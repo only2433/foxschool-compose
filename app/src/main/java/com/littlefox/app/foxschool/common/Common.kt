@@ -9,6 +9,7 @@ class Common
 
         const val SECOND: Int = 1000;
         const val PARAMS_DISPLAY_METRICS : String = "display_metrics";
+        const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f;
     }
 
 }
