@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
@@ -22,6 +23,7 @@ import android.os.StatFs
 import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.util.DisplayMetrics
 import android.view.*
@@ -37,16 +39,20 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.preference.PreferenceManager
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.BuildConfig
 
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.UserLoginData
+import com.littlefox.app.foxschool.`object`.result.MainInformationResult
+import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
 import com.littlefox.app.foxschool.base.MainApplication
-import com.littlefox.app.foxschool.enum.BookColor
-import com.littlefox.app.foxschool.enum.DataType
-import com.littlefox.app.foxschool.enum.Grade
+import com.littlefox.app.foxschool.enumerate.BookColor
+import com.littlefox.app.foxschool.enumerate.DataType
+import com.littlefox.app.foxschool.enumerate.Grade
 import com.littlefox.library.view.`object`.DisPlayMetricsObject
 import com.littlefox.logmonitor.Log
 import java.io.File
@@ -1289,6 +1295,7 @@ class CommonUtils
      * @param positionY 시작 위치 Y
      * @param duration 애니메이션 시간
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun showAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, duration : Int)
     {
         showAnimateReveal(view, color, positionX, positionY, false, duration)
@@ -1303,6 +1310,7 @@ class CommonUtils
      * @param isAlphaAnimation 알파 애니메이션을 적용할 것인지의 여부
      * @param duration 애니메이션 시간
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun showAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, isAlphaAnimation : Boolean, duration : Int)
     {
         val finalRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
@@ -1327,6 +1335,7 @@ class CommonUtils
      * @param positionY 시작 위치 Y
      * @param duration 애니메이션 시간
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun hideAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, duration : Int)
     {
         hideAnimateReveal(view, color, positionX, positionY, false, duration)
@@ -1341,12 +1350,13 @@ class CommonUtils
      * @param isAlphaAnimation 알파 애니메이션을 적용할 것인지의 여부
      * @param duration 애니메이션 시간
      */
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     fun hideAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, isAlphaAnimation : Boolean, duration : Int)
     {
         val initialRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
         val animaterSet = AnimatorSet()
         val revealAnimation : Animator = ViewAnimationUtils.createCircularReveal(view, positionX, positionY, initialRadius, 0f)
-        view.setBackgroundColor(ContextCompat.getColor(sContext, color))
+        view.setBackgroundColor(ContextCompat.getColor(sContext!!, color))
         if(isAlphaAnimation)
         {
             val alphaAnimation : Animator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
@@ -1566,16 +1576,7 @@ class CommonUtils
     {
         setPreferenceObject(Common.PARAMS_FILE_MAIN_INFO, data)
     }
-    /*public ClassMainResult loadClassMainData()
-    {
-        ClassMainResult data = (ClassMainResult)getPreferenceObject(Common.PARAMS_FILE_CLASS_MAIN_INFO, ClassMainResult.class);
-        return data;
-    }
 
-    public void saveClassMainData(ClassMainResult data)
-    {
-        setPreferenceObject(Common.PARAMS_FILE_CLASS_MAIN_INFO, data);
-    }*/
     /**
      * 최대 사이즈를 정해놓은 리스트에 아이템을 Push . 최대 개수가 넘게 되면 제일 뒤에 있는 아이템을 pop 한다.
      * @param data 데이터 객체
@@ -1700,16 +1701,16 @@ class CommonUtils
      */
     fun getHeaderInformation(needToken : Boolean) : Map<String, String>
     {
-        var token = ""
+        var token : String = ""
         val deviceType : String = if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
         val result : MutableMap<String, String> = HashMap()
         if(needToken)
         {
-            token = "Bearer " + net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getSharedPreference(Common.PARAMS_ACCESS_TOKEN, Common.TYPE_PARAMS_STRING) as String
+            token = "Bearer " + getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
             result["Authorization"] = token
         }
         result["api-locale"] = Locale.getDefault().toString()
-        result["api-user-agent"] = Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
+        result["api-user-agent"] = Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
         return result
     }
 
@@ -1722,12 +1723,36 @@ class CommonUtils
     {
         return when(lineCount)
         {
-            1, 2 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(122) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(174)
-            3 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(160) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(174)
-            4 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(196) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(230)
-            5 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(232) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(280)
-            6 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(268) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(330)
-            else -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(304) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(380)
+            1, 2 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(122)
+                else
+                    return getPixel(174)
+            3 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(160)
+                else
+                    return getPixel(174)
+            4 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(196)
+                else
+                    return getPixel(230)
+            5 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(232)
+                else
+                    return getPixel(280)
+            6 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(268)
+                else
+                    return getPixel(330)
+            else ->
+                if(Feature.IS_TABLET)
+                    return getPixel(304)
+                else
+                    return getPixel(380)
         }
     }
 
@@ -1735,9 +1760,21 @@ class CommonUtils
     {
         return when(lineCount)
         {
-            4 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(158) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(226)
-            5 -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(198) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(282)
-            else -> if(Feature.IS_TABLET) net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(118) else net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getPixel(170)
+            4 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(158)
+                else
+                    return getPixel(226)
+            5 ->
+                if(Feature.IS_TABLET)
+                    return getPixel(198)
+                else
+                    return getPixel(282)
+            else ->
+                if(Feature.IS_TABLET)
+                    return getPixel(118)
+                else
+                    return getPixel(170)
         }
     }
 
@@ -1750,38 +1787,38 @@ class CommonUtils
     fun getCountryAddLabel(label : String) : String
     {
         var result = ""
-        result = if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
+        if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
         {
-            "KO_$label"
+            result = "KO_$label"
         }
         else if(Locale.getDefault().toString().contains(Locale.JAPAN.toString()))
         {
-            "JP_$label"
+            result = "JP_$label"
         }
         else if(Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString()))
         {
-            "CN_$label"
+            result = "CN_$label"
         }
         else if(Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString()))
         {
-            "TW_$label"
+            result = "TW_$label"
         }
         else
         {
-            "EN_$label"
+            result = "EN_$label"
         }
         return result
     }
 
     fun getDateTitle(index : Int) : String
     {
-        return when(index)
+        when(index)
         {
-            0 -> "월요일"
-            1 -> "화요일"
-            2 -> "수요일"
-            3 -> "목요일"
-            else -> "금요일"
+            0 -> return "월요일"
+            1 -> return "화요일"
+            2 -> return "수요일"
+            3 -> return "목요일"
+            else -> return "금요일"
         }
     }
 
@@ -1790,16 +1827,16 @@ class CommonUtils
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임
      */
-    fun getContentsName(data : ContentsBaseResult) : String
+    fun getContentsName(data : ContentsBaseResult) : String?
     {
-        var result = ""
-        result = if(data.getSubName().equals(""))
+        var result : String? = ""
+        if(data.getSubName().equals(""))
         {
-            data.getName()
+            result = data.getName()
         }
         else
         {
-            data.getName().toString() + ": " + data.getSubName()
+            result = data.getName().toString() + ": " + data.getSubName()
         }
         return result
     }
@@ -1812,14 +1849,14 @@ class CommonUtils
      */
     fun getContentsName(name : String, subName : String) : String
     {
-        var result = ""
-        result = if(subName == "")
+        var result : String = ""
+        if(subName == "")
         {
-            name
+            result = name
         }
         else
         {
-            "$name: $subName"
+            result = "$name: $subName"
         }
         return result
     }
@@ -1829,33 +1866,21 @@ class CommonUtils
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임
      */
-    fun getVocabularyTitleName(data : ContentsBaseResult) : String
+    fun getVocabularyTitleName(data : ContentsBaseResult) : String?
     {
-        var result = ""
-        result = if(data.getSubName().equals(""))
+        var result : String?  = ""
+        if(data.getSubName().equals(""))
         {
-            data.getName()
+            result = data.getName()
         }
         else
         {
-            data.getSubName()
+            result = data.getSubName()
         }
         return result
     }
 
-    fun getCategoryType(data : ContentsBaseResult) : String
-    {
-        var result = ""
-        if(data.getType().equals(Common.CONTENT_TYPE_STORY))
-        {
-            result = Common.ANALYTICS_CATEGORY_STORY
-        }
-        else
-        {
-            result = Common.ANALYTICS_CATEGORY_SONG
-        }
-        return result
-    }
+
 
     /**
      * 총 플레이타임의 80퍼센트를 봐야 학습 기록을 저장하기위해 총시간에서 80퍼센트를 계산
@@ -1897,98 +1922,12 @@ class CommonUtils
         return result
     }
 
-    /**
-     * 클래스의 학습 방법을 리턴해 주는 메소드
-     * @param code API 에서 사용하는 학습 코드
-     * @return 학습 코드에 맞는 학습 방법
-     */
-    fun getClassStudyMethodTitle(code : String?) : String
-    {
-        return when(code)
-        {
-            CLASS_STUDY_TYPE_MOVIE -> sContext!!.resources.getString(R.string.text_class_study_type_movie)
-            Common.CLASS_STUDY_TYPE_SPEAK_SENTENCE -> sContext!!.resources.getString(R.string.text_class_study_type_speak_sentence)
-            Common.CLASS_STUDY_TYPE_SPEAK_SCENE -> sContext!!.resources.getString(R.string.text_class_study_type_speak_scene)
-            Common.CLASS_STUDY_TYPE_SPEAK_SHORT -> sContext!!.resources.getString(R.string.text_class_study_type_speak_short)
-            Common.CLASS_STUDY_TYPE_READ_SENTENCE -> sContext!!.resources.getString(R.string.text_class_study_type_read_sentence)
-            Common.CLASS_STUDY_TYPE_READ_ALONG -> sContext!!.resources.getString(R.string.text_class_study_type_read_along)
-            Common.CLASS_STUDY_TYPE_LEARN_WORD -> sContext!!.resources.getString(R.string.text_class_study_type_learn_word)
-            Common.CLASS_STUDY_TYPE_DIRECTION -> sContext!!.resources.getString(R.string.text_class_study_type_direction)
-            else -> sContext!!.resources.getString(R.string.text_class_study_type_movie)
-        }
-    }
-
-    fun getClassStudyMethodColor(data : String?) : Int
-    {
-        return when(data)
-        {
-            CLASS_STUDY_TYPE_MOVIE -> if(Feature.IS_TABLET) R.drawable.class_label_01_tablet else R.drawable.class_label_01
-            Common.CLASS_STUDY_TYPE_SPEAK_SENTENCE -> if(Feature.IS_TABLET) R.drawable.class_label_02_tablet else R.drawable.class_label_02
-            else -> if(Feature.IS_TABLET) R.drawable.class_label_01_tablet else R.drawable.class_label_01
-        }
-    }
-
-    /**
-     * 학습 방법에 따른 클래스 타입을 전달
-     * @param code 학습 방법
-     * @return LISTENING 듣기, SPEAKING 말하기, 추후 추가 예정
-     */
-    fun getClassEnrollType(code : String?) : ClassEnrollType
-    {
-        when(code)
-        {
-            Common.CLASS_STUDY_TYPE_MOVIE -> return ClassEnrollType.LISTENING
-            Common.CLASS_STUDY_TYPE_SPEAK_SENTENCE, Common.CLASS_STUDY_TYPE_SPEAK_SCENE, Common.CLASS_STUDY_TYPE_SPEAK_SHORT -> return ClassEnrollType.SPEAKING
-        }
-        return ClassEnrollType.LISTENING
-    }
-
-    fun getClassEnrollTypeText(code : String?) : String
-    {
-        when(code)
-        {
-            Common.CLASS_STUDY_TYPE_MOVIE -> return sContext!!.resources.getString(R.string.text_class_listening)
-            Common.CLASS_STUDY_TYPE_SPEAK_SENTENCE, Common.CLASS_STUDY_TYPE_SPEAK_SCENE, Common.CLASS_STUDY_TYPE_SPEAK_SHORT -> return sContext!!.resources.getString(R.string.text_class_speaking)
-        }
-        return sContext!!.resources.getString(R.string.text_class_listening)
-    }
-
-    fun getClassEnrollTypeTextColor(code : String?) : Int
-    {
-        when(code)
-        {
-            Common.CLASS_STUDY_TYPE_MOVIE -> return sContext!!.resources.getColor(R.color.color_6b71db)
-            Common.CLASS_STUDY_TYPE_SPEAK_SENTENCE, Common.CLASS_STUDY_TYPE_SPEAK_SCENE, Common.CLASS_STUDY_TYPE_SPEAK_SHORT -> return sContext!!.resources.getColor(R.color.color_eb5e8d)
-        }
-        return sContext!!.resources.getColor(R.color.color_6b71db)
-    }
-
-    fun getClassEnrollStatus(data : String?) : String
-    {
-        return when(data)
-        {
-            Common.CLASS_ENROLL_STATUS_POSSIBLE -> sContext!!.resources.getString(R.string.text_enroll)
-            Common.CLASS_ENROLL_STATUS_ING -> sContext!!.resources.getString(R.string.text_enroll_cancel)
-            Common.CLASS_ENROLL_STATUS_WAIT -> sContext!!.resources.getString(R.string.text_enroll_end)
-            else -> sContext!!.resources.getString(R.string.text_enroll)
-        }
-    }
-
-    fun getSelectClassStatus(data : String?) : String
-    {
-        return when(data)
-        {
-            Common.CLASS_MAIN_STATUS_STUDY_POSSIBLE -> sContext!!.resources.getString(R.string.text_class_study_start)
-            Common.CLASS_MAIN_STATUS_STUDY_END -> sContext!!.resources.getString(R.string.text_class_study_end)
-            else -> sContext!!.resources.getString(R.string.text_class_study_end)
-        }
-    }
 
     fun getGenderItemList(isNoneNecessary : Boolean) : Array<String?>
     {
         val result : Array<String?>
         val data : Array<String>
-        return if(isNoneNecessary)
+        if(isNoneNecessary)
         {
             result = arrayOfNulls(3)
             data = sContext!!.resources.getStringArray(R.array.text_list_gender)
@@ -2003,29 +1942,20 @@ class CommonUtils
                     result[i] = data[i - 1]
                 }
             }
-            result
+            return result
         }
         else
         {
             result = sContext!!.resources.getStringArray(R.array.text_list_gender)
-            result
+            return result
         }
     }
 
-    fun getLevelItemList(dataList : ArrayList<String>) : Array<String?>
-    {
-        val result = arrayOfNulls<String>(dataList.size)
-        result[0] = sContext!!.resources.getString(R.string.text_all)
-        for(i in 1 until dataList.size)
-        {
-            result[i] = dataList[i] + " " + sContext!!.resources.getString(R.string.text_class_level)
-        }
-        return result
-    }
+
 
     fun getYearItemList(isNoneNecessary : Boolean) : Array<String?>
     {
-        var maxYear : Int = Integer.valueOf(net.littlefox.lf_app_fragment.common.CommonUtils.getInstance(sContext).getTodayYear(System.currentTimeMillis()))
+        var maxYear : Int = Integer.valueOf(getTodayYear(System.currentTimeMillis()))
         val itemListSize = maxYear - (maxYear - 100) + 1
         Log.f("maxYear : " + maxYear + ", minYear : " + (maxYear - 100 + 1) + ", itemListSize : " + itemListSize)
         val result = arrayOfNulls<String>(itemListSize)
@@ -2078,55 +2008,6 @@ class CommonUtils
         }
     }
 
-    fun getAwardImage(awardCondition : String?, isPastMyHistory : Boolean) : Int
-    {
-        return when(awardCondition)
-        {
-            Common.AWARD_GOLD -> R.drawable.award_gold_1
-            Common.AWARD_SILVER -> R.drawable.award_silver_1
-            Common.AWARD_BRONZE -> R.drawable.award_bronze_1
-            else -> if(isPastMyHistory)
-            {
-                R.drawable.award_fail
-            }
-            else
-            {
-                R.drawable.award_ing
-            }
-        }
-    }
-
-    fun getAwardText(awardCondition : String?, isPastMyHistory : Boolean) : String
-    {
-        return when(awardCondition)
-        {
-            Common.AWARD_GOLD -> sContext!!.resources.getString(R.string.text_award_gold)
-            Common.AWARD_SILVER -> if(isPastMyHistory)
-            {
-                sContext!!.resources.getString(R.string.text_award_silver)
-            }
-            else
-            {
-                sContext!!.resources.getString(R.string.text_award_silver) + " " + sContext!!.resources.getString(R.string.text_award_get)
-            }
-            Common.AWARD_BRONZE -> if(isPastMyHistory)
-            {
-                sContext!!.resources.getString(R.string.text_award_bronze)
-            }
-            else
-            {
-                sContext!!.resources.getString(R.string.text_award_bronze) + " " + sContext!!.resources.getString(R.string.text_award_get)
-            }
-            else -> if(isPastMyHistory)
-            {
-                ""
-            }
-            else
-            {
-                sContext!!.resources.getString(R.string.text_award_ready)
-            }
-        }
-    }
 
     fun getCurrentPercent(currentDuration : Int, maxDuration : Int) : Int
     {

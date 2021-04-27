@@ -1,21 +1,26 @@
-package com.littlefox.app.foxschool.object.result.main;
+package com.littlefox.app.foxschool.`object`.result.main
 
-public class CompanyInformationResult
+class CompanyInformationResult
 {
-    private String ceo = "";
-    private String address = "";
-    private String brn = "";
-    private String mosrn = "";
-    private String ecn_number = "";
-    private String phone = "";
-    private String fax = "";
+    private val ceo = ""
+    private val address = ""
+    private val brn = ""
+    private val mosrn = ""
 
-    public String getCEO()
+    /**
+     * 전자 출판물 인증
+     * @return 해당 텍스트
+     */
+    private val ecn_number = ""
+    private val phone = ""
+    private val fax = ""
+
+    fun getCEO() : String
     {
         return ceo;
     }
 
-    public String getAddress()
+    fun getAddress() : String
     {
         return address;
     }
@@ -24,7 +29,7 @@ public class CompanyInformationResult
      * 사업자 등록 번호
      * @return 해당 텍스트
      */
-    public String getCompanyRegistrationNumber()
+    fun getCompanyRegistrationNumber() : String
     {
         return brn;
     }
@@ -33,26 +38,22 @@ public class CompanyInformationResult
      * 통신 판매업 신고
      * @return 해당 텍스트
      */
-    public String getReportCompany()
+    fun getReportCompany() : String
     {
         return mosrn;
     }
 
-    /**
-     * 전자 출판물 인증
-     * @return 해당 텍스트
-     */
-    public String getElectronicPublishingCertification()
+    fun getElectronicPublishingCertification() : String
     {
         return ecn_number;
     }
 
-    public String getPhoneNumber()
+    fun getPhoneNumber() : String
     {
         return phone;
     }
 
-    public String getFaxNumber()
+    fun getFax() : String
     {
         return fax;
     }

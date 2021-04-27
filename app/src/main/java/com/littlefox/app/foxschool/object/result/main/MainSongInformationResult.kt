@@ -1,14 +1,14 @@
-package com.littlefox.app.foxschool.object.result.main;
+package com.littlefox.app.foxschool.`object`.result.main
 
-import net.littlefox.lf_app_fragment.object.result.common.SeriesInformationResult;
 
-import java.util.ArrayList;
+import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
+import java.util.ArrayList
 
-public class MainSongInformationResult
+class MainSongInformationResult
 {
-    private ArrayList<SeriesInformationResult> categories = null;
+    private val categories : ArrayList<SeriesInformationResult>? = null
 
-    public ArrayList<SeriesInformationResult> getContentByCategoriesToList()
+    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>?
     {
         return categories;
     }

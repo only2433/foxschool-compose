@@ -1,26 +1,26 @@
-package com.littlefox.app.foxschool.object.result.main;
+package com.littlefox.app.foxschool.`object`.result.main
 
-import net.littlefox.lf_app_fragment.object.result.common.SeriesInformationResult;
+import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
+import java.util.*
 
-import java.util.ArrayList;
-
-public class MainStoryInformationResult
+class MainStoryInformationResult
 {
-    private ArrayList<SeriesInformationResult> levels = null;
-    private ArrayList<SeriesInformationResult> categories = null;
+    private var levels : ArrayList<SeriesInformationResult>? = null
+    private val categories : ArrayList<SeriesInformationResult>? = null
 
-    public ArrayList<SeriesInformationResult> getContentByLevelToList()
+    fun getContentByLevelToList() : ArrayList<SeriesInformationResult>?
     {
         return levels;
     }
 
-    public void setContentByLevelToList(ArrayList<SeriesInformationResult> data)
+    fun setContentByLevelToList(data : ArrayList<SeriesInformationResult>?)
     {
         levels = data;
     }
 
-    public ArrayList<SeriesInformationResult> getContentByCategoriesToList()
+    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>?
     {
         return categories;
     }
+
 }

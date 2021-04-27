@@ -1,86 +1,88 @@
-package com.littlefox.app.foxschool.object.result.main;
+package com.littlefox.app.foxschool.`object`.result.main
 
-public class InAppCompaignResult
+class InAppCompaignResult
 {
-    private int id = 0;
-    private int article_id = 0;
-    private String title = "";
-    private String content = "";
-    private String btn1_use = "";
-    private String btn1_mode = "";
-    private String btn1_text = "";
-    private String btn1_link = "";
-    private String btn2_use = "";
-    private String btn2_mode = "";
-    private String btn2_text = "";
-    private int not_display_days = 0;
+    private val id : Int            = 0
+    private val article_id : Int    = 0
+    private val title : String      = ""
+    private val content : String    = ""
+    private val btn1_use : String   = ""
+    private val btn1_mode : String  = ""
+    private val btn1_text : String  = ""
+    private val btn1_link : String  = ""
+    private val btn2_use : String   = ""
+    private val btn2_mode : String  = ""
+    private val btn2_text : String  = ""
+    private val not_display_days : Int  = 0
 
-    public int getID()
+    val isButton1Use : Boolean
+        get()
+        {
+            if(btn1_use == "Y")
+            {
+                return true
+            }
+            else
+                return false
+        }
+
+    val isButton2Use : Boolean
+        get()
+        {
+            if(btn2_use == "Y")
+            {
+                return true
+            }
+            else
+                return false
+        }
+
+    fun getID() : Int
     {
         return id;
     }
 
-    public int getArticleID()
+    fun getArticleID() : Int
     {
         return article_id;
     }
 
-    public String getTitle()
+    fun getTitle() : String?
     {
         return title;
     }
 
-    public String getContent()
+    fun getContent() : String
     {
         return content;
     }
 
-    public boolean isButton1Use()
-    {
-        if(btn1_use.equals("Y"))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public String getButton1Mode()
+    fun getButton1Mode() : String
     {
         return btn1_mode;
     }
 
-    public String getButton1Text()
+    fun getButton1Text() : String
     {
         return btn1_text;
     }
 
-    public String getButton1Link()
+    fun getButton1Link() : String
     {
         return btn1_link;
     }
 
-    public boolean isButton2Use()
-    {
-        if(btn2_use.equals("Y"))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public String getButton2Mode()
+    fun getButton2Mode() : String
     {
         return btn2_mode;
     }
 
-    public String getButton2Text()
+    fun getButton2Text() : String
     {
         return btn2_text;
     }
 
-    public int getNotDisplayDays()
+    fun getNotDisplayDays() : Int
     {
         return not_display_days;
     }

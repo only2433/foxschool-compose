@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.enum
+package com.littlefox.app.foxschool.enumerate
 
 enum class BookColor
 {

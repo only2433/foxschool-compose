@@ -1,76 +1,83 @@
-package com.littlefox.app.foxschool.object.result.main;
+package com.littlefox.app.foxschool.`object`.result.main
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Parcel
+import android.os.Parcelable
 
-public class MyBookshelfResult implements Parcelable
+class MyBookshelfResult : Parcelable
 {
-    private String id = "";
-    private String name = "";
-    private String color = "";
-    private int contents_count = 0;
+    private var id : String? = ""
+    private var name : String? = ""
+    private var color : String? = ""
+    private var contents_count : Int = 0
 
-    public MyBookshelfResult(String id, String name, String color)
+    constructor(id : String?, name : String?, color : String?)
     {
-        this.id = id;
-        this.name = name;
-        this.color = color;
+        this.id = id
+        this.name = name
+        this.color = color
     }
 
-    protected MyBookshelfResult(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        color = in.readString();
-        contents_count = in.readInt();
+    protected constructor(`in` : Parcel)
+    {
+        id = `in`.readString()
+        name = `in`.readString()
+        color = `in`.readString()
+        contents_count = `in`.readInt()
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(color);
-        dest.writeInt(contents_count);
+    override fun writeToParcel(dest : Parcel, flags : Int)
+    {
+        dest.writeString(id)
+        dest.writeString(name)
+        dest.writeString(color)
+        dest.writeInt(contents_count)
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    override fun describeContents() : Int
+    {
+        return 0
     }
 
-    public static final Creator<MyBookshelfResult> CREATOR = new Creator<MyBookshelfResult>() {
-        @Override
-        public net.littlefox.lf_app_fragment.object.result.main.MyBookshelfResult createFromParcel(Parcel in) {
-            return new net.littlefox.lf_app_fragment.object.result.main.MyBookshelfResult(in);
-        }
-
-        @Override
-        public net.littlefox.lf_app_fragment.object.result.main.MyBookshelfResult[] newArray(int size) {
-            return new net.littlefox.lf_app_fragment.object.result.main.MyBookshelfResult[size];
-        }
-    };
-
-    public String getID()
+    fun getID() : String?
     {
         return id;
     }
 
-    public String getName()
+    fun getName() : String?
     {
         return name;
     }
 
-    public int getContentsCount()
+    fun getColor() : String?
+    {
+        return color;
+    }
+
+    fun getCountentsCount() : Int
     {
         return contents_count;
     }
 
-    public void setcontentsCount(int count)
+    fun setCountentsCount(count : Int)
     {
         contents_count = count;
     }
 
-    public String getColor()
+
+    companion object
     {
-        return color;
+        @JvmField
+        val CREATOR : Parcelable.Creator<MyBookshelfResult?> = object : Parcelable.Creator<MyBookshelfResult?>
+        {
+            override fun createFromParcel(`in` : Parcel) : MyBookshelfResult?
+            {
+                return MyBookshelfResult(`in`)
+            }
+
+            override fun newArray(size : Int) : Array<MyBookshelfResult?>
+            {
+                return arrayOfNulls(size)
+            }
+        }
     }
 }

@@ -1,46 +1,43 @@
-package com.littlefox.app.foxschool.object.result;
+package com.littlefox.app.foxschool.`object`.result
 
-import net.littlefox.lf_app_fragment.object.result.common.ContentsBaseResult;
-import net.littlefox.lf_app_fragment.object.result.common.SeriesBaseResult;
-import net.littlefox.lf_app_fragment.object.result.littlefoxClass.ClassMainResult;
+import com.littlefox.app.foxschool.`object`.result.main.*
+import java.util.*
 
-import java.util.ArrayList;
-
-public class MainInformationResult
+class MainInformationResult
 {
-    private MainStoryInformationResult story = null;
-    private MainSongInformationResult song = null;
-    private ArrayList<MyBookshelfResult> bookshelves = new ArrayList<MyBookshelfResult>();
-    private ArrayList<MyVocabularyResult> vocabularies = new ArrayList<MyVocabularyResult>();
-    private CompanyInformationResult company_information = null;
-    private InAppCompaignResult in_app_campaign = null;
+    private val story : MainStoryInformationResult? = null
+    private val song : MainSongInformationResult? = null
+    private val bookshelves : ArrayList<MyBookshelfResult> = ArrayList<MyBookshelfResult>()
+    private val vocabularies : ArrayList<MyVocabularyResult> = ArrayList<MyVocabularyResult>()
+    private val company_information : CompanyInformationResult? = null
+    private val in_app_campaign : InAppCompaignResult? = null
 
-    public MainStoryInformationResult getMainStoryInformation()
+    fun getMainStoryInformation() : MainStoryInformationResult?
     {
         return story;
     }
 
-    public MainSongInformationResult getMainSongInformation()
+    fun getMainSongInformation() : MainSongInformationResult?
     {
         return song;
     }
 
-    public ArrayList<MyBookshelfResult> getBookShelvesList()
+    fun getBookShelvesList() : ArrayList<MyBookshelfResult>
     {
         return bookshelves;
     }
 
-    public ArrayList<MyVocabularyResult> getVocabulariesList()
+    fun getVocabulariesList() : ArrayList<MyVocabularyResult>?
     {
         return vocabularies;
     }
 
-    public CompanyInformationResult getCompanyInformation()
+    fun getCompanyInformation() : CompanyInformationResult?
     {
         return company_information;
     }
 
-    public InAppCompaignResult getInAppCompaignInformation()
+    fun getInAppCompaignInformation() : InAppCompaignResult?
     {
         return in_app_campaign;
     }
