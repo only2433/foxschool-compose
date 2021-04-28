@@ -6,7 +6,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.enumerate.TransitionType
 import java.io.Serializable
 
-open class SeriesBaseResult  : Parcelable
+open class SeriesBaseResult : Parcelable
 {
     private var id : String? = ""
     private var name : String? = ""

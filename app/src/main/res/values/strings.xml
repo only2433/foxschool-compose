@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">FoxSchool</string>
+
     <string name="text_no_select">None</string>
     <string name="text_all">All</string>
+
+
+    <string name="message_toast_network_error">No network connection is available.\nPlease connect to a network and try again.</string>
 
     <string-array name="text_list_gender">
         <item>Male</item>

@@ -16,6 +16,8 @@ class Common
         const val PARAMS_FILE_MAIN_INFO : String        = "file_main_info";
         const val PARAMS_ACCESS_TOKEN : String          = "access_token";
 
+        const val COROUTINE_CODE_FILE_DOWNLOAD          = "file_download";
+
         const val CONTENT_TYPE_ALL : String     = ""
         const val CONTENT_TYPE_STORY : String   = "S"
         const val CONTENT_TYPE_SONG : String    = "M"

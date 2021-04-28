@@ -71,6 +71,21 @@ import java.util.*
  */
 class CommonUtils
 {
+    companion object
+    {
+        var sCommonUtils : CommonUtils? = null
+        var sContext : Context? = null
+        fun getInstance(context : Context?) : CommonUtils?
+        {
+            if(sCommonUtils == null)
+            {
+                sCommonUtils = CommonUtils()
+            }
+            sContext = context
+            return sCommonUtils
+        }
+    }
+
     fun getDateTime(timeMs : Long) : String
     {
         val date = Date(timeMs)
@@ -2049,45 +2064,32 @@ class CommonUtils
         return seedNum
     }
 
-    companion object
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If it doesn't, display a dialog that allows users to download the APK from the Google Play Store or enable it in the device's
+     * system settings.
+     */
+    fun checkPlayServices() : Boolean
     {
-        var sCommonUtils : CommonUtils? = null
-        var sContext : Context? = null
-        fun getInstance(context : Context?) : CommonUtils?
+        val googleApiAvailability : GoogleApiAvailability = GoogleApiAvailability.getInstance()
+        val resultCode : Int = googleApiAvailability.isGooglePlayServicesAvailable(sContext)
+        when(resultCode)
         {
-            if(sCommonUtils == null)
+            ConnectionResult.SUCCESS -> return true
+            ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_INVALID, ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ->
             {
-                sCommonUtils = CommonUtils()
-            }
-            sContext = context
-            return sCommonUtils
-        }
-
-        /**
-         * Check the device to make sure it has the Google Play Services APK. If it doesn't, display a dialog that allows users to download the APK from the Google Play Store or enable it in the device's
-         * system settings.
-         */
-        fun checkPlayServices() : Boolean
-        {
-            val googleApiAvailability : GoogleApiAvailability = GoogleApiAvailability.getInstance()
-            val resultCode : Int = googleApiAvailability.isGooglePlayServicesAvailable(sContext)
-            when(resultCode)
-            {
-                ConnectionResult.SUCCESS -> return true
-                ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_INVALID, ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ->
+                val dialog : Dialog = googleApiAvailability.getErrorDialog(sContext as Activity?, resultCode, 0)
+                dialog.setOnCancelListener(object : DialogInterface.OnCancelListener
                 {
-                    val dialog : Dialog = googleApiAvailability.getErrorDialog(sContext as Activity?, resultCode, 0)
-                    dialog.setOnCancelListener(object : DialogInterface.OnCancelListener
+                    override fun onCancel(dialogInterface : DialogInterface)
                     {
-                        override fun onCancel(dialogInterface : DialogInterface)
-                        {
-                            (sContext as Activity?)!!.finish()
-                        }
-                    })
-                    dialog.show()
-                }
+                        (sContext as Activity?)!!.finish()
+                    }
+                })
+                dialog.show()
             }
-            return false
         }
+        return false
     }
+
+
 }
