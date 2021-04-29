@@ -2,7 +2,7 @@ package com.littlefox.app.foxschool.`object`.result.base
 
 import com.littlefox.logmonitor.Log
 
-class BaseResult
+open class BaseResult
 {
     private var status : Int = -1
     private var message = ""
