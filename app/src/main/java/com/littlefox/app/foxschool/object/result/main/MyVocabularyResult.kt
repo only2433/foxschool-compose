@@ -9,9 +9,9 @@ class MyVocabularyResult : Parcelable
     /**
      * 보케블러리 책장 ID
      */
-    private var id : String? = ""
-    private var name : String? = ""
-    private var color : String? = ""
+    private var id : String = ""
+    private var name : String = ""
+    private var color : String = ""
     private var wordCount : Int = 0
 
     /**
@@ -20,7 +20,7 @@ class MyVocabularyResult : Parcelable
     private var contentID : String? = ""
     private var vocabularyType : VocabularyType? = null
 
-    constructor(id : String?, name : String?, color : String?, vocabularyType : VocabularyType?)
+    constructor(id : String, name : String, color : String, vocabularyType : VocabularyType?)
     {
         contentID = id
         this.name = name
@@ -28,7 +28,7 @@ class MyVocabularyResult : Parcelable
         this.vocabularyType = vocabularyType
     }
 
-    constructor(id : String?, name : String?, vocabularyType : VocabularyType?)
+    constructor(id : String, name : String, vocabularyType : VocabularyType?)
     {
         contentID = id
         this.name = name
@@ -37,10 +37,10 @@ class MyVocabularyResult : Parcelable
 
     protected constructor(`in` : Parcel)
     {
-        id = `in`.readString()
-        contentID = `in`.readString()
-        name = `in`.readString()
-        color = `in`.readString()
+        id = `in`.readString()!!
+        contentID = `in`.readString()!!
+        name = `in`.readString()!!
+        color = `in`.readString()!!
         wordCount = `in`.readInt()
         vocabularyType = `in`.readSerializable() as VocabularyType?
     }
@@ -60,22 +60,22 @@ class MyVocabularyResult : Parcelable
         return 0
     }
 
-    fun getID() : String?
+    fun getID() : String
     {
         return id;
     }
 
-    fun getContentID() : String?
+    fun getContentID() : String
     {
         return contentID;
     }
 
-    fun getName() : String?
+    fun getName() : String
     {
         return name;
     }
 
-    fun getColor() : String?
+    fun getColor() : String
     {
         return color;
     }

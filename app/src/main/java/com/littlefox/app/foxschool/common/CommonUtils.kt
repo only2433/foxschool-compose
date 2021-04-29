@@ -74,15 +74,15 @@ class CommonUtils
     companion object
     {
         var sCommonUtils : CommonUtils? = null
-        var sContext : Context? = null
-        fun getInstance(context : Context?) : CommonUtils?
+        lateinit var sContext : Context
+        fun getInstance(context : Context) : CommonUtils
         {
             if(sCommonUtils == null)
             {
                 sCommonUtils = CommonUtils()
             }
             sContext = context
-            return sCommonUtils
+            return sCommonUtils!!
         }
     }
 
@@ -183,7 +183,7 @@ class CommonUtils
             Feature.IS_TABLET = false
         }
         Log.f("IS_TABLET : " + Feature.IS_TABLET)
-        if(getInstance(sContext)!!.isHaveNavigationBar())
+        if(isHaveNavigationBar())
         {
             Log.f("HAVE NAVIGATION BAR")
             Feature.HAVE_NAVIGATION_BAR = true
@@ -193,7 +193,7 @@ class CommonUtils
             Log.f("NOT NAVIGATION BAR")
             Feature.HAVE_NAVIGATION_BAR = false
         }
-        if(getInstance(sContext)!!.isDisplayMinimumSize)
+        if(isDisplayMinimumSize)
         {
             Log.f("MINIMUM DISPLAY SIZE")
             Feature.IS_MINIMUM_DISPLAY_SIZE = true
@@ -205,16 +205,16 @@ class CommonUtils
         }
         if(Feature.IS_TABLET)
         {
-            Log.f("비율 : " + getInstance(sContext)!!.displayWidthPixel.toFloat() / getInstance(sContext)!!.displayHeightPixel.toFloat())
+            Log.f("비율 : " + displayWidthPixel.toFloat() / displayHeightPixel.toFloat())
         }
         else
         {
-            Log.f("비율 : " + getInstance(sContext)!!.displayHeightPixel.toFloat() / getInstance(sContext)!!.displayWidthPixel.toFloat())
+            Log.f("비율 : " + displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
 
         }
         if(Feature.IS_TABLET)
         {
-            var currentDisplayRadio : Float = (getInstance(sContext)!!.displayWidthPixel.toFloat() / getInstance(sContext)!!.displayHeightPixel);
+            var currentDisplayRadio : Float = (displayWidthPixel.toFloat() / displayHeightPixel);
             if(currentDisplayRadio < Common.MINIMUM_TABLET_DISPLAY_RADIO)
             {
                 Log.f("4 : 3 비율 ")
@@ -254,7 +254,7 @@ class CommonUtils
         {
             MainApplication.sDisPlayMetrics = DisplayMetrics()
         }
-        (sContext as Activity?)!!.windowManager.defaultDisplay.getMetrics(MainApplication.sDisPlayMetrics)
+        (sContext as Activity).windowManager.defaultDisplay.getMetrics(MainApplication.sDisPlayMetrics)
         width = MainApplication.sDisPlayMetrics.widthPixels
         height = MainApplication.sDisPlayMetrics.heightPixels
         /**
@@ -302,7 +302,7 @@ class CommonUtils
             else
                 MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
-        return (value * MainApplication.sDisplayFactor!!).toInt()
+        return (value * MainApplication.sDisplayFactor).toInt()
     }
 
     /**
@@ -331,7 +331,7 @@ class CommonUtils
             else
                 MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
-        return value * MainApplication.sDisplayFactor!!
+        return value * MainApplication.sDisplayFactor
     }
 
     /**
@@ -359,7 +359,7 @@ class CommonUtils
             else
                 MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1920.0f
         }
-        return (value * MainApplication.sDisplayFactor!!).toInt()
+        return (value * MainApplication.sDisplayFactor).toInt()
     }
 
     /**
@@ -387,7 +387,7 @@ class CommonUtils
             else
                 MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
         }
-        return value * MainApplication.sDisplayFactor!!
+        return value * MainApplication.sDisplayFactor
     }
 
     /**
@@ -410,18 +410,18 @@ class CommonUtils
         {
             DataType.TYPE_BOOLEAN -> return pref.getBoolean(key, false)
             DataType.TYPE_INTEGER -> return pref.getInt(key, -1)
-            DataType.TYPE_STRING -> return pref.getString(key, "")!!
+            DataType.TYPE_STRING -> return pref.getString(key, "").toString()
         }
         return pref.getBoolean(key, false)
     }
 
-    fun getSharedPreferenceString(key : String?, defaultValue : String?) : String
+    fun getSharedPreferenceString(key : String, defaultValue : String) : String
     {
         val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
-        return pref.getString(key, defaultValue)!!
+        return pref.getString(key, defaultValue).toString()
     }
 
-    fun getSharedPreferenceInteger(key : String?, defaultValue : Int) : Int
+    fun getSharedPreferenceInteger(key : String, defaultValue : Int) : Int
     {
         val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
         return pref.getInt(key, defaultValue)
@@ -432,21 +432,21 @@ class CommonUtils
      * @param key 해당 값의 키값
      * @param object 저장할 데이터
      */
-    fun setSharedPreference(key : String?, data : Any?)
+    fun setSharedPreference(key : String, data : Any)
     {
         val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
         val editor : SharedPreferences.Editor = pref.edit()
         if(data is Boolean)
         {
-            editor.putBoolean(key, (data as Boolean?)!!)
+            editor.putBoolean(key, (data as Boolean))
         }
         else if(data is Int)
         {
-            editor.putInt(key, (data as Int?)!!)
+            editor.putInt(key, (data as Int))
         }
         else if(data is String)
         {
-            editor.putString(key, data as String?)
+            editor.putString(key, data as String)
         }
         editor.commit()
     }
@@ -485,14 +485,14 @@ class CommonUtils
                 val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
                 if(disPlayMetricsObject != null)
                 {
-                    return disPlayMetricsObject.heightPixel.toInt();
+                    return disPlayMetricsObject.heightPixel.toInt()
                 }
                 else
                 {
-                    return 0;
+                    return 0
                 }
             }
-            return MainApplication.sDisPlayMetrics.heightPixels;
+            return MainApplication.sDisPlayMetrics.heightPixels
         }
 
     /**
@@ -511,7 +511,6 @@ class CommonUtils
             {
                 return false
             }
-
         }
 
     /**
@@ -528,17 +527,32 @@ class CommonUtils
             checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties()
         }
 
-    private fun checkTabletDeviceWithScreenSize(context : Context?) : Boolean
+    private fun checkTabletDeviceWithScreenSize(context : Context) : Boolean
     {
-        val device_large = context!!.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
+        val device_large = context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
         Log.f("device_large : $device_large")
         if(device_large)
         {
             val metrics = DisplayMetrics()
-            val activity = context as Activity?
+            val activity = context as Activity
             activity!!.windowManager.defaultDisplay.getMetrics(metrics)
             Log.f("metrics.densityDpi : " + metrics.densityDpi)
-            if(metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH || metrics.densityDpi == DisplayMetrics.DENSITY_TV || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH || metrics.densityDpi == 136 || metrics.densityDpi == 180 || metrics.densityDpi == 240 || metrics.densityDpi == 300 || metrics.densityDpi == 306 || metrics.densityDpi == 330 || metrics.densityDpi == DisplayMetrics.DENSITY_280 || metrics.densityDpi == DisplayMetrics.DENSITY_340 || metrics.densityDpi == DisplayMetrics.DENSITY_360 || metrics.densityDpi == 372 || metrics.densityDpi == DisplayMetrics.DENSITY_420 || metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
+            if(metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_TV
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH
+                    || metrics.densityDpi == 136
+                    || metrics.densityDpi == 180
+                    || metrics.densityDpi == 240
+                    || metrics.densityDpi == 300
+                    || metrics.densityDpi == 306
+                    || metrics.densityDpi == 330
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_280
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_340
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_360
+                    || metrics.densityDpi == 372
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_420
+                    || metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
             {
                 return true
             }
@@ -569,12 +583,12 @@ class CommonUtils
         return isTablet
     }
 
-    private fun checkTabletDeviceWithUserAgent(context : Context?) : Boolean
+    private fun checkTabletDeviceWithUserAgent(context : Context) : Boolean
     {
         try
         {
             var webView : WebView? = WebView(context)
-            val ua : String = webView!!.getSettings()!!.getUserAgentString()
+            val ua : String = webView?.getSettings()?.getUserAgentString().toString()
             webView = null
             if(ua.contains("Mobile Safari")
                     && Build.MODEL == "BTV-W09" == false
@@ -611,7 +625,7 @@ class CommonUtils
             var result = -1
             try
             {
-                val pi : PackageInfo? = sContext!!.packageManager.getPackageInfo(Common.PACKAGE_NAME, 0)
+                val pi : PackageInfo? = sContext.packageManager.getPackageInfo(Common.PACKAGE_NAME, 0)
                 if(pi != null)
                 {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
@@ -635,12 +649,12 @@ class CommonUtils
      * 패키지 버전 네임 확인
      * @return 패키지 버전 네임
      */
-    fun getPackageVersionName(packageName : String?) : String
+    fun getPackageVersionName(packageName : String) : String
     {
         var result = ""
         try
         {
-            val pi : PackageInfo? = sContext!!.packageManager.getPackageInfo(packageName, 0)
+            val pi : PackageInfo? = sContext.packageManager.getPackageInfo(packageName, 0)
             if(pi != null) result = pi.versionName
         }
         catch(ex : Exception)
@@ -655,12 +669,12 @@ class CommonUtils
      * @param packageName 해당 패키지 명
      * @return
      */
-    fun isInstalledPackage(packageName : String?) : Boolean
+    fun isInstalledPackage(packageName : String) : Boolean
     {
         var result = true
         try
         {
-            val intent : Intent? = sContext!!.packageManager.getLaunchIntentForPackage(packageName!!)
+            val intent : Intent? = sContext.packageManager.getLaunchIntentForPackage(packageName)
             if(intent == null)
             {
                 result = false
@@ -678,7 +692,7 @@ class CommonUtils
      * @return
      */
     val secureDeviceID : String
-        get() = Settings.Secure.getString(sContext!!.contentResolver, Settings.Secure.ANDROID_ID)
+        get() = Settings.Secure.getString(sContext.contentResolver, Settings.Secure.ANDROID_ID)
 
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
@@ -688,7 +702,7 @@ class CommonUtils
      */
     fun convertDpToPixel(dp : Float) : Float
     {
-        val resources = sContext!!.resources
+        val resources = sContext.resources
         val metrics = resources.displayMetrics
         return dp * (metrics.densityDpi / 160f)
     }
@@ -701,7 +715,7 @@ class CommonUtils
      */
     fun convertPixelsToDp(px : Float) : Float
     {
-        val resources = sContext!!.resources
+        val resources = sContext.resources
         val metrics = resources.displayMetrics
         return px / (metrics.densityDpi / 160f)
     }
@@ -760,7 +774,7 @@ class CommonUtils
         return dirSize
     }
 
-    fun getDrawableResourceFromString(context : Context, name : String?) : Int
+    fun getDrawableResourceFromString(context : Context, name : String) : Int
     {
         return context.resources.getIdentifier(name, "drawable", context.applicationContext.packageName)
     }
@@ -808,12 +822,12 @@ class CommonUtils
 
     fun getDrawableFromBitmap(mBitmap : Bitmap?) : Drawable
     {
-        return BitmapDrawable(sContext!!.resources, mBitmap)
+        return BitmapDrawable(sContext.resources, mBitmap)
     }
 
     fun getScaledDrawable(width : Int, height : Int, drawable : Int) : Drawable
     {
-        var bitmap : Bitmap = BitmapFactory.decodeResource(sContext!!.resources, drawable)
+        var bitmap : Bitmap = BitmapFactory.decodeResource(sContext.resources, drawable)
         bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
         return getDrawableFromBitmap(bitmap)
     }
@@ -858,7 +872,7 @@ class CommonUtils
     {
         var result : Any? = null
         val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
-        val loadObjectString : String = pref.getString(key, "")!!
+        val loadObjectString : String = pref.getString(key, "").toString()
         if(loadObjectString == "" == false)
         {
             result = Gson().fromJson<Any>(loadObjectString, className)
@@ -943,38 +957,38 @@ class CommonUtils
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
-            val window = (sContext as Activity?)!!.window
+            val window = (sContext as Activity).window
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             window.statusBarColor = color
         }
     }
 
-    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout?, message : String?)
+    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showSnackMessage(coordinatorLayout, message, sContext!!.resources.getColor(R.color.color_d8232a), Gravity.CENTER)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_d8232a), Gravity.CENTER)
     }
 
-    fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout?, message : String?)
+    fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showSnackMessage(coordinatorLayout, message, sContext!!.resources.getColor(R.color.color_18b5b2), Gravity.CENTER)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_18b5b2), Gravity.CENTER)
     }
 
-    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout?, message : String?, gravity : Int)
+    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
     {
-        showSnackMessage(coordinatorLayout, message, sContext!!.resources.getColor(R.color.color_d8232a), gravity)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_d8232a), gravity)
     }
 
-    fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout?, message : String?, gravity : Int)
+    fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
     {
-        showSnackMessage(coordinatorLayout, message, sContext!!.resources.getColor(R.color.color_18b5b2), gravity)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_18b5b2), gravity)
     }
 
     @JvmOverloads
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout?, message : String?, color : Int, gravity : Int = -1)
+    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, color : Int, gravity : Int = -1)
     {
         Log.f("gravity : $gravity")
-        val snackbar : Snackbar = Snackbar.make(coordinatorLayout!!, message!!, Snackbar.LENGTH_SHORT)
+        val snackbar : Snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
         if(gravity != -1)
@@ -990,10 +1004,10 @@ class CommonUtils
         snackbar.show()
     }
 
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout?, message : Array<String>, color : IntArray)
+    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : Array<String>, color : IntArray)
     {
         var beforeCount = 0
-        var messageText : String? = ""
+        var messageText : String = ""
         val spannableStringBuilder : SpannableStringBuilder
         for(s in message)
         {
@@ -1010,17 +1024,17 @@ class CommonUtils
             spannableStringBuilder.setSpan(ForegroundColorSpan(color[i]), beforeCount, currentCount, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             beforeCount = currentCount
         }
-        val snackbar : Snackbar = Snackbar.make(coordinatorLayout!!, messageText!!, Snackbar.LENGTH_SHORT)
+        val snackbar : Snackbar = Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
         textView.setText(spannableStringBuilder)
         snackbar.show()
     }
 
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout?, message : Array<String>, color : IntArray, listener : View.OnClickListener?)
+    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : Array<String>, color : IntArray, listener : View.OnClickListener?)
     {
         var beforeCount = 0
-        var messageText : String? = ""
+        var messageText : String = ""
         val spannableStringBuilder : SpannableStringBuilder
         for(s in message)
         {
@@ -1037,7 +1051,7 @@ class CommonUtils
             spannableStringBuilder.setSpan(ForegroundColorSpan(color[i]), beforeCount, currentCount, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             beforeCount = currentCount
         }
-        val snackbar : Snackbar = Snackbar.make(coordinatorLayout!!, messageText!!, Snackbar.LENGTH_SHORT)
+        val snackbar : Snackbar = Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
         textView.setText(spannableStringBuilder)
@@ -1084,13 +1098,13 @@ class CommonUtils
     {
         Log.f("Today : " + getDateTime(System.currentTimeMillis()))
         Log.f("Pay End Day : " + getDateTime(subscribeEndMiliseconds))
-        return if(System.currentTimeMillis() >= subscribeEndMiliseconds)
+        if(System.currentTimeMillis() >= subscribeEndMiliseconds)
         {
-            true
+            return true
         }
         else
         {
-            false
+            return false
         }
     }
 
@@ -1147,7 +1161,7 @@ class CommonUtils
     {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setData(Uri.parse(link))
-        sContext!!.startActivity(intent)
+        sContext.startActivity(intent)
     }
 
     /**
@@ -1192,7 +1206,7 @@ class CommonUtils
 
     fun getAppUsableScreenSize() : Point
     {
-            val windowManager : WindowManager = sContext!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val windowManager : WindowManager = sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
             val display : Display = windowManager.getDefaultDisplay()
             val size = Point()
             display.getSize(size)
@@ -1201,7 +1215,7 @@ class CommonUtils
 
     fun getRealScreenSize() : Point
     {
-        val windowManager : WindowManager = sContext!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager : WindowManager = sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display : Display = windowManager.getDefaultDisplay()
         val size = Point()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -1234,7 +1248,7 @@ class CommonUtils
     fun inquireForDeveloper(sendUrl : String?)
     {
         var userID = ""
-        val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+        val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData
         if(userLoginData != null)
         {
             userID = userLoginData.userID
@@ -1252,9 +1266,9 @@ class CommonUtils
             i = Intent(Intent.ACTION_SEND)
             i.putExtra(Intent.EXTRA_TEXT, text)
             val file = File(Log.getLogfilePath())
-            val uri : Uri = FileProvider.getUriForFile(sContext!! , BuildConfig.APPLICATION_ID, file)
+            val uri : Uri = FileProvider.getUriForFile(sContext , BuildConfig.APPLICATION_ID, file)
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            i.setDataAndType(uri, sContext!!.contentResolver.getType(uri))
+            i.setDataAndType(uri, sContext.contentResolver.getType(uri))
             i.putExtra(Intent.EXTRA_STREAM, uri)
         }
         else
@@ -1269,16 +1283,16 @@ class CommonUtils
 
     fun getDayNumberSuffixToEN(day : Int) : String
     {
-        return if(day >= 11 && day <= 13)
+        if(day >= 11 && day <= 13)
         {
-            "th"
+            return "th"
         }
         else when(day % 10)
         {
-            1 -> "st"
-            2 -> "nd"
-            3 -> "rd"
-            else -> "th"
+            1 -> return "st"
+            2 -> return "nd"
+            3 -> return "rd"
+            else -> return "th"
         }
     }
 
@@ -1331,7 +1345,7 @@ class CommonUtils
         val finalRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
         val animaterSet = AnimatorSet()
         val revealAnimation : Animator = ViewAnimationUtils.createCircularReveal(view, positionX, positionY, 0f, finalRadius)
-        view.setBackgroundColor(ContextCompat.getColor(sContext!!, color))
+        view.setBackgroundColor(ContextCompat.getColor(sContext, color))
         if(isAlphaAnimation)
         {
             val alphaAnimation : Animator = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f)
@@ -1371,7 +1385,7 @@ class CommonUtils
         val initialRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
         val animaterSet = AnimatorSet()
         val revealAnimation : Animator = ViewAnimationUtils.createCircularReveal(view, positionX, positionY, initialRadius, 0f)
-        view.setBackgroundColor(ContextCompat.getColor(sContext!!, color))
+        view.setBackgroundColor(ContextCompat.getColor(sContext, color))
         if(isAlphaAnimation)
         {
             val alphaAnimation : Animator = ObjectAnimator.ofFloat(view, "alpha", 1f, 0f)
@@ -1388,7 +1402,7 @@ class CommonUtils
         val unAuthorizeList = ArrayList<String>()
         for(i in permissionList.indices)
         {
-            if(ContextCompat.checkSelfPermission(sContext!!, permissionList[i]) != PackageManager.PERMISSION_GRANTED)
+            if(ContextCompat.checkSelfPermission(sContext, permissionList[i]) != PackageManager.PERMISSION_GRANTED)
             {
                 unAuthorizeList.add(permissionList[i])
             }
@@ -1451,59 +1465,101 @@ class CommonUtils
         {
             return Grade.EXCELLENT
         }
-        return if(quizCount < 6)
+        if(quizCount < 6)
         {
-            isGradeVeryGood = if(quizCount - 1 == correctCount) true else false
+            if(quizCount - 1 == correctCount)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(quizCount - 2 <= correctCount) Grade.GOODS else Grade.POOL
+                if(quizCount - 2 <= correctCount)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
         else if(quizCount < 11)
         {
-            isGradeVeryGood = if(quizCount - 1 == correctCount) true else false
+            if(quizCount - 1 == correctCount)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(quizCount - 3 <= correctCount) Grade.GOODS else Grade.POOL
+                if(quizCount - 3 <= correctCount)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
         else if(quizCount < 15)
         {
-            isGradeVeryGood = if(correctCount >= 8) true else false
+            if(correctCount >= 8)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 6) Grade.GOODS else Grade.POOL
+                if(correctCount >= 6)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
         else if(quizCount < 17)
         {
-            isGradeVeryGood = if(correctCount >= 13) true else false
+            if(correctCount >= 13)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 11) Grade.GOODS else Grade.POOL
+                if(correctCount >= 11)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
         else if(quizCount < 20)
         {
-            isGradeVeryGood = if(correctCount >= 15) true else false
+            if(correctCount >= 15)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 13) Grade.GOODS else Grade.POOL
+                if(correctCount >= 13)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
         else
         {
-            isGradeVeryGood = if(correctCount >= 18) true else false
+            if(correctCount >= 18)
+                isGradeVeryGood = true
+            else
+                isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 16) Grade.GOODS else Grade.POOL
+                if(correctCount >= 16)
+                    return Grade.GOODS
+                else
+                    return Grade.POOL
             }
-            else Grade.VERYGOOD
+            else
+                return Grade.VERYGOOD
         }
     }
 
@@ -1567,9 +1623,9 @@ class CommonUtils
     fun hideKeyboard()
     {
         Log.f("")
-        val inputMethodManager = sContext!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager = sContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         //Find the currently focused view, so we can grab the correct window token from it.
-        var view : View = (sContext as AppCompatActivity?)!!.getCurrentFocus()!!
+        var view : View = (sContext as AppCompatActivity).getCurrentFocus()!!
         //If no view currently has focus, create a new one, just so we can grab a window token from it
         if(view == null)
         {
@@ -1582,12 +1638,12 @@ class CommonUtils
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun loadMainData() : MainInformationResult?
+    fun loadMainData() : MainInformationResult
     {
-        return getPreferenceObject(Common.PARAMS_FILE_MAIN_INFO, MainInformationResult::class.java) as MainInformationResult?
+        return getPreferenceObject(Common.PARAMS_FILE_MAIN_INFO, MainInformationResult::class.java) as MainInformationResult
     }
 
-    fun saveMainData(data : MainInformationResult?)
+    fun saveMainData(data : MainInformationResult)
     {
         setPreferenceObject(Common.PARAMS_FILE_MAIN_INFO, data)
     }
@@ -1736,7 +1792,7 @@ class CommonUtils
      */
     fun getVocabularyContentViewSize(lineCount : Int) : Int
     {
-        return when(lineCount)
+        when(lineCount)
         {
             1, 2 ->
                 if(Feature.IS_TABLET)
@@ -1773,7 +1829,7 @@ class CommonUtils
 
     fun getRecordHistoryContentSize(lineCount : Int) : Int
     {
-        return when(lineCount)
+        when(lineCount)
         {
             4 ->
                 if(Feature.IS_TABLET)
@@ -1851,7 +1907,7 @@ class CommonUtils
         }
         else
         {
-            result = data.getName().toString() + ": " + data.getSubName()
+            result = data.getName() + ": " + data.getSubName()
         }
         return result
     }
@@ -1961,7 +2017,7 @@ class CommonUtils
         }
         else
         {
-            result = sContext!!.resources.getStringArray(R.array.text_list_gender)
+            result = sContext.resources.getStringArray(R.array.text_list_gender)
             return result
         }
     }
@@ -2014,7 +2070,7 @@ class CommonUtils
         {
             try
             {
-                out!!.close()
+                out?.close()
             }
             catch(e : IOException)
             {
@@ -2082,7 +2138,7 @@ class CommonUtils
                 {
                     override fun onCancel(dialogInterface : DialogInterface)
                     {
-                        (sContext as Activity?)!!.finish()
+                        (sContext as Activity).finish()
                     }
                 })
                 dialog.show()

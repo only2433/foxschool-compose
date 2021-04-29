@@ -6,12 +6,12 @@ import com.littlefox.app.foxschool.common.Common
 
 class ContentsBaseResult  : Parcelable
 {
-    private var id : String? = ""
+    private var id : String = ""
     private var index = 0
-    private var type : String? = Common.CONTENT_TYPE_STORY
-    private var name : String? = ""
-    private var sub_name : String? = ""
-    private var thumbnailUrl : String? = ""
+    private var type : String = Common.CONTENT_TYPE_STORY
+    private var name : String = ""
+    private var sub_name : String = ""
+    private var thumbnailUrl : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
     private var user_service_info : ServiceSupportedTypeResult? = null
     private var isSelected = false
@@ -30,16 +30,16 @@ class ContentsBaseResult  : Parcelable
 
     protected constructor(`in` : Parcel)
     {
-        id = `in`.readString()
+        id = `in`.readString()!!
         index = `in`.readInt()
-        type = `in`.readString()
-        name = `in`.readString()
-        sub_name = `in`.readString()
-        thumbnailUrl = `in`.readString()
+        type = `in`.readString()!!
+        name = `in`.readString()!!
+        sub_name = `in`.readString()!!
+        thumbnailUrl = `in`.readString()!!
         isSelected = `in`.readByte().toInt() != 0
         isOptionDisable = `in`.readByte().toInt() != 0
-        service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
-        user_service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
+        service_info = `in`.readSerializable() as ServiceSupportedTypeResult
+        user_service_info = `in`.readSerializable() as ServiceSupportedTypeResult
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)
@@ -62,7 +62,7 @@ class ContentsBaseResult  : Parcelable
         return 0
     }
 
-    fun getID() : String?
+    fun getID() : String
     {
         return id;
     }
@@ -72,22 +72,22 @@ class ContentsBaseResult  : Parcelable
         return index;
     }
 
-    fun getType() : String?
+    fun getType() : String
     {
         return type;
     }
 
-    fun getName() : String?
+    fun getName() : String
     {
         return name;
     }
 
-    fun getSubName() : String?
+    fun getSubName() : String
     {
         return sub_name;
     }
 
-    fun getThumbnailUrl() : String?
+    fun getThumbnailUrl() : String
     {
         return thumbnailUrl;
     }

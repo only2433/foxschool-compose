@@ -5,12 +5,12 @@ import android.os.Parcelable
 
 class MyBookshelfResult : Parcelable
 {
-    private var id : String? = ""
-    private var name : String? = ""
-    private var color : String? = ""
-    private var contents_count : Int = 0
+    private var id : String             = ""
+    private var name : String           = ""
+    private var color : String          = ""
+    private var contents_count : Int    = 0
 
-    constructor(id : String?, name : String?, color : String?)
+    constructor(id : String, name : String, color : String)
     {
         this.id = id
         this.name = name
@@ -19,9 +19,9 @@ class MyBookshelfResult : Parcelable
 
     protected constructor(`in` : Parcel)
     {
-        id = `in`.readString()
-        name = `in`.readString()
-        color = `in`.readString()
+        id = `in`.readString()!!
+        name = `in`.readString()!!
+        color = `in`.readString()!!
         contents_count = `in`.readInt()
     }
 
@@ -38,22 +38,22 @@ class MyBookshelfResult : Parcelable
         return 0
     }
 
-    fun getID() : String?
+    fun getID() : String
     {
         return id;
     }
 
-    fun getName() : String?
+    fun getName() : String
     {
         return name;
     }
 
-    fun getColor() : String?
+    fun getColor() : String
     {
         return color;
     }
 
-    fun getCountentsCount() : Int
+    fun getContentsCount() : Int
     {
         return contents_count;
     }

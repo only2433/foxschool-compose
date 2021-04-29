@@ -7,7 +7,7 @@ class Common
         const val PACKAGE_NAME : String = "com.littlefox.app.foxschool"
         const val PATH_APP_ROOT = "/data/data/" + PACKAGE_NAME + "/files/"
 
-        const val SECOND: Int = 1000;
+        const val SECOND : Int = 1000;
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f
 
         const val PARAMS_DISPLAY_METRICS : String       = "display_metrics"
@@ -33,6 +33,9 @@ class Common
 
         const val SERVICE_NOT_ENDED : String    = "N"
         const val SERVICE_ENDED : String        = "Y"
+
+        const val TARGET_PHONE_DISPLAY_WIDTH : Int = 1080
+        const val TARGET_TABLET_DISPLAY_WIDTH : Int = 1920
 
 
     }

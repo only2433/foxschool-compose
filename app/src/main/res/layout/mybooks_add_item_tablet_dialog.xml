@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_baseLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:scale_base_width="800"
+        app:scale_base_height="120">
+        <ImageView
+            android:id="@+id/_coverBooksImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/bookshelf_01"
+            app:scale_left="90"
+            app:scale_top="24"
+            app:scale_width="66"
+            app:scale_height="74"
+            />
+        <ImageView
+            android:id="@+id/_iconBooksImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_bookshelf"
+            app:scale_left="106"
+            app:scale_top="34"
+            app:scale_width="40"
+            app:scale_height="40"/>
+
+        <TextView
+            android:id="@+id/_booksTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="매일 아침 등교 전 보는 동화(23)"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            android:ellipsize="end"
+            app:scale_left="178"
+            app:scale_top="0"
+            app:scale_width="560"
+            app:scale_height="118"
+            app:scale_textsize="28"/>
+
+        <ImageView
+            android:id="@+id/_booksEnterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_more"
+            app:scale_left="750"
+            app:scale_top="42"
+            app:scale_width="20"
+            app:scale_height="36"/>
+
+        <ImageView
+            android:id="@+id/_booksBottomLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_dbdada"
+            app:scale_left="42"
+            app:scale_top="118"
+            app:scale_width="716"
+            app:scale_height="2"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

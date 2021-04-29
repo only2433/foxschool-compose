@@ -25,13 +25,13 @@ class Font (context : Context)
     companion object
     {
         private var _self : Font? = null
-        fun getInstance(context : Context?) : Font?
+        fun getInstance(context : Context?) : Font
         {
             if(_self == null)
             {
                 _self = Font(context!!)
             }
-            return _self
+            return _self!!
         }
 
 
@@ -70,5 +70,25 @@ class Font (context : Context)
     fun getRobotoBold() : Typeface?
     {
         return robotoBold;
+    }
+
+    fun getRobotoRegular() : Typeface?
+    {
+        return robotoRegular;
+    }
+
+    fun getRobotoLight() : Typeface?
+    {
+        return robotoLight;
+    }
+
+    fun getRobotoMedium() : Typeface?
+    {
+        return robotoMedium;
+    }
+
+    fun getGungsu() : Typeface?
+    {
+        return gungsu;
     }
 }

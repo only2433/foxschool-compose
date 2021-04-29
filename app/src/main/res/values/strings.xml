@@ -1,11 +1,29 @@
 <resources>
     <string name="app_name">FoxSchool</string>
 
+    <string name="title_quiz">Quiz</string>
+
     <string name="text_no_select">None</string>
     <string name="text_all">All</string>
-
+    <string name="text_confirm">OK</string>
+    <string name="text_cancel">Cancel</string>
+    <string name="text_select_bookshelf">Select Bookshelf</string>
+    <string name="text_select_continuous_listening">Continue Select</string>
+    <string name="text_not_have_interval">No Interval</string>
+    <string name="text_original_translate">Text</string>
+    <string name="text_original_text">Text</string>
+    <string name="text_wordbook">Vocabulary</string>
+    <string name="text_contain_bookshelf">Bookshelf</string>
+    <string name="text_ebook">eBook</string>
+    <string name="text_starwords">StarWords</string>
+    <string name="text_crossword">CrossWord</string>
+    <string name="text_select_vocabulary">Select Vocabulary List</string>
+    <string name="text_sec_interval">%d sec Interval</string>
+    <string name="text_delete">Delete</string>
 
     <string name="message_toast_network_error">No network connection is available.\nPlease connect to a network and try again.</string>
+    <string name="message_payment_service_paid_using">This service is only available to subscribed members. Please subscribe to use this service.</string>
+    <string name="message_payment_service_login">This service is only available to subscribed members. Please log in to use this service.</string>
 
     <string-array name="text_list_gender">
         <item>Male</item>
