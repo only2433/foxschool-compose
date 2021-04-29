@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/player_black_bg">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_playerEndButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="100"
+        app:scale_base_width="1920">
+
+
+        <ImageView
+            android:id="@+id/_playerEndCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/player_btn_close"
+            app:scale_height="58"
+            app:scale_left="1800"
+            app:scale_top="40"
+            app:scale_width="57" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_freeUserEndLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        app:scale_base_height="424"
+        app:scale_base_width="1920">
+
+        <TextView
+            android:id="@+id/_paymentMessageText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="10dp"
+            android:text="@string/message_preview_remain_day_end"
+            android:textColor="@color/color_white"
+            app:scale_height="224"
+            app:scale_left="0"
+            app:scale_textsize="46"
+            app:scale_top="0"
+            app:scale_width="1920" />
+
+        <ImageView
+            android:id="@+id/_paymentButtonBoxImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/replay_btn_box"
+            app:scale_height="148"
+            app:scale_left="710"
+            app:scale_top="224"
+            app:scale_width="497" />
+
+        <ImageView
+            android:id="@+id/_paymentButtonIconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_payment"
+            app:scale_height="69"
+            app:scale_left="822"
+            app:scale_top="264"
+            app:scale_width="69" />
+
+        <TextView
+            android:id="@+id/_paymentButtonIconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="10dp"
+            android:text="@string/text_subscribe"
+            android:textColor="@color/color_d6d6d6"
+            app:scale_height="69"
+            app:scale_left="940"
+            app:scale_textsize="38"
+            app:scale_top="264"
+            app:scale_width="260" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_paidUserEndLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
+        app:scale_base_height="375"
+        app:scale_base_width="1920"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/_ebookButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_ebook_player"
+            android:scaleType="fitXY"
+            app:scale_left="570"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_quizButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_quiz_player"
+            android:scaleType="fitXY"
+            app:scale_left="780"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_vocabularyButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_voca_player"
+            android:scaleType="fitXY"
+            app:scale_left="990"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+        <ImageView
+            android:id="@+id/_translateButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_org_player"
+            android:scaleType="fitXY"
+            app:scale_left="1200"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_replayButtonBoxImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/replay_btn_box"
+            app:scale_height="148"
+            app:scale_left="452"
+            app:scale_top="227"
+            app:scale_width="497" />
+
+        <ImageView
+            android:id="@+id/_replayButtonIconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_icon_again"
+            app:scale_height="69"
+            app:scale_left="564"
+            app:scale_top="267"
+            app:scale_width="69" />
+
+        <TextView
+            android:id="@+id/_replayButtonIconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="10dp"
+            android:text="@string/text_replay"
+            android:textColor="@color/color_d6d6d6"
+            app:scale_height="69"
+            app:scale_left="682"
+            app:scale_textsize="40"
+            app:scale_top="267"
+            app:scale_width="260" />
+
+
+
+        <ImageView
+            android:id="@+id/_nextButtonBoxImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/replay_btn_box"
+            app:scale_height="148"
+            app:scale_left="972"
+            app:scale_top="227"
+            app:scale_width="497" />
+
+        <ImageView
+            android:id="@+id/_nextButtonIconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_icon_next_end"
+            app:scale_height="69"
+            app:scale_left="1084"
+            app:scale_top="267"
+            app:scale_width="69" />
+
+        <TextView
+            android:id="@+id/_nextButtonIconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="10dp"
+            android:text="@string/text_next_video"
+            android:textColor="@color/color_d6d6d6"
+            app:scale_height="69"
+            app:scale_left="1202"
+            app:scale_textsize="40"
+            app:scale_top="267"
+            app:scale_width="260" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+</RelativeLayout>

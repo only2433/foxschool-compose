@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool
+package com.littlefox.app.foxschool.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_playListTitleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_edeef2"
+        app:scale_base_width="1080"
+        app:scale_base_height="115">
+        <TextView
+            android:id="@+id/_playListTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_play_list_title"
+            android:textColor="@color/color_black"
+            android:gravity="center_vertical"
+            app:scale_top="0"
+            app:scale_left="40"
+            app:scale_width="500"
+            app:scale_height="115"
+            app:scale_textsize="40"/>
+
+
+
+        <ImageView
+            android:id="@+id/_playListCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/player_btn_close"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="0"
+            app:scale_height="0"
+            />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/_playerListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

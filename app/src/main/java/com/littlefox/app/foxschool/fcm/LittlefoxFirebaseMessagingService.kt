@@ -13,7 +13,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.littlefox.app.foxschool.MainActivity
+import com.littlefox.app.foxschool.main.MainActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.logmonitor.Log
 

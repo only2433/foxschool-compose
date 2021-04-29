@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemBaseLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:scale_base_width="654"
+        app:scale_base_height="220"
+        android:foreground="?android:attr/selectableItemBackground">
+        <ImageView
+            android:id="@+id/_itemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/box"
+            android:scaleType="fitXY"
+            app:scale_left="20"
+            app:scale_top="0"
+            app:scale_width="614"
+            app:scale_height="200" />
+
+        <ImageView
+            android:id="@+id/_itemTitleImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="42"
+            app:scale_top="20"
+            app:scale_width="226"
+            app:scale_height="160"/>
+
+        <TextView
+            android:id="@+id/_itemTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            app:scale_left="290"
+            app:scale_top="20"
+            app:scale_width="322"
+            app:scale_height="160"
+            app:scale_textsize="32"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+</RelativeLayout>

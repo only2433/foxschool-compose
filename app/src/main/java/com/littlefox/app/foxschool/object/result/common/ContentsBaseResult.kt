@@ -14,13 +14,13 @@ class ContentsBaseResult  : Parcelable
     private var thumbnailUrl : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
     private var user_service_info : ServiceSupportedTypeResult? = null
-    private var isSelected = false
+    var isSelected = false
         get() = field
         set(value)
         {
             field = value
         }
-    private var isOptionDisable = false
+    var isOptionDisable = false
         get() = field
         set(value)
         {

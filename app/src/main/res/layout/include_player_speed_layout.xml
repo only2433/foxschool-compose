@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_playSpeedListTitleLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:scale_base_width="654"
+        app:scale_base_height="150">
+        <TextView
+            android:id="@+id/_playSpeedListTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_play_speed_title"
+            android:textColor="@color/color_white"
+            android:gravity="center_vertical"
+            app:scale_top="0"
+            app:scale_left="40"
+            app:scale_width="500"
+            app:scale_height="150"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:id="@+id/_playSpeedListCloseButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="562"
+            app:scale_top="48"
+            app:scale_width="64"
+            app:scale_height="65"
+            />
+
+        <ImageView
+            android:id="@+id/_playSpeedListCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/player_btn_close"
+            android:scaleType="fitXY"
+            app:scale_left="567"
+            app:scale_top="52"
+            app:scale_width="54"
+            app:scale_height="55"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_ffffff"
+            android:alpha="0.25"
+            app:scale_left="39"
+            app:scale_top="141"
+            app:scale_width="576"
+            app:scale_height="2"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/_playerSpeedListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

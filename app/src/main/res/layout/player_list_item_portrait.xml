@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemBaseLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_edeef2"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:scale_base_width="1080"
+        app:scale_base_height="318">
+        <ImageView
+            android:id="@+id/_itemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/box"
+            android:scaleType="fitXY"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="288" />
+
+        <ImageView
+            android:id="@+id/_itemTitleImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="60"
+            app:scale_top="28"
+            app:scale_width="325"
+            app:scale_height="230"/>
+
+        <TextView
+            android:id="@+id/_itemTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            app:scale_left="422"
+            app:scale_top="38"
+            app:scale_width="500"
+            app:scale_height="220"
+            app:scale_textsize="42"/>
+
+        <ImageView
+            android:id="@+id/_itemTitleOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_learning"
+            android:scaleType="fitXY"
+            app:scale_left="950"
+            app:scale_top="80"
+            app:scale_width="92"
+            app:scale_height="125"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+</RelativeLayout>
