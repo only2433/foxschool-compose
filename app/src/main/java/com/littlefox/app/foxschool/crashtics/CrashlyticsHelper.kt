@@ -38,6 +38,6 @@ class CrashlyticsHelper
         {
             FirebaseCrashlytics.getInstance().setCustomKey(key, result.crashlyticsData.get(key).toString())
         }
-        FirebaseCrashlytics.getInstance().recordException(result.exception)
+        FirebaseCrashlytics.getInstance().recordException(result.exception!!)
     }
 }

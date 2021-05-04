@@ -1814,7 +1814,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         Log.f("Auth Content data error end")
-                        (mContext as PlayerHlsActivity?).finish()
+                        (mContext as PlayerHlsActivity).finish()
                     }
                 }
             }
@@ -1824,26 +1824,29 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     companion object
     {
         //1시간이 지나면 팝업을 띄워 확인 작업
-        val MAX_WARNING_WATCH_MOVIE_TIME : Int = 60 * 60 * Common.SECOND
-        const val MAX_LOCKMODE_SECOND = 3
-        private const val MESSAGE_UI_UPDATE = 100
-        private const val MESSAGE_PREVIEW_UI_UPDATE = 101
-        private const val MESSAGE_LOCK_BUTTON_ACTIVATE = 102
-        private const val MESSAGE_WARNING_WATCH_MOVIE = 103
-        private const val MESSAGE_LOCK_COUNT_TIME = 104
-        private const val MESSAGE_START_QUIZ = 105
-        private const val MESSAGE_START_TRANSLATE = 106
-        private const val MESSAGE_START_EBOOK = 107
-        private const val MESSAGE_START_VOCABULARY = 108
-        private const val MESSAGE_REQUEST_CONTENTS_ADD = 109
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD = 110
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG = 111
-        private const val MESSAGE_REQUEST_VIDEO = 112
-        const val DIALOG_TYPE_WARNING_WATCH_MOVIE = 10001
-        const val DIALOG_TYPE_WARNING_API_EXCEPTION = 10002
+        private const val MAX_WARNING_WATCH_MOVIE_TIME : Int    = 60 * 60 * Common.SECOND
+        private const val MAX_LOCKMODE_SECOND : Int             = 3
+
+        private const val MESSAGE_UI_UPDATE : Int                       = 100
+        private const val MESSAGE_PREVIEW_UI_UPDATE : Int               = 101
+        private const val MESSAGE_LOCK_BUTTON_ACTIVATE : Int            = 102
+        private const val MESSAGE_WARNING_WATCH_MOVIE : Int             = 103
+        private const val MESSAGE_LOCK_COUNT_TIME : Int                 = 104
+        private const val MESSAGE_START_QUIZ : Int                      = 105
+        private const val MESSAGE_START_TRANSLATE : Int                 = 106
+        private const val MESSAGE_START_EBOOK : Int                     = 107
+        private const val MESSAGE_START_VOCABULARY : Int                = 108
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 109
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 110
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 111
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 112
+
+        private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
+        private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
+
         private val PLAY_SPEED_LIST = floatArrayOf(0.7f, 0.85f, 1.0f, 1.15f, 1.3f)
-        private const val DEFAULT_SPEED_INDEX = 2
-        private const val FINE_TUNING_PAGE_TIME = 1f
+        private const val DEFAULT_SPEED_INDEX : Int         = 2
+        private const val FINE_TUNING_PAGE_TIME : Float     = 1f
     }
 
 }

@@ -5,10 +5,15 @@ import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
 import android.view.View
-import net.littlefox.lf_app_fragment.common.Common
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.RecyclerView
+import com.littlefox.app.foxschool.common.Common
 
-class NestedScrollingView : NestedScrollView {
+
+class NestedScrollingView : NestedScrollView
+{
     private var mState: Int = RecyclerView.SCROLL_STATE_IDLE
+    private var mScrollListener: NestedScrollViewScrollStateListener? = null
 
     interface NestedScrollViewScrollStateListener {
         fun onNestedScrollViewStateChanged(state: Int)
@@ -30,11 +35,11 @@ class NestedScrollingView : NestedScrollView {
         mScrollListener = scrollListener
     }
 
-    private var mScrollListener: NestedScrollViewScrollStateListener? = null
 
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
+
+    constructor(context: Context) : super(context) {}
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {}
 
     override fun stopNestedScroll() {
         super.stopNestedScroll()
