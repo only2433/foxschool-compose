@@ -14,18 +14,8 @@ class ContentsBaseResult  : Parcelable
     private var thumbnailUrl : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
     private var user_service_info : ServiceSupportedTypeResult? = null
-    var isSelected = false
-        get() = field
-        set(value)
-        {
-            field = value
-        }
-    var isOptionDisable = false
-        get() = field
-        set(value)
-        {
-            field = value
-        }
+    private var isSelected = false
+    private var isOptionDisable = false
 
 
     protected constructor(`in` : Parcel)
@@ -102,6 +92,25 @@ class ContentsBaseResult  : Parcelable
         return user_service_info;
     }
 
+    fun isSelected() : Boolean
+    {
+        return isSelected;
+    }
+
+    fun setSelected(isSelect : Boolean)
+    {
+        isSelected = isSelect;
+    }
+
+    fun isOptionDisable() : Boolean
+    {
+        return isOptionDisable;
+    }
+
+    fun setOptionDisable(isDisable : Boolean)
+    {
+        isOptionDisable = isDisable;
+    }
 
 
 

@@ -1,17 +1,37 @@
 package com.littlefox.app.foxschool.adapter
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import butterknife.BindView
+import butterknife.ButterKnife
+import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.adapter.listener.PlayerEventListener
+import com.littlefox.app.foxschool.common.Font
+import com.ssomai.android.scalablelayout.ScalableLayout
 
 
-class PlayerSpeedListAdapter(context : Context?, currentSpeedIndex : Int) : RecyclerView.Adapter<net.littlefox.lf_app_fragment.adapter.PlayerSpeedListAdapter.ViewHolder?>()
+class PlayerSpeedListAdapter : RecyclerView.Adapter<PlayerSpeedListAdapter.ViewHolder?>
 {
-    private var mContext : Context? = null
-    private var mPlayerEventListener : PlayerEventListener? = null
-    private var mSpeedTextList : Array<String>? = null
+    private val mContext : Context
+    private lateinit var mPlayerEventListener : PlayerEventListener
+    private val mSpeedTextList : Array<String>
     private var mCurrentSpeedIndex = 0
-    fun setPlayerEventListener(listener : PlayerEventListener?)
+
+
+    constructor(context : Context, currentSpeedIndex : Int)
+    {
+        mContext = context
+        mSpeedTextList = getSpeedTextList()
+        mCurrentSpeedIndex = currentSpeedIndex
+    }
+
+
+    fun setPlayerEventListener(listener : PlayerEventListener)
     {
         mPlayerEventListener = listener
     }
@@ -23,17 +43,17 @@ class PlayerSpeedListAdapter(context : Context?, currentSpeedIndex : Int) : Recy
         return ViewHolder(view)
     }
 
-    fun onBindViewHolder(holder : ViewHolder, position : Int)
+    override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
         if(mCurrentSpeedIndex == position)
         {
-            holder._SelectIcon!!.setImageResource(R.drawable.player__speed_select)
+            holder._SelectIcon.setImageResource(R.drawable.player__speed_select)
         }
         else
         {
-            holder._SelectIcon!!.setImageResource(R.drawable.player__speed_select_default)
+            holder._SelectIcon.setImageResource(R.drawable.player__speed_select_default)
         }
-        holder._SelectSpeedText.setText(mSpeedTextList!![position])
+        holder._SelectSpeedText.setText(mSpeedTextList[position])
         holder._ItemBaseLayout.setOnClickListener(View.OnClickListener {
             mCurrentSpeedIndex = position
             notifyDataSetChanged()
@@ -43,40 +63,33 @@ class PlayerSpeedListAdapter(context : Context?, currentSpeedIndex : Int) : Recy
 
     override fun getItemCount() : Int
     {
-        return mSpeedTextList!!.size
+        return mSpeedTextList.size
     }
 
     private fun getSpeedTextList() : Array<String>
     {
-        return mContext!!.resources.getStringArray(R.array.text_list_speed)
+        return mContext.resources.getStringArray(R.array.text_list_speed)
     }
 
-    inner class ViewHolder(view : View?) : RecyclerView.ViewHolder(view)
+    inner class ViewHolder : RecyclerView.ViewHolder
     {
         @BindView(R.id._itemBaseLayout)
-        var _ItemBaseLayout : ScalableLayout? = null
+        lateinit var _ItemBaseLayout : ScalableLayout
 
         @BindView(R.id._selectIcon)
-        var _SelectIcon : ImageView? = null
+        lateinit var _SelectIcon : ImageView
 
         @BindView(R.id._selectSpeedText)
-        var _SelectSpeedText : TextView? = null
+        lateinit var _SelectSpeedText : TextView
         private fun initFont()
         {
             _SelectSpeedText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
         }
 
-        init
+        constructor(view : View) : super(view)
         {
             ButterKnife.bind(this, view)
             initFont()
         }
-    }
-
-    init
-    {
-        mContext = context
-        mSpeedTextList = getSpeedTextList()
-        mCurrentSpeedIndex = currentSpeedIndex
     }
 }

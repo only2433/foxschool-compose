@@ -17,10 +17,10 @@ class MyVocabularyResult : Parcelable
     /**
      * 해당 컨텐츠 ID
      */
-    private var contentID : String? = ""
-    private var vocabularyType : VocabularyType? = null
+    private var contentID : String = ""
+    private var vocabularyType : VocabularyType = VocabularyType.VOCABULARY_CONTENTS
 
-    constructor(id : String, name : String, color : String, vocabularyType : VocabularyType?)
+    constructor(id : String, name : String, color : String, vocabularyType : VocabularyType)
     {
         contentID = id
         this.name = name
@@ -28,7 +28,7 @@ class MyVocabularyResult : Parcelable
         this.vocabularyType = vocabularyType
     }
 
-    constructor(id : String, name : String, vocabularyType : VocabularyType?)
+    constructor(id : String, name : String, vocabularyType : VocabularyType)
     {
         contentID = id
         this.name = name
@@ -42,7 +42,7 @@ class MyVocabularyResult : Parcelable
         name = `in`.readString()!!
         color = `in`.readString()!!
         wordCount = `in`.readInt()
-        vocabularyType = `in`.readSerializable() as VocabularyType?
+        vocabularyType = `in`.readSerializable() as VocabularyType
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)
@@ -62,42 +62,42 @@ class MyVocabularyResult : Parcelable
 
     fun getID() : String
     {
-        return id;
+        return id
     }
 
     fun getContentID() : String
     {
-        return contentID;
+        return contentID
     }
 
     fun getName() : String
     {
-        return name;
+        return name
     }
 
     fun getColor() : String
     {
-        return color;
+        return color
     }
 
     fun getWordCount() : Int
     {
-        return wordCount;
+        return wordCount
     }
 
-    fun getVocabularyType() : VocabularyType?
+    fun getVocabularyType() : VocabularyType
     {
-        return vocabularyType;
+        return vocabularyType
     }
 
     fun setWordcount(count : Int)
     {
-        wordCount = count;
+        wordCount = count
     }
 
     fun setVocabularyType(type : VocabularyType)
     {
-        vocabularyType = type;
+        vocabularyType = type
     }
 
 

@@ -47,7 +47,7 @@ import com.google.firebase.BuildConfig
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.MainInformationResult
+import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.enumerate.BookColor
@@ -898,16 +898,16 @@ class CommonUtils
         editor.commit()
     }
 
-    fun getTranslateYAnimation(duration : Int, fromYValue : Float, toYValue : Float) : Animation?
+    fun getTranslateYAnimation(duration : Long, fromYValue : Float, toYValue : Float) : Animation?
     {
         return getTranslateYAnimation(duration, fromYValue, toYValue, null)
     }
 
-    fun getTranslateYAnimation(duration : Int, fromYValue : Float, toYValue : Float, interpolator : Interpolator?) : Animation?
+    fun getTranslateYAnimation(duration : Long, fromYValue : Float, toYValue : Float, interpolator : Interpolator?) : Animation?
     {
         var anim : Animation? = null
         anim = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.ABSOLUTE, fromYValue, Animation.ABSOLUTE, toYValue)
-        anim.setDuration(duration.toLong())
+        anim.setDuration(duration)
         anim.setFillAfter(true)
         if(interpolator != null)
         {
@@ -916,16 +916,16 @@ class CommonUtils
         return anim
     }
 
-    fun getTranslateXAnimation(duration : Int, fromXValue : Float, toXValue : Float) : Animation?
+    fun getTranslateXAnimation(duration : Long, fromXValue : Float, toXValue : Float) : Animation?
     {
         return getTranslateXAnimation(duration, fromXValue, toXValue, null)
     }
 
-    fun getTranslateXAnimation(duration : Int, fromXValue : Float, toXValue : Float, interpolator : Interpolator?) : Animation?
+    fun getTranslateXAnimation(duration : Long, fromXValue : Float, toXValue : Float, interpolator : Interpolator?) : Animation?
     {
         var anim : Animation? = null
         anim = TranslateAnimation(Animation.ABSOLUTE, fromXValue, Animation.ABSOLUTE, toXValue, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
-        anim.setDuration(duration.toLong())
+        anim.setDuration(duration)
         anim.setFillAfter(true)
         if(interpolator != null)
         {
@@ -934,20 +934,20 @@ class CommonUtils
         return anim
     }
 
-    fun getAlphaAnimation(duration : Int, fromValue : Float, toValue : Float) : Animation?
+    fun getAlphaAnimation(duration : Long, fromValue : Float, toValue : Float) : Animation?
     {
         var anim : Animation? = null
         anim = AlphaAnimation(fromValue, toValue)
-        anim.setDuration(duration.toLong())
+        anim.setDuration(duration)
         anim.setFillAfter(true)
         return anim
     }
 
-    fun getRotateAnimation(duration : Int, fromValue : Float, toValue : Float) : Animation?
+    fun getRotateAnimation(duration : Long, fromValue : Float, toValue : Float) : Animation?
     {
         var anim : Animation? = null
         anim = RotateAnimation(fromValue, toValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
-        anim.setDuration(duration.toLong())
+        anim.setDuration(duration)
         anim.setFillAfter(false)
         anim.setInterpolator(LinearInterpolator())
         return anim
@@ -1898,7 +1898,7 @@ class CommonUtils
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임
      */
-    fun getContentsName(data : ContentsBaseResult) : String?
+    fun getContentsName(data : ContentsBaseResult) : String
     {
         var result : String? = ""
         if(data.getSubName().equals(""))

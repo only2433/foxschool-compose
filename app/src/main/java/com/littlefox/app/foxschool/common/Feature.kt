@@ -58,4 +58,9 @@ object Feature {
      * 리틀팍스 클래스 사용 여부
      */
     var IS_SUPPORT_LITTLEFOX_CLASS = true
+
+    /**
+     * 코칭 마크 체크 여부
+     */
+    var IS_COACHMARK_CHECK = true
 }

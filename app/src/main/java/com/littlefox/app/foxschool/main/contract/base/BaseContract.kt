@@ -13,6 +13,10 @@ class BaseContract
     {
         fun initView()
         fun initFont()
+        fun showLoading()
+        fun hideLoading()
+        fun showSuccessMessage(message : String)
+        fun showErrorMessage(message : String)
     }
 
     interface Presenter
@@ -20,7 +24,7 @@ class BaseContract
         fun resume()
         fun pause()
         fun destroy()
-        fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
-        fun sendMessageEvent(msg : Message?)
+        fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent)
+        fun sendMessageEvent(msg : Message)
     }
 }

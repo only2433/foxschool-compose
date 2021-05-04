@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.littlefox.app.foxschool.`object`.record.RecordInfoData
+import com.littlefox.app.foxschool.`object`.data.record.RecordInfoData
 import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
 import com.littlefox.app.foxschool.`object`.result.record.RecordFileUploadBaseObject
 import com.littlefox.app.foxschool.common.Common

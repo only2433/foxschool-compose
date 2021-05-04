@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`.record
+package com.littlefox.app.foxschool.`object`.data.record
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -6,7 +6,6 @@ import android.os.Parcelable
 class RecordUploadedData : Parcelable
 {
     private var class_id = -1
-
     private var study_date : String = ""
 
     constructor(class_id : Int, study_date : String)

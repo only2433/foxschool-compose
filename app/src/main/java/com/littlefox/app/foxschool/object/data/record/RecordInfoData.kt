@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`.record
+package com.littlefox.app.foxschool.`object`.data.record
 
 class RecordInfoData(filePath : String, fileName : String, classID : Int, contentsID : String, itemConnt : Int, indexOfDay : Int)
 {

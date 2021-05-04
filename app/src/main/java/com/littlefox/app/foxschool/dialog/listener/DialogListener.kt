@@ -15,5 +15,5 @@ interface DialogListener
      * @param buttonType 선택한 버튼
      * @param eventType 보낼 Dialog Status Type
      */
-    fun onChoiceButtonClick(buttonType : DialogButtonType?, eventType : Int)
+    fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
 }

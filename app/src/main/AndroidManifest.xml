@@ -42,6 +42,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".main.PlayerHlsActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
+
+        <service
+            android:name=".fcm.LittlefoxFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="net.littlefox.lf_app_fragment"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

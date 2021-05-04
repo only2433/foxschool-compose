@@ -24,6 +24,11 @@
     <string name="text_subscribe">회비결제</string>
     <string name="text_replay">다시보기</string>
     <string name="text_next_video">다음편 보기</string>
+    <string name="text_membership">회원가입</string>
+    <string name="text_preview">미리보기...</string>
+    <string name="text_second">초</string>
+    <string name="text_retry">재시도</string>
+    <string name="text_close">닫기</string>
 
 
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -31,9 +36,23 @@
     <string name="message_toast_network_error">"네트워크에 접속할 수 없습니다.\n네트워크 연결 상태를 확인해 주세요."</string>
     <string name="message_payment_service_paid_using">유료 서비스 입니다. 회비결제 후 이용해주세요.</string>
     <string name="message_payment_service_login">유료회원 전용 서비스입니다. 로그인 후 이용해주세요.</string>
+    <string name="message_lock_on">화면을 잠그려면 3초간 눌러주세요</string>
+    <string name="message_lock_off">잠금을 해제하려면 3초간 눌러주세요</string>
+    <string name="message_longtime_play_warning">"오랜 시간 동안 영상을 시청하셨습니다. 잠시 쉬는 시간을 가져보세요. 영상을 계속 시청하시겠습니까?"</string>
+    <string name="message_success_save_contents_in_bookshelf">책장에 등록되었습니다.</string>
+
+
 
     <string-array name="text_list_gender">
         <item>남</item>
         <item>여</item>
+    </string-array>
+
+    <string-array name="text_list_speed">
+        <item>0.7x</item>
+        <item>0.85x</item>
+        <item>1x (Normal)</item>
+        <item>1.15x</item>
+        <item>1.3x</item>
     </string-array>
 </resources>

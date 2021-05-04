@@ -6,9 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "coachMark")
 data class CoachmarkEntity(
-        @PrimaryKey(autoGenerate = true)
-        var id : Int = 0,
-
         @ColumnInfo(name = "user_id")
         var userID : String,
 
@@ -20,4 +17,8 @@ data class CoachmarkEntity(
 
         @ColumnInfo(name = "is_record_coachmark_viewed")
         var isRecordCoachmarkViewed : Boolean)
+{
+        @PrimaryKey(autoGenerate = true)
+        var id : Int = 0
+}
 

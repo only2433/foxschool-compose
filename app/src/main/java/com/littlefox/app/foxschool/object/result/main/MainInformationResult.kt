@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`.result
+package com.littlefox.app.foxschool.`object`.result.main
 
 import com.littlefox.app.foxschool.`object`.result.main.*
 import java.util.*
