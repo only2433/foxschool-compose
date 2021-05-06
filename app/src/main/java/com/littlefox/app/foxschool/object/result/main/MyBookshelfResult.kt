@@ -3,7 +3,7 @@ package com.littlefox.app.foxschool.`object`.result.main
 import android.os.Parcel
 import android.os.Parcelable
 
-class MyBookshelfResult : Parcelable
+open class MyBookshelfResult : Parcelable
 {
     private var id : String             = ""
     private var name : String           = ""

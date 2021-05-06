@@ -15,8 +15,10 @@ class Common
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS
         const val API_STUDY_LOG_SAVE : String       = API_CONTENTS
         const val API_QUIZ_SAVE_RECORD : String     = API_CONTENTS
+        const val API_VOCABULARY_CONTENTS : String  = API_CONTENTS
         const val API_SEARCH_LIST : String          = BASE_PUBLIC_API + "contents"
         const val API_BOOKSHELF : String            = BASE_PUBLIC_API + "bookshelves"
+        const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
 
         const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
 
@@ -35,15 +37,27 @@ class Common
         const val PARAMS_PLAYER_SPEED_INDEX : String        = "player_speed_index"
         const val PARAMS_IS_ENABLE_CAPTION : String         = "is_enable_caption"
         const val PARAMS_IS_ENABLE_PAGE_BY_PAGE : String    = "is_enable_page_by_page"
+        const val PARAMS_VOCABULARY_INTERVAL : String       = "vocabulary_interval"
 
-        const val INTENT_PLAYER_DATA_PARAMS : String        = "player_data_params"
-        const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String  = "introduce_video"
+        const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
+        const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
+        const val INTENT_VOCABULARY_DATA : String                   = "vocabulary_data"
+        const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
 
-        const val COROUTINE_CODE_FILE_DOWNLOAD : String             = "file_download";
-        const val COROUTINE_CODE_CLASS_RECORD_FILE : String         = "record_file";
-        const val COROUTINE_CODE_AUTH_CONTENT_PLAY : String         = "auth_content_play"
-        const val COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD : String    = "bookshelf_contents_add"
+
+        const val COROUTINE_CODE_FILE_DOWNLOAD : String                 = "file_download";
+        const val COROUTINE_CODE_CLASS_RECORD_FILE : String             = "record_file";
+        const val COROUTINE_CODE_AUTH_CONTENT_PLAY : String             = "auth_content_play"
+        const val COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD : String        = "bookshelf_contents_add"
         const val COROUTINE_CODE_STUDY_LOG_SAVE : String                = "study_log_save"
+        const val COROUTINE_CODE_VOCABULARY_SHELF : String              = "vocabulary_shelf_list"
+        const val COROUTINE_CODE_VOCABULARY_CREATE : String             = "vocabulary_create"
+        const val COROUTINE_CODE_VOCABULARY_DELETE : String             = "vocabulary_delete"
+        const val COROUTINE_CODE_VOCABULARY_UPDATE : String             = "vocabulary_update"
+        const val COROUTINE_CODE_VOCABULARY_CONTENTS_ADD : String       = "vocabulary_contents_add"
+        const val COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE : String    = "vocabulary_contents_delete"
+        const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
+
 
         const val CONTENT_TYPE_ALL : String     = ""
         const val CONTENT_TYPE_STORY : String   = "S"

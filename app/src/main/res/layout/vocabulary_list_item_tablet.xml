@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="960"
+        app:scale_base_height="206">
+
+        <ImageView
+            android:id="@+id/_itemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/box_list"
+            android:scaleType="fitXY"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="960"
+            app:scale_height="206"/>
+
+        <TextView
+            android:id="@+id/_itemTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="title"
+            android:textColor="@color/color_2e3192"
+            android:gravity="center_vertical"
+            app:scale_left="50"
+            app:scale_top="0"
+            app:scale_width="800"
+            app:scale_height="83"
+            app:scale_textsize="34"/>
+
+        <ImageView
+            android:id="@+id/_itemPlayIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_sound"
+            android:scaleType="fitXY"
+            app:scale_left="880"
+            app:scale_top="22"
+            app:scale_width="40"
+            app:scale_height="40"/>
+
+        <ImageView
+            android:id="@+id/_itemDivideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@color/color_f5f5f5"
+            android:scaleType="fitXY"
+            app:scale_left="0"
+            app:scale_top="83"
+            app:scale_width="960"
+            app:scale_height="1"
+            />
+
+        <TextView
+            android:id="@+id/_itemContentsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(국가, 주인등에) 충성하는\nDogs are loyal loving pets."
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            android:lineSpacingExtra="5dp"
+            app:scale_left="48"
+            app:scale_top="84"
+            app:scale_width="864"
+            app:scale_height="122"
+            app:scale_textsize="28"/>
+
+
+
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

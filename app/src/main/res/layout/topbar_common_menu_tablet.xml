@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ssomai.android.scalablelayout.ScalableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_23cc8a"
+    app:scale_base_height="96"
+    app:scale_base_width="1920">
+
+
+    <ImageView
+        android:id="@+id/_backButtonRect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_height="96"
+        app:scale_left="0"
+        app:scale_top="0"
+        app:scale_width="140" />
+
+    <ImageView
+        android:id="@+id/_backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/top_pre_tablet"
+        android:visibility="gone"
+        app:scale_height="36"
+        app:scale_left="50"
+        app:scale_top="30"
+        app:scale_width="40" />
+
+    <TextView
+        android:id="@+id/_titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/color_white"
+        app:scale_height="96"
+        app:scale_left="140"
+        app:scale_textsize="36"
+        app:scale_top="0"
+        app:scale_width="1640" />
+
+    <ImageView
+        android:id="@+id/_closeButtonRect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_height="96"
+        app:scale_left="1780"
+        app:scale_top="0"
+        app:scale_width="140" />
+
+    <ImageView
+        android:id="@+id/_closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/top_close_tablet"
+        android:visibility="gone"
+        app:scale_height="34"
+        app:scale_left="1836"
+        app:scale_top="31"
+        app:scale_width="34" />
+
+    <ImageView
+        android:id="@+id/_infoButtonRect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_height="96"
+        app:scale_left="1780"
+        app:scale_top="0"
+        app:scale_width="140" />
+
+    <ImageView
+        android:id="@+id/_infoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:src="@drawable/top_info"
+        android:visibility="gone"
+        app:scale_height="36"
+        app:scale_left="1852"
+        app:scale_top="30"
+        app:scale_width="18" />
+
+    <ImageView
+        android:id="@+id/_settingButtonRect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_height="96"
+        app:scale_left="1780"
+        app:scale_top="0"
+        app:scale_width="140"/>
+
+    <ImageView
+        android:id="@+id/_settingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/top_setting_tablet"
+        android:scaleType="fitXY"
+        android:visibility="gone"
+        app:scale_width="36"
+        app:scale_height="36"
+        app:scale_left="1843"
+        app:scale_top="30"
+        />
+
+</com.ssomai.android.scalablelayout.ScalableLayout>

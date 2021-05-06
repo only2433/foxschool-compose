@@ -27,7 +27,7 @@ class MainInformationResult
         return bookshelves;
     }
 
-    fun getVocabulariesList() : ArrayList<MyVocabularyResult>?
+    fun getVocabulariesList() : ArrayList<MyVocabularyResult>
     {
         return vocabularies;
     }

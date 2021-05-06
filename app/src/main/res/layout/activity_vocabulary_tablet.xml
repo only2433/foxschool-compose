@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_f5f5f5"
+    android:fitsSystemWindows="true"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/_titleBaselayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/topbar_common_menu_tablet"/>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="97"
+            app:scale_base_width="1920" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_ffffff"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1920"
+                app:scale_height="95"/>
+
+            <ImageView
+                android:id="@+id/_checkAllIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_left="627"
+                app:scale_top="26"
+                app:scale_width="43"
+                app:scale_height="43"/>
+
+            <TextView
+                android:id="@+id/_checkAllText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                android:text="@string/text_all"
+                app:scale_left="682"
+                app:scale_top="26"
+                app:scale_width="100"
+                app:scale_height="43"
+                app:scale_textsize="26"/>
+
+            <ImageView
+                android:id="@+id/_checkWordIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_left="820"
+                app:scale_top="26"
+                app:scale_width="43"
+                app:scale_height="43"/>
+
+            <TextView
+                android:id="@+id/_checkWordText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                android:text="@string/text_words"
+                app:scale_left="875"
+                app:scale_top="26"
+                app:scale_width="100"
+                app:scale_height="43"
+                app:scale_textsize="26"/>
+
+            <ImageView
+                android:id="@+id/_checkMeaningIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_left="1013"
+                app:scale_top="26"
+                app:scale_width="43"
+                app:scale_height="43"/>
+
+            <TextView
+                android:id="@+id/_checkMeaningText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                android:text="@string/text_meaning"
+                app:scale_left="1068"
+                app:scale_top="26"
+                app:scale_width="100"
+                app:scale_height="43"
+                app:scale_textsize="26"/>
+
+            <ImageView
+                android:id="@+id/_checkExampleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_left="1206"
+                app:scale_top="26"
+                app:scale_width="43"
+                app:scale_height="43"/>
+
+            <TextView
+                android:id="@+id/_checkExampleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                android:text="@string/text_example"
+                app:scale_left="1261"
+                app:scale_top="26"
+                app:scale_width="100"
+                app:scale_height="43"
+                app:scale_textsize="26"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d9dede"
+                app:scale_left="0"
+                app:scale_top="95"
+                app:scale_width="1920"
+                app:scale_height="2"/>
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="20">
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/_wordItemList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            ></androidx.recyclerview.widget.RecyclerView>
+
+    </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_standardLineLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                app:scale_base_width="1920"
+                app:scale_base_height="96"></com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_loadingProgressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/_standardLineLayout"
+                android:visibility="gone"
+                app:scale_base_height="150"
+                app:scale_base_width="1920">
+
+                <com.littlefox.library.view.dialog.ProgressWheel
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:matProg_barColor="@color/color_20b1f9"
+                    app:matProg_progressIndeterminate="true"
+                    app:scale_height="150"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="150" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_bottomControlLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_centerVertical="true"
+                app:scale_base_width="1920"
+                app:scale_base_height="787">
+
+                <ImageView
+                    android:id="@+id/_menuBarBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/popup_v_tablet"
+                    app:scale_left="1495"
+                    app:scale_top="193"
+                    app:scale_width="136"
+                    app:scale_height="594"/>
+
+                <ImageView
+                    android:id="@+id/_bottomIntervalIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tablet_interval"
+                    android:scaleType="fitXY"
+                    app:scale_left="1495"
+                    app:scale_top="200"
+                    app:scale_width="138"
+                    app:scale_height="94"/>
+                <TextView
+                    android:id="@+id/_bottomIntervalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2초 간격"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center_horizontal|top"
+                    app:scale_left="1495"
+                    app:scale_top="294"
+                    app:scale_width="138"
+                    app:scale_height="50"
+                    app:scale_textsize="24"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tablet_line"
+                    app:scale_left="1495"
+                    app:scale_top="344"
+                    app:scale_width="138"
+                    app:scale_height="2"/>
+
+                <ImageView
+                    android:id="@+id/_bottomSelectIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tablet_all"
+                    android:scaleType="fitXY"
+                    app:scale_left="1495"
+                    app:scale_top="346"
+                    app:scale_width="138"
+                    app:scale_height="94"/>
+                <TextView
+                    android:id="@+id/_bottomSelectText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_select_all"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center_horizontal|top"
+                    app:scale_left="1495"
+                    app:scale_top="440"
+                    app:scale_width="138"
+                    app:scale_height="50"
+                    app:scale_textsize="24"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tablet_line"
+                    app:scale_left="1495"
+                    app:scale_top="490"
+                    app:scale_width="138"
+                    app:scale_height="2"/>
+
+                <ImageView
+                    android:id="@+id/_bottomPlayIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tablet_play"
+                    android:scaleType="fitXY"
+                    app:scale_left="1495"
+                    app:scale_top="492"
+                    app:scale_width="138"
+                    app:scale_height="94"/>
+
+                <TextView
+                    android:id="@+id/_bottomSelectCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/count_1"
+                    android:visibility="gone"
+                    android:text="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_8d65ff"
+                    app:scale_left="1562"
+                    app:scale_top="512"
+                    app:scale_width="30"
+                    app:scale_height="30"
+                    app:scale_textsize="22"/>
+
+                <TextView
+                    android:id="@+id/_bottomPlayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_select_play"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center_horizontal|top"
+                    app:scale_left="1495"
+                    app:scale_top="586"
+                    app:scale_width="138"
+                    app:scale_height="50"
+                    app:scale_textsize="24"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tablet_line"
+                    app:scale_left="1495"
+                    app:scale_top="636"
+                    app:scale_width="138"
+                    app:scale_height="2"/>
+
+                <ImageView
+                    android:id="@+id/_bottomWordsActionIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tablet_voca"
+                    android:scaleType="fitXY"
+                    app:scale_left="1495"
+                    app:scale_top="638"
+                    app:scale_width="138"
+                    app:scale_height="94"/>
+                <TextView
+                    android:id="@+id/_bottomWordsActionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_add_vocabulary"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center_horizontal|top"
+                    app:scale_left="1495"
+                    app:scale_top="732"
+                    app:scale_width="138"
+                    app:scale_height="50"
+                    app:scale_textsize="24"/>
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

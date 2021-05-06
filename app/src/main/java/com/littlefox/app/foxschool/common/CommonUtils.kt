@@ -1747,7 +1747,7 @@ class CommonUtils
      * @param html 해당 HTML 데이터
      * @return 제거한 String
      */
-    fun removeHtmlTag(html : String) : String?
+    fun removeHtmlTag(html : String) : String
     {
         var html = html
         try
@@ -1760,7 +1760,7 @@ class CommonUtils
         }
         catch(e : NullPointerException)
         {
-            return null
+            return ""
         }
         return html
     }

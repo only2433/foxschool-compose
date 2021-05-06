@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 
-class MyVocabularyResult : Parcelable
+open class MyVocabularyResult : Parcelable
 {
     /**
      * 보케블러리 책장 ID
@@ -90,7 +90,7 @@ class MyVocabularyResult : Parcelable
         return vocabularyType
     }
 
-    fun setWordcount(count : Int)
+    fun setWordCount(count : Int)
     {
         wordCount = count
     }
