@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`
+package com.littlefox.app.foxschool.`object`.data.login
 
 /**
  * 오토 로그인 일때 정보를 지속적으로 저장하기 위해 사용

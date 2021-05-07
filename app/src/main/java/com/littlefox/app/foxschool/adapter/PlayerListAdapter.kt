@@ -85,7 +85,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
         })
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            if(mPlayInformationList[position].isOptionDisable)
+            if(mPlayInformationList[position].isOptionDisable())
             {
                 holder._ItemTitleOption.visibility = View.GONE
             }

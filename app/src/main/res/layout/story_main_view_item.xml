@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="502"
+        app:scale_base_height="394">
+        <ImageView
+            android:id="@+id/_thumbnailImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/thum01"
+            android:scaleType="fitXY"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="502"
+            app:scale_height="282"/>
+        <ImageView
+            android:id="@+id/_indexImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/level01"
+            app:scale_left="0"
+            app:scale_top="227"
+            app:scale_width="65"
+            app:scale_height="55"/>
+
+        <TextView
+            android:id="@+id/_storyCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_333333"
+            android:text="48편"
+            android:gravity="center"
+            app:scale_left="0"
+            app:scale_top="292"
+            app:scale_width="502"
+            app:scale_height="78"
+            app:scale_textsize="38"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

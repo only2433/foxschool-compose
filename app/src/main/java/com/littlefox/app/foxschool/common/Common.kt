@@ -75,8 +75,8 @@ class Common
         const val SERVICE_NOT_ENDED : String    = "N"
         const val SERVICE_ENDED : String        = "Y"
 
-        const val TARGET_PHONE_DISPLAY_WIDTH : Int = 1080
-        const val TARGET_TABLET_DISPLAY_WIDTH : Int = 1920
+        const val TARGET_PHONE_DISPLAY_WIDTH : Float = 1080.0f
+        const val TARGET_TABLET_DISPLAY_WIDTH : Float = 1920.0f
 
         const val LOADING_DIALOG_SIZE : Int              = 150
 

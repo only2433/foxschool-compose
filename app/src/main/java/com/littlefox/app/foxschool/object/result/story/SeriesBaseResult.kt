@@ -8,29 +8,29 @@ import java.io.Serializable
 
 open class SeriesBaseResult : Parcelable
 {
-    private var id : String? = ""
-    private var name : String? = ""
-    private var app_thumbnail_url : String? = ""
+    private var id : String = ""
+    private var name : String = ""
+    private var app_thumbnail_url : String = ""
     private var colors : ColorData? = null
     private var series : SeriesData? = null
     private var free_single_sort_number : Int = 0
-    private var free_series_sort_number : Int  = 0
-    private var basic_sort_number : Int  = 0
-    private var seriesType : String? = Common.CONTENT_TYPE_STORY
-    private var transitionType : TransitionType? = TransitionType.PAIR_IMAGE
+    private var free_series_sort_number : Int = 0
+    private var basic_sort_number : Int = 0
+    private var seriesType : String = Common.CONTENT_TYPE_STORY
+    private var transitionType : TransitionType = TransitionType.PAIR_IMAGE
 
     protected constructor(`in` : Parcel)
     {
-        id = `in`.readString()
-        name = `in`.readString()
-        seriesType = `in`.readString()
-        app_thumbnail_url = `in`.readString()
-        transitionType = `in`.readSerializable() as TransitionType?
-        colors = `in`.readSerializable() as ColorData?
+        id = `in`.readString()!!
+        name = `in`.readString()!!
+        seriesType = `in`.readString()!!
+        app_thumbnail_url = `in`.readString()!!
+        transitionType = `in`.readSerializable() as TransitionType
+        colors = `in`.readSerializable() as ColorData
         free_single_sort_number = `in`.readInt()
         free_series_sort_number = `in`.readInt()
         basic_sort_number = `in`.readInt()
-        series = `in`.readSerializable() as SeriesData?
+        series = `in`.readSerializable() as SeriesData
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)
@@ -52,7 +52,47 @@ open class SeriesBaseResult : Parcelable
         return 0
     }
 
-    val statusBarColor : String
+    fun getDisplayID() : String
+    {
+        return id;
+    }
+
+    fun getSeriesName() : String
+    {
+        return name;
+    }
+
+    fun getSeriesType() : String
+    {
+        return seriesType;
+    }
+
+    fun getThumbnailUrl() : String
+    {
+        return app_thumbnail_url;
+    }
+
+    fun getTransitionType() : TransitionType
+    {
+        return transitionType;
+    }
+
+    fun getFreeSingleSortNumber() : Int
+    {
+        return free_single_sort_number;
+    }
+
+    fun getFreeSeriesSortNumber() : Int
+    {
+        return free_series_sort_number;
+    }
+
+    fun getBasicSortNumber() : Int
+    {
+        return basic_sort_number;
+    }
+
+    val statusBarColor : String?
         get()
         {
             if(colors == null)
@@ -60,10 +100,10 @@ open class SeriesBaseResult : Parcelable
                 return "#1a8ec7"
             }
             else
-                return colors!!.status_bar
+                return colors?.status_bar
         }
 
-    val titleColor : String
+    val titleColor : String?
         get()
         {
             if(colors == null)
@@ -71,10 +111,10 @@ open class SeriesBaseResult : Parcelable
                return "#20b1f9"
             }
             else
-                return colors!!.title
+                return colors?.title
         }
 
-    val introduction : String
+    val introduction : String?
         get()
         {
             if(series == null)
@@ -82,30 +122,30 @@ open class SeriesBaseResult : Parcelable
                 return ""
             }
             else
-                return series!!.introduction
+                return series?.introduction
         }
 
     val categoryData : String?
         get()
         {
-            if(series == null || series!!.categories == null)
+            if(series == null || series?.categories == null)
             {
                 return ""
             }
             else
-                return series!!.categories
+                return series?.categories
         }
 
     inner class ColorData : Serializable
     {
-        var status_bar = ""
-        var title = ""
+        var status_bar : String = ""
+        var title : String  = ""
     }
 
     inner class SeriesData : Serializable
     {
-        var introduction = ""
-        var categories : String? = ""
+        var introduction : String  = ""
+        var categories : String = ""
     }
 
     companion object

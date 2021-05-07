@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="220">
+        <ImageView
+            android:id="@+id/_mybooksAddView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_add"
+            android:scaleType="fitXY"
+            app:scale_left="496"
+            app:scale_top="40"
+            app:scale_width="87"
+            app:scale_height="87"/>
+        <TextView
+            android:id="@+id/_mybooksAddText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_add_bookshelf"
+            android:textColor="@color/color_b7b7b7"
+            android:gravity="center"
+            app:scale_left="0"
+            app:scale_top="130"
+            app:scale_width="1080"
+            app:scale_height="70"
+            app:scale_textsize="40"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+</LinearLayout>

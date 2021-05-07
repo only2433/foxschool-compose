@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/color_f5f5f5"
+    tools:ignore="MissingPrefix">
+
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_f5f5f5"
+                app:scale_base_height="28"
+                app:scale_base_width="1920"></com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_switchButtonLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:scale_base_height="97"
+                app:scale_base_width="1920">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tab_bg"
+                    app:scale_height="67"
+                    app:scale_left="727"
+                    app:scale_top="0"
+                    app:scale_width="462" />
+
+                <ImageView
+                    android:id="@+id/_switchAnimationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/tab_bokshelf_on"
+                    app:scale_left="727"
+                    app:scale_top="0"
+                    app:scale_width="231"
+                    app:scale_height="67" />
+
+                <TextView
+                    android:id="@+id/_bookshelfTextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_bookshelf"
+                    android:textColor="@color/color_8d65ff"
+                    app:scale_left="727"
+                    app:scale_top="0"
+                    app:scale_width="231"
+                    app:scale_height="67"
+                    app:scale_textsize="28"
+                     />
+
+                <TextView
+                    android:id="@+id/_vocabularyTextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_vocabulary"
+                    android:textColor="@color/color_a0a0a0"
+                    app:scale_left="958"
+                    app:scale_top="0"
+                    app:scale_width="231"
+                    app:scale_height="67"
+                    app:scale_textsize="28" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/_booksScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:id="@+id/_backgroundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1920"
+                    app:scale_base_height="290">
+
+                    <ImageView
+                        android:id="@+id/_backgroundImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/box_list"
+                        app:scale_left="480"
+                        app:scale_top="0"
+                        app:scale_width="960"
+                        app:scale_height="290"/>
+
+                </com.ssomai.android.scalablelayout.ScalableLayout>
+
+                <LinearLayout
+                    android:id="@+id/_booksItemLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
+
+            </RelativeLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+</LinearLayout>

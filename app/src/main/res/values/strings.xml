@@ -34,9 +34,24 @@
     <string name="text_example">예문</string>
     <string name="text_select_all">전체 선택</string>
     <string name="text_select_play">선택 재생</string>
+    <string name="text_add_bookshelf">책장 추가</string>
+    <string name="text_manage_bookshelf">책장 관리</string>
     <string name="text_add_vocabulary">단어장 추가</string>
+    <string name="text_manage_vocabulary">단어장 관리</string>
     <string name="text_stop_play">그만듣기</string>
     <string name="text_select_init">선택해제</string>
+    <string name="text_levels">단계별</string>
+    <string name="text_categories">주제별</string>
+    <string name="text_bookshelf">나의 책장</string>
+    <string name="text_vocabulary">나의 단어장</string>
+    <string name="text_count_level">%d 단계</string>
+    <string name="text_count_stories">%s편</string>
+    <string name="text_count_series_stories">%s부작</string>
+    <string name="text_count_songs">%s곡</string>
+    <string name="text_great_testimonial">우수 활용수기</string>
+
+
+
 
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
     <string name="message_preview_free_user_end">미리보기가 종료되었습니다.\n회원가입 후 모든 콘텐츠를 이용해 보세요.</string>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="960"
+        app:scale_base_height="175">
+        <ImageView
+            android:id="@+id/_backgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="960"
+            app:scale_height="165"/>
+        <TextView
+            android:id="@+id/_titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[새로운 시리즈] Monster Academy 시즌 2 - Coming soon"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:scale_left="38"
+            app:scale_top="24"
+            app:scale_width="884"
+            app:scale_height="80"
+            app:scale_textsize="30"/>
+
+        <TextView
+            android:id="@+id/_dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2017-12-12 15:24"
+            android:textColor="@color/color_b7b7b7"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            app:scale_left="38"
+            app:scale_top="114"
+            app:scale_width="884"
+            app:scale_height="30"
+            app:scale_textsize="22"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>
