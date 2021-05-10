@@ -75,5 +75,10 @@ class SingleLiveEvent<T> : MutableLiveData<T?>()
         value = null
     }
 
+    fun observe(newsWebviewFragment : NewsWebviewFragment, observer : Observer<T>)
+    {
+
+    }
+
 
 }

@@ -108,6 +108,7 @@ class Common
         const val PAGE_SONG : Int       = 1
         const val PAGE_MY_BOOKS : Int   = 2
 
+        const val BRIDGE_NAME : String = "littlefoxJavaInterface"
     }
 
 }

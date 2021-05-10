@@ -366,12 +366,14 @@ class MainStoryFragment : Fragment()
         {
             ViewAnimator.animate(_SwitchAnimationButton)
                 .translationX(CommonUtils.getInstance(mContext).getPixel(SWITCH_TAB_WIDTH), 0f)
-                .duration(duration).start()
+                .duration(duration)
+                .start()
         } else
         {
             ViewAnimator.animate(_SwitchAnimationButton)
                 .translationX(0f, CommonUtils.getInstance(mContext).getPixel(SWITCH_TAB_WIDTH))
-                .duration(duration).start()
+                .duration(duration)
+                .start()
         }
     }
 
@@ -379,12 +381,12 @@ class MainStoryFragment : Fragment()
     {
         if(tab === SeriesType.LEVEL)
         {
-            _LevelsTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_26d0df))
-            _CategoriesTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_a0a0a0))
+            _LevelsTextButton.setTextColor(mContext.resources.getColor(R.color.color_26d0df))
+            _CategoriesTextButton.setTextColor(mContext.resources.getColor(R.color.color_a0a0a0))
         } else
         {
-            _LevelsTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_a0a0a0))
-            _CategoriesTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_26d0df))
+            _LevelsTextButton.setTextColor(mContext.resources.getColor(R.color.color_a0a0a0))
+            _CategoriesTextButton.setTextColor(mContext.resources.getColor(R.color.color_26d0df))
         }
     }
 
@@ -399,10 +401,11 @@ class MainStoryFragment : Fragment()
         {
             ViewAnimator.animate(_NavigationControllerLayout).alpha(0.0f, 1.0f)
                 .duration(Common.DURATION_SHORT)
-                .onStart {_NavigationControllerLayout.setVisibility(View.VISIBLE)}.start()
+                .onStart {_NavigationControllerLayout.setVisibility(View.VISIBLE)}
+                .start()
         } else
         {
-            mAnimationHandler!!.removeMessages(MESSAGE_HIDE_CONTROLLER)
+            mAnimationHandler?.removeMessages(MESSAGE_HIDE_CONTROLLER)
         }
     }
 
@@ -416,7 +419,8 @@ class MainStoryFragment : Fragment()
         {
             ViewAnimator.animate(_NavigationControllerLayout).alpha(1.0f, 0.0f)
                 .duration(Common.DURATION_SHORT)
-                .onStop {_NavigationControllerLayout.setVisibility(View.GONE)}.start()
+                .onStop {_NavigationControllerLayout.setVisibility(View.GONE)}
+                .start()
         }
     }
 
@@ -435,6 +439,7 @@ class MainStoryFragment : Fragment()
             }
         }
     }
+
     var mStoryGridViewListener : RecyclerView.OnScrollListener =
         object : RecyclerView.OnScrollListener()
         {
@@ -466,6 +471,4 @@ class MainStoryFragment : Fragment()
                 mCurrentScrollDy += dy
             }
         }
-
-
 }
