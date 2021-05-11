@@ -3,6 +3,8 @@ package com.littlefox.app.foxschool.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.PagerAdapter
+import com.littlefox.app.foxschool.fragment.NewsListFragment
 import java.util.ArrayList
 
 class MainFragmentSelectionPagerAdapter : FragmentStatePagerAdapter
@@ -40,10 +42,11 @@ class MainFragmentSelectionPagerAdapter : FragmentStatePagerAdapter
 
     override fun getItemPosition(`object` : Any) : Int
     {
-        return if(`object` is NewsListFragment)
+        if(`object` is NewsListFragment)
         {
-            PagerAdapter.POSITION_UNCHANGED
-        } else PagerAdapter.POSITION_NONE
+            return PagerAdapter.POSITION_UNCHANGED
+        } else
+            return PagerAdapter.POSITION_NONE
     }
 
     val pagerFragmentList : List<Fragment>

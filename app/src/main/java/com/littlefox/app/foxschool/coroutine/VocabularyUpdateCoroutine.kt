@@ -25,17 +25,17 @@ class VocabularyUpdateCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : VocabularyShelfBaseObject? = null
+        lateinit var result : VocabularyShelfBaseObject
         synchronized(mSync) {
             isRunning = true
             val list = ContentValues()
             list.put("name", mBookName)
             list.put("color", CommonUtils.getInstance(mContext).getBookColorString(mSelectBookColor))
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF.toString() + mVocabularyID, list, NetworkUtil.POST_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, VocabularyShelfBaseObject::class.java)
-            if(result?.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") === false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result

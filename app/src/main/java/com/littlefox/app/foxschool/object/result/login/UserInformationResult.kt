@@ -9,7 +9,7 @@ class UserInformationResult
     private val expire_date : String = ""
     private val remaining_day : Int = 0
     private val mobile_url : String = ""
-    private val users : ArrayList<UserInformation>? = null
+    private val users : ArrayList<UserInformation> = ArrayList<UserInformation>();
 
     val currentUserNickName : String
         get()
@@ -48,6 +48,11 @@ class UserInformationResult
     fun getMobileUrlPrefix() : String
     {
         return mobile_url
+    }
+
+    fun getUserInformationList() : ArrayList<UserInformation>
+    {
+        return users;
     }
 
     inner class UserInformation

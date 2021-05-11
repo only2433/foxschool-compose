@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainDrawLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/_mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_mainBaseTabletToplayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="96"
+            app:scale_base_width="1920" >
+
+            <ImageView
+                android:id="@+id/_mainBackgroundView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1920"
+                app:scale_height="96"
+                android:background="@color/color_20b1f9" />
+
+            <FrameLayout
+                android:id="@+id/_mainBackgroundAnimationLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1920"
+                app:scale_height="96"/>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/_mainTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:scale_height="96"
+                app:scale_left="648"
+                app:scale_top="0"
+                app:scale_width="624"
+                app:tabIndicatorColor="@color/color_fff55a"  />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_menu_tablet"
+                android:scaleType="fitXY"
+                app:scale_height="27"
+                app:scale_left="40"
+                app:scale_top="34"
+                app:scale_width="39" />
+
+            <ImageView
+                android:id="@+id/_topMenuSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_height="96"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="120" />
+
+
+            <ImageView
+                android:id="@+id/_topMenuLittlefox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/logo_tablet"
+                android:scaleType="fitXY"
+                app:scale_height="50"
+                app:scale_left="128"
+                app:scale_top="23"
+                app:scale_width="98" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_search_tablet"
+                android:scaleType="fitXY"
+                app:scale_height="30"
+                app:scale_left="1846"
+                app:scale_top="33"
+                app:scale_width="28" />
+
+            <ImageView
+                android:id="@+id/_topMenuSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_height="96"
+                app:scale_left="1800"
+                app:scale_top="0"
+                app:scale_width="120" />
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+        <com.littlefox.library.view.extra.SwipeDisableViewPager
+            android:id="@+id/_mainViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/_mainBaseTabletToplayout"
+            app:swipeable="false" />
+
+        </RelativeLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <include
+        android:id="@+id/_navigationBaseLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        layout="@layout/drawer_main_menu_tablet"
+        android:choiceMode="singleChoice" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

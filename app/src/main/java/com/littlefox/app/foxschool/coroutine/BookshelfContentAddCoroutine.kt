@@ -27,7 +27,7 @@ class BookshelfContentAddCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : BookshelfBaseObject? = null
+        lateinit var  result : BookshelfBaseObject
         synchronized(mSync) {
             isRunning = true
             val list = ContentValues()
@@ -38,9 +38,9 @@ class BookshelfContentAddCoroutine : BaseCoroutine
             val respose : String? = requestServerPair(mContext, Common.API_BOOKSHELF + File.separator + mBookshelfID + File.separator + "contents", list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(respose, BookshelfBaseObject::class.java)
 
-            if(result?.getAccessToken().equals("") == false)
+            if(result.getAccessToken().equals("") == false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result

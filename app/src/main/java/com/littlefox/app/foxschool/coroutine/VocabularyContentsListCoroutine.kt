@@ -20,14 +20,14 @@ class VocabularyContentsListCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : VocabularyContentsBaseObject? = null
+        lateinit var result : VocabularyContentsBaseObject
         synchronized(mSync) {
             isRunning = true
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_CONTENTS.toString() + mContentID + "/vocabulary", null, NetworkUtil.GET_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_CONTENTS + mContentID + "/vocabulary", null, NetworkUtil.GET_METHOD)
             result = Gson().fromJson(response, VocabularyContentsBaseObject::class.java)
-            if(result?.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") === false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result

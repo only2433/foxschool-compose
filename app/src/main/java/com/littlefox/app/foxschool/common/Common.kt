@@ -10,7 +10,11 @@ class Common
         const val BASE_URL : String                 = "https://apis.littlefox.com/"
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
+        const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
+        const val API_ME : String                   = BASE_PUBLIC_API + "auth/me"
+        const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
+        const val API_CHANGE_USER : String          = BASE_PUBLIC_API + "auth/change"
         const val API_QUIZ : String                 = API_CONTENTS
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS
         const val API_STUDY_LOG_SAVE : String       = API_CONTENTS
@@ -45,8 +49,11 @@ class Common
         const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
 
 
-        const val COROUTINE_CODE_FILE_DOWNLOAD : String                 = "file_download";
-        const val COROUTINE_CODE_CLASS_RECORD_FILE : String             = "record_file";
+        const val COROUTINE_CODE_MAIN : String                          = "main"
+        const val COROUTINE_CODE_ME : String                            = "me"
+        const val COROUTINE_CODE_CHANGE_USER : String                   = "change_user"
+        const val COROUTINE_CODE_FILE_DOWNLOAD : String                 = "file_download"
+        const val COROUTINE_CODE_CLASS_RECORD_FILE : String             = "record_file"
         const val COROUTINE_CODE_AUTH_CONTENT_PLAY : String             = "auth_content_play"
         const val COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD : String        = "bookshelf_contents_add"
         const val COROUTINE_CODE_STUDY_LOG_SAVE : String                = "study_log_save"
@@ -109,6 +116,10 @@ class Common
         const val PAGE_MY_BOOKS : Int   = 2
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
+
+        const val IAC_AWAKE_CODE_ALWAYS_VISIBLE : String            = "C"
+        const val IAC_AWAKE_CODE_ONCE_VISIBLE : String              = "E"
+        const val IAC_AWAKE_CODE_SPECIAL_DATE_VISIBLE : String      = "F"
     }
 
 }

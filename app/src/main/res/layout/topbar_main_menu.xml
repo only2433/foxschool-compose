@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="144"
+        app:scale_base_width="1080" >
+
+        <ImageView
+            android:id="@+id/_topMenuSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_menu"
+            app:scale_height="144"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="138" />
+
+
+
+
+        <ImageView
+            android:id="@+id/_topMenuLittlefox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:scaleType="fitXY"
+            app:scale_height="86"
+            app:scale_left="452"
+            app:scale_top="29"
+            app:scale_width="171" />
+		
+
+        <ImageView
+            android:id="@+id/_topMenuSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_search"
+            app:scale_height="144"
+            app:scale_left="942"
+            app:scale_top="0"
+            app:scale_width="138" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

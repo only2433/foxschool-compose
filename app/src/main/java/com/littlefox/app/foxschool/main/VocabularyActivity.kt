@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Message
@@ -420,7 +421,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         mVocabularyPresenter.acvitityResult(requestCode, resultCode, data)
     }
 
-    override fun handlerMessage(message : Message?)
+    override fun handlerMessage(message : Message)
     {
         mVocabularyPresenter.sendMessageEvent(message)
     }

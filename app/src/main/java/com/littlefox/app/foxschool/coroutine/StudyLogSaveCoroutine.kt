@@ -24,7 +24,7 @@ class StudyLogSaveCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : BaseResult? = null
+        lateinit var result : BaseResult
         synchronized(mSync)
         {
             isRunning = true
@@ -32,11 +32,11 @@ class StudyLogSaveCoroutine : BaseCoroutine
             list.put("play_type", mContentPlayType)
             list.put("play_time", mStudyPlayTime)
 
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_STUDY_LOG_SAVE.toString() + mContentsID + "/player/history", list, NetworkUtil.POST_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_STUDY_LOG_SAVE + mContentsID + "/player/history", list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, BaseResult::class.java)
-            if(result?.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") === false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result

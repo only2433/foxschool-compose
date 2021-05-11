@@ -21,14 +21,14 @@ class VocabularyDeleteCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : BaseResult? = null
+        lateinit var result : BaseResult
         synchronized(mSync) {
             isRunning = true
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF.toString() + mVocabularyID, null, NetworkUtil.DELETE_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID, null, NetworkUtil.DELETE_METHOD)
             result = Gson().fromJson(response, BaseResult::class.java)
-            if(result?.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") === false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result

@@ -26,7 +26,7 @@ class VocabularyContentsDeleteCoroutine : BaseCoroutine
         {
             return null
         }
-        var result : BaseResult? = null
+        lateinit var result : BaseResult
         synchronized(mSync) {
             val list = ContentValues()
             for(i in mSendDataList.indices)
@@ -34,11 +34,11 @@ class VocabularyContentsDeleteCoroutine : BaseCoroutine
                 list.put("words[$i][content_id]", mSendDataList[i].getContentID())
                 list.put("words[$i][word_id]", mSendDataList[i].getID())
             }
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF.toString() + mVocabularyID + File.separator + "words/delete", list, NetworkUtil.POST_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID + File.separator + "words/delete", list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, BaseResult::class.java)
-            if(result?.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") === false)
             {
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result?.getAccessToken().toString())
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
         }
         return result
