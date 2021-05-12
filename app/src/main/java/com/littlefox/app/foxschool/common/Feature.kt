@@ -48,10 +48,6 @@ object Feature {
      */
     const val IS_CHINESE_MODEL = false
 
-    /**
-     * 크로스워드, 스타워즈 테스트 여부
-     */
-    const val IS_GAME_TEST = false
     const val IS_ENABLE_FIREBASE_CRASHLYTICS = true
 
     /**

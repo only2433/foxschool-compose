@@ -19,7 +19,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.StatFs
-
 import android.provider.Settings
 import android.text.SpannableStringBuilder
 import android.text.Spanned
@@ -43,12 +42,11 @@ import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.BuildConfig
-
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.enumerate.BookColor
 import com.littlefox.app.foxschool.enumerate.DataType
@@ -156,6 +154,14 @@ class CommonUtils
             mFormatter.format("%02d:%02d", minutes, seconds).toString()
         }
     }
+
+
+    fun getTodayDateText() : String
+    {
+        val calendar = Calendar.getInstance()
+        return SimpleDateFormat("yyyy.MM.dd").format(calendar.time)
+    }
+
 
     fun showDeviceInfo()
     {
@@ -1937,9 +1943,9 @@ class CommonUtils
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임
      */
-    fun getVocabularyTitleName(data : ContentsBaseResult) : String?
+    fun getVocabularyTitleName(data : ContentsBaseResult) : String
     {
-        var result : String?  = ""
+        var result : String  = ""
         if(data.getSubName().equals(""))
         {
             result = data.getName()

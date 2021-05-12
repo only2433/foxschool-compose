@@ -16,7 +16,7 @@
     <string name="text_wordbook">단어장</string>
     <string name="text_contain_bookshelf">책장 담기</string>
     <string name="text_ebook">eBook</string>
-    <string name="text_starwords">StarWords</string>
+    <string name="text_starwords">스타워즈</string>
     <string name="text_crossword">CrossWord</string>
     <string name="text_select_vocabulary">단어장 선택</string>
     <string name="text_sec_interval">%d초 간격</string>
@@ -88,8 +88,15 @@
     <string name="message_success_save_contents_in_vocabulary">단어장에 등록되었습니다.</string>
     <string name="message_not_add_selected_contents_bookshelf">책장에 담을 콘텐츠를 선택해 주세요.</string>
     <string name="message_success_delete_contents">삭제되었습니다.</string>
-
-
+    <string name="message_try_logout">로그아웃 하시겠습니까?</string>
+    <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
+    <string name="message_check_end_app">앱을 종료하시겠습니까？</string>
+    <string name="message_empty_bookshelf_contents">책장에 담겨있는 콘텐츠가 없습니다.</string>
+    <string name="message_empty_vocabulary_contents">콘텐츠가 없습니다.</string>
+    <string name="message_maximum_bookshelf">책장은 10개까지 생성할 수 있습니다.</string>
+    <string name="message_maximum_vocabulary">단어장은 10개까지 생성할 수 있습니다.</string>
+    <string name="message_delete_vocabulary">단어장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다. \n삭제하시겠습니까?</string>
+    <string name="message_delete_bookshelf">책장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다.\n삭제하시겠습니까?</string>
     <string-array name="text_list_gender">
         <item>남</item>
         <item>여</item>

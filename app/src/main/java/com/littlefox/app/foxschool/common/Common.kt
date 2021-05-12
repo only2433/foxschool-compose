@@ -23,31 +23,32 @@ class Common
         const val API_SEARCH_LIST : String          = BASE_PUBLIC_API + "contents"
         const val API_BOOKSHELF : String            = BASE_PUBLIC_API + "bookshelves"
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
-
         const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
 
         const val SECOND : Int = 1000;
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f
 
-        const val PARAMS_DISPLAY_METRICS : String           = "display_metrics"
-        const val PARAMS_REGISTER_APP_VERSION : String      = "app_version"
-        const val PARAMS_USER_LOGIN : String                = "user_login"
-        const val PARAMS_FILE_MAIN_INFO : String            = "file_main_info"
-        const val PARAMS_ACCESS_TOKEN : String              = "access_token"
-        const val PARAMS_USER_API_INFORMATION : String      = "user_api_information"
-        const val PARAMS_IS_AUTO_LOGIN_DATA : String        = "is_auto_login_data"
-        const val PARAMS_IS_DISPOSABLE_LOGIN : String       = "is_disposable_login"
-        const val PARAMS_IS_VIDEO_HIGH_RESOLUTION : String  = "is_video_high_resolution"
-        const val PARAMS_PLAYER_SPEED_INDEX : String        = "player_speed_index"
-        const val PARAMS_IS_ENABLE_CAPTION : String         = "is_enable_caption"
-        const val PARAMS_IS_ENABLE_PAGE_BY_PAGE : String    = "is_enable_page_by_page"
-        const val PARAMS_VOCABULARY_INTERVAL : String       = "vocabulary_interval"
+        const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
+        const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
+        const val PARAMS_USER_LOGIN : String                    = "user_login"
+        const val PARAMS_FILE_MAIN_INFO : String                = "file_main_info"
+        const val PARAMS_ACCESS_TOKEN : String                  = "access_token"
+        const val PARAMS_USER_API_INFORMATION : String          = "user_api_information"
+        const val PARAMS_IS_AUTO_LOGIN_DATA : String            = "is_auto_login_data"
+        const val PARAMS_IS_DISPOSABLE_LOGIN : String           = "is_disposable_login"
+        const val PARAMS_IS_VIDEO_HIGH_RESOLUTION : String      = "is_video_high_resolution"
+        const val PARAMS_PLAYER_SPEED_INDEX : String            = "player_speed_index"
+        const val PARAMS_IS_ENABLE_CAPTION : String             = "is_enable_caption"
+        const val PARAMS_IS_ENABLE_PAGE_BY_PAGE : String        = "is_enable_page_by_page"
+        const val PARAMS_VOCABULARY_INTERVAL : String           = "vocabulary_interval"
+        const val PARAMS_APP_EXECUTE_DATE : String              = "app_execute_date"
+        const val PARAMS_IAC_CONTROLLER_INFORMATION : String    = "iac_controller_information";
 
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
         const val INTENT_VOCABULARY_DATA : String                   = "vocabulary_data"
         const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
-
+        const val INTENT_RESULT_SERIES_ID : String                  = "series_id";
 
         const val COROUTINE_CODE_MAIN : String                          = "main"
         const val COROUTINE_CODE_ME : String                            = "me"
@@ -65,6 +66,9 @@ class Common
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE : String    = "vocabulary_contents_delete"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
 
+        // View name of the header image. Used for actihvity scene transitions
+        const val STORY_DETAIL_LIST_HEADER_IMAGE : String       = "story_content_list_header_image"
+        const val CATEGORY_DETAIL_LIST_HEADER_IMAGE : String    = "category_content_list_header_image"
 
         const val CONTENT_TYPE_ALL : String     = ""
         const val CONTENT_TYPE_STORY : String   = "S"
@@ -120,6 +124,14 @@ class Common
         const val IAC_AWAKE_CODE_ALWAYS_VISIBLE : String            = "C"
         const val IAC_AWAKE_CODE_ONCE_VISIBLE : String              = "E"
         const val IAC_AWAKE_CODE_SPECIAL_DATE_VISIBLE : String      = "F"
+
+        const val RESULT_CODE_SERIES_LIST : Int = 10002
+
+        /** 개발자 이메일  */
+        const val DEVELOPER_EMAIL : String = "help@littlefox.com"
+
+        const val INAPP_CAMPAIGN_MODE_NEWS : String             = "N"
+        const val INAPP_CAMPAIGN_MODE_TESTIMONIAL : String      = "T"
     }
 
 }

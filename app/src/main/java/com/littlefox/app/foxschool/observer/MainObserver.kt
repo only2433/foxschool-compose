@@ -6,7 +6,7 @@ import java.util.ArrayList
 
 object MainObserver
 {
-    private var mUpdateMainFragmentList : ArrayList<Int>? = null
+    private lateinit var mUpdateMainFragmentList : ArrayList<Int>
     private var isUpdateUserStatus : Boolean = false
     private var isEnterPaymentPage : Boolean = false
 
@@ -22,19 +22,20 @@ object MainObserver
     fun updatePage(page : Int)
     {
         init()
-        if(mUpdateMainFragmentList?.contains(page) == false)
+        if(mUpdateMainFragmentList.contains(page) == false)
         {
-            mUpdateMainFragmentList?.add(page)
+            mUpdateMainFragmentList.add(page)
         }
     }
 
     fun clearAll()
     {
-        mUpdateMainFragmentList?.clear()
+        init()
+        mUpdateMainFragmentList.clear()
     }
 
 
-    fun getUpdatePageList() : ArrayList<Int>?
+    fun getUpdatePageList() : ArrayList<Int>
     {
         init()
         return mUpdateMainFragmentList

@@ -6,9 +6,9 @@ import java.util.ArrayList
 
 class MainSongInformationResult
 {
-    private val categories : ArrayList<SeriesInformationResult>? = null
+    private val categories : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
 
-    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>?
+    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>
     {
         return categories;
     }

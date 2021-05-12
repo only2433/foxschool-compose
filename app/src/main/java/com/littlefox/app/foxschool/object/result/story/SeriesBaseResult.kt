@@ -92,6 +92,16 @@ open class SeriesBaseResult : Parcelable
         return basic_sort_number;
     }
 
+    fun setTransitionType(type : TransitionType)
+    {
+        transitionType = type;
+    }
+
+    fun setSeriesType(seriesType : String)
+    {
+        this.seriesType = seriesType;
+    }
+
     val statusBarColor : String?
         get()
         {

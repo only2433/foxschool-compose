@@ -17,7 +17,7 @@ class IACController
     private var isIACAwake = false
     private var isPositiveButtonClick = false
 
-    init
+    constructor()
     {
         mSaveIACInformation = null
     }
@@ -106,7 +106,7 @@ class IACController
         {
             Log.f("SPECIAL_DATE_VISIBLE")
             date = Date(currentTime)
-            saveDate = Date(mSaveIACInformation?.iacCloseTime)
+            saveDate = Date(mSaveIACInformation!!.iacCloseTime)
             val currentDateFormat = CurDateFormat.format(date)
             val savedDateFormat = CurDateFormat.format(saveDate)
             Log.f(
@@ -114,11 +114,12 @@ class IACController
                     savedDateFormat
                 ) + ", latingDate : " + mSaveIACInformation?.latingDate
             )
-            if(Integer.valueOf(currentDateFormat) - Integer.valueOf(savedDateFormat) >= mSaveIACInformation?.latingDate)
+            if(Integer.valueOf(currentDateFormat) - Integer.valueOf(savedDateFormat) >= mSaveIACInformation!!.latingDate)
             {
                 isIACAwake = true
             }
-        } else if(mSaveIACInformation?.iacType.equals(Common.IAC_AWAKE_CODE_ONCE_VISIBLE))
+        }
+        else if(mSaveIACInformation?.iacType.equals(Common.IAC_AWAKE_CODE_ONCE_VISIBLE))
         {
             Log.f("ONCE_VISIBLE")
             isIACAwake = false

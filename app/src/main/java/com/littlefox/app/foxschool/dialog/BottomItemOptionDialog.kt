@@ -45,11 +45,8 @@ class BottomItemOptionDialog: BottomSheetDialog
     @BindView(R.id._optionEBookLayout)
     lateinit var _OptionEBookLayout : ScalableLayout
 
-    @BindView(R.id._optionGameStarwarsLayout)
-    lateinit var _OptionGameStarwarsLayout : ScalableLayout
-
-    @BindView(R.id._optionGameCrosswordLayout)
-    lateinit var _OptionGameCrosswordLayout : ScalableLayout
+    @BindView(R.id._optionStarWordsLayout)
+    lateinit var _OptionStarwordsLayout : ScalableLayout
 
     @BindView(R.id._thumbnailImage)
     lateinit var _ThumbnailImage : ImageView
@@ -69,11 +66,8 @@ class BottomItemOptionDialog: BottomSheetDialog
     @BindView(R.id._eBookImage)
     lateinit var _EBookImage : ImageView
 
-    @BindView(R.id._gameStarwarsImage)
-    lateinit var _GameStarwarsImage : ImageView
-
-    @BindView(R.id._gameCrosswordImage)
-    lateinit var _GameCrosswordImage : ImageView
+    @BindView(R.id._starWordsImage)
+    lateinit var _StarwordsImage : ImageView
 
     @BindView(R.id._contentIndexText)
     lateinit var _ContentIndexText : TextView
@@ -96,11 +90,18 @@ class BottomItemOptionDialog: BottomSheetDialog
     @BindView(R.id._eBookTitleText)
     lateinit var _eBookTitleText : TextView
 
-    @BindView(R.id._gameStarwarsTitleText)
-    lateinit var _GameStarwarsTitleText : TextView
+    @BindView(R.id._starWordsTitleText)
+    lateinit var _StarwordsTitleText : TextView
 
-    @BindView(R.id._gameCrosswordTitleText)
-    lateinit var _GameCrosswordTitleText : TextView
+    companion object
+    {
+        private const val SERVICE_INFO_BASE : Int           = 0
+        private const val SERVICE_INFO_QUIZ : Int           = 1
+        private const val SERVICE_INFO_VOCA : Int           = 2
+        private const val SERVICE_INFO_ORIGINAL_TEXT : Int  = 3
+        private const val SERVICE_INFO_EBOOK : Int          = 4
+        private const val SERVICE_INFO_STARWORDS : Int      = 5;
+    }
 
     private val mContext : Context
     private var mPosition : Int = 0
@@ -128,8 +129,6 @@ class BottomItemOptionDialog: BottomSheetDialog
         }
         ButterKnife.bind(this)
     }
-
-
 
     protected override fun onCreate(savedInstanceState : Bundle)
     {
@@ -231,17 +230,18 @@ class BottomItemOptionDialog: BottomSheetDialog
                 _OptionEBookLayout.setVisibility(View.VISIBLE)
             }
         }
-        if(Feature.IS_GAME_TEST && isDisableGame == false)
+        if(isDisableGame == false)
         {
-            if(mContentsInformationResult.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
             {
-                _OptionGameCrosswordLayout.setVisibility(View.VISIBLE)
-            }
-            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
-            {
-                _OptionGameStarwarsLayout.setVisibility(View.VISIBLE)
+                _OptionStarwordsLayout.setVisibility(View.GONE)
             }
         }
+        else
+        {
+            _OptionStarwordsLayout.setVisibility(View.GONE)
+        }
+
         if(isDeleteItemInBookshelf)
         {
             _BookshelfImage.setImageResource(R.drawable.learning_05)
@@ -264,7 +264,7 @@ class BottomItemOptionDialog: BottomSheetDialog
                 mContentsInformationResult.getThumbnailUrl())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(_ThumbnailImage)
-        if(mIndexColor == "" == false)
+        if(mIndexColor.equals("") == false)
         {
             _ContentIndexText.setTextColor(Color.parseColor(mIndexColor))
         }
@@ -316,11 +316,10 @@ class BottomItemOptionDialog: BottomSheetDialog
         _WordBookTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _BookshelfTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _eBookTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _GameStarwarsTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _GameCrosswordTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _StarwordsTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
     }
 
-    @OnClick(R.id._optionQuizLayout, R.id._optionTranslateLayout, R.id._optionWordBookLayout, R.id._optionBookshelfLayout, R.id._optionEBookLayout, R.id._optionGameCrosswordLayout, R.id._optionGameStarwarsLayout)
+    @OnClick(R.id._optionQuizLayout, R.id._optionTranslateLayout, R.id._optionWordBookLayout, R.id._optionBookshelfLayout, R.id._optionEBookLayout, R.id._optionStarWordsLayout)
     fun onClickView(view : View)
     {
         when(view.id)
@@ -372,15 +371,13 @@ class BottomItemOptionDialog: BottomSheetDialog
                     mItemOptionListener.onClickEbook()
                 }
             }
-            R.id._optionGameStarwarsLayout ->
+            R.id._optionStarWordsLayout ->
             {
                 dismiss()
-                mItemOptionListener.onClickGameStarwords()
-            }
-            R.id._optionGameCrosswordLayout ->
-            {
-                dismiss()
-                mItemOptionListener.onClickGameCrossword()
+                if(isServiceAvailable(SERVICE_INFO_STARWORDS))
+                {
+                    mItemOptionListener.onClickGameStarwords()
+                }
             }
         }
     }
@@ -394,6 +391,7 @@ class BottomItemOptionDialog: BottomSheetDialog
             SERVICE_INFO_ORIGINAL_TEXT -> serviceCheck = mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType()
             SERVICE_INFO_VOCA -> serviceCheck = mContentsInformationResult.getServiceInformation()?.getVocabularySupportType()
             SERVICE_INFO_EBOOK -> serviceCheck = mContentsInformationResult.getServiceInformation()?.getEbookSupportType()
+            SERVICE_INFO_STARWORDS -> serviceCheck = mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType()
         }
 
         if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
@@ -421,12 +419,5 @@ class BottomItemOptionDialog: BottomSheetDialog
         }
     }
 
-    companion object
-    {
-        private const val SERVICE_INFO_BASE = 0
-        private const val SERVICE_INFO_QUIZ = 1
-        private const val SERVICE_INFO_VOCA = 2
-        private const val SERVICE_INFO_ORIGINAL_TEXT = 3
-        private const val SERVICE_INFO_EBOOK = 4
-    }
+
 }

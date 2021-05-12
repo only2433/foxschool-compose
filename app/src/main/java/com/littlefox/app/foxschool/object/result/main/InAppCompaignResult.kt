@@ -47,7 +47,7 @@ class InAppCompaignResult
         return article_id;
     }
 
-    fun getTitle() : String?
+    fun getTitle() : String
     {
         return title;
     }
