@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix, NewApi"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/_introBaseLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/intro_background">
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_height="532"
+            app:scale_base_width="1920">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/intro_logo"
+                app:scale_top="332"
+                app:scale_left="883"
+                app:scale_width="154"
+                app:scale_height="80"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/foxschool_logo"
+                app:scale_top="449"
+                app:scale_left="713"
+                app:scale_width="493"
+                app:scale_height="80"/>
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_introItemSelectLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="312"
+            android:visibility="visible"
+            android:layout_alignParentBottom="true">
+
+
+            <TextView
+                android:id="@+id/_introMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_intro_foxschool"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center"
+                app:scale_left="560"
+                app:scale_top="0"
+                app:scale_width="800"
+                app:scale_height="76"
+                app:scale_textsize="26"/>
+
+            <TextView
+                android:id="@+id/_loginText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_login"
+                android:background="@drawable/btn_w_tablet"
+                android:textColor="@color/color_3370de"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                app:scale_left="373"
+                app:scale_top="114"
+                app:scale_width="552"
+                app:scale_height="84"
+                app:scale_textsize="32"/>
+
+
+            <TextView
+                android:id="@+id/_membershipText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_membership"
+                android:background="@drawable/btn_b_tablet"
+                android:textColor="@color/color_ffffff"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                app:scale_left="968"
+                app:scale_top="114"
+                app:scale_width="552"
+                app:scale_height="84"
+                app:scale_textsize="30"/>
+
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_progressLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            app:scale_base_height="144"
+            app:scale_base_width="1920">
+
+            <ProgressBar
+                android:id="@+id/_introProgressPercent"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/intro_progress_bar"
+                app:scale_height="36"
+                app:scale_left="257"
+                app:scale_top="0"
+                app:scale_width="1423" />
+
+            <TextView
+                android:id="@+id/_introProgressText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|right"
+                android:text=""
+                android:textColor="@color/color_white"
+                app:scale_height="36"
+                app:scale_left="257"
+                app:scale_textsize="23"
+                app:scale_top="0"
+                app:scale_width="1410" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_frameAnimationLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="110"
+            android:visibility="gone"
+            android:layout_above="@id/_progressLayout">
+            <ImageView
+                android:id="@+id/_frameAnimationView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:scale_left="903"
+                app:scale_top="0"
+                app:scale_width="112"
+                app:scale_height="110"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </RelativeLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

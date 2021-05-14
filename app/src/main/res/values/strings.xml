@@ -68,6 +68,7 @@
     <string name="text_free_using">무료 이용 중</string>
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
+    <string name="text_foxschool_introduce">팍스스쿨 소개</string>
 
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
@@ -97,6 +98,10 @@
     <string name="message_maximum_vocabulary">단어장은 10개까지 생성할 수 있습니다.</string>
     <string name="message_delete_vocabulary">단어장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다. \n삭제하시겠습니까?</string>
     <string name="message_delete_bookshelf">책장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다.\n삭제하시겠습니까?</string>
+    <string name="message_warning_empty_id">아이디를 입력해주세요.</string>
+    <string name="message_warning_empty_password">비밀번호를 입력해주세요.</string>
+    <string name="message_warning_empty_school">학교를 선택해 주세요.</string>
+    <string name="message_intro_foxschool">팍스스쿨 회원 전용 앱입니다.\n회원가입은 서비스 신청 후 PC웹에서 가능합니다.</string>
     <string-array name="text_list_gender">
         <item>남</item>
         <item>여</item>

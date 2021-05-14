@@ -24,6 +24,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
+import android.text.style.ImageSpan
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.animation.*
@@ -63,6 +64,7 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 /**
  * Created by 정재현 on 2015-07-07.
@@ -972,22 +974,30 @@ class CommonUtils
 
     fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_d8232a), Gravity.CENTER)
+        showErrorSnackMessage(coordinatorLayout,
+            message,
+            sContext.resources.getColor(R.color.color_fff348),
+            R.drawable.snackbar_warning,
+            Gravity.CENTER)
     }
 
     fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_18b5b2), Gravity.CENTER)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_57e2ff), Gravity.CENTER)
     }
 
     fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_d8232a), gravity)
+        showErrorSnackMessage(coordinatorLayout,
+            message,
+            sContext.resources.getColor(R.color.color_fff348),
+            R.drawable.snackbar_warning,
+            gravity)
     }
 
     fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_18b5b2), gravity)
+        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_57e2ff), gravity)
     }
 
     @JvmOverloads
@@ -1006,6 +1016,28 @@ class CommonUtils
             textView.setGravity(gravity)
         }
         textView.setMaxLines(3)
+        textView.setTextColor(color)
+        snackbar.show()
+    }
+
+    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, color : Int, icon : Int , gravity : Int = -1)
+    {
+        val builder = SpannableStringBuilder()
+        builder.append(" ")
+        builder.setSpan(ImageSpan(sContext, icon), 0, 1, 0)
+        builder.append(" " + message)
+        val snackbar = Snackbar.make(coordinatorLayout, builder, Snackbar.LENGTH_LONG)
+        val view = snackbar.view
+        val textView = view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+
+        if(gravity != -1)
+        {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                textView.textAlignment = View.TEXT_ALIGNMENT_GRAVITY
+            }
+            textView.gravity = Gravity.CENTER
+        }
         textView.setTextColor(color)
         snackbar.show()
     }
