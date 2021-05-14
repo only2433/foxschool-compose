@@ -32,21 +32,6 @@
             app:scale_top="0"
             app:scale_width="320" />
 
-        <TextView
-            android:id="@+id/_detailPaymentInfoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_b_small_tablet"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:visibility="gone"
-            android:gravity="center"
-            android:text="@string/text_detail_view"
-            android:textColor="@color/color_ffffff"
-            app:scale_width="242"
-            app:scale_height="68"
-            app:scale_left="367"
-            app:scale_top="16"
-            app:scale_textsize="30"/>
 
         <TextView
             android:id="@+id/_loginEnterButton"

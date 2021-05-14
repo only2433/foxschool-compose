@@ -172,9 +172,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._paymentRemainingDateText)
     lateinit var _PaymentRemainingDateText : TextView
 
-    @BindView(R.id._detailPaymentInfoButton)
-    lateinit var _DetailPaymentInfoButton : TextView
-
     @BindView(R.id._studyInfoLayout)
     lateinit var _StudyInfoLayout : ScalableLayout
 
@@ -339,7 +336,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         _UserTypeText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _UserNameText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _PaymentRemainingDateText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _DetailPaymentInfoButton.setTypeface(Font.getInstance(this).getRobotoMedium())
         _LeaningLogMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _AttendanceMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _MyInfoMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
@@ -446,11 +442,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 if(i == 0)
                 {
                     _UserTypeText.setText(getResources().getString(R.string.text_parent_user))
-                    _DetailPaymentInfoButton.setVisibility(View.VISIBLE)
                 } else
                 {
                     _UserTypeText.setText(getResources().getString(R.string.text_child_user).toString() + i.toString())
-                    _DetailPaymentInfoButton.setVisibility(View.GONE)
                 }
                 _UserNameText.setText(userInformationResult.getUserInformationList().get(i).getNickName())
                 _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_787a9f))
@@ -495,7 +489,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         if(Feature.IS_REMAIN_DAY_END_USER)
         {
             _PaymentRemainingDateText.setText(getResources().getString(R.string.text_free_using))
-            _DetailPaymentInfoButton.setText(getResources().getString(R.string.text_subscribe))
         } else
         {
             if((Locale.getDefault().toString().contains(Locale.KOREA.toString())
@@ -523,7 +516,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 }
                 _PaymentRemainingDateText.setText(String.format(getResources().getString(R.string.text_remaining_day_name)) + " : " + remainingDate)
             }
-            _DetailPaymentInfoButton.setText(getResources().getString(R.string.text_detail_view))
         }
         _UserSelectMenuLayout.getViewTreeObserver()
             .addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
@@ -570,7 +562,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._addChildUserButtonLayout,
         R.id._attendanceMenuButton,
         R.id._signEnterButton,
-        R.id._detailPaymentInfoButton,
         R.id._menuLogoutLayout,
         R.id._leaningLogMenuButton,
         R.id._topMenuSetting,
@@ -638,14 +629,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 mCurrentUserPosition = CHILD_USER_3_INDEX
                 hideUserSelectLayoutAnimation()
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_FORCE_CLOSE_DRAWER_MENU,
-                    Common.DURATION_SHORT
-                )
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_SEND_CHANGE_USER,
-                    Common.DURATION_CHANGE_USER
-                )
+                mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_FORCE_CLOSE_DRAWER_MENU, Common.DURATION_SHORT)
+                mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_SEND_CHANGE_USER, Common.DURATION_CHANGE_USER)
             }
             R.id._loginEnterButton ->
             {
@@ -671,16 +656,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuAttendance()
-            }
-            R.id._signEnterButton ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickPaidSignIn()
-            }
-            R.id._detailPaymentInfoButton ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuDetailPaymentInformation()
             }
             R.id._menuLogoutLayout ->
             {
@@ -785,7 +760,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             _UserNameText.setVisibility(View.GONE)
             _UserSelectMenuButton.visibility = View.GONE
             _PaymentRemainingDateText.setVisibility(View.GONE)
-            _DetailPaymentInfoButton.setVisibility(View.GONE)
             _MenuLogoutLayout.setVisibility(View.GONE)
         } else
         {
@@ -799,7 +773,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             _UserNameText.setVisibility(View.VISIBLE)
             _UserSelectMenuButton.visibility = View.VISIBLE
             _PaymentRemainingDateText.setVisibility(View.VISIBLE)
-            _DetailPaymentInfoButton.setVisibility(View.VISIBLE)
             _MenuLogoutLayout.setVisibility(View.VISIBLE)
         }
     }
@@ -906,7 +879,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 mMainPresenter.onClickSearch()
             }
         })
-        getSupportActionBar().setCustomView(customView)
+        getSupportActionBar()?.setCustomView(customView)
         val parent = customView.parent as Toolbar
         parent.setContentInsetsAbsolute(0, 0)
     }
@@ -1025,7 +998,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
             Log.f("position : $position")
             val rect = Rect()
-            _MainTabsLayout.getTabAt(position).getCustomView().getGlobalVisibleRect(rect)
+            _MainTabsLayout.getTabAt(position)?.getCustomView()?.getGlobalVisibleRect(rect)
             animateRevealColorFromCoordinates(
                 _MainBackgroundAnimationLayout,
                 TAB_BACKGROUND_COLOR[position],
@@ -1058,6 +1031,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
         override fun onDrawerStateChanged(newState : Int) {}
     }
+
     private val mMenuClickListener : View.OnClickListener = object : View.OnClickListener
     {
         override fun onClick(view : View)
@@ -1073,11 +1047,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                     mMainPresenter.onClickMenuNews()
-                }
-                R.id._menuTestimonialButtonRect ->
-                {
-                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuTestimonial()
                 }
                 R.id._menuFAQsButtonRect ->
                 {
