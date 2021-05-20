@@ -6,6 +6,7 @@ class Common
     {
         const val PACKAGE_NAME : String = "com.littlefox.app.foxschool"
         const val PATH_APP_ROOT : String = "/data/data/" + PACKAGE_NAME + "/files/"
+        const val APP_LINK : String     = "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME
 
         const val BASE_URL : String                 = "https://apis.littlefox.com/"
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
@@ -31,6 +32,7 @@ class Common
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
+        const val PARAMS_VERSION_INFORMATION : String           = "version_information"
         const val PARAMS_USER_LOGIN : String                    = "user_login"
         const val PARAMS_FILE_MAIN_INFO : String                = "file_main_info"
         const val PARAMS_ACCESS_TOKEN : String                  = "access_token"
@@ -46,7 +48,7 @@ class Common
         const val PARAMS_IAC_CONTROLLER_INFORMATION : String    = "iac_controller_information";
         const val PARAMS_IS_FORCE_PROGRESSIVE_PLAY : String     = "is_force_progressive_play"
         const val PARAMS_FIREBASE_PUSH_TOKEN : String           = "firebase_access_token"
-
+        const val PARAMS_IS_PUSH_SEND : String                  = "is_push_send"
 
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
@@ -142,6 +144,8 @@ class Common
 
         const val PLAYER_TYPE_NORMAL : String       = "normal"
         const val PLAYER_TYPE_PROGRESSIVE : String  = "progressive"
+
+        const val MAXIMUM_LOG_FILE_SIZE : Long = 1024 * 1024 * 10L
     }
 
 }

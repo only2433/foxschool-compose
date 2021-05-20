@@ -17,6 +17,6 @@ class IntroContract
         fun onClickIntroduce()
         fun onClickHomeButton()
         fun onClickLogin()
-        fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String?>, grantResults : IntArray)
+        fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
     }
 }

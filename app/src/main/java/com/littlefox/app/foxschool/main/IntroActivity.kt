@@ -157,7 +157,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         mIntroPresenter.acvitityResult(requestCode, resultCode, data)
     }
 
-    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String?>, grantResults : IntArray)
+    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
     {
         mIntroPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }

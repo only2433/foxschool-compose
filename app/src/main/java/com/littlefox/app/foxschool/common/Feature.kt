@@ -42,11 +42,7 @@ object Feature {
      */
     const val IS_APP_PAYMENT_FAIL_NO_CHECK = true
 
-    /**
-     * 중국향 모델 인지 여부. TRUE는 오직 사이트에 올리는 거만 허용. 앱스토어에 올릴땐 무조건 FALSE
-     * 깜빡하면 큰일 난다.
-     */
-    const val IS_CHINESE_MODEL = false
+
 
     const val IS_ENABLE_FIREBASE_CRASHLYTICS = true
 

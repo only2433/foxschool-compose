@@ -102,6 +102,9 @@
     <string name="message_warning_empty_password">비밀번호를 입력해주세요.</string>
     <string name="message_warning_empty_school">학교를 선택해 주세요.</string>
     <string name="message_intro_foxschool">팍스스쿨 회원 전용 앱입니다.\n회원가입은 서비스 신청 후 PC웹에서 가능합니다.</string>
+    <string name="message_force_update">중요 업데이트가 있습니다. 원활한 앱 이용을 위해서는 반드시 업데이트 해야 합니다.</string>
+    <string name="message_need_update">새로운 버전의 앱이 출시되었습니다. 업데이트하시겠습니까?</string>
+
     <string-array name="text_list_gender">
         <item>남</item>
         <item>여</item>
