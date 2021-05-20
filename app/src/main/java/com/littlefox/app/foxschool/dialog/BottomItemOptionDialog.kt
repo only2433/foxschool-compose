@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
 import com.littlefox.logmonitor.Log

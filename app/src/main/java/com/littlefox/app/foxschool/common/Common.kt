@@ -10,6 +10,7 @@ class Common
         const val BASE_URL : String                 = "https://apis.littlefox.com/"
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
+        const val API_INIT : String                 = BASE_PUBLIC_API + "app/version"
         const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
         const val API_ME : String                   = BASE_PUBLIC_API + "auth/me"
@@ -43,6 +44,9 @@ class Common
         const val PARAMS_VOCABULARY_INTERVAL : String           = "vocabulary_interval"
         const val PARAMS_APP_EXECUTE_DATE : String              = "app_execute_date"
         const val PARAMS_IAC_CONTROLLER_INFORMATION : String    = "iac_controller_information";
+        const val PARAMS_IS_FORCE_PROGRESSIVE_PLAY : String     = "is_force_progressive_play"
+        const val PARAMS_FIREBASE_PUSH_TOKEN : String           = "firebase_access_token"
+
 
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
@@ -50,6 +54,7 @@ class Common
         const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
         const val INTENT_RESULT_SERIES_ID : String                  = "series_id";
 
+        const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_MAIN : String                          = "main"
         const val COROUTINE_CODE_ME : String                            = "me"
         const val COROUTINE_CODE_CHANGE_USER : String                   = "change_user"
@@ -65,6 +70,8 @@ class Common
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_ADD : String       = "vocabulary_contents_add"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE : String    = "vocabulary_contents_delete"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
+
+        const val LOG_FILE : String = "littlefox_foxschool.txt"
 
         // View name of the header image. Used for actihvity scene transitions
         const val STORY_DETAIL_LIST_HEADER_IMAGE : String       = "story_content_list_header_image"
@@ -132,6 +139,9 @@ class Common
 
         const val INAPP_CAMPAIGN_MODE_NEWS : String             = "N"
         const val INAPP_CAMPAIGN_MODE_TESTIMONIAL : String      = "T"
+
+        const val PLAYER_TYPE_NORMAL : String       = "normal"
+        const val PLAYER_TYPE_PROGRESSIVE : String  = "progressive"
     }
 
 }

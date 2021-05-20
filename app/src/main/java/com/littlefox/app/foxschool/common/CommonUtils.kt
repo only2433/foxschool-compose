@@ -46,7 +46,7 @@ import com.google.firebase.BuildConfig
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.enumerate.BookColor

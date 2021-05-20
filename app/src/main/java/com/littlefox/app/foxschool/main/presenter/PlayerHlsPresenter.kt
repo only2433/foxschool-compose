@@ -13,7 +13,6 @@ import android.os.Vibrator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -27,7 +26,7 @@ import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
@@ -43,7 +42,6 @@ import com.littlefox.app.foxschool.coroutine.AuthContentPlayCoroutine
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
 import com.littlefox.app.foxschool.coroutine.StudyLogSaveCoroutine
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
-import com.littlefox.app.foxschool.crashtics.GoogleAnalyticsHelper
 import com.littlefox.app.foxschool.database.CoachmarkDao
 import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity

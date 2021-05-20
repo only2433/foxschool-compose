@@ -13,7 +13,7 @@ import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.adapter.listener.PlayerEventListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font

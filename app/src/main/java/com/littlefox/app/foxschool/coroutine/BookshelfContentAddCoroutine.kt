@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil

@@ -1,6 +1,6 @@
 package com.littlefox.app.foxschool.`object`.result.player
 
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import java.util.*
 
 class PlayItemResult

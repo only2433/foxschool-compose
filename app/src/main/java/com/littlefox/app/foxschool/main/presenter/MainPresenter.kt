@@ -19,7 +19,7 @@ import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.UserInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.common.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.InAppCompaignResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult

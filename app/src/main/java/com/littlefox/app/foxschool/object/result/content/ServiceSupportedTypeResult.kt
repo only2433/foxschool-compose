@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`.result.common
+package com.littlefox.app.foxschool.`object`.result.content
 
 import com.littlefox.app.foxschool.common.Common
 import java.io.Serializable

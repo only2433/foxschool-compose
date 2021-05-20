@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.`object`.result.common
+package com.littlefox.app.foxschool.`object`.result.content
 
 import android.os.Parcel
 import android.os.Parcelable
