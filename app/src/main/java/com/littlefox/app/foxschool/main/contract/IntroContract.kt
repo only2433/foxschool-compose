@@ -9,7 +9,7 @@ class IntroContract
         fun showToast(message : String)
         fun showItemSelectView()
         fun showProgressView()
-        fun setProgressPercent(percent : Int)
+        fun setProgressPercent(fromPercent : Float, toPercent : Float)
     }
 
     interface Presenter : BaseContract.Presenter

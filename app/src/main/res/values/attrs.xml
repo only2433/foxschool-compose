@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="banner">
+        <attr name="base_width" format ="reference|integer"/>
+        <attr name="base_height" format ="reference|integer"/>
+        <attr name="image_width" format ="reference|integer"/>
+        <attr name="image_height" format ="reference|integer"/>
+        <attr name="indicator_size" format ="reference|integer"/>
+        <attr name="indicator_top" format ="reference|integer"/>
+    </declare-styleable>
+</resources>

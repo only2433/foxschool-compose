@@ -20,10 +20,13 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.contract.IntroContract
 import com.littlefox.app.foxschool.main.presenter.IntroPresenter
+import com.littlefox.app.foxschool.view.ProgressBarAnimation
+import com.littlefox.app.foxschool.view.WaveDrawable
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -74,6 +77,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     private lateinit var mIntroPresenter : IntroContract.Presenter
     private var mHomeKeyIntentFilter : IntentFilter? = null
     private var mFrameAnimationDrawable : AnimationDrawable? = null
+    private lateinit var mProgressBarAnimation : ProgressBarAnimation;
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -191,10 +195,11 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         startFrameAnimation()
     }
 
-    override fun setProgressPercent(percent : Int)
+    override fun setProgressPercent(fromPercent : Float, toPercent : Float)
     {
-        _IntroProgressPercent.setProgress(percent)
-        _IntroProgressText.setText("$percent%")
+        mProgressBarAnimation = ProgressBarAnimation(_IntroProgressPercent, _IntroProgressText, fromPercent, toPercent)
+        mProgressBarAnimation.duration = Common.DURATION_SHORT_LONG
+        _IntroProgressPercent.startAnimation(mProgressBarAnimation)
     }
 
     @OnClick( R.id._introduceText, R.id._loginText)

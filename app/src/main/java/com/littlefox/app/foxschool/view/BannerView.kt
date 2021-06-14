@@ -1,16 +1,41 @@
 package com.littlefox.app.foxschool.view
 
-import android.R
+
 import android.content.Context
+import android.content.res.TypedArray
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.ViewFlipper
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.result.main.BannerInformationResult
+import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.view.listener.OnBannerClickListener
 import com.littlefox.logmonitor.Log
+import com.ssomai.android.scalablelayout.ScalableLayout
 import java.util.*
 
-class BannerView : RelativeLayout {
+class BannerView : RelativeLayout
+{
+    companion object {
+        private const val MESSAGE_CHANGE_BANNER = 1001
+        private const val DURATION_PAGE_CHANGE = 3000
+        private const val DURATION_PAGE_ANIMATION = 300
+        private const val DEFAULT_VIEW_PAGER_WIDTH = 940
+        private const val DEFAULT_VIEW_PAGER_HEIGHT = 400
+        private const val DEFAULT_INDICATOR_SIZE = 30
+        private const val DEFAULT_INDICATOR_TOP = 370
+        private const val TAG_INDICATOR = "indicator"
+        private const val TAG_IMAGE = "image"
+    }
+
     internal inner class PageChangeTask : TimerTask() {
         override fun run() {
             if (mCurrentPosition >= mBannerInformationList!!.size - 1) {
@@ -46,10 +71,10 @@ class BannerView : RelativeLayout {
     private var isIndicatorHave = false
     private var mCurrentPosition = 0
     private var mBannerInformationList: ArrayList<BannerInformationResult>? = null
-    private var _BaseLayout: ScalableLayout? = null
-    private var _BannerViewSwitcher: ViewFlipper? = null
-    private var mContext: Context? = null
-    private var mLayoutInflator: LayoutInflater? = null
+    private lateinit var _BaseLayout: ScalableLayout
+    private lateinit var _BannerViewSwitcher: ViewFlipper
+    private lateinit var mContext: Context
+    private lateinit var mLayoutInflator: LayoutInflater
     private var mDiffImageSizeInLayout = 0
     private var mPageChangeTimer: Timer? = null
 
@@ -107,12 +132,12 @@ class BannerView : RelativeLayout {
     }
 
     private fun initImageAddLayoutParams() {
-        _BannerViewSwitcher.setInAnimation(mContext, R.anim.fade_in)
-        _BannerViewSwitcher.setOutAnimation(mContext, R.anim.fade_out)
+        _BannerViewSwitcher.setInAnimation(mContext, android.R.anim.fade_in)
+        _BannerViewSwitcher.setOutAnimation(mContext, android.R.anim.fade_out)
         if (isIndicatorHave) {
             for (i in mBannerInformationList!!.indices) {
                 val imageView = ImageView(mContext)
-                (mContext as AppCompatActivity?).runOnUiThread(Runnable {
+                (mContext as AppCompatActivity?)!!.runOnUiThread(Runnable {
                     Glide.with(mContext)
                             .load(mBannerInformationList!![i].getImageUrl())
                             .transition(DrawableTransitionOptions.withCrossFade())
@@ -120,7 +145,7 @@ class BannerView : RelativeLayout {
                 })
                 imageView.setOnClickListener { v ->
                     Log.i("getTag : " + v.tag.toString())
-                    mOnBannerClickListener.onBannerSelectItem(i)
+                    mOnBannerClickListener?.onBannerSelectItem(i)
                 }
                 _BannerViewSwitcher.addView(imageView)
             }
@@ -131,7 +156,7 @@ class BannerView : RelativeLayout {
      * 배너 이미지 사이즈 중앙에 배너 인디케이터를 위치 시키는 메소드
      */
     private fun initIndicatorLayoutParams() {
-        mDiffImageSizeInLayout = ((_BaseLayout.getScaleWidth() - mImageWidth) / 2)
+        mDiffImageSizeInLayout = ((_BaseLayout.getScaleWidth() - mImageWidth) / 2).toInt()
         val DEFAULT_INDICATOR_MARGIN_LEFT: Int = CommonUtils.getInstance(mContext).getPixel(34)
         val centerLocation = if (mBannerInformationList!!.size > 1) (mImageWidth - (mIndicatorSize * mBannerInformationList!!.size + DEFAULT_INDICATOR_MARGIN_LEFT * (mBannerInformationList!!.size - 1))) / 2 + mDiffImageSizeInLayout else (mImageWidth - mIndicatorSize) / 2 + mDiffImageSizeInLayout
         if (isIndicatorHave) {
@@ -210,19 +235,10 @@ class BannerView : RelativeLayout {
         }
     }
 
-    fun setOnBannerClickListener(onBannerClickListener: OnBannerClickListener?) {
+    fun setOnBannerClickListener(onBannerClickListener: OnBannerClickListener?)
+    {
         mOnBannerClickListener = onBannerClickListener
     }
 
-    companion object {
-        private const val MESSAGE_CHANGE_BANNER = 1001
-        private const val DURATION_PAGE_CHANGE = 3000
-        private const val DURATION_PAGE_ANIMATION = 300
-        private const val DEFAULT_VIEW_PAGER_WIDTH = 940
-        private const val DEFAULT_VIEW_PAGER_HEIGHT = 400
-        private const val DEFAULT_INDICATOR_SIZE = 30
-        private const val DEFAULT_INDICATOR_TOP = 370
-        private const val TAG_INDICATOR = "indicator"
-        private const val TAG_IMAGE = "image"
-    }
+
 }

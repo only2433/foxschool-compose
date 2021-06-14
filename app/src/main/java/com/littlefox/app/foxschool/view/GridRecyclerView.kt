@@ -32,12 +32,14 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * Created by Freddie (Musenkishi) Lust-Hed.
  */
-class GridRecyclerView : RecyclerView {
+class GridRecyclerView : RecyclerView
+{
     constructor(context: Context?) : super(context!!) {}
     constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {}
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context!!, attrs, defStyle) {}
 
-    override fun setLayoutManager(layout: LayoutManager?) {
+    override fun setLayoutManager(layout: LayoutManager?)
+    {
         if (layout is GridLayoutManager) {
             super.setLayoutManager(layout)
         } else {
@@ -45,8 +47,10 @@ class GridRecyclerView : RecyclerView {
         }
     }
 
-    override fun attachLayoutAnimationParameters(child: View, params: ViewGroup.LayoutParams, index: Int, count: Int) {
-        if (adapter != null && layoutManager is GridLayoutManager) {
+    override fun attachLayoutAnimationParameters(child: View, params: ViewGroup.LayoutParams, index: Int, count: Int)
+    {
+        if (adapter != null && layoutManager is GridLayoutManager)
+        {
             var animationParams = params.layoutAnimationParameters as GridLayoutAnimationController.AnimationParameters
             if (animationParams == null) {
                 animationParams = GridLayoutAnimationController.AnimationParameters()
@@ -60,7 +64,9 @@ class GridRecyclerView : RecyclerView {
             val invertedIndex = count - 1 - index
             animationParams.column = columns - 1 - invertedIndex % columns
             animationParams.row = animationParams.rowsCount - 1 - invertedIndex / columns
-        } else {
+        }
+        else
+        {
             super.attachLayoutAnimationParameters(child, params, index, count)
         }
     }

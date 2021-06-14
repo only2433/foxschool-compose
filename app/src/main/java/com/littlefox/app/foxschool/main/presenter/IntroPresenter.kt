@@ -46,21 +46,21 @@ class IntroPresenter : IntroContract.Presenter
 {
     companion object
     {
-        private const val PERMISSION_REQUEST : Int  = 0x01
-        private const val REQUEST_CODE_LOGIN : Int      = 1001
-        private const val REQUEST_CODE_GO_LOGIN : Int   = 1002
+        private const val PERMISSION_REQUEST : Int                  = 0x01
+        private const val REQUEST_CODE_LOGIN : Int                  = 1001
+        private const val REQUEST_CODE_GO_LOGIN : Int               = 1002
         private const val DIALOG_TYPE_SELECT_UPDATE_CONFIRM : Int   = 10001
         private const val DIALOG_TYPE_FORCE_UPDATE : Int            = 10002
         private const val MESSAGE_INIT : Int                    = 100
-        private const val MESSAGE_CHECK_API_MAIN : Int          = 101
-        private const val MESSAGE_REQEUST_COMPLETE_LOGIN : Int  = 102
-        private const val MESSAGE_INCREASE_PERCENT : Int        = 103
+        private const val MESSAGE_REQUEST_AUTO_LOGIN : Int      = 101
+        private const val MESSAGE_CHECK_API_MAIN : Int          = 102
+        private const val MESSAGE_REQEUST_COMPLETE_LOGIN : Int  = 103
         private const val MESSAGE_START_LOGIN : Int             = 104
         private const val MESSAGE_START_MAIN : Int              = 105
         private const val MESSAGE_APP_SERVER_ERROR : Int        = 106
         private const val MAX_PROGRESS_DURATION : Int       = 100
         private const val PROGRESS_TASK_PERIOD : Int        = 20
-        private val PERCENT_SEQUENCE = intArrayOf(0, 30, 60, 100)
+        private val PERCENT_SEQUENCE = floatArrayOf(0f, 30f, 60f, 100f)
     }
 
     private lateinit var mContext : Context
@@ -76,7 +76,7 @@ class IntroPresenter : IntroContract.Presenter
     private var mAuthMeCoroutine : AuthMeCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
 
-    private inner class ProgressTimerTask : TimerTask()
+    /*private inner class ProgressTimerTask : TimerTask()
     {
         override fun run()
         {
@@ -109,7 +109,7 @@ class IntroPresenter : IntroContract.Presenter
             message.arg1 = (mTimerCount * 100 / MAX_PROGRESS_DURATION)
             mMainHandler.sendMessage(message)
         }
-    }
+    }*/
 
 
 
@@ -207,15 +207,59 @@ class IntroPresenter : IntroContract.Presenter
     private fun startAPIProcess()
     {
         Log.f("")
-        mCurrentIntroProcess = if(Feature.IS_FREE_USER)
+        if(Feature.IS_FREE_USER)
         {
-            IntroProcess.LOGIN_COMPLTE
+            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+            enableProgressAniamtion(IntroProcess.LOGIN_COMPLTE)
         }
         else
         {
-            IntroProcess.INIT_COMPLETE
+            mCurrentIntroProcess = IntroProcess.INIT_COMPLETE
+            enableProgressAniamtion(IntroProcess.INIT_COMPLETE)
         }
-        enableTimer(true)
+    }
+
+    private fun enableProgressAniamtion(process : IntroProcess)
+    {
+        Log.f("process : $process")
+        when(process)
+        {
+            IntroProcess.INIT_COMPLETE ->
+            {
+                mMainContractView.setProgressPercent(
+                    PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[1]
+                )
+                mMainHandler.sendEmptyMessageDelayed(
+                    IntroPresenter.MESSAGE_REQUEST_AUTO_LOGIN,
+                    Common.DURATION_SHORT_LONG
+                )
+            }
+            IntroProcess.LOGIN_COMPLTE ->
+            {
+                if(Feature.IS_FREE_USER)
+                {
+                    mMainContractView.setProgressPercent(
+                        PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[2]
+                    )
+                } else
+                {
+                    mMainContractView.setProgressPercent(
+                        PERCENT_SEQUENCE[1], PERCENT_SEQUENCE[2]
+                    )
+                }
+                mMainHandler.sendEmptyMessageDelayed(
+                    MESSAGE_CHECK_API_MAIN,
+                    Common.DURATION_SHORT_LONG
+                )
+            }
+            IntroProcess.MAIN_COMPELTE ->
+            {
+                mMainContractView.setProgressPercent(
+                    PERCENT_SEQUENCE[2], PERCENT_SEQUENCE[3]
+                )
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_MAIN, Common.DURATION_SHORT_LONG)
+            }
+        }
     }
 
     private fun settingLogFile()
@@ -268,21 +312,6 @@ class IntroPresenter : IntroContract.Presenter
         mMainInformationCoroutine?.execute()
     }
 
-    private fun enableTimer(isStart : Boolean)
-    {
-        if(isStart)
-        {
-            mProgressTimer = Timer()
-            mProgressTimer!!.schedule(ProgressTimerTask(), 0, PROGRESS_TASK_PERIOD.toLong())
-        } else
-        {
-            if(mProgressTimer != null)
-            {
-                mProgressTimer!!.cancel()
-                mProgressTimer = null
-            }
-        }
-    }
 
     private fun startMainActivity()
     {
@@ -311,7 +340,6 @@ class IntroPresenter : IntroContract.Presenter
     private fun release()
     {
         Log.f("")
-        enableTimer(false)
         mAuthMeCoroutine?.cancel()
         mAuthMeCoroutine = null
         mMainInformationCoroutine?.cancel()
@@ -410,7 +438,7 @@ class IntroPresenter : IntroContract.Presenter
         when(msg.what)
         {
             MESSAGE_INIT -> init()
-            MESSAGE_INCREASE_PERCENT -> mMainContractView.setProgressPercent(msg.arg1)
+            MESSAGE_REQUEST_AUTO_LOGIN -> requestAutoLoginAsync();
             MESSAGE_CHECK_API_MAIN -> requestMainInformationAsync()
             MESSAGE_REQEUST_COMPLETE_LOGIN -> requestInitAsync()
             MESSAGE_START_LOGIN -> startLoginActivity()
@@ -471,7 +499,7 @@ class IntroPresenter : IntroContract.Presenter
                     val userInformationResult : UserInformationResult = (result as UserInformationBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, userInformationResult)
                     mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                    enableTimer(true)
+                    enableProgressAniamtion(IntroProcess.LOGIN_COMPLTE)
                 }
                 else if(code == Common.COROUTINE_CODE_MAIN)
                 {
@@ -479,7 +507,7 @@ class IntroPresenter : IntroContract.Presenter
                     val mainInformationResult : MainInformationResult = (`object` as MainInformationBaseObject).getData()
                     CommonUtils.getInstance(mContext).saveMainData(mainInformationResult)
                     mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
-                    enableTimer(true)
+                    enableProgressAniamtion(IntroProcess.MAIN_COMPELTE)
                 }
             } else
             {
