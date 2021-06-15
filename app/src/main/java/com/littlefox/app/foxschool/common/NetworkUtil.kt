@@ -53,11 +53,12 @@ object NetworkUtil
 
     fun isConnectNetwork(context : Context) : Boolean
     {
-        return if(getConnectivityStatus(context) == TYPE_NOT_CONNECTED)
+        if(getConnectivityStatus(context) == TYPE_NOT_CONNECTED)
         {
-            false
+            return false
         }
-        else true
+        else
+            return true
     }
 
     fun getConnectivityStatusString(context : Context) : String?

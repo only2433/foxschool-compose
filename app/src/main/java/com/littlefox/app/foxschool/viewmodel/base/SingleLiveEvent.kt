@@ -34,16 +34,17 @@ import java.util.concurrent.atomic.AtomicBoolean
  *
  * Note that only one observer is going to be notified of changes.
  */
-class SingleLiveEvent<T> : MutableLiveData<T?>()
+class SingleLiveEvent<T> : MutableLiveData<T>()
 {
     companion object
     {
         private const val TAG = "SingleLiveEvent"
     }
 
-    private val mPending = AtomicBoolean(false)
+    private val mPending : AtomicBoolean = AtomicBoolean(false)
+
     @MainThread
-    fun observe(owner : LifecycleOwner, observer : Observer<Any>)
+    override fun observe(owner : LifecycleOwner, observer : Observer<in T>)
     {
         if(hasActiveObservers())
         {
@@ -73,11 +74,6 @@ class SingleLiveEvent<T> : MutableLiveData<T?>()
     fun call()
     {
         value = null
-    }
-
-    fun observe(newsWebviewFragment : NewsWebviewFragment, observer : Observer<T>)
-    {
-
     }
 
 

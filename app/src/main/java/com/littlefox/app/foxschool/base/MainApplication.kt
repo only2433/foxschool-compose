@@ -19,6 +19,6 @@ public class MainApplication : Application() {
         var sDisplayHeightFactor = 0.0f
 
         /** 해당 변수는 static 변수도 어느순간 값을 회수되기 때문에 값을 가지고 있어야 하기 때문  */
-        lateinit var sDisPlayMetrics: DisplayMetrics;
+        var sDisPlayMetrics: DisplayMetrics? = null;
     }
 }

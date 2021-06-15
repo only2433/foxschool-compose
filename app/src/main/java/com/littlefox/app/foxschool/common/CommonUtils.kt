@@ -173,7 +173,7 @@ class CommonUtils
         Log.f("VERSION SDK : " + Build.VERSION.SDK_INT)
         Log.f("APP VERSION : " + getPackageVersionName(Common.PACKAGE_NAME))
         Log.f("Device ID : $secureDeviceID")
-        Log.f("WIDTH PIXEL : " + MainApplication.sDisPlayMetrics.widthPixels + ", HEIGHT PIXEL : " + MainApplication.sDisPlayMetrics.heightPixels)
+        Log.f("WIDTH PIXEL : " + MainApplication.sDisPlayMetrics!!.widthPixels + ", HEIGHT PIXEL : " + MainApplication.sDisPlayMetrics!!.heightPixels)
         Log.f("Language : " + Locale.getDefault().toString())
         Log.f("Available Storage : $availableStorageSize")
         Log.f("checkTabletDeviceWithProperties : " + checkTabletDeviceWithProperties())
@@ -263,28 +263,28 @@ class CommonUtils
             MainApplication.sDisPlayMetrics = DisplayMetrics()
         }
         (sContext as Activity).windowManager.defaultDisplay.getMetrics(MainApplication.sDisPlayMetrics)
-        width = MainApplication.sDisPlayMetrics.widthPixels
-        height = MainApplication.sDisPlayMetrics.heightPixels
+        width = MainApplication.sDisPlayMetrics!!.widthPixels
+        height = MainApplication.sDisPlayMetrics!!.heightPixels
         /**
          * 방어코드 가끔 OS 결함으로 width , height 가 잘못들어올때 방어코드 처리
          */
         if(isTabletModel)
         {
-            if(MainApplication.sDisPlayMetrics.widthPixels < MainApplication.sDisPlayMetrics.heightPixels)
+            if(MainApplication.sDisPlayMetrics!!.widthPixels < MainApplication.sDisPlayMetrics!!.heightPixels)
             {
-                MainApplication.sDisPlayMetrics.widthPixels = height
-                MainApplication.sDisPlayMetrics.heightPixels = width
+                MainApplication.sDisPlayMetrics!!.widthPixels = height
+                MainApplication.sDisPlayMetrics!!.heightPixels = width
             }
         }
         else
         {
-            if(MainApplication.sDisPlayMetrics.widthPixels > MainApplication.sDisPlayMetrics.heightPixels)
+            if(MainApplication.sDisPlayMetrics!!.widthPixels > MainApplication.sDisPlayMetrics!!.heightPixels)
             {
-                MainApplication.sDisPlayMetrics.widthPixels = height
-                MainApplication.sDisPlayMetrics.heightPixels = width
+                MainApplication.sDisPlayMetrics!!.widthPixels = height
+                MainApplication.sDisPlayMetrics!!.heightPixels = width
             }
         }
-        val `object` = DisPlayMetricsObject(MainApplication.sDisPlayMetrics.widthPixels.toFloat(), MainApplication.sDisPlayMetrics.heightPixels.toFloat())
+        val `object` = DisPlayMetricsObject(MainApplication.sDisPlayMetrics!!.widthPixels.toFloat(), MainApplication.sDisPlayMetrics!!.heightPixels.toFloat())
         setPreferenceObject(Common.PARAMS_DISPLAY_METRICS, `object`)
     }
 
@@ -299,7 +299,11 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET) MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.widthPixels / 1920.0f else MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.widthPixels / 1080.0f
+                if(Feature.IS_TABLET)
+
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
+                else
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
         }
         catch(e : NullPointerException)
@@ -326,9 +330,9 @@ class CommonUtils
             {
                 if(Feature.IS_TABLET)
                 {
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.widthPixels / 1920.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
                 }
-                else MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.widthPixels / 1080.0f
+                else MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
         }
         catch(e : NullPointerException)
@@ -354,9 +358,9 @@ class CommonUtils
             if(MainApplication.sDisplayFactor == 0.0f)
             {
                 if(Feature.IS_TABLET)
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.heightPixels / 1200.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
                 else
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.heightPixels / 1920.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
         }
         catch(e : NullPointerException)
@@ -382,9 +386,9 @@ class CommonUtils
             if(MainApplication.sDisplayFactor == 0.0f)
             {
                 if(Feature.IS_TABLET)
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.heightPixels / 1200.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
                 else
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics.heightPixels / 1920.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
         }
         catch(e : NullPointerException)
@@ -478,7 +482,7 @@ class CommonUtils
                     return 0
                 }
             }
-            return MainApplication.sDisPlayMetrics.widthPixels
+            return MainApplication.sDisPlayMetrics!!.widthPixels
         }
 
     /**
@@ -500,7 +504,7 @@ class CommonUtils
                     return 0
                 }
             }
-            return MainApplication.sDisPlayMetrics.heightPixels
+            return MainApplication.sDisPlayMetrics!!.heightPixels
         }
 
     /**

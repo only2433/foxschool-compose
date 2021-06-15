@@ -65,7 +65,7 @@ class MainStoryFragment : Fragment()
         R.id._navigationLevel8,
         R.id._navigationLevel9
     )
-    lateinit var _NavigationLevelButtonList : List<TextView>
+    lateinit var _NavigationLevelButtonList : List<@JvmSuppressWildcards TextView>
 
     var mAnimationHandler : Handler? = object : Handler()
     {

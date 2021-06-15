@@ -140,14 +140,14 @@ class VocabularyPresenter : VocabularyContract.Presenter
         releaseAudio()
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent)
+    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         Log.f("requestCode : $requestCode, resultCode : $resultCode")
         when(requestCode)
         {
             REQUEST_CODE_UPDATE_VOCABULARY -> if(resultCode == Activity.RESULT_OK)
             {
-                val bookName : String = data.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME)
+                val bookName : String = data!!.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME)
                 Log.f("bookName : $bookName")
                 mVocabularyContractView!!.setTitle(bookName)
             }

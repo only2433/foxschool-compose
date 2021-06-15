@@ -115,7 +115,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2Layout,
         R.id._childUser3Layout
     )
-    lateinit var _UserSelectMenuItemLayoutList : List<ScalableLayout>
+    lateinit var _UserSelectMenuItemLayoutList : List<@JvmSuppressWildcards ScalableLayout>
 
     @BindViews(
         R.id._parentUserThumnnailImage,
@@ -123,7 +123,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2ThumnnailImage,
         R.id._childUser3ThumnnailImage
     )
-    lateinit var _UserSelectMenuItemThumnnailList : List<ImageView>
+    lateinit var _UserSelectMenuItemThumnnailList : List<@JvmSuppressWildcards ImageView>
 
     @BindViews(
         R.id._parentUserBadgeBackground,
@@ -131,7 +131,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2BadgeBackground,
         R.id._childUser3BadgeBackground
     )
-    lateinit var _UserSelectMenuItemBadgeList : List<ImageView>
+    lateinit var _UserSelectMenuItemBadgeList : List<@JvmSuppressWildcards ImageView>
 
     @BindViews(
         R.id._parentUserTypeText,
@@ -139,7 +139,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2TypeText,
         R.id._childUser3TypeText
     )
-    lateinit var _UserSelectMenuItemTypeList : List<TextView>
+    lateinit var _UserSelectMenuItemTypeList : List<@JvmSuppressWildcards TextView>
 
     @BindViews(
         R.id._parentUserNameText,
@@ -147,7 +147,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2NameText,
         R.id._childUser3NameText
     )
-    lateinit var _UserSelectMenuItemNameList : List<TextView>
+    lateinit var _UserSelectMenuItemNameList : List<@JvmSuppressWildcards TextView>
 
     @BindViews(
         R.id._parentUserCheckImage,
@@ -155,7 +155,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._childUser2CheckImage,
         R.id._childUser3CheckImage
     )
-    lateinit var _UserSelectMenuItemCheckImageList : List<ImageView>
+    lateinit var _UserSelectMenuItemCheckImageList : List<@JvmSuppressWildcards ImageView>
 
     @BindView(R.id._addChildUserButtonLayout)
     lateinit var _AddChildUserButtonLayout : ScalableLayout

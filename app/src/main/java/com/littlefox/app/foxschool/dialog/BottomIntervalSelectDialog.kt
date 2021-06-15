@@ -22,7 +22,7 @@ class BottomIntervalSelectDialog : BottomSheetDialog
     lateinit var _TitleText : TextView
 
     @BindViews(R.id._intervalNoHaveButton, R.id._interval1SecButton, R.id._interval2SecButton, R.id._interval3SecButton, R.id._interval5SecButton, R.id._interval7SecButton, R.id._interval10SecButton, R.id._interval15SecButton, R.id._interval20SecButton, R.id._interval30SecButton)
-    lateinit var _IntervalIDList : List<TextView>
+    lateinit var _IntervalIDList : List<@JvmSuppressWildcards TextView>
 
     private val mContext : Context
     private var mCurrentIntervalSecond : Int = 0

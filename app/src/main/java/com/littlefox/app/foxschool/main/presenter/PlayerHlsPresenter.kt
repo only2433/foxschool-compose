@@ -232,8 +232,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent)
+
+    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
+
     }
 
     override fun sendMessageEvent(msg : Message)

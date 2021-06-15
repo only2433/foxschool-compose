@@ -267,10 +267,10 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     lateinit var _PlayerPrevPageButton : ImageView
 
     @BindViews(R.id._player1PageButton, R.id._player2PageButton, R.id._player3PageButton, R.id._player4PageButton, R.id._player5PageButton)
-    lateinit var _PageButtonList : List<ImageView>
+    lateinit var _PageButtonList : List<@JvmSuppressWildcards ImageView>
 
     @BindViews(R.id._player1PageText, R.id._player2PageText, R.id._player3PageText, R.id._player4PageText, R.id._player5PageText)
-    lateinit var _PageTextList : List<TextView>
+    lateinit var _PageTextList : List<@JvmSuppressWildcards TextView>
 
     @BindView(R.id._playerNextPageButton)
     lateinit var _PlayerNextPageButton : ImageView
