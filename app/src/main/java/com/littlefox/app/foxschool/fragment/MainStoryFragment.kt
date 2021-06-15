@@ -127,12 +127,13 @@ class MainStoryFragment : Fragment()
     {
         Log.f("")
         var view : View? = null
-        view = if(Feature.IS_TABLET)
+        if(Feature.IS_TABLET)
         {
-            inflater.inflate(R.layout.fragment_main_story_tablet, container, false)
-        } else
+            view = inflater.inflate(R.layout.fragment_main_story_tablet, container, false)
+        }
+        else
         {
-            inflater.inflate(R.layout.fragment_main_story, container, false)
+            view = inflater.inflate(R.layout.fragment_main_story, container, false)
         }
         mUnbinder = ButterKnife.bind(this, view)
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()

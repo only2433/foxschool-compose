@@ -17,12 +17,12 @@ class CompanyInformationResult
 
     fun getCEO() : String
     {
-        return ceo;
+        return ceo
     }
 
     fun getAddress() : String
     {
-        return address;
+        return address
     }
 
     /**
@@ -31,7 +31,7 @@ class CompanyInformationResult
      */
     fun getCompanyRegistrationNumber() : String
     {
-        return brn;
+        return brn
     }
 
     /**
@@ -40,21 +40,21 @@ class CompanyInformationResult
      */
     fun getReportCompany() : String
     {
-        return mosrn;
+        return mosrn
     }
 
     fun getElectronicPublishingCertification() : String
     {
-        return ecn_number;
+        return ecn_number
     }
 
     fun getPhoneNumber() : String
     {
-        return phone;
+        return phone
     }
 
     fun getFax() : String
     {
-        return fax;
+        return fax
     }
 }

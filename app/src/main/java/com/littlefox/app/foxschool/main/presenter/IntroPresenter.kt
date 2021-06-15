@@ -41,7 +41,6 @@ import com.littlefox.logmonitor.Log
 
 import java.util.*
 
-@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class IntroPresenter : IntroContract.Presenter
 {
     companion object
@@ -67,50 +66,12 @@ class IntroPresenter : IntroContract.Presenter
     private lateinit var mPermissionList : ArrayList<String>
     private lateinit var mMainHandler : WeakReferenceHandler
     private var mMainContractView : IntroContract.View
-    private var mTimerCount : Int = 0
-    private var mProgressTimer : Timer? = null
     private var mCurrentIntroProcess : IntroProcess = IntroProcess.NONE
     private var isAutoLogin = false
     private var isDisposableLogin = false
     private var mInitCoroutine : InitCoroutine? = null
     private var mAuthMeCoroutine : AuthMeCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
-
-    /*private inner class ProgressTimerTask : TimerTask()
-    {
-        override fun run()
-        {
-            mTimerCount++
-            Log.f("mCurrentIntroProcess : $mCurrentIntroProcess, mTimerCount : $mTimerCount")
-            if(mCurrentIntroProcess === IntroProcess.INIT_COMPLETE)
-            {
-                if(mTimerCount == PERCENT_SEQUENCE[1])
-                {
-                    enableTimer(false)
-                    requestAutoLoginAsync()
-                }
-            } else if(mCurrentIntroProcess === IntroProcess.LOGIN_COMPLTE)
-            {
-                if(mTimerCount == PERCENT_SEQUENCE[2])
-                {
-                    enableTimer(false)
-                    requestMainInformationAsync()
-                }
-            } else if(mCurrentIntroProcess === IntroProcess.MAIN_COMPELTE)
-            {
-                if(mTimerCount == PERCENT_SEQUENCE[3])
-                {
-                    enableTimer(false)
-                    mMainHandler.sendEmptyMessage(MESSAGE_START_MAIN)
-                }
-            }
-            val message = Message.obtain()
-            message.what = MESSAGE_INCREASE_PERCENT
-            message.arg1 = (mTimerCount * 100 / MAX_PROGRESS_DURATION)
-            mMainHandler.sendMessage(message)
-        }
-    }*/
-
 
 
     constructor(context : Context)

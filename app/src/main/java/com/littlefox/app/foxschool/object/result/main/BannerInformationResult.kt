@@ -11,26 +11,26 @@ class BannerInformationResult
 
     fun getBannerID() : String
     {
-        return id;
+        return id
     }
 
     fun getLinkUrl() : String
     {
-        return link_url;
+        return link_url
     }
 
     fun getImageUrl() : String
     {
-        return image_url;
+        return image_url
     }
 
     fun getType() : String
     {
-        return type;
+        return type
     }
 
     fun getArticleNumber() : String
     {
-        return article_num;
+        return article_num
     }
 }
