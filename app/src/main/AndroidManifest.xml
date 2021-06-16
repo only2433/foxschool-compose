@@ -43,6 +43,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".main.MainActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
         <activity android:name=".main.PlayerHlsActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"

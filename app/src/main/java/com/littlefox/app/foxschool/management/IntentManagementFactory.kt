@@ -15,6 +15,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.main.MainActivity
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
@@ -168,6 +169,8 @@ class IntentManagementFactory
         var intent : Intent? = null
         when(mode)
         {
+            ActivityMode.MAIN -> intent = Intent(mContext, MainActivity::class.java)
+
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)
             ActivityMode.LOGIN ->

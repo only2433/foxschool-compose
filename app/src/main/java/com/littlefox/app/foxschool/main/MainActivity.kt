@@ -67,9 +67,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._mainBackgroundAnimationLayout)
     lateinit var _MainBackgroundAnimationLayout : FrameLayout
 
+    @Nullable
     @BindView(R.id._topMenuSetting)
     lateinit var _TopMenuSetting : ImageView
 
+    @Nullable
     @BindView(R.id._topMenuSearch)
     lateinit var _TopMenuSearch : ImageView
 
@@ -407,7 +409,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         )
     }
 
-    override fun settingUserInformation(userInformationResult : UserInformationResult)
+    override fun settingUserInformation(userInformationResult : UserInformationResult?)
     {
         setMenuLoginStatus()
         if(Feature.IS_FREE_USER)
@@ -418,21 +420,19 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
             _UserSelectMenuItemLayoutList[i].setVisibility(View.GONE)
         }
-        mCurrentUserStatusSize = userInformationResult.getUserInformationList().size
+        mCurrentUserStatusSize = userInformationResult!!.getUserInformationList().size
         for(i in 0 until mCurrentUserStatusSize)
         {
             val position = i
             _UserSelectMenuItemLayoutList[i].setVisibility(View.VISIBLE)
-            if(userInformationResult.getUserInformationList().get(i).getID()
-                    .equals(userInformationResult.getCurrentUserID())
-            )
+            if(userInformationResult!!.getUserInformationList().get(i).getID().equals(userInformationResult!!.getCurrentUserID()))
             {
                 mCurrentUserPosition = i
                 Glide.with(this)
-                    .load(userInformationResult.getUserInformationList().get(i).getThumbnail())
+                    .load(userInformationResult!!.getUserInformationList().get(i).getThumbnail())
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(_UserThumbnailImage)
-                if(userInformationResult.getUserInformationList().get(i).isCustomAvatar)
+                if(userInformationResult!!.getUserInformationList().get(i).isCustomAvatar)
                 {
                     _UserBadgeBackground.visibility = View.VISIBLE
                 } else
@@ -446,7 +446,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 {
                     _UserTypeText.setText(getResources().getString(R.string.text_child_user).toString() + i.toString())
                 }
-                _UserNameText.setText(userInformationResult.getUserInformationList().get(i).getNickName())
+                _UserNameText.setText(userInformationResult!!.getUserInformationList().get(i).getNickName())
                 _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_787a9f))
                 _UserSelectMenuItemNameList[i].setTextColor(getResources().getColor(R.color.color_2e3192))
                 _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_on)
@@ -457,10 +457,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_off)
             }
             Glide.with(this)
-                .load(userInformationResult.getUserInformationList().get(i).getThumbnail())
+                .load(userInformationResult!!.getUserInformationList().get(i).getThumbnail())
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(_UserSelectMenuItemThumnnailList[i])
-            if(userInformationResult.getUserInformationList().get(i).isCustomAvatar)
+            if(userInformationResult!!.getUserInformationList().get(i).isCustomAvatar)
             {
                 _UserSelectMenuItemBadgeList.get(i).visibility = View.VISIBLE
             } else
@@ -474,9 +474,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 _UserSelectMenuItemTypeList[i].setText(getResources().getString(R.string.text_add_child_user).toString() + i.toString())
             }
-            _UserSelectMenuItemNameList[i].setText(userInformationResult.getUserInformationList().get(i).getNickName())
+            _UserSelectMenuItemNameList[i].setText(userInformationResult!!.getUserInformationList().get(i).getNickName())
         }
-        if((userInformationResult.getUserInformationList().size === MAX_USER_SIZE
+        if((userInformationResult!!.getUserInformationList().size === MAX_USER_SIZE
                     || mCurrentUserPosition != 0))
         {
             _AddChildUserButtonLayout.setVisibility(View.GONE)
@@ -500,7 +500,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 _PaymentRemainingDateText.setText(
                     java.lang.String.format(
                         getResources().getString(R.string.text_remaining_day),
-                        userInformationResult.getRemainingDay()
+                        userInformationResult!!.getRemainingDay()
                     )
                 )
             } else
@@ -508,7 +508,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 var remainingDate = ""
                 try
                 {
-                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userInformationResult.getExpireDate())
+                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userInformationResult!!.getExpireDate())
                     remainingDate = SimpleDateFormat("MM/dd/yyyy").format(date)
                 } catch(e : ParseException)
                 {

@@ -97,7 +97,7 @@ class MainPresenter : MainContract.Presenter
     private lateinit var mMainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter
     private lateinit var mFragmentList : List<Fragment>
     private lateinit var mMainInformationResult : MainInformationResult
-    private lateinit var mUserInformationResult : UserInformationResult
+    private var mUserInformationResult : UserInformationResult ?= null
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
     private lateinit var mTempleteAlertDialog : TempleteAlertDialog
@@ -139,8 +139,7 @@ class MainPresenter : MainContract.Presenter
 
         mFragmentList = mMainFragmentSelectionPagerAdapter.pagerFragmentList
         mMainContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
-        mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(
-            Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
+        mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult?
         mMainContractView.settingUserInformation(mUserInformationResult)
         initIACInformation()
 
@@ -352,9 +351,9 @@ class MainPresenter : MainContract.Presenter
 
     override fun changeUser(index : Int)
     {
-        Log.f("change ID : " + mUserInformationResult.getUserInformationList().get(index).getID())
+        Log.f("change ID : " + mUserInformationResult!!.getUserInformationList().get(index).getID())
         mMainContractView.showLoading()
-        requestChangeUserAsync(mUserInformationResult.getUserInformationList().get(index).getID())
+        requestChangeUserAsync(mUserInformationResult!!.getUserInformationList().get(index).getID())
     }
 
     override fun onClickMenuLogin()
@@ -676,10 +675,7 @@ class MainPresenter : MainContract.Presenter
         Log.f("update Status : " + MainObserver.isUpdateUserStatus())
         if(MainObserver.isUpdateUserStatus())
         {
-            mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(
-                Common.PARAMS_USER_API_INFORMATION,
-                UserInformationResult::class.java
-            ) as UserInformationResult
+            mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
             mMainContractView.settingUserInformation(mUserInformationResult)
             MainObserver.clearUserStatus()
         }

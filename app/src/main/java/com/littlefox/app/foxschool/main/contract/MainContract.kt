@@ -14,7 +14,7 @@ class MainContract
         override fun hideLoading()
         override fun showSuccessMessage(message : String)
         override fun showErrorMessage(message : String)
-        fun settingUserInformation(userInformationResult : UserInformationResult)
+        fun settingUserInformation(userInformationResult : UserInformationResult?)
         fun setCurrentPage(page : Int)
     }
 

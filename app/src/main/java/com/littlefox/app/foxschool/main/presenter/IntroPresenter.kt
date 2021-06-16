@@ -298,6 +298,18 @@ class IntroPresenter : IntroContract.Presenter
             .startActivity()
     }
 
+    private fun startFreeUser()
+    {
+        Feature.IS_FREE_USER = true
+        CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
+        CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, "")
+        CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, null)
+        CommonUtils.getInstance(mContext)
+            .setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, null)
+        mMainContractView.showProgressView()
+        requestInitAsync()
+    }
+
     private fun release()
     {
         Log.f("")
@@ -325,7 +337,8 @@ class IntroPresenter : IntroContract.Presenter
     override fun onClickLogin()
     {
         Log.f("")
-        startLoginActivity()
+        //startLoginActivity()
+        startFreeUser()
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
@@ -350,6 +363,10 @@ class IntroPresenter : IntroContract.Presenter
                 if(isAllCheckSuccess == false)
                 {
                     (mContext as AppCompatActivity).finish()
+                }
+                else
+                {
+                    executeSequence();
                 }
             }
         }
@@ -434,7 +451,7 @@ class IntroPresenter : IntroContract.Presenter
                     val versionDataResult : VersionDataResult = (result as VersionBaseObject).getData()
                     CommonUtils.getInstance(mContext)
                         .setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
-                    if(versionDataResult.isNeedUpdate)
+                   /* if(versionDataResult.isNeedUpdate)
                     {
                         if(versionDataResult.isForceUpdate())
                         {
@@ -454,7 +471,8 @@ class IntroPresenter : IntroContract.Presenter
                     } else
                     {
                         startAPIProcess()
-                    }
+                    }*/
+                    startAPIProcess()
                 } else if(code == Common.COROUTINE_CODE_ME)
                 {
                     val userInformationResult : UserInformationResult = (result as UserInformationBaseObject).getData()

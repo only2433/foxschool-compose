@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -48,9 +49,11 @@ class MainMyBooksFragment() : Fragment()
     @BindView(R.id._vocabularyTextButton)
     lateinit var _VocabularyTextButton : TextView
 
+    @Nullable
     @BindView(R.id._backgroundLayout)
     lateinit var _BackgroundLayout : ScalableLayout
 
+    @Nullable
     @BindView(R.id._backgroundImage)
     lateinit var _BackgroundImage : ImageView
 

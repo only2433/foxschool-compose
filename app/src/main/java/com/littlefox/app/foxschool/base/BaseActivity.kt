@@ -5,35 +5,35 @@ import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.receiver.NetworkConnectReceiver
 import com.littlefox.logmonitor.ExceptionCheckHandler
+import com.littlefox.logmonitor.Log
 
 
 open class BaseActivity : AppCompatActivity()
 {
-    private var mConnectReceiver  : NetworkConnectReceiver? = null;
-
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         Thread.setDefaultUncaughtExceptionHandler(ExceptionCheckHandler(this))
-        mConnectReceiver =  NetworkConnectReceiver();
         IntentManagementFactory.getInstance().setCurrentActivity(this)
     }
 
-    protected override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
+        Log.f("")
          IntentManagementFactory.getInstance().setCurrentActivity(this)
-        mConnectReceiver?.register(this);
+
     }
 
-    protected override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
-        mConnectReceiver?.unregister(this);
+        Log.f("")
     }
 
-    protected override fun onDestroy() {
+    override fun onDestroy()
+    {
         super.onDestroy()
     }
 
-    override fun finish() {
-        super.finish()
-    }
 }
