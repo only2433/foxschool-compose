@@ -77,12 +77,12 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
         {
             holder._ItemBackground.setImageResource(R.drawable.box)
         }
-        holder._ItemBaseLayout.setOnClickListener(View.OnClickListener {
+        holder._ItemBaseLayout.setOnClickListener {
             mCurrentPlayIndex = position
             Log.f("mCurrentPlayIndex : $mCurrentPlayIndex")
             mPlayerEventListener.onItemClick(position)
             notifyDataSetChanged()
-        })
+        }
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
             if(mPlayInformationList[position].isOptionDisable())

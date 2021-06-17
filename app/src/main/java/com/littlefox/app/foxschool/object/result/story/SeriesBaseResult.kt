@@ -102,7 +102,7 @@ open class SeriesBaseResult : Parcelable
         this.seriesType = seriesType;
     }
 
-    val statusBarColor : String?
+    val statusBarColor : String
         get()
         {
             if(colors == null)
@@ -110,10 +110,10 @@ open class SeriesBaseResult : Parcelable
                 return "#1a8ec7"
             }
             else
-                return colors?.status_bar
+                return colors!!.status_bar
         }
 
-    val titleColor : String?
+    val titleColor : String
         get()
         {
             if(colors == null)
@@ -121,10 +121,10 @@ open class SeriesBaseResult : Parcelable
                return "#20b1f9"
             }
             else
-                return colors?.title
+                return colors!!.title
         }
 
-    val introduction : String?
+    val introduction : String
         get()
         {
             if(series == null)
@@ -132,10 +132,10 @@ open class SeriesBaseResult : Parcelable
                 return ""
             }
             else
-                return series?.introduction
+                return series!!.introduction
         }
 
-    val categoryData : String?
+    val categoryData : String
         get()
         {
             if(series == null || series?.categories == null)
@@ -143,7 +143,7 @@ open class SeriesBaseResult : Parcelable
                 return ""
             }
             else
-                return series?.categories
+                return series!!.categories
         }
 
     inner class ColorData : Serializable

@@ -92,6 +92,11 @@ class ContentsBaseResult  : Parcelable
         return user_service_info;
     }
 
+    fun setIndex(index : Int)
+    {
+        this.index = index;
+    }
+
     fun isSelected() : Boolean
     {
         return isSelected;

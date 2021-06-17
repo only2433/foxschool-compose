@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="244">
+        <ImageView
+            android:id="@+id/_backgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/box_list"
+            android:scaleType="fitXY"
+            app:scale_left="28"
+            app:scale_top="0"
+            app:scale_width="1024"
+            app:scale_height="234"/>
+
+        <ImageView
+            android:id="@+id/_thumbnailImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="54"
+            app:scale_top="26"
+            app:scale_width="324"
+            app:scale_height="182"/>
+
+        <ImageView
+            android:id="@+id/_freeIconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_free"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            app:scale_left="54"
+            app:scale_top="26"
+            app:scale_width="106"
+            app:scale_height="106"/>
+
+        <ImageView
+            android:id="@+id/_studiedCheckIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_check"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            app:scale_left="328"
+            app:scale_top="42"
+            app:scale_width="33"
+            app:scale_height="30"/>
+
+        <TextView
+            android:id="@+id/_contentIndexText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/color_26d0df"
+            android:gravity="center"
+            app:scale_left="399"
+            app:scale_top="26"
+            app:scale_width="80"
+            app:scale_height="182"
+            app:scale_textsize="40"/>
+
+        <TextView
+            android:id="@+id/_contentTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:gravity="center_vertical|left"
+            android:textColor="@color/color_444444"
+            app:scale_left="494"
+            app:scale_top="26"
+            app:scale_width="450"
+            app:scale_height="182"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:id="@+id/_thumbnailOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_learning"
+            app:scale_left="954"
+            app:scale_top="60"
+            app:scale_width="92"
+            app:scale_height="125"/>
+
+        <ImageView
+            android:id="@+id/_lastPlayedIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_bookmark"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            app:scale_left="999"
+            app:scale_top="0"
+            app:scale_width="53"
+            app:scale_height="46"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_bottomLogoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_base_width="1080"
+        app:scale_base_height="176">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/footer_logo132"
+            android:scaleType="fitXY"
+            app:scale_left="446"
+            app:scale_top="39"
+            app:scale_width="187"
+            app:scale_height="97"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+</LinearLayout>

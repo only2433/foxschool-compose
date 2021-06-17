@@ -9,5 +9,6 @@ interface ItemOptionListener
     fun onClickEbook()
     fun onClickGameStarwords()
     fun onClickGameCrossword()
+    fun onClickFlashCard()
     fun onErrorMessage(message : String)
 }

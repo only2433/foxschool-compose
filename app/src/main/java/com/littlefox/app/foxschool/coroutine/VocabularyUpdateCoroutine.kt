@@ -33,7 +33,7 @@ class VocabularyUpdateCoroutine : BaseCoroutine
             list.put("color", CommonUtils.getInstance(mContext).getBookColorString(mSelectBookColor))
             val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, VocabularyShelfBaseObject::class.java)
-            if(result.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") == false)
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

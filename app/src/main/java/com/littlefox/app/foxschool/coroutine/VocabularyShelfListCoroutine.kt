@@ -25,7 +25,7 @@ class VocabularyShelfListCoroutine : BaseCoroutine
             isRunning = true
             val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID, null, NetworkUtil.GET_METHOD)
             result = Gson().fromJson(response, VocabularyShelfListItemBaseObject::class.java)
-            if(result.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") == false)
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

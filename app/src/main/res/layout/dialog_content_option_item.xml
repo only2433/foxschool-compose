@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_iconLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:scale_base_width="280"
+        app:scale_base_height="252">
+
+        <ImageView
+            android:id="@+id/_iconImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="80"
+            app:scale_top="0"
+            app:scale_width="120"
+            app:scale_height="120"/>
+        <TextView
+            android:id="@+id/_iconText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            app:scale_left="0"
+            app:scale_top="120"
+            app:scale_width="280"
+            app:scale_height="72"
+            app:scale_textsize="34"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</FrameLayout>

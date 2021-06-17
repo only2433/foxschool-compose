@@ -1,19 +1,14 @@
 package com.littlefox.app.foxschool.main
 
-import android.animation.Animator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.Rect
-import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.view.*
-import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 import androidx.annotation.Nullable
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
@@ -224,35 +219,32 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         private val MESSAGE_FORCE_CLOSE_DRAWER_MENU : Int   = 10
         private val MESSAGE_SEND_CHANGE_USER : Int          = 11
         private val MAX_USER_SIZE : Int                     = 4
+
         private val PARENT_USER_INDEX : Int                 = 0
         private val CHILD_USER_1_INDEX : Int                = 1
         private val CHILD_USER_2_INDEX : Int                = 2
         private val CHILD_USER_3_INDEX : Int                = 3
-        private val TAB_INDICATOR_COLOR = intArrayOf(
-            R.color.color_1fb77c,
-            R.color.color_1fb77c,
-            R.color.color_1fb77c
+
+        private val TAB_INDICATOR_COLOR_STUDENT : Int = R.color.color_23cc8a
+        private val TAB_INDICATOR_COLOR_TEACHER : Int = R.color.color_29c8e6
+        private val TAB_IMAGE_ICONS_STUDENT = intArrayOf(
+            R.drawable.choice_top_bar_icon_story_student,
+            R.drawable.choice_top_bar_icon_song_student,
+            R.drawable.choice_top_bar_icon_my_books_student
         )
-        private val TAB_IMAGE_ICONS = intArrayOf(
-            R.drawable.choice_top_bar_icon_story,
-            R.drawable.choice_top_bar_icon_song,
-            R.drawable.choice_top_bar_icon_my_books
+        private val TAB_IMAGE_ICONS_TEACHER = intArrayOf(
+            R.drawable.choice_top_bar_icon_story_teacher,
+            R.drawable.choice_top_bar_icon_song_teacher,
+            R.drawable.choice_top_bar_icon_my_books_teacher
         )
         private val TAB_IMAGE_ICONS_TABLET = intArrayOf(
             R.drawable.choice_top_bar_icon_story_tablet,
             R.drawable.choice_top_bar_icon_song_tablet,
             R.drawable.choice_top_bar_icon_my_books_tablet
         )
-        private val TAB_BACKGROUND_COLOR = intArrayOf(
-            R.color.color_23cc8a,
-            R.color.color_23cc8a,
-            R.color.color_23cc8a
-        )
-        private val TAB_BACKGROUND_COLOR_TABLET = intArrayOf(
-            R.color.color_fff55a,
-            R.color.color_fff55a,
-            R.color.color_fff55a
-        )
+        private val TAB_BACKGROUND_COLOR_STUDENT : Int = R.color.color_23cc8a;
+        private val TAB_BACKGROUND_COLOR_TEACHER : Int = R.color.color_29c8e6;
+        private val TAB_BACKGROUND_COLOR_TABLET : Int = R.color.color_fff55a;
     }
 
     private lateinit var mMainPresenter : MainPresenter
@@ -309,7 +301,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun initView()
     {
-        setStatusBarColor(Common.PAGE_STORY)
+        setStatusBarColor()
+        setIndicatorBarColor()
         _MainDrawLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         _MainDrawLayout.setFocusableInTouchMode(false)
         _MainDrawLayout.addDrawerListener(mDrawerListener)
@@ -907,7 +900,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                     CommonUtils.getInstance(this).getPixel(72),
                     CommonUtils.getInstance(this).getHeightPixel(68))
                 image.layoutParams = params
-                image.setImageResource(TAB_IMAGE_ICONS[i])
+                image.setImageResource(TAB_IMAGE_ICONS_STUDENT[i])
                 _MainTabsLayout.getTabAt(i)?.setCustomView(image)
             }
         }
@@ -933,60 +926,19 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-    fun animateRevealColorFromCoordinates(viewRoot : ViewGroup, color : Int, x : Int, y : Int, duration : Long)
+
+    private fun setStatusBarColor()
     {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            return
-        }
-        viewRoot.post(object : Runnable
-        {
-            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun run()
-            {
-                val finalRadius = Math.hypot(viewRoot.getWidth().toDouble(), viewRoot.getHeight().toDouble()).toFloat()
-                var anim : Animator? = null
-                anim = ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0f, finalRadius)
-                viewRoot.setBackgroundColor(getResources().getColor(color))
-                anim.setDuration(duration)
-                anim.setInterpolator(AccelerateDecelerateInterpolator())
-                anim.addListener(object : Animator.AnimatorListener
-                {
-                    override fun onAnimationStart(animation : Animator)
-                    {
-                    }
-
-                    override fun onAnimationEnd(animation : Animator)
-                    {
-                        _MainBackgroundView.setBackgroundColor(getResources().getColor(color))
-                    }
-
-                    override fun onAnimationCancel(animation : Animator)
-                    {
-                    }
-
-                    override fun onAnimationRepeat(animation : Animator)
-                    {
-                    }
-                })
-                anim.start()
-            }
-        })
+        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(TAB_INDICATOR_COLOR_STUDENT))
     }
 
-    private fun setStatusBarColor(index : Int)
-    {
-        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(TAB_INDICATOR_COLOR[index]))
-    }
-
-    private fun setIndicatorBarColor(index : Int)
+    private fun setIndicatorBarColor()
     {
         _MainTabsLayout.setSelectedTabIndicatorColor(
             if(Feature.IS_TABLET)
-                getResources().getColor(TAB_BACKGROUND_COLOR_TABLET[index])
+                getResources().getColor(TAB_BACKGROUND_COLOR_TABLET)
             else
-                getResources().getColor(TAB_BACKGROUND_COLOR[index]
-            )
+                getResources().getColor(TAB_BACKGROUND_COLOR_STUDENT)
         )
     }
 
@@ -997,20 +949,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         override fun onPageSelected(position : Int)
         {
             Log.f("position : $position")
-            val rect = Rect()
-            _MainTabsLayout.getTabAt(position)?.getCustomView()?.getGlobalVisibleRect(rect)
-            animateRevealColorFromCoordinates(
-                _MainBackgroundAnimationLayout,
-                TAB_BACKGROUND_COLOR[position],
-                rect.centerX(),
-                rect.centerY(),
-                if(Feature.IS_TABLET)
-                    Common.DURATION_SHORT_LONG
-                else
-                    Common.DURATION_MENU_ANIMATION_PHONE
-            )
-            setStatusBarColor(position)
-            setIndicatorBarColor(position)
         }
 
         override fun onPageScrollStateChanged(state : Int)

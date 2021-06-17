@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    >
+
+    <include
+        android:id="@+id/_titleBaselayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/topbar_common_menu"/>
+    <ScrollView
+        android:id="@+id/_introduceInformationScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/_introduceBaseLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_introductionTitleLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:scale_base_width="1080"
+                app:scale_base_height="752">
+
+
+                <TextView
+                    android:id="@+id/_introductionTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/info_box_b"
+                    android:text="@string/text_introduction"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_ffffff"
+                    app:scale_top="38"
+                    app:scale_left="30"
+                    app:scale_width="1020"
+                    app:scale_height="120"
+                    app:scale_textsize="46"/>
+
+                <ImageView
+                    android:id="@+id/_introductionContentsBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/info_box_w"
+                    app:scale_left="32"
+                    app:scale_top="159"
+                    app:scale_width="1016"
+                    app:scale_height="563"/>
+
+                <ImageView
+                    android:id="@+id/_introductionContentsImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:scaleType="fitXY"
+                    android:alpha="0.85"
+                    app:scale_left="74"
+                    app:scale_top="203"
+                    app:scale_width="931"
+                    app:scale_height="523"/>
+
+                <ImageView
+                    android:id="@+id/_introductionContentsPlayButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/info_play"
+                    android:visibility="gone"
+                    app:scale_left="465"
+                    app:scale_top="390"
+                    app:scale_width="150"
+                    app:scale_height="150"
+                    />
+
+                <TextView
+                    android:id="@+id/_introduceInformationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="@color/color_23a3e5"
+                    android:gravity="center_vertical"
+                    app:scale_left="74"
+                    app:scale_top="183"
+                    app:scale_width="931"
+                    app:scale_height="100"
+                    app:scale_textsize="40"/>
+
+                <TextView
+                    android:id="@+id/_introductionContentsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_444444"
+                    app:scale_top="283"
+                    app:scale_left="74"
+                    app:scale_width="939"
+                    app:scale_height="431"
+                    app:scale_textsize="44"/>
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

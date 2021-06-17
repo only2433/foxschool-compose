@@ -17,6 +17,9 @@ class Common
         const val API_ME : String                   = BASE_PUBLIC_API + "auth/me"
         const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
         const val API_CHANGE_USER : String          = BASE_PUBLIC_API + "auth/change"
+        const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
+        const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
+        const val API_INTRODUCE_SERIES : String     = BASE_PUBLIC_API + "contents/story/series/"
         const val API_QUIZ : String                 = API_CONTENTS
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS
         const val API_STUDY_LOG_SAVE : String       = API_CONTENTS
@@ -54,7 +57,9 @@ class Common
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
         const val INTENT_VOCABULARY_DATA : String                   = "vocabulary_data"
         const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
-        const val INTENT_RESULT_SERIES_ID : String                  = "series_id";
+        const val INTENT_RESULT_SERIES_ID : String                  = "series_id"
+        const val INTENT_STORY_SERIES_DATA : String                 = "story_series_data"
+
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_MAIN : String                          = "main"
@@ -72,6 +77,9 @@ class Common
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_ADD : String       = "vocabulary_contents_add"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE : String    = "vocabulary_contents_delete"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
+        const val COROUTINE_SERIES_CONTENTS_LIST_INFO : String          = "series_contents_list_info"
+        const val COROUTINE_CODE_INTRODUCE_SERIES : String              = "introduce_series";
+
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"
 

@@ -36,7 +36,7 @@ class VocabularyContentsDeleteCoroutine : BaseCoroutine
             }
             val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID + File.separator + "words/delete", list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, BaseResult::class.java)
-            if(result.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") == false)
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

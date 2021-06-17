@@ -27,11 +27,11 @@ class ChangeUserCoroutine : BaseCoroutine
             list.put("sub_user_id", mChangeUserID)
             val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_CHANGE_USER, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, UserInformationBaseObject::class.java)
-            if(result.getAccessToken().equals("") === false)
+            if(result.getAccessToken().equals("") == false)
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
-            if(result.getStatus() === BaseResult.SUCCESS_CODE_OK)
+            if(result.getStatus() == BaseResult.SUCCESS_CODE_OK)
             {
                 Feature.IS_FREE_USER = false
                 if(result.getData().getRemainingDay() > 0)
