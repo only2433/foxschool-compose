@@ -131,6 +131,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         }
         else
         {
+            Log.f("mDataList[position].getSubName() : "+mDataList[position].getSubName());
             if(mDataList[position].getSubName().equals(""))
             {
                 holder._ContentTitleText.setText(mDataList[position].getName())

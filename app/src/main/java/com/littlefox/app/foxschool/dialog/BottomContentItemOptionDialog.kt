@@ -49,15 +49,15 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     lateinit var _ContentTitleText : TextView
 
     private var mContext : Context
-    private var mPosition = 0
-    private var isFullName = false
-    private var isDeleteItemInBookshelf = false
-    private var isDisableBookshelf = false
-    private var isDisableGame = false
-    private var mIndexColor = ""
+    private var mPosition : Int = 0
+    private var isFullName : Boolean = false
+    private var isDeleteItemInBookshelf : Boolean  = false
+    private var isDisableBookshelf : Boolean  = false
+    private var isDisableGame : Boolean  = false
+    private var mIndexColor : String = ""
     private var mItemOptionListener : ItemOptionListener? = null
     private var mContentsInformationResult : ContentsBaseResult
-    private var isFullScreen = false
+    private var isFullScreen : Boolean = false
     private lateinit var mAddItemTypeList : ArrayList<ContentItemType>
 
     constructor(context : Context, result : ContentsBaseResult) : super(context)
@@ -69,8 +69,9 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         mContentsInformationResult = result
     }
 
-    protected override fun onCreate(savedInstanceState : Bundle)
+    override fun onCreate(savedInstanceState : Bundle?)
     {
+        Log.f("");
         super.onCreate(savedInstanceState)
         if(Feature.IS_TABLET)
         {

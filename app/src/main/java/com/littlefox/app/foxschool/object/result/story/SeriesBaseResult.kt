@@ -16,14 +16,14 @@ open class SeriesBaseResult : Parcelable
     private var free_single_sort_number : Int = 0
     private var free_series_sort_number : Int = 0
     private var basic_sort_number : Int = 0
-    private var seriesType : String = Common.CONTENT_TYPE_STORY
+    private var seriesType : String? = Common.CONTENT_TYPE_STORY
     private var transitionType : TransitionType = TransitionType.PAIR_IMAGE
 
     protected constructor(`in` : Parcel)
     {
         id = `in`.readString()!!
         name = `in`.readString()!!
-        seriesType = `in`.readString()!!
+        seriesType = `in`.readString()
         app_thumbnail_url = `in`.readString()!!
         transitionType = `in`.readSerializable() as TransitionType
         colors = `in`.readSerializable() as ColorData?
@@ -64,7 +64,11 @@ open class SeriesBaseResult : Parcelable
 
     fun getSeriesType() : String
     {
-        return seriesType;
+        if(seriesType == null)
+        {
+            return  Common.CONTENT_TYPE_STORY
+        }
+        return seriesType!!;
     }
 
     fun getThumbnailUrl() : String

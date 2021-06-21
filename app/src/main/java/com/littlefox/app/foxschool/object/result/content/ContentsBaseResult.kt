@@ -10,7 +10,7 @@ class ContentsBaseResult  : Parcelable
     private var index = 0
     private var type : String = Common.CONTENT_TYPE_STORY
     private var name : String = ""
-    private var sub_name : String = ""
+    private var sub_name : String? = ""
     private var thumbnail_url : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
     private var user_service_info : ServiceSupportedTypeResult? = null
@@ -74,7 +74,11 @@ class ContentsBaseResult  : Parcelable
 
     fun getSubName() : String
     {
-        return sub_name;
+        if(sub_name == null)
+        {
+            return ""
+        }
+        return sub_name!!;
     }
 
     fun getThumbnailUrl() : String

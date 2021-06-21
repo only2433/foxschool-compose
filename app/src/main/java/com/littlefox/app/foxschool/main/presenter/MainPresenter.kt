@@ -806,10 +806,7 @@ class MainPresenter : MainContract.Presenter
         mMainSongFragmentDataObserver.songCategoryItemData.observe(mContext as AppCompatActivity,
             Observer<Pair<SeriesInformationResult, View>> {seriesInformationResultViewPair ->
                 Log.f("onClick SongCategoriesItem")
-                val pair = Pair<View, String>(
-                    seriesInformationResultViewPair.second,
-                    Common.STORY_DETAIL_LIST_HEADER_IMAGE
-                )
+                val pair = Pair<View, String>(seriesInformationResultViewPair.second, Common.STORY_DETAIL_LIST_HEADER_IMAGE)
                 seriesInformationResultViewPair.first.setTransitionType(TransitionType.PAIR_IMAGE)
                 seriesInformationResultViewPair.first.setSeriesType(Common.CONTENT_TYPE_SONG)
                 IntentManagementFactory.getInstance()

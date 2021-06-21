@@ -173,15 +173,15 @@ class TempleteAlertDialog(private val mContext : Context)
 
 
         val dialog = mAlertDialogBuilder.show()
-        val messageText : TextView = dialog.findViewById<View>(R.id.message) as TextView
-        messageText.setTypeface(Font.getInstance(mContext)!!.getRobotoRegular())
+        val messageText : TextView? = dialog.findViewById<View>(R.id.message) as TextView?
+        messageText!!.setTypeface(Font.getInstance(mContext)!!.getRobotoRegular())
         if(mGravityValue != -1)
         {
-            messageText.setGravity(mGravityValue)
+            messageText!!.setGravity(mGravityValue)
         }
         else
         {
-            messageText.setGravity(Gravity.CENTER)
+            messageText!!.setGravity(Gravity.CENTER)
         }
         dialog.show()
     }
