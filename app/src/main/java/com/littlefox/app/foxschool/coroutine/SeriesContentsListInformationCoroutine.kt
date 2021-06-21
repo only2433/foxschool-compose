@@ -19,7 +19,7 @@ class SeriesContentsListInformationCoroutine : BaseCoroutine
 
     override fun doInBackground() : Any?
     {
-        if(isRunning == false)
+        if(isRunning == true)
         {
             return null
         }
@@ -28,7 +28,7 @@ class SeriesContentsListInformationCoroutine : BaseCoroutine
         synchronized(mSync)
         {
             isRunning = true
-            var response : String ?= ""
+            var response : String? = ""
             if(mContentType == Common.CONTENT_TYPE_STORY)
             {
                 response = requestServerPair(mContext, Common.API_STORY_DETAIL_LIST + mCurrentDisplayID, null, NetworkUtil.GET_METHOD)

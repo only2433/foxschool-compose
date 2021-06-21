@@ -46,7 +46,7 @@ import com.littlefox.app.foxschool.database.CoachmarkDao
 import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
-import com.littlefox.app.foxschool.dialog.BottomItemOptionDialog
+import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
 import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
@@ -149,10 +149,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mCurrentOrientation = 0
     private var isAuthorizationComplete = false
     private var isRepeatOn = false
-    private lateinit var mBottomItemOptionDialog : BottomItemOptionDialog
-    private lateinit var mBottomBookAddDialog : BottomBookAddDialog
+
+
+
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentBookshelfAddResult : MyBookshelfResult
+    private var mBottomBookAddDialog : BottomBookAddDialog ? = null;
+    private var mBottomContentItemOptionDialog : BottomContentItemOptionDialog? = null;
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mPageByPageDataList : ArrayList<PageByPageData> = ArrayList<PageByPageData>()
     private var mCurrentRepeatPageIndex = -1
@@ -903,11 +906,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun showBottomItemOptionDialog(result : ContentsBaseResult)
     {
         pausePlayer()
-        mBottomItemOptionDialog = BottomItemOptionDialog(mContext)
-        mBottomItemOptionDialog
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext,result)
+        mBottomContentItemOptionDialog!!
                 .setFullName()
                 .setFullScreen()
-                .setData(result)
                 .disableBookshelf()
                 .disableGame()
                 .setItemOptionListener(mItemOptionListener)
@@ -921,29 +923,23 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 enableTimer(true)
             }
         })
-        mBottomItemOptionDialog.show()
+        mBottomContentItemOptionDialog!!.show()
     }
 
     private fun hideBottomDialog()
     {
-        if(mBottomItemOptionDialog != null && mBottomItemOptionDialog.isShowing())
-        {
-            mBottomItemOptionDialog.cancel()
-        }
-        if(mBottomBookAddDialog != null && mBottomBookAddDialog.isShowing())
-        {
-            mBottomBookAddDialog.cancel()
-        }
+        mBottomContentItemOptionDialog?.cancel()
+        mBottomBookAddDialog?.cancel()
     }
 
     private fun showBottomBookAddDialog()
     {
         mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog.setCancelable(true)
-        mBottomBookAddDialog.setBookshelfData(mMainInformationResult.getBookShelvesList())
-        mBottomBookAddDialog.setFullScreen()
-        mBottomBookAddDialog.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog.setOnCancelListener(object : DialogInterface.OnCancelListener
+        mBottomBookAddDialog!!.setCancelable(true)
+        mBottomBookAddDialog!!.setBookshelfData(mMainInformationResult.getBookShelvesList())
+        mBottomBookAddDialog!!.setFullScreen()
+        mBottomBookAddDialog!!.setBookSelectListener(mBookAddListener)
+        mBottomBookAddDialog!!.setOnCancelListener(object : DialogInterface.OnCancelListener
         {
             override fun onCancel(dialog : DialogInterface)
             {
@@ -952,7 +948,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 enableTimer(true)
             }
         })
-        mBottomBookAddDialog.show()
+        mBottomBookAddDialog!!.show()
     }
 
     private fun enableLockCountTimer(isStart : Boolean)
@@ -1698,7 +1694,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         override fun onClickQuiz()
         {
             Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_QUIZ, Common.DURATION_SHORT.toLong())
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_QUIZ, Common.DURATION_SHORT)
         }
 
         override fun onClickTranslate()
@@ -1732,6 +1728,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         override fun onClickGameCrossword()
         {
         }
+
+        override fun onClickFlashCard()
+        {}
 
         override fun onErrorMessage(message : String)
         {

@@ -774,30 +774,29 @@ class MainPresenter : MainContract.Presenter
         mMainStoryFragmentDataObserver.storyLevelsItemData.observe(mContext as AppCompatActivity,
             Observer<Pair<SeriesInformationResult, View>> {seriesInformationResultViewPair ->
                 Log.f("onClick StoryLevelsItem")
-                val pair = Pair<View, String>(
-                    seriesInformationResultViewPair.second,
-                    Common.STORY_DETAIL_LIST_HEADER_IMAGE
-                )
+                val pair = Pair<View, String>(seriesInformationResultViewPair.second, Common.STORY_DETAIL_LIST_HEADER_IMAGE)
+
                 seriesInformationResultViewPair.first.setTransitionType(TransitionType.PAIR_IMAGE)
                 seriesInformationResultViewPair.first.setSeriesType(Common.CONTENT_TYPE_STORY)
                 IntentManagementFactory.getInstance()
                     .readyActivityMode(ActivityMode.SERIES_DETAIL_LIST)
                     .setData(seriesInformationResultViewPair.first as SeriesBaseResult)
-                    .setViewPair(pair).setAnimationMode(AnimationMode.METERIAL_ANIMATION)
+                    .setViewPair(pair)
+                    .setAnimationMode(AnimationMode.METERIAL_ANIMATION)
                     .startActivity()
             })
+
         mMainStoryFragmentDataObserver.storyCategoryItemData.observe(mContext as AppCompatActivity,
             Observer<Pair<SeriesInformationResult, View>> {seriesInformationResultViewPair ->
                 Log.f("onClick StoryCategoryItem")
-                val pair = Pair<View, String>(
-                    seriesInformationResultViewPair.second,
-                    Common.CATEGORY_DETAIL_LIST_HEADER_IMAGE
-                )
+                val pair = Pair<View, String>(seriesInformationResultViewPair.second, Common.CATEGORY_DETAIL_LIST_HEADER_IMAGE)
+
                 seriesInformationResultViewPair.first.setTransitionType(TransitionType.PAIR_IMAGE)
                 IntentManagementFactory.getInstance()
                     .readyActivityMode(ActivityMode.STORY_CATEGORY_LIST)
                     .setData(seriesInformationResultViewPair.first as SeriesBaseResult)
-                    .setViewPair(pair).setAnimationMode(AnimationMode.METERIAL_ANIMATION)
+                    .setViewPair(pair)
+                    .setAnimationMode(AnimationMode.METERIAL_ANIMATION)
                     .startActivity()
             })
     }

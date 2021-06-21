@@ -291,7 +291,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 
     private fun requestContentsDetailInformationAsync()
     {
-        Log.f("")
+        Log.f("seriesType : "+mCurrentSeriesBaseResult.getSeriesType()+", displayID : "+ mCurrentSeriesBaseResult.getDisplayID())
         mSeriesContentsListInformationCoroutine = SeriesContentsListInformationCoroutine(mContext)
         mSeriesContentsListInformationCoroutine!!.setData(mCurrentSeriesBaseResult.getSeriesType(), mCurrentSeriesBaseResult.getDisplayID())
         mSeriesContentsListInformationCoroutine!!.asyncListener = mAsyncListener

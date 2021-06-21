@@ -26,11 +26,11 @@ open class SeriesBaseResult : Parcelable
         seriesType = `in`.readString()!!
         app_thumbnail_url = `in`.readString()!!
         transitionType = `in`.readSerializable() as TransitionType
-        colors = `in`.readSerializable() as ColorData
+        colors = `in`.readSerializable() as ColorData?
         free_single_sort_number = `in`.readInt()
         free_series_sort_number = `in`.readInt()
         basic_sort_number = `in`.readInt()
-        series = `in`.readSerializable() as SeriesData
+        series = `in`.readSerializable() as SeriesData?
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)

@@ -9,28 +9,16 @@ import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 
 class MainStoryFragmentDataObserver : ViewModel()
 {
-    var storyLevelsItemData : MutableLiveData<Pair<SeriesInformationResult, View>> =
-        MutableLiveData<Pair<SeriesInformationResult, View>>()
-    var storyCategoryItemData : MutableLiveData<Pair<SeriesInformationResult, View>> =
-        MutableLiveData<Pair<SeriesInformationResult, View>>()
+    var storyLevelsItemData : MutableLiveData<Pair<SeriesInformationResult, View>> = MutableLiveData<Pair<SeriesInformationResult, View>>()
+    var storyCategoryItemData : MutableLiveData<Pair<SeriesInformationResult, View>> = MutableLiveData<Pair<SeriesInformationResult, View>>()
 
     fun onClickStoryLevelsItem(seriesInformationResult : SeriesInformationResult, selectView : View)
     {
-        storyLevelsItemData.setValue(
-            Pair<SeriesInformationResult, View>(
-                seriesInformationResult,
-                selectView
-            )
-        )
+        storyLevelsItemData.setValue(Pair<SeriesInformationResult, View>(seriesInformationResult, selectView))
     }
 
     fun onClickStoryCategoriesItem(seriesInformationResult : SeriesInformationResult, selectView : View)
     {
-        storyCategoryItemData.setValue(
-            Pair<SeriesInformationResult, View>(
-                seriesInformationResult,
-                selectView
-            )
-        )
+        storyCategoryItemData.setValue(Pair<SeriesInformationResult, View>(seriesInformationResult, selectView))
     }
 }

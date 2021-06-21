@@ -12,7 +12,7 @@ class SeriesContentsListContract
         fun initTransition(transitionType : TransitionType)
         fun setStatusBar(statusColor : String)
         fun settingTitleView(title : String)
-        fun settingBackgroundView(thumbnailUrl : String?, topbarColor : String)
+        fun settingBackgroundView(thumbnailUrl : String, topbarColor : String)
         fun settingTitleViewTablet(title : String)
         fun settingBackgroundViewTablet(thumbnailUrl : String, topbarColor : String, animationType : TransitionType)
         fun showFloatingToolbarLayout()

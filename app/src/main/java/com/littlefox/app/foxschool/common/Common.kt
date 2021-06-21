@@ -59,6 +59,7 @@ class Common
         const val INTENT_MODIFY_VOCABULARY_NAME : String            = "vocabulary_name"
         const val INTENT_RESULT_SERIES_ID : String                  = "series_id"
         const val INTENT_STORY_SERIES_DATA : String                 = "story_series_data"
+        const val INTENT_STORY_CATEGORY_DATA : String               = "story_category_data"
 
 
         const val COROUTINE_CODE_INIT : String                          = "init"
@@ -79,6 +80,7 @@ class Common
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
         const val COROUTINE_SERIES_CONTENTS_LIST_INFO : String          = "series_contents_list_info"
         const val COROUTINE_CODE_INTRODUCE_SERIES : String              = "introduce_series";
+        const val COROUTINE_CODE_STORY_CATEGORY_LIST_INFO : String      = "story_categoty_list_info";
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"

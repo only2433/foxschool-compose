@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="144"
+        app:scale_base_width="1080" >
+
+
+        <ImageView
+            android:id="@+id/_topMenuBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/top_pre"
+            android:scaleType="centerInside"
+            app:scale_height="144"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="138"/>
+
+        <TextView
+            android:id="@+id/_topMenuTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rocket Girl"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center"
+            app:scale_left="170"
+            app:scale_top="0"
+            app:scale_width="736"
+            app:scale_height="144"
+            app:scale_textsize="50"/>
+
+
+
+        <ImageView
+            android:id="@+id/_topMenuInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/info_icon"
+            android:scaleType="centerInside"
+            app:scale_height="144"
+            app:scale_left="942"
+            app:scale_top="0"
+            app:scale_width="138" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

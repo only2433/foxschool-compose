@@ -11,7 +11,7 @@ class ContentsBaseResult  : Parcelable
     private var type : String = Common.CONTENT_TYPE_STORY
     private var name : String = ""
     private var sub_name : String = ""
-    private var thumbnailUrl : String = ""
+    private var thumbnail_url : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
     private var user_service_info : ServiceSupportedTypeResult? = null
     private var isSelected = false
@@ -25,7 +25,7 @@ class ContentsBaseResult  : Parcelable
         type = `in`.readString()!!
         name = `in`.readString()!!
         sub_name = `in`.readString()!!
-        thumbnailUrl = `in`.readString()!!
+        thumbnail_url = `in`.readString()!!
         isSelected = `in`.readByte().toInt() != 0
         isOptionDisable = `in`.readByte().toInt() != 0
         service_info = `in`.readSerializable() as ServiceSupportedTypeResult
@@ -39,7 +39,7 @@ class ContentsBaseResult  : Parcelable
         dest.writeString(type)
         dest.writeString(name)
         dest.writeString(sub_name)
-        dest.writeString(thumbnailUrl)
+        dest.writeString(thumbnail_url)
         dest.writeByte((if(isSelected) 1 else 0).toByte())
         dest.writeByte((if(isOptionDisable) 1 else 0).toByte())
         dest.writeSerializable(service_info)
@@ -79,7 +79,7 @@ class ContentsBaseResult  : Parcelable
 
     fun getThumbnailUrl() : String
     {
-        return thumbnailUrl;
+        return thumbnail_url;
     }
 
     fun getServiceInformation() : ServiceSupportedTypeResult?

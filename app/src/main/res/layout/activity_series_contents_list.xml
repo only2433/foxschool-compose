@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/_detailAppbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/_detailCollapsingToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:minHeight="?attr/actionBarSize"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:titleEnabled="false">
+
+            <ImageView
+                android:id="@+id/_detailThumbnailImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                app:layout_collapseMode="parallax" />
+
+            <TextView
+                android:id="@+id/_detailInformationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1단계 | 96편"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center"
+                android:background="@color/color_alpha_50"/>
+
+            <ImageView
+                android:id="@+id/_detailARHelpButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/android_icon_help"/>
+
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/_detailToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_edeef2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/_detailInformationList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layoutAnimation="@anim/listview_layoutanimation"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_loadingProgressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            app:scale_base_height="150"
+            app:scale_base_width="1080">
+
+            <com.littlefox.library.view.dialog.ProgressWheel
+                android:id="@+id/_progressWheelView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:matProg_barColor="@color/color_20b1f9"
+                app:matProg_progressIndeterminate="true"
+                app:scale_height="150"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="150" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
+            android:id="@+id/_fabToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:showDuration="400"
+            app:hideDuration="400"
+            app:horizontalMargin="20dp"
+            app:verticalMargin="10dp"
+            app:fadeInFraction="0.3"
+            app:fabId="@+id/_floatingMenuButton"
+            app:containerId="@+id/_floatingMenuButtonLayout"
+            app:fabToolbarId="@+id/_floatingMenuBarLayout">
+
+            <RelativeLayout
+                android:id="@+id/_floatingMenuButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                >
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/_floatingMenuButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:scaleType="fitXY"
+                    android:src="@drawable/btn_plus"
+                    app:backgroundTint="@color/color_26d0df"
+                    app:borderWidth="0dp"
+                    app:useCompatPadding="true" />
+            </RelativeLayout>
+
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_floatingMenuBarLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_26d0df"
+                android:layout_alignParentBottom="true"
+                app:scale_base_width="1080"
+                app:scale_base_height="176">
+
+                <ImageView
+                    android:id="@+id/_menuSelectAllImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bottom_all"
+                    android:scaleType="fitXY"
+                    app:scale_left="30"
+                    app:scale_top="0"
+                    app:scale_width="210"
+                    app:scale_height="90"/>
+                <TextView
+                    android:id="@+id/_menuSelectAllText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_select_all"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center"
+                    app:scale_left="0"
+                    app:scale_top="90"
+                    app:scale_width="270"
+                    app:scale_height="86"
+                    app:scale_textsize="32"/>
+
+                <ImageView
+                    android:id="@+id/_menuSelectPlayImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bottom_play"
+                    android:scaleType="fitXY"
+                    app:scale_left="300"
+                    app:scale_top="0"
+                    app:scale_width="210"
+                    app:scale_height="90"/>
+                <TextView
+                    android:id="@+id/_menuSelectPlayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_select_play"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center"
+                    app:scale_left="270"
+                    app:scale_top="90"
+                    app:scale_width="270"
+                    app:scale_height="86"
+                    app:scale_textsize="32"/>
+
+                <TextView
+                    android:id="@+id/_menuSelectCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/count_1"
+                    android:visibility="gone"
+                    android:text="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_1ea6b2"
+                    app:scale_left="410"
+                    app:scale_top="10"
+                    app:scale_width="40"
+                    app:scale_height="40"
+                    app:scale_textsize="28"/>
+
+                <ImageView
+                    android:id="@+id/_menuAddBookshelfImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bottom_bookshelf"
+                    android:scaleType="fitXY"
+                    app:scale_left="570"
+                    app:scale_top="0"
+                    app:scale_width="210"
+                    app:scale_height="90"/>
+                <TextView
+                    android:id="@+id/_menuAddBookshelfText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_contain_bookshelf"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center"
+                    app:scale_left="540"
+                    app:scale_top="90"
+                    app:scale_width="270"
+                    app:scale_height="86"
+                    app:scale_textsize="32"/>
+
+
+                <ImageView
+                    android:id="@+id/_menuCancelImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bottom_close"
+                    android:scaleType="fitXY"
+                    app:scale_left="840"
+                    app:scale_top="0"
+                    app:scale_width="210"
+                    app:scale_height="90"/>
+                <TextView
+                    android:id="@+id/_menuCancelText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_cancel"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center"
+                    app:scale_left="810"
+                    app:scale_top="90"
+                    app:scale_width="270"
+                    app:scale_height="86"
+                    app:scale_textsize="32"/>
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

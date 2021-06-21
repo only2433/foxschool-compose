@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -148,14 +149,14 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             holder._BackgroundImage.setImageResource(R.drawable.box_list)
         }
 
-        if(mDataList[position].getUserServiceSupportedInformation()!!.getStorySupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        /*if(mDataList[position].getUserServiceSupportedInformation()!!.getStorySupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             holder._StudiedCheckIcon.visibility = View.VISIBLE
         }
         else
         {
             holder._StudiedCheckIcon.visibility = View.GONE
-        }
+        }*/
 
         if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
         {
@@ -286,6 +287,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
 
     inner class ViewHolder : RecyclerView.ViewHolder
     {
+        @Nullable
         @BindView(R.id._bottomLogoLayout)
         lateinit var _BottomLogoLayout : ScalableLayout
 
@@ -301,6 +303,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         @BindView(R.id._studiedCheckIcon)
         lateinit var _StudiedCheckIcon : ImageView
 
+        @Nullable
         @BindView(R.id._contentIndexText)
         lateinit var _ContentIndexText : TextView
 
@@ -310,6 +313,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         @BindView(R.id._thumbnailOption)
         lateinit var _thumbnailOption : ImageView
 
+        @Nullable
         @BindView(R.id._lastPlayedIcon)
         lateinit var _LastPlayedIcon : ImageView
 

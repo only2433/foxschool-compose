@@ -11,11 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.MainActivity
+import com.littlefox.app.foxschool.main.SeriesContentsListActivity
+import com.littlefox.app.foxschool.main.StoryCategoryListActivity
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
@@ -170,6 +173,23 @@ class IntentManagementFactory
         when(mode)
         {
             ActivityMode.MAIN -> intent = Intent(mContext, MainActivity::class.java)
+
+            ActivityMode.SERIES_DETAIL_LIST ->
+            {
+                intent = Intent(mContext, SeriesContentsListActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_STORY_SERIES_DATA, `object` as SeriesBaseResult?)
+                }
+            }
+            ActivityMode.STORY_CATEGORY_LIST ->
+            {
+                intent = Intent(mContext, StoryCategoryListActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_STORY_CATEGORY_DATA, `object` as SeriesBaseResult?)
+                }
+            }
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)

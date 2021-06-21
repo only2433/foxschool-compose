@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_menuInformationLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_base_width="640"
+                app:scale_base_height="1200">
+
+                <ImageView
+                    android:id="@+id/_backgroundView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:scale_left= "0"
+                    app:scale_top = "0"
+                    app:scale_width="640"
+                    app:scale_height="1200" />
+
+                <FrameLayout
+                    android:id="@+id/_backgroundAnimationLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:scale_left= "0"
+                    app:scale_top = "0"
+                    app:scale_width="640"
+                    app:scale_height="1200"/>
+
+
+                <ImageView
+                    android:id="@+id/_backButtonRect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:scale_height="96"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="140" />
+
+                <ImageView
+                    android:id="@+id/_backButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/top_pre_tablet"
+                    android:visibility="visible"
+                    app:scale_height="36"
+                    app:scale_left="50"
+                    app:scale_top="30"
+                    app:scale_width="40" />
+
+                <TextView
+                    android:id="@+id/_titleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_ffffff"
+                    android:text=""
+                    app:scale_left="50"
+                    app:scale_top="80"
+                    app:scale_width="500"
+                    app:scale_height="108"
+                    app:scale_textsize="46"/>
+
+                <TextView
+                    android:id="@+id/_detailInformationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_ffffff"
+                    android:text=""
+                    app:scale_left="50"
+                    app:scale_top="188"
+                    app:scale_width="500"
+                    app:scale_height="70"
+                    app:scale_textsize="26"/>
+
+                <ImageView
+                    android:id="@+id/_detailThumbnailImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    app:scale_left="1"
+                    app:scale_top="280"
+                    app:scale_width="638"
+                    app:scale_height="359"/>
+
+                <TextView
+                    android:id="@+id/_detailInformationIntroduceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_ffffff"
+                    app:scale_left="20"
+                    app:scale_top="660"
+                    app:scale_width="600"
+                    app:scale_height="300"
+                    app:scale_textsize="26"/>
+
+                <ImageView
+                    android:id="@+id/_infoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/info_icon"
+                    app:scale_height="70"
+                    app:scale_left="542"
+                    app:scale_top="1050"
+                    app:scale_width="70" />
+
+                <TextView
+                    android:id="@+id/_arDataText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/color_ffffff"
+                    android:text=""
+                    app:scale_left="20"
+                    app:scale_top="1050"
+                    app:scale_width="80"
+                    app:scale_height="70"
+                    app:scale_textsize="26"/>
+
+                <ImageView
+                    android:id="@+id/_detailARHelpButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/android_icon_help"
+                    app:scale_left="110"
+                    app:scale_top="1063"
+                    app:scale_width="44"
+                    app:scale_height="44" />
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/_detailInformationList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_loadingProgressLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            app:scale_base_height="150"
+            app:scale_base_width="1920">
+
+            <com.littlefox.library.view.dialog.ProgressWheel
+                android:id="@+id/_progressWheelView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:matProg_barColor="@color/color_20b1f9"
+                app:matProg_progressIndeterminate="true"
+                app:scale_height="150"
+                app:scale_left="1105"
+                app:scale_top="0"
+                app:scale_width="150" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_floatingMenuBarLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            app:scale_base_width="1920"
+            app:scale_base_height="594">
+
+            <ImageView
+                android:id="@+id/_menuBarBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/popup_b_tablet"
+                app:scale_left="1720"
+                app:scale_top="0"
+                app:scale_width="136"
+                app:scale_height="594"/>
+
+            <ImageView
+                android:id="@+id/_menuSelectAllImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tablet_all"
+                android:scaleType="fitXY"
+                app:scale_left="1720"
+                app:scale_top="7"
+                app:scale_width="138"
+                app:scale_height="94"/>
+            <TextView
+                android:id="@+id/_menuSelectAllText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_select_all"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center_horizontal|top"
+                app:scale_left="1720"
+                app:scale_top="101"
+                app:scale_width="138"
+                app:scale_height="50"
+                app:scale_textsize="24"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tablet_line"
+                app:scale_left="1720"
+                app:scale_top="151"
+                app:scale_width="138"
+                app:scale_height="2"/>
+
+            <ImageView
+                android:id="@+id/_menuSelectPlayImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tablet_play"
+                android:scaleType="fitXY"
+                app:scale_left="1720"
+                app:scale_top="153"
+                app:scale_width="138"
+                app:scale_height="94"/>
+            <TextView
+                android:id="@+id/_menuSelectPlayText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_select_play"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center_horizontal|top"
+                app:scale_left="1720"
+                app:scale_top="247"
+                app:scale_width="138"
+                app:scale_height="50"
+                app:scale_textsize="24"/>
+
+            <TextView
+                android:id="@+id/_menuSelectCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/count_1"
+                android:visibility="gone"
+                android:text="1"
+                android:gravity="center"
+                android:textColor="@color/color_1ea6b2"
+                app:scale_left="1787"
+                app:scale_top="175"
+                app:scale_width="30"
+                app:scale_height="30"
+                app:scale_textsize="22"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tablet_line"
+                app:scale_left="1720"
+                app:scale_top="297"
+                app:scale_width="138"
+                app:scale_height="2"/>
+
+            <ImageView
+                android:id="@+id/_menuAddBookshelfImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tablet_bookshelf"
+                android:scaleType="fitXY"
+                app:scale_left="1720"
+                app:scale_top="299"
+                app:scale_width="138"
+                app:scale_height="94"/>
+            <TextView
+                android:id="@+id/_menuAddBookshelfText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_contain_bookshelf"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center_horizontal|top"
+                app:scale_left="1720"
+                app:scale_top="393"
+                app:scale_width="138"
+                app:scale_height="50"
+                app:scale_textsize="24"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tablet_line"
+                app:scale_left="1720"
+                app:scale_top="443"
+                app:scale_width="138"
+                app:scale_height="2"/>
+
+            <ImageView
+                android:id="@+id/_menuCancelImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/tablet_close"
+                android:scaleType="fitXY"
+                app:scale_left="1720"
+                app:scale_top="445"
+                app:scale_width="138"
+                app:scale_height="94"/>
+            <TextView
+                android:id="@+id/_menuCancelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_cancel"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center_horizontal|top"
+                app:scale_left="1720"
+                app:scale_top="539"
+                app:scale_width="138"
+                app:scale_height="50"
+                app:scale_textsize="24"/>
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    </RelativeLayout>
+
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
