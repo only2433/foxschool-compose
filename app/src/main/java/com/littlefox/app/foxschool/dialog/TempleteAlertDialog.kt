@@ -164,9 +164,7 @@ class TempleteAlertDialog(private val mContext : Context)
                     {
                         mDialogListener.onChoiceButtonClick(DialogButtonType.BUTTON_2, mDialogEventType)
                     }
-                    catch(e : NullPointerException)
-                    {
-                    }
+                    catch(e : NullPointerException) { }
                 }
             })
         }

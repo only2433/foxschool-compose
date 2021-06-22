@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         app:scale_base_width="1080"
         app:scale_base_height="1000">
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -31,46 +32,13 @@
             app:scale_height="1000"/>
 
         <ImageView
-            android:id="@+id/_inputSchoolEditBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/text_box"
-            app:scale_left="146"
-            app:scale_top="75"
-            app:scale_width="788"
-            app:scale_height="120"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_search_2"
-            android:scaleType="centerInside"
-            app:scale_left="146"
-            app:scale_top="75"
-            app:scale_width="120"
-            app:scale_height="120"/>
-        <EditText
-            android:id="@+id/_inputSchoolEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="@string/text_school_search"
-            android:gravity="center_vertical"
-            android:background="@null"
-            app:scale_left="266"
-            app:scale_top="75"
-            app:scale_width="548"
-            app:scale_height="120"
-            app:scale_textsize="40"/>
-
-        <ImageView
             android:id="@+id/_inputIdEditBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/text_box"
-            app:scale_left="146"
+            app:scale_left="98"
             app:scale_top="223"
-            app:scale_width="788"
+            app:scale_width="884"
             app:scale_height="120"/>
 
         <ImageView
@@ -78,7 +46,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_id"
             android:scaleType="centerInside"
-            app:scale_left="146"
+            app:scale_left="98"
             app:scale_top="223"
             app:scale_width="120"
             app:scale_height="120"/>
@@ -91,9 +59,9 @@
             android:inputType="textEmailAddress"
             android:gravity="center_vertical"
             android:background="@null"
-            app:scale_left="266"
+            app:scale_left="218"
             app:scale_top="223"
-            app:scale_width="548"
+            app:scale_width="644"
             app:scale_height="120"
             app:scale_textsize="40"/>
 
@@ -102,9 +70,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/text_box"
-            app:scale_left="146"
+            app:scale_left="98"
             app:scale_top="371"
-            app:scale_width="788"
+            app:scale_width="884"
             app:scale_height="120"/>
 
         <ImageView
@@ -112,7 +80,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_lock"
             android:scaleType="centerInside"
-            app:scale_left="146"
+            app:scale_left="98"
             app:scale_top="371"
             app:scale_width="120"
             app:scale_height="120"/>
@@ -125,9 +93,9 @@
             android:gravity="center_vertical"
             android:inputType="textPassword"
             android:background="@null"
-            app:scale_left="266"
+            app:scale_left="218"
             app:scale_top="371"
-            app:scale_width="548"
+            app:scale_width="644"
             app:scale_height="120"
             app:scale_textsize="40"/>
 
@@ -153,6 +121,62 @@
             app:scale_top="509"
             app:scale_width="400"
             app:scale_height="100"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:id="@+id/_inputSchoolEditBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/text_box"
+            app:scale_left="98"
+            app:scale_top="75"
+            app:scale_width="884"
+            app:scale_height="120"/>
+
+        <ImageView
+            android:id="@+id/_inputSchoolLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_707070"
+            android:visibility="gone"
+            app:scale_left="98"
+            app:scale_top="195"
+            app:scale_width="884"
+            app:scale_height="1"/>
+
+        <ImageView
+            android:id="@+id/_inputSchoolDeleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_tex_del"
+            android:visibility="gone"
+            app:scale_left="887"
+            app:scale_top="106"
+            app:scale_width="60"
+            app:scale_height="60"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_search_2"
+            android:scaleType="centerInside"
+            app:scale_left="98"
+            app:scale_top="75"
+            app:scale_width="120"
+            app:scale_height="120"/>
+        <EditText
+            android:id="@+id/_inputSchoolEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="@string/text_school_search"
+            android:gravity="center_vertical"
+            android:background="@null"
+            app:scale_left="218"
+            app:scale_top="75"
+            app:scale_width="644"
+            app:scale_height="120"
             app:scale_textsize="40"/>
 
         <TextView
