@@ -78,10 +78,10 @@
 
 
             <TextView
-                android:id="@+id/_membershipText"
+                android:id="@+id/_introduceText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/text_membership"
+                android:text="@string/text_foxschool_introduce"
                 android:background="@drawable/btn_b_tablet"
                 android:textColor="@color/color_ffffff"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"

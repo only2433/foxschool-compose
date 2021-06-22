@@ -70,6 +70,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._topMenuSearch)
     lateinit var _TopMenuSearch : ImageView
 
+    @Nullable
     @BindView(R.id._mainToolBar)
     lateinit var _MainToolbar : Toolbar
 

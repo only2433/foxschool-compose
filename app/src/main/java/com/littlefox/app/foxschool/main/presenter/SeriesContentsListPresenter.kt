@@ -225,12 +225,12 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     {
         Log.f("playNumber : " + playNumber + ", isStillOnSeries : " + mDetailItemInformationResult.isStillOnSeries)
         var playPosition = 0
-        playPosition = if(mDetailItemInformationResult.isStillOnSeries)
+        if(mDetailItemInformationResult.isStillOnSeries)
         {
-            mDetailItemInformationResult.getContentsList().size - (playNumber + 1)
+            playPosition = mDetailItemInformationResult.getContentsList().size - (playNumber + 1)
         } else
         {
-            playNumber
+            playPosition = playNumber
         }
         startCurrentSelectMovieActivity(playPosition)
     }
@@ -253,8 +253,10 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 Log.f("onClickSelectPlay List isStillOnSeries : " + mDetailItemInformationResult.seriesID)
                 Collections.reverse(sendItemList)
             }
-            IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)
-                .setAnimationMode(AnimationMode.NORMAL_ANIMATION).setData(sendItemList)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.PLAYER)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .setData(sendItemList)
                 .startActivity()
         }
         else
@@ -340,10 +342,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
             {
                 val mUserInformationResult : UserInformationResult =
-                    CommonUtils.getInstance(mContext).getPreferenceObject(
-                        Common.PARAMS_USER_API_INFORMATION,
-                        UserInformationResult::class.java
-                    ) as UserInformationResult
+                    CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
                 val resultIndex = lastStudyMovieIndex
                 mStoryDetailListContractView.showLastWatchSeriesInformation(
                     mCurrentSeriesBaseResult.getSeriesName(),
@@ -387,7 +386,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.PLAYER)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setData(sendItemList).startActivity();
+            .setData(sendItemList)
+            .startActivity();
     }
 
     private fun startQuizAcitiviy()
@@ -396,7 +396,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startOriginTranslateActivity()
@@ -405,7 +406,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startEbookActivity()
@@ -414,7 +416,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startGameStarwordsActivity()
@@ -423,7 +426,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startGameCrosswordActivity()
@@ -432,7 +436,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startVocabularyActivity()
@@ -625,7 +630,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 if(count == 0)
                 {
                     mStoryDetailListContractView.hideFloatingToolbarLayout()
-                } else
+                }
+                else
                 {
                     if(count == 1)
                     {
