@@ -385,20 +385,18 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun showSuccessMessage(message : String)
     {
-        CommonUtils.getInstance(this).showSnackMessage(
+        CommonUtils.getInstance(this).showSuccessSnackMessage(
             _MainContentCoordinatorLayout,
             message,
-            getResources().getColor(R.color.color_18b5b2),
             Gravity.CENTER
         )
     }
 
     override fun showErrorMessage(message : String)
     {
-        CommonUtils.getInstance(this).showSnackMessage(
+        CommonUtils.getInstance(this).showErrorSnackMessage(
             _MainContentCoordinatorLayout,
             message,
-            getResources().getColor(R.color.color_d8232a),
             Gravity.CENTER
         )
     }

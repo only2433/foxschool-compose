@@ -282,20 +282,6 @@
                         app:scale_top="106"
                         app:scale_width="1020" />
 
-                    <TextView
-                        android:id="@+id/_signButtonText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_bl"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:gravity="center"
-                        android:text="@string/text_membership"
-                        android:textColor="@color/color_23a3e5"
-                        app:scale_height="120"
-                        app:scale_left="326"
-                        app:scale_textsize="40"
-                        app:scale_top="256"
-                        app:scale_width="428" />
                 </com.ssomai.android.scalablelayout.ScalableLayout>
             </RelativeLayout>
         </LinearLayout>
