@@ -187,15 +187,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mBottomContentItemOptionDialog : BottomContentItemOptionDialog? = null;
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mPageByPageDataList : ArrayList<PageByPageData> = ArrayList<PageByPageData>()
-    private var mCurrentRepeatPageIndex = -1
-    private var mCurrentPageIndex = 0
-    private var mCurrentPlaySpeedIndex = DEFAULT_SPEED_INDEX
-    private lateinit var _PlayerView : PlayerView
+    private var mCurrentRepeatPageIndex : Int = -1
+    private var mCurrentPageIndex : Int = 0
+    private var mCurrentPlaySpeedIndex : Int = DEFAULT_SPEED_INDEX
     private var mPlayer : SimpleExoPlayer? = null
-    private var isVideoPrepared = false
+    private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
+    protected var mJob: Job? = null;
     private lateinit var mUserInformationResult : UserInformationResult
-    protected var mJob: Job?= null;
+    private lateinit var _PlayerView : PlayerView
 
     private val testUserInformation : String = "{\"data\":{\"current_user_id\":\"U201501051459287843\",\"login_id\":\"only2433\",\"country_code\":\"KR\",\"language_code\":\"ko\",\"www_url\":\"https:\\/\\/www.littlefox.co.kr\\/ko\",\"mobile_url\":\"https:\\/\\/m.littlefox.co.kr\\/ko\",\"users\":[{\"id\":\"U201501051459287843\",\"type\":\"M\",\"name\":\"\\uc7ac\\ud604\",\"nickname\":\"only2433\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201602221544353888\",\"type\":\"S\",\"nickname\":\"\\ud551\\ud4015\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201603021547356385\",\"type\":\"S\",\"name\":\"\\ucd94\\uac00 \\uc0ac\\uc6a9\\uc790\",\"nickname\":\"You12\",\"birth_year\":2016,\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"}],\"expire_date\":\"2021-07-01 09:12:44\",\"remaining_day\":16},\"status\":200,\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpcy5saXR0bGVmb3guY29tXC9hcGlcL3YxXC9hdXRoXC9tZSIsImlhdCI6MTYyMzcyNDAxMywiZXhwIjoxNjI2MzE2MDEzLCJuYmYiOjE2MjM3MjQwMTMsImp0aSI6IkRoNWx4VGlRZUhjVzdFdXQiLCJzdWIiOiJVMjAxNTAxMDUxNDU5Mjg3ODQzIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImF1dGhfa2V5IjoiNTAxMDE0NTk5NTE1ODQ3MCIsImN1cnJlbnRfdXNlcl9pZCI6IlUyMDE1MDEwNTE0NTkyODc4NDMiLCJleHBpcmVfZGF0ZSI6MTYyNTA5ODM2NH0.FfjT2ypwKE2e1HQ9T9ULlsln_q5NE6-nnZm6eMDtDf-O5wLWw6n63CJVjQ4rUIvURLWtjQrSynAqcuTpVpzWhQ\"}"
 
@@ -338,7 +338,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mUserInformationResult = Gson().fromJson(testUserInformation, UserInformationResult::class.java)
         accessDataBase()
-    //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
+        //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
     }
 
     private fun initPlayList(orientation : Int)
@@ -559,9 +559,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 Log.f("Max Duration : " + mPlayer!!.getDuration())
                 when(playbackState)
                 {
-                    Player.STATE_IDLE ->
-                    {
-                    }
+                    Player.STATE_IDLE -> { }
                     Player.STATE_BUFFERING -> if(playWhenReady)
                     {
                         mPlayerContractView.showMovieLoading()
