@@ -24,12 +24,12 @@ class ContentsBaseResult  : Parcelable
         index = `in`.readInt()
         type = `in`.readString()!!
         name = `in`.readString()!!
-        sub_name = `in`.readString()!!
+        sub_name = `in`.readString()
         thumbnail_url = `in`.readString()!!
         isSelected = `in`.readByte().toInt() != 0
         isOptionDisable = `in`.readByte().toInt() != 0
-        service_info = `in`.readSerializable() as ServiceSupportedTypeResult
-        user_service_info = `in`.readSerializable() as ServiceSupportedTypeResult
+        service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
+        user_service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)
@@ -54,22 +54,22 @@ class ContentsBaseResult  : Parcelable
 
     fun getID() : String
     {
-        return id;
+        return id
     }
 
     fun getIndex() : Int
     {
-        return index;
+        return index
     }
 
     fun getType() : String
     {
-        return type;
+        return type
     }
 
     fun getName() : String
     {
-        return name;
+        return name
     }
 
     fun getSubName() : String
@@ -78,47 +78,47 @@ class ContentsBaseResult  : Parcelable
         {
             return ""
         }
-        return sub_name!!;
+        return sub_name!!
     }
 
     fun getThumbnailUrl() : String
     {
-        return thumbnail_url;
+        return thumbnail_url
     }
 
     fun getServiceInformation() : ServiceSupportedTypeResult?
     {
-        return service_info;
+        return service_info
     }
 
     fun getUserServiceSupportedInformation() : ServiceSupportedTypeResult?
     {
-        return user_service_info;
+        return user_service_info
     }
 
     fun setIndex(index : Int)
     {
-        this.index = index;
+        this.index = index
     }
 
     fun isSelected() : Boolean
     {
-        return isSelected;
+        return isSelected
     }
 
     fun setSelected(isSelect : Boolean)
     {
-        isSelected = isSelect;
+        isSelected = isSelect
     }
 
     fun isOptionDisable() : Boolean
     {
-        return isOptionDisable;
+        return isOptionDisable
     }
 
     fun setOptionDisable(isDisable : Boolean)
     {
-        isOptionDisable = isDisable;
+        isOptionDisable = isDisable
     }
 
 

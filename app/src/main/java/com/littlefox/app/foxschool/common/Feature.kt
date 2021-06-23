@@ -53,10 +53,7 @@ object Feature {
      */
     var IS_SUPPORT_LITTLEFOX_CLASS : Boolean  = true
 
-    /**
-     * 코칭 마크 체크 여부
-     */
-    var IS_COACHMARK_CHECK : Boolean  = true
+
 
     /**
      * 앱 사용자의 타입

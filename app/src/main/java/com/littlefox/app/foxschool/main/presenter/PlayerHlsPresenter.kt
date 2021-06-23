@@ -20,6 +20,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
@@ -60,6 +61,7 @@ import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
+import kotlinx.coroutines.*
 
 import java.util.*
 
@@ -80,7 +82,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 mMainHandler.sendEmptyMessage(MESSAGE_PREVIEW_UI_UPDATE)
             }
-            mCurrentStudyLogMilliSeconds = mCurrentStudyLogMilliSeconds + (Common.DURATION_SHORTEST * PLAY_SPEED_LIST[mCurrentPlaySpeedIndex]) as Int
+            mCurrentStudyLogMilliSeconds = mCurrentStudyLogMilliSeconds + (Common.DURATION_SHORTEST * PLAY_SPEED_LIST[mCurrentPlaySpeedIndex]).toInt()
         }
     }
 
@@ -119,6 +121,35 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
     }
 
+    companion object
+    {
+        //1시간이 지나면 팝업을 띄워 확인 작업
+        private const val MAX_WARNING_WATCH_MOVIE_TIME : Int    = 60 * 60 * Common.SECOND
+        private const val MAX_LOCKMODE_SECOND : Int             = 3
+
+        private const val MESSAGE_UI_UPDATE : Int                       = 100
+        private const val MESSAGE_PREVIEW_UI_UPDATE : Int               = 101
+        private const val MESSAGE_LOCK_BUTTON_ACTIVATE : Int            = 102
+        private const val MESSAGE_WARNING_WATCH_MOVIE : Int             = 103
+        private const val MESSAGE_LOCK_COUNT_TIME : Int                 = 104
+        private const val MESSAGE_START_QUIZ : Int                      = 105
+        private const val MESSAGE_START_TRANSLATE : Int                 = 106
+        private const val MESSAGE_START_EBOOK : Int                     = 107
+        private const val MESSAGE_START_VOCABULARY : Int                = 108
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 109
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 110
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 111
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 112
+        private const val MESSAGE_CHECK_MOVIE : Int                     = 113
+
+        private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
+        private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
+
+        private val PLAY_SPEED_LIST = floatArrayOf(0.7f, 0.85f, 1.0f, 1.15f, 1.3f)
+        private const val DEFAULT_SPEED_INDEX : Int         = 2
+        private const val FINE_TUNING_PAGE_TIME : Float     = 1f
+    }
+
     private lateinit var mContext : Context
     private lateinit var mPlayerContractView : PlayerContract.View
     private lateinit var mPlayListAdapter : PlayerListAdapter
@@ -150,8 +181,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var isAuthorizationComplete = false
     private var isRepeatOn = false
 
-
-
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentBookshelfAddResult : MyBookshelfResult
     private var mBottomBookAddDialog : BottomBookAddDialog ? = null;
@@ -162,10 +191,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mCurrentPageIndex = 0
     private var mCurrentPlaySpeedIndex = DEFAULT_SPEED_INDEX
     private lateinit var _PlayerView : PlayerView
-    private lateinit var mPlayer : SimpleExoPlayer
+    private var mPlayer : SimpleExoPlayer? = null
     private var isVideoPrepared = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
     private lateinit var mUserInformationResult : UserInformationResult
+    protected var mJob: Job?= null;
+
+    private val testUserInformation : String = "{\"data\":{\"current_user_id\":\"U201501051459287843\",\"login_id\":\"only2433\",\"country_code\":\"KR\",\"language_code\":\"ko\",\"www_url\":\"https:\\/\\/www.littlefox.co.kr\\/ko\",\"mobile_url\":\"https:\\/\\/m.littlefox.co.kr\\/ko\",\"users\":[{\"id\":\"U201501051459287843\",\"type\":\"M\",\"name\":\"\\uc7ac\\ud604\",\"nickname\":\"only2433\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201602221544353888\",\"type\":\"S\",\"nickname\":\"\\ud551\\ud4015\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201603021547356385\",\"type\":\"S\",\"name\":\"\\ucd94\\uac00 \\uc0ac\\uc6a9\\uc790\",\"nickname\":\"You12\",\"birth_year\":2016,\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"}],\"expire_date\":\"2021-07-01 09:12:44\",\"remaining_day\":16},\"status\":200,\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpcy5saXR0bGVmb3guY29tXC9hcGlcL3YxXC9hdXRoXC9tZSIsImlhdCI6MTYyMzcyNDAxMywiZXhwIjoxNjI2MzE2MDEzLCJuYmYiOjE2MjM3MjQwMTMsImp0aSI6IkRoNWx4VGlRZUhjVzdFdXQiLCJzdWIiOiJVMjAxNTAxMDUxNDU5Mjg3ODQzIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImF1dGhfa2V5IjoiNTAxMDE0NTk5NTE1ODQ3MCIsImN1cnJlbnRfdXNlcl9pZCI6IlUyMDE1MDEwNTE0NTkyODc4NDMiLCJleHBpcmVfZGF0ZSI6MTYyNTA5ODM2NH0.FfjT2ypwKE2e1HQ9T9ULlsln_q5NE6-nnZm6eMDtDf-O5wLWw6n63CJVjQ4rUIvURLWtjQrSynAqcuTpVpzWhQ\"}"
 
 
     constructor(context : Context, videoView : PlayerView, orientation : Int)
@@ -182,7 +214,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         setupPlayVideo()
         initPlayList(mCurrentOrientation)
         initPlaySpeedList()
-        checkMovieTiming()
+        mMainHandler.sendEmptyMessage(MESSAGE_CHECK_MOVIE)
     }
 
     override fun pause()
@@ -233,6 +265,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         mMainHandler.removeCallbacksAndMessages(null)
 
+        mJob?.cancel()
+
     }
 
 
@@ -264,7 +298,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             MESSAGE_WARNING_WATCH_MOVIE ->
             {
                 enableTimer(false)
-                mPlayer.setPlayWhenReady(false)
+                mPlayer?.setPlayWhenReady(false)
                 showTempleteAlertDialog(DIALOG_TYPE_WARNING_WATCH_MOVIE,
                         DialogButtonType.BUTTON_2,
                         mContext.resources.getString(R.string.message_longtime_play_warning))
@@ -290,6 +324,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
             MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG -> showBottomBookAddDialog()
             MESSAGE_REQUEST_VIDEO -> requestAuthContentPlay()
+            MESSAGE_CHECK_MOVIE -> checkMovieTiming()
         }
     }
 
@@ -301,7 +336,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
-        mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
+        mUserInformationResult = Gson().fromJson(testUserInformation, UserInformationResult::class.java)
+        accessDataBase()
+    //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
     }
 
     private fun initPlayList(orientation : Int)
@@ -328,8 +365,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private val isPlaying : Boolean
         private get()
         {
-            Log.f("playWhenReady : " + mPlayer.getPlayWhenReady() + ", state : " + mPlayer.getPlaybackState())
-            return mPlayer.getPlayWhenReady() && mPlayer.getPlaybackState() == Player.STATE_READY
+            Log.f("playWhenReady : " + mPlayer!!.getPlayWhenReady() + ", state : " + mPlayer!!.getPlaybackState())
+            return mPlayer!!.getPlayWhenReady() && mPlayer!!.getPlaybackState() == Player.STATE_READY
         }
 
     private fun accessDataBase()
@@ -340,66 +377,71 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun isStoryCoachmarkViewed(userID : String) : Boolean
     {
         var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
-
         if(data == null)
         {
-            return false;
+            Log.f("data null story")
+            return false
         }
         else
         {
+            Log.f("data.isStoryCoachmarkViewed : " + data.isStoryCoachmarkViewed)
             if(data.isStoryCoachmarkViewed)
             {
-                return true;
-            }
-            else
+                return  true
+            } else
             {
-                return false;
+                return  false
             }
         }
     }
 
     private fun setStoryCoachmarkViewed(userID : String)
     {
-        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+        CoroutineScope(Dispatchers.IO).launch {
+            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
 
-        if(data == null)
-        {
-            data = CoachmarkEntity(userID,
+            if(data == null)
+            {
+                Log.f("data null ")
+                data = CoachmarkEntity(userID,
                     true,
-            false,
-            false);
-            mCoachingMarkUserDao?.insertItem(data);
+                    false,
+                    false);
+                mCoachingMarkUserDao?.insertItem(data);
+            }
+            else
+            {
+                Log.f("data update  ")
+                data.isStoryCoachmarkViewed = true;
+                mCoachingMarkUserDao?.updateItem(data);
+            }
         }
-        else
-        {
-            data.isStoryCoachmarkViewed = true;
-            mCoachingMarkUserDao?.updateItem(data);
-        }
+
     }
 
     private fun setSongCoachmarkViewed(userID : String)
     {
-        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
-
-        if(data == null)
-        {
-            data = CoachmarkEntity(userID,
+        CoroutineScope(Dispatchers.IO).launch {
+            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+            if(data == null)
+            {
+                data = CoachmarkEntity(userID,
                     false,
                     true,
                     false);
-            mCoachingMarkUserDao?.insertItem(data);
-        }
-        else
-        {
-            data.isSongCoachmarkViewed = true;
-            mCoachingMarkUserDao?.updateItem(data);
+                mCoachingMarkUserDao?.insertItem(data);
+            }
+            else
+            {
+                data.isSongCoachmarkViewed = true;
+                mCoachingMarkUserDao?.updateItem(data);
+            }
         }
     }
 
     private fun isSongCoachmarkViewed(userID : String) : Boolean
     {
         var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
-
         if(data == null)
         {
             return false;
@@ -468,8 +510,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         if(mPlayer != null && isPlaying)
         {
-            mCurrentPlayDuration = mPlayer.getCurrentPosition()
-            mPlayer.setPlayWhenReady(false)
+            mCurrentPlayDuration = mPlayer!!.getCurrentPosition()
+            mPlayer!!.setPlayWhenReady(false)
             enableTimer(false)
             mPlayerContractView.enablePlayMovie(false)
             mCurrentPlayerStatus = PlayerStatus.PAUSE
@@ -481,8 +523,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("status : $mCurrentPlayerStatus")
         if(mCurrentPlayerStatus === PlayerStatus.PAUSE)
         {
-            mPlayer.seekTo(mCurrentPlayDuration)
-            mPlayer.setPlayWhenReady(true)
+            mPlayer!!.seekTo(mCurrentPlayDuration)
+            mPlayer!!.setPlayWhenReady(true)
             enableTimer(true)
             mPlayerContractView.enablePlayMovie(true)
             mCurrentPlayerStatus = PlayerStatus.PLAY
@@ -495,10 +537,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
             params = PlaybackParameters(PLAY_SPEED_LIST[speendIndex])
-            if(mPlayer != null)
-            {
-                mPlayer.setPlaybackParameters(params)
-            }
+            mPlayer?.setPlaybackParameters(params)
         }
     }
 
@@ -509,16 +548,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             mPlayer = ExoPlayerFactory.newSimpleInstance(mContext.applicationContext)
             _PlayerView.setPlayer(mPlayer)
         }
-        mPlayer.addListener(object : Player.EventListener
+
+        mPlayer!!.addListener(object : Player.EventListener
         {
-            override fun onLoadingChanged(isLoading : Boolean)
-            {
-            }
+            override fun onLoadingChanged(isLoading : Boolean) {}
 
             override fun onPlayerStateChanged(playWhenReady : Boolean, playbackState : Int)
             {
                 Log.f("playWhenReady : $playWhenReady, playbackState : $playbackState")
-                Log.f("Max Duration : " + mPlayer.getDuration())
+                Log.f("Max Duration : " + mPlayer!!.getDuration())
                 when(playbackState)
                 {
                     Player.STATE_IDLE ->
@@ -564,7 +602,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
             override fun onSeekProcessed()
             {
-                Log.f("Max Duration : " + mPlayer.getDuration())
+                Log.f("Max Duration : " + mPlayer!!.getDuration())
             }
         })
     }
@@ -601,11 +639,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             if(mCurrentPlayerUserType === PlayerUserType.FULL_PLAY)
             {
                 Log.f("init Play Payment User")
-                Log.f("Max Duration : " + mPlayer.getDuration())
-                Log.f("Max Progress : " + (mPlayer.getDuration() / Common.SECOND) as Int)
+                Log.f("Max Duration : " + mPlayer!!.getDuration())
+                Log.f("Max Progress : " + (mPlayer!!.getDuration() / Common.SECOND))
                 mPlayerContractView.setCurrentMovieTime("00:00")
-                mPlayerContractView.setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getDuration() as Int))
-                mPlayerContractView.setMaxProgress((mPlayer.getDuration() / Common.SECOND) as Int)
+                mPlayerContractView.setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
+                mPlayerContractView.setMaxProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
                 if(isAvailableCaption)
                 {
                     mPlayerContractView.settingCurrentPageLine(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
@@ -622,7 +660,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
         }
         mPlayerContractView.hideMovieLoading()
-        mPlayer.setPlayWhenReady(true)
+        mPlayer!!.setPlayWhenReady(true)
         enableTimer(true)
     }
 
@@ -630,8 +668,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         mCurrentPlayerStatus = PlayerStatus.COMPELTE
         enableTimer(false)
-        mPlayerContractView.setSeekProgress((mPlayer.getDuration() / Common.SECOND) as Int)
-        mPlayerContractView.setCurrentMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getDuration() as Int))
+        mPlayerContractView.setSeekProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
+        mPlayerContractView.setCurrentMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
         sendStudyLogSaveAsync()
         var nextMovieIndex = mCurrentPlayMovieIndex
         nextMovieIndex++
@@ -673,7 +711,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         else
         {
             mCurrentPlayMovieIndex = nextMovieIndex
-            checkMovieTiming()
+            mMainHandler.sendEmptyMessage(MESSAGE_CHECK_MOVIE)
         }
     }
 
@@ -696,29 +734,34 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun checkMovieTiming()
     {
-        val type : String = mPlayInformationList!![mCurrentPlayMovieIndex].getType()
+        var isShowCoachingMark : Boolean = false
+        val type : String = mPlayInformationList[mCurrentPlayMovieIndex].getType()
         mPlayerContractView.initMovieLayout()
-        if(isShowCoachmark(type))
-        {
-            Log.f("show coachmark")
-            pausePlayer()
-            mPlayerContractView.settingCoachmarkView(type)
-        }
-        else
-        {
-            prepareMovie()
+
+        mJob = CoroutineScope(Dispatchers.Main).launch{
+
+            CoroutineScope(Dispatchers.Default).async {
+                isShowCoachingMark = isShowCoachmark(type)
+            }.await()
+
+            if(isShowCoachingMark)
+            {
+                Log.f("show coachmark")
+                pausePlayer()
+                mPlayerContractView.settingCoachmarkView(type)
+            } else
+            {
+                Log.f("show coachmark")
+                prepareMovie()
+            }
         }
     }
 
     private fun isShowCoachmark(type : String) : Boolean
     {
-        if(Feature.IS_COACHMARK_CHECK === false)
-        {
-            return false
-        }
-
         if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
         {
+            Log.f("serviceInformationType : "+mPlayInformationList[mCurrentPlayMovieIndex].getServiceInformation()?.getServiceSupportType());
             if(mPlayInformationList[mCurrentPlayMovieIndex].getServiceInformation()?.getServiceSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
             {
                 return false
@@ -777,10 +820,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun releasePlayer()
     {
         _PlayerView.setPlayer(null)
-        if(mPlayer != null)
-        {
-            mPlayer.release()
-        }
+        mPlayer?.release()
     }
 
     /**
@@ -837,7 +877,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayerContractView.checkSupportCaptionView(isAvailableCaption)
         mPlayerContractView.settingPlayerOption(isCaptionEnable, isPageByPageEnable)
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
-        mPlayer.prepare(source, true, false)
+        mPlayer!!.prepare(source, true, false)
         _PlayerView.requestFocus()
         mPlayerContractView.scrollPosition(mCurrentPlayMovieIndex)
     }
@@ -1000,15 +1040,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             return
         }
-        mPlayerContractView.setSeekProgress((mPlayer.getCurrentPosition() / Common.SECOND) as Int)
-        mPlayerContractView.setCurrentMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getCurrentPosition() as Int))
+        mPlayerContractView.setSeekProgress((mPlayer!!.getCurrentPosition().toInt() / Common.SECOND))
+        mPlayerContractView.setCurrentMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getCurrentPosition()))
         if(isAvailableCaption)
         {
             if(mCurrentRepeatPageIndex != -1)
             {
                 if(isEndTimeForCurrentPage)
                 {
-                    mPlayer.setPlayWhenReady(false)
+                    mPlayer!!.setPlayWhenReady(false)
                     mPlayerContractView.enablePlayMovie(false)
                     return
                 }
@@ -1046,12 +1086,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 Log.f("Preview End")
                 mCurrentPlayerStatus = PlayerStatus.COMPELTE
                 enableTimer(false)
-                mPlayer.setPlayWhenReady(false)
-                mPlayer.stop(true)
+                mPlayer!!.setPlayWhenReady(false)
+                mPlayer!!.stop(true)
                 mPlayerContractView.showPreviewUserEndView()
                 return
             }
-            val remainTime : Int = mFreeUserPreviewTime - mPlayer.getCurrentPosition() as Int / Common.SECOND
+            val remainTime : Int = mFreeUserPreviewTime - mPlayer!!.getCurrentPosition().toInt() / Common.SECOND
             mPlayerContractView.setRemainPreviewTime(remainTime)
             if(isTimeForCaption == true)
             {
@@ -1082,7 +1122,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     return false
                 }
                 val visibleTime : Float = mAuthContentResult.getCaptionList().get(mCurrentCaptionIndex).getStartTime()
-                if(visibleTime <= mPlayer.getCurrentPosition() as Float)
+                if(visibleTime <= mPlayer!!.getCurrentPosition().toFloat())
                 {
                     return true
                 }
@@ -1106,7 +1146,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     return false
                 }
                 val visibleTime : Float = mPageByPageDataList[mCurrentPageIndex].getStartTime()
-                if(visibleTime <= mPlayer.getCurrentPosition() as Float)
+                if(visibleTime <= mPlayer!!.getCurrentPosition().toFloat())
                 {
                     return true
                 }
@@ -1121,8 +1161,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private val isEndTimeForCurrentPage : Boolean
         private get()
         {
-            val endTime = (mPageByPageDataList[mCurrentRepeatPageIndex].getEndTime() * FINE_TUNING_PAGE_TIME) as Float
-            if(endTime <= mPlayer.getCurrentPosition() as Float)
+            val endTime = (mPageByPageDataList[mCurrentRepeatPageIndex].getEndTime() * FINE_TUNING_PAGE_TIME).toFloat()
+            if(endTime <= mPlayer!!.getCurrentPosition().toFloat())
             {
                 return true
             }
@@ -1145,7 +1185,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 return -1
             }
             startTime = mAuthContentResult.getCaptionList().get(0).getStartTime()
-            if(startTime > mPlayer.getCurrentPosition() as Float)
+            if(startTime > mPlayer!!.getCurrentPosition().toFloat())
             {
                 return 0
             }
@@ -1156,7 +1196,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 startTime = mAuthContentResult.getCaptionList().get(i).getStartTime()
                 endTime = mAuthContentResult.getCaptionList().get(i).getEndTime()
-                if(startTime <= mPlayer.getCurrentPosition() as Float && endTime >= mPlayer.getCurrentPosition() as Float)
+                if(startTime <= mPlayer!!.getCurrentPosition().toFloat()
+                    && endTime >= mPlayer!!.getCurrentPosition().toFloat())
                 {
                     return i
                 }
@@ -1167,7 +1208,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             for(i in 0 until mAuthContentResult.getCaptionList().size)
             {
                 startTime = mAuthContentResult.getCaptionList().get(i).getStartTime()
-                if(startTime >= mPlayer.getCurrentPosition() as Float)
+                if(startTime >= mPlayer!!.getCurrentPosition().toFloat())
                 {
                     return i
                 }
@@ -1191,12 +1232,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 return -1
             }
             startTime = mPageByPageDataList[0].getStartTime()
-            if(startTime > mPlayer.getCurrentPosition() as Float)
+            if(startTime > mPlayer!!.getCurrentPosition().toFloat())
             {
                 return -1
             }
             endTime = mPageByPageDataList[lastItemIndex].getEndTime()
-            if(endTime < mPlayer.getCurrentPosition() as Float)
+            if(endTime < mPlayer!!.getCurrentPosition().toFloat())
             {
                 return lastItemIndex
             }
@@ -1207,9 +1248,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 startTime = mPageByPageDataList[i].getStartTime()
                 endTime = mPageByPageDataList[i].getEndTime()
-                if(startTime <= mPlayer.getCurrentPosition() as Float && endTime >= mPlayer.getCurrentPosition() as Float)
+                if(startTime <= mPlayer!!.getCurrentPosition().toFloat() && endTime >= mPlayer!!.getCurrentPosition().toFloat())
                 {
-                    Log.f("startTime : " + startTime + ", curretPosition : " + mPlayer.getCurrentPosition() as Float + ", endTime : " + endTime)
+                    Log.f("startTime : " + startTime + ", curretPosition : " + mPlayer!!.getCurrentPosition().toFloat() + ", endTime : " + endTime)
                     return i
                 }
             }
@@ -1219,9 +1260,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             for(i in mPageByPageDataList.indices)
             {
                 startTime = mPageByPageDataList[i].getStartTime()
-                if(startTime >= mPlayer.getCurrentPosition() as Float)
+                if(startTime >= mPlayer!!.getCurrentPosition().toFloat())
                 {
-                    Log.f("startTime : " + startTime + ", curretPosition : " + mPlayer.getCurrentPosition() as Float)
+                    Log.f("startTime : " + startTime + ", curretPosition : " + mPlayer!!.getCurrentPosition().toFloat())
                     return i
                 }
             }
@@ -1247,7 +1288,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             autoPlay = "single"
         }
-        val studyLogSeconds = Math.round(mCurrentStudyLogMilliSeconds / Common.DURATION_LONG as Float)
+        val studyLogSeconds = Math.round(mCurrentStudyLogMilliSeconds / Common.DURATION_LONG.toFloat())
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
         mStudyLogSaveCoroutine = StudyLogSaveCoroutine(mContext)
         mStudyLogSaveCoroutine?.setData(mPlayInformationList[mCurrentSaveLogIndex].getID(), autoPlay, studyLogSeconds)
@@ -1302,7 +1343,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private val isFreeUserLimitedTimeEnd : Boolean
         get()
         {
-            if(mPlayer.getCurrentPosition() as Int / Common.SECOND >= mFreeUserPreviewTime)
+            if(mPlayer!!.getCurrentPosition().toInt() / Common.SECOND >= mFreeUserPreviewTime)
             {
                 return true
             }
@@ -1313,19 +1354,19 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.QUIZ).setData(mPlayInformationList!![mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.QUIZ).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
     }
 
     private fun startOriginTranslateActivity()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE).setData(mPlayInformationList!![mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
     }
 
     private fun startEbookActivity()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_EBOOK).setData(mPlayInformationList!![mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_EBOOK).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
     }
 
     private fun startVocabularyActivity()
@@ -1374,7 +1415,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         if(isPlaying)
         {
             Log.f("pause video")
-            mPlayer.setPlayWhenReady(false)
+            mPlayer!!.setPlayWhenReady(false)
             mPlayerContractView.enablePlayMovie(false)
         }
         else
@@ -1384,7 +1425,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 mCurrentRepeatPageIndex = -1
             }
-            mPlayer.setPlayWhenReady(true)
+            mPlayer!!.setPlayWhenReady(true)
             mPlayerContractView.enablePlayMovie(true)
         }
     }
@@ -1407,7 +1448,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mCurrentPlayMovieIndex++
         enableTimer(false)
         sendStudyLogSaveAsync()
-        checkMovieTiming()
+        mMainHandler.sendEmptyMessage(MESSAGE_CHECK_MOVIE)
     }
 
     override fun onPrevButton()
@@ -1416,7 +1457,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mCurrentPlayMovieIndex--
         enableTimer(false)
         sendStudyLogSaveAsync()
-        checkMovieTiming()
+        mMainHandler.sendEmptyMessage(MESSAGE_CHECK_MOVIE)
     }
 
     override fun onReplayButton()
@@ -1450,8 +1491,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mCurrentPageIndex = mCurrentRepeatPageIndex
         mPlayerContractView.setCaptionText("")
         Log.f("repeatIndex : " + mCurrentRepeatPageIndex + ", startTime : " + mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime() as Int)
-        mPlayer.seekTo(mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toLong())
-        mPlayer.setPlayWhenReady(true)
+        mPlayer!!.seekTo(mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toLong())
+        mPlayer!!.setPlayWhenReady(true)
         mCurrentCaptionIndex = currentCaptionIndex
         mPlayerContractView.enableCurrentPage(index)
         mPlayerContractView.enablePlayMovie(true)
@@ -1460,7 +1501,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     override fun onCoachMarkNeverSeeAgain(type : String)
     {
         val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mUserInformationResult.getCurrentUserID()
-        Log.f("userID : $userID type : $type")
+        Log.f("userID : $userID , type : $type")
         if(type == Common.CONTENT_TYPE_STORY)
         {
             setStoryCoachmarkViewed(userID)
@@ -1510,7 +1551,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     override fun onStopTrackingSeek(progress : Int)
     {
-        mPlayer.seekTo((progress * Common.SECOND).toLong())
+        mPlayer!!.seekTo((progress * Common.SECOND).toLong())
         mCurrentCaptionIndex = currentCaptionIndex
         val pageIndex = currentPageIndex
         Log.f("progress : $progress, pageIndex : $mCurrentPageIndex")
@@ -1533,6 +1574,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     override fun onChangeOrientation(orientation : Int)
     {
         Log.f("orientation : $orientation")
+        var isShowCoachingMark : Boolean = false
         mCurrentOrientation = orientation
         if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
@@ -1540,9 +1582,17 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         initPlayList(orientation)
         mPlayerContractView.settingSpeedTextLayout(mCurrentPlaySpeedIndex, false)
-        if(isShowCoachmark(mPlayInformationList[mCurrentPlayMovieIndex].getType()))
-        {
-            mPlayerContractView.settingCoachmarkView(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+
+        mJob = CoroutineScope(Dispatchers.Main).launch {
+
+            CoroutineScope(Dispatchers.Default).async {
+                isShowCoachingMark = isShowCoachmark(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+            }.await()
+
+            if(isShowCoachingMark)
+            {
+                mPlayerContractView.settingCoachmarkView(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+            }
         }
     }
 
@@ -1564,7 +1614,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("")
         Log.f("option index : $mCurrentPlayMovieIndex")
         mSelectItemOptionIndex = mCurrentPlayMovieIndex
-        showBottomItemOptionDialog(mPlayInformationList!![mSelectItemOptionIndex])
+        showBottomItemOptionDialog(mPlayInformationList[mSelectItemOptionIndex])
     }
 
     override fun onClickCurrentMovieEbookButton()
@@ -1772,7 +1822,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             Log.f("List select Index : $index")
             mCurrentPlayMovieIndex = index
             enableTimer(false)
-            checkMovieTiming()
+            mMainHandler.sendEmptyMessage(MESSAGE_CHECK_MOVIE)
         }
     }
     private val mDialogListener : DialogListener = object : DialogListener
@@ -1795,7 +1845,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                         Log.f("Warning watch movie Continue")
                         mCurrentWatchingTime = 0
                         enableTimer(true)
-                        mPlayer.setPlayWhenReady(true)
+                        mPlayer!!.setPlayWhenReady(true)
                     }
                 }
             }
@@ -1820,32 +1870,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
     }
 
-    companion object
-    {
-        //1시간이 지나면 팝업을 띄워 확인 작업
-        private const val MAX_WARNING_WATCH_MOVIE_TIME : Int    = 60 * 60 * Common.SECOND
-        private const val MAX_LOCKMODE_SECOND : Int             = 3
 
-        private const val MESSAGE_UI_UPDATE : Int                       = 100
-        private const val MESSAGE_PREVIEW_UI_UPDATE : Int               = 101
-        private const val MESSAGE_LOCK_BUTTON_ACTIVATE : Int            = 102
-        private const val MESSAGE_WARNING_WATCH_MOVIE : Int             = 103
-        private const val MESSAGE_LOCK_COUNT_TIME : Int                 = 104
-        private const val MESSAGE_START_QUIZ : Int                      = 105
-        private const val MESSAGE_START_TRANSLATE : Int                 = 106
-        private const val MESSAGE_START_EBOOK : Int                     = 107
-        private const val MESSAGE_START_VOCABULARY : Int                = 108
-        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 109
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 110
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 111
-        private const val MESSAGE_REQUEST_VIDEO : Int                   = 112
-
-        private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
-        private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
-
-        private val PLAY_SPEED_LIST = floatArrayOf(0.7f, 0.85f, 1.0f, 1.15f, 1.3f)
-        private const val DEFAULT_SPEED_INDEX : Int         = 2
-        private const val FINE_TUNING_PAGE_TIME : Float     = 1f
-    }
 
 }

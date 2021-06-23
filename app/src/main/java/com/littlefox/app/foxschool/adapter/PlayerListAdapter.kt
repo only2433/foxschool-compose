@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -123,6 +124,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
         @BindView(R.id._itemTitleText)
         lateinit var _ItemTitleText : TextView
 
+        @Nullable
         @BindView(R.id._itemTitleOption)
         lateinit var _ItemTitleOption : ImageView
 

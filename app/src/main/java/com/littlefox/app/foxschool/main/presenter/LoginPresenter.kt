@@ -10,7 +10,6 @@ import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 
 class LoginPresenter : LoginContract.Presenter
 {
-
     private lateinit var mContext : Context
     private lateinit var mMainHandler : WeakReferenceHandler
     private var mLoginContractView : LoginContract.View

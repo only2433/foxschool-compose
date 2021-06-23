@@ -110,7 +110,7 @@ class CommonUtils
      * @param timeMs 밀리세컨드
      * @return 시간 String Ex) HH:MM:TT
      */
-    fun getMillisecondTime(timeMs : Int) : String
+    fun getMillisecondTime(timeMs : Long) : String
     {
         val mFormatBuilder = StringBuilder()
         val mFormatter = Formatter(mFormatBuilder, Locale.getDefault())

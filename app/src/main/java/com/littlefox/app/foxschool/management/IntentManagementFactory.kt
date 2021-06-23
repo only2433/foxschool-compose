@@ -11,12 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.MainActivity
+import com.littlefox.app.foxschool.main.PlayerHlsActivity
 import com.littlefox.app.foxschool.main.SeriesContentsListActivity
 import com.littlefox.app.foxschool.main.StoryCategoryListActivity
 import com.littlefox.app.foxschool.observer.MainObserver
@@ -190,6 +192,14 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_STORY_CATEGORY_DATA, `object` as SeriesBaseResult?)
                 }
             }
+            ActivityMode.PLAYER ->
+            {
+                intent = Intent(mContext, PlayerHlsActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putParcelableArrayListExtra(Common.INTENT_PLAYER_DATA_PARAMS, `object` as ArrayList<ContentsBaseResult?>?)
+                }
+            }
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)
@@ -201,7 +211,7 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_IS_LOGIN_FROM_MAIN, `object` as Boolean?)
                 }
             }
-            MAIN -> intent = Intent(mContext, MainActivity::class.java)
+
             PLAYER ->
             {
                 val isProgressivePlay = CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_IS_FORCE_PROGRESSIVE_PLAY, Common.TYPE_PARAMS_BOOLEAN) as Boolean

@@ -4,12 +4,12 @@ import java.util.*
 
 class UserInformationResult
 {
-    private val current_user_id : String = ""
-    private val country_code : String = ""
-    private val expire_date : String = ""
-    private val remaining_day : Int = 0
-    private val mobile_url : String = ""
-    private val users : ArrayList<UserInformation> = ArrayList<UserInformation>();
+    private var current_user_id : String = ""
+    private var country_code : String = ""
+    private var expire_date : String = ""
+    private var remaining_day : Int = 0
+    private var mobile_url : String = ""
+    private var users : ArrayList<UserInformation> = ArrayList<UserInformation>();
 
     val currentUserNickName : String
         get()
@@ -84,6 +84,5 @@ class UserInformationResult
         {
             return avatar_image_url;
         }
-
     }
 }

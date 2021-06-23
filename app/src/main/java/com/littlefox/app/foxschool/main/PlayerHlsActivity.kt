@@ -17,6 +17,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.recyclerview.widget.RecyclerView
@@ -30,12 +31,12 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.PlayerListAdapter
 import com.littlefox.app.foxschool.adapter.PlayerSpeedListAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
-import com.littlefox.app.foxschool.common.listener.OrientationChangeListener;
+import com.littlefox.app.foxschool.common.*
+import com.littlefox.app.foxschool.common.listener.OrientationChangeListener
 import com.littlefox.app.foxschool.main.contract.PlayerContract
 import com.littlefox.app.foxschool.main.presenter.PlayerHlsPresenter
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-import com.littlefox.library.view.animator.AnimationListener.Stop
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.library.view.controller.FadeAnimationController
 import com.littlefox.library.view.controller.FadeAnimationInformation
@@ -44,8 +45,6 @@ import com.littlefox.library.view.dialog.ProgressWheel
 import com.littlefox.library.view.layoutmanager.LinearLayoutScrollerManager
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
-import com.littlefox.app.foxschool.`object`.data.player.IntroduceVideoItemData
-import com.littlefox.app.foxschool.common.*
 import java.util.*
 
 /**
@@ -107,6 +106,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._playerPreviewLayout)
     lateinit var _PlayerPreviewLayout : ScalableLayout
 
+    @Nullable
     @BindView(R.id._playerEndBaseLayout)
     lateinit var _PlayerEndBaseLayout : RelativeLayout
 
@@ -318,8 +318,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        val data : IntroduceVideoItemData = intent.getParcelableExtra(Common.INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS)
-        if(data != null || Feature.IS_TABLET)
+        if(Feature.IS_TABLET)
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             mCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
@@ -336,7 +335,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mPlayerContractPresenter = PlayerHlsPresenter(this, _PlayerView, mCurrentOrientation)
         mOrientationManager = OrientationManager.getInstance(this)
         mOrientationManager?.setOrientationChangedListener(this)
-        if(data != null || Feature.IS_TABLET)
+        if(Feature.IS_TABLET)
         {
             mOrientationManager?.disable()
         }
