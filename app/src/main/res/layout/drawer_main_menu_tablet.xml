@@ -7,108 +7,45 @@
     android:layout_height="match_parent"
     android:background="@color/color_ffffff">
 
-    <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_paymentInfoLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/_userStatusLayout"
-        android:background="@color/color_edeef2"
-        app:scale_base_height="100"
-        app:scale_base_width="650">
-
-        <TextView
-            android:id="@+id/_paymentRemainingDateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:visibility="gone"
-            android:text="Valid Date: [27/07/2017]"
-            android:textColor="@color/color_476274"
-            app:scale_height="100"
-            app:scale_left="30"
-            app:scale_textsize="28"
-            app:scale_top="0"
-            app:scale_width="320" />
-
-
-        <TextView
-            android:id="@+id/_loginEnterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_b1_small_tablet"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:visibility="visible"
-            android:gravity="center"
-            android:text="@string/text_login"
-            android:textColor="@color/color_ffffff"
-            app:scale_width="242"
-            app:scale_height="68"
-            app:scale_left="66"
-            app:scale_top="16"
-            app:scale_textsize="30"
-
-             />
-
-        <TextView
-            android:id="@+id/_signEnterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/btn_b_small_tablet"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:visibility="visible"
-            android:gravity="center"
-            android:text="@string/text_payment_membership"
-            android:textColor="@color/color_ffffff"
-            app:scale_width="242"
-            app:scale_height="68"
-            app:scale_top="16"
-            app:scale_left="338"
-            app:scale_textsize="30"
-
-             />
-
-    </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_studyInfoLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/_paymentInfoLayout"
+        android:layout_below="@id/_userStatusLayout"
         android:background="@color/color_edeef2"
         app:scale_base_height="160"
-        app:scale_base_width="650">
+        app:scale_base_width="530">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/box_list"
             android:scaleType="fitXY"
-            app:scale_top="0"
-            app:scale_left="28"
-            app:scale_width="594"
-            app:scale_height="140"/>
+            app:scale_top="23"
+            app:scale_left="23"
+            app:scale_width="484"
+            app:scale_height="114"/>
 
         <ImageView
             android:id="@+id/_leaningLogMenuButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_height="140"
-            app:scale_left="28"
-            app:scale_top="0"
-            app:scale_width="197" />
+            app:scale_left="23"
+            app:scale_top="23"
+            app:scale_width="160"
+            app:scale_height="114"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/menu_icon01"
-            app:scale_left="98"
-            app:scale_top="23"
-            app:scale_width="60"
-            app:scale_height="54"/>
+            android:src="@drawable/main_option_icon_1"
+            app:scale_left="80"
+            app:scale_top="42"
+            app:scale_width="45"
+            app:scale_height="42"/>
 
         <TextView
             android:id="@+id/_leaningLogMenuText"
@@ -117,102 +54,100 @@
             android:gravity="center"
             android:text="@string/text_learning_log"
             android:textColor="@color/color_444444"
-            app:scale_left="28"
-            app:scale_top="90"
-            app:scale_width="197"
-            app:scale_height="34"
-            app:scale_textsize="24"/>
+            app:scale_left="23"
+            app:scale_top="87"
+            app:scale_width="160"
+            app:scale_height="40"
+            app:scale_textsize="18"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/color_dbdada"
-            app:scale_height="140"
-            app:scale_left="225"
-            app:scale_top="0"
-            app:scale_width="2" />
+            app:scale_height="114"
+            app:scale_left="183"
+            app:scale_top="23"
+            app:scale_width="1" />
 
         <ImageView
-            android:id="@+id/_attendanceMenuButton"
+            android:id="@+id/_recordLogMenuButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="227"
-            app:scale_top="0"
-            app:scale_width="197"
-            app:scale_height="140"/>
+            app:scale_left="184"
+            app:scale_top="23"
+            app:scale_width="160"
+            app:scale_height="114"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/menu_icon02"
-            app:scale_left="297"
-            app:scale_top="23"
-            app:scale_width="60"
-            app:scale_height="54"
+            android:src="@drawable/main_option_icon_2"
+            app:scale_left="242"
+            app:scale_top="42"
+            app:scale_width="45"
+            app:scale_height="42"
              />
 
         <TextView
-            android:id="@+id/_attendanceMenuText"
+            android:id="@+id/_recordLogText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/text_attendance"
+            android:text="@string/text_record_log"
             android:textColor="@color/color_444444"
-            app:scale_width="197"
-            app:scale_left="227"
-            app:scale_top="90"
-            app:scale_height="34"
-            app:scale_textsize="24"
+            app:scale_left="184"
+            app:scale_top="87"
+            app:scale_width="160"
+            app:scale_height="40"
+            app:scale_textsize="18"
              />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/color_dbdada"
-            app:scale_left="426"
-            app:scale_top="0"
-            app:scale_width="2"
-            app:scale_height="140"
-             />
-
-        <ImageView
-            android:id="@+id/_myInfoMenuButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="428"
-            app:scale_top="0"
-            app:scale_width="198"
-            app:scale_height="140"
-
+            app:scale_left="344"
+            app:scale_top="23"
+            app:scale_width="1"
+            app:scale_height="114"
             />
 
+        <ImageView
+            android:id="@+id/_homeworkManageMenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:scale_left="345"
+            app:scale_top="23"
+            app:scale_width="160"
+            app:scale_height="114"/>
+
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/menu_icon03"
-            app:scale_left="498"
-            app:scale_top="23"
-            app:scale_width="60"
-            app:scale_height="54"
-             />
+            android:src="@drawable/main_option_icon_3"
+            app:scale_left="407"
+            app:scale_top="42"
+            app:scale_width="45"
+            app:scale_height="42"
+            />
 
         <TextView
-            android:id="@+id/_myInfoMenuText"
+            android:id="@+id/_homeworkManageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/color_444444"
-            android:text="@string/text_my_info"
-            app:scale_width="198"
-            app:scale_height="34"
-            app:scale_left="428"
-            app:scale_top="90"
-            app:scale_textsize="24"
+            android:text="@string/text_homework_manage"
+            app:scale_left="345"
+            app:scale_top="87"
+            app:scale_width="160"
+            app:scale_height="40"
+            app:scale_textsize="18"
 
             />
 
@@ -234,410 +169,7 @@
             />
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/_userSelectMenuLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/color_ffffff"
-        android:layout_below="@id/_userStatusLayout"
-        android:orientation="vertical"
-        android:visibility="invisible">
 
-        <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_parentUserLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:scale_base_height="160"
-            app:scale_base_width="650">
-
-            <ImageView
-                android:id="@+id/_parentUserThumnnailImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                 />
-
-            <ImageView
-                android:id="@+id/_parentUserBadgeBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/bage_gold_87"
-                android:visibility="gone"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <TextView
-                android:id="@+id/_parentUserTypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_parent_user"
-                android:textColor="@color/color_787a9f"
-                app:scale_width="200"
-                app:scale_height="35"
-                app:scale_left="154"
-                app:scale_top="37"
-                app:scale_textsize="25"
-
-                />
-
-            <TextView
-                android:id="@+id/_parentUserNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:maxLines="1"
-                android:text="다람쥐인 척 하는 여우"
-                android:textColor="@color/color_2e3192"
-                app:scale_width="380"
-                app:scale_height="45"
-                app:scale_left="154"
-                app:scale_top="72"
-                app:scale_textsize="32"
-                 />
-
-            <ImageView
-                android:id="@+id/_parentUserCheckImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside"
-                android:src="@drawable/check_on"
-                app:scale_width="44"
-                app:scale_height="44"
-                app:scale_left="570"
-                app:scale_top="56"
-                 />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/color_dbdada"
-                app:scale_height="2"
-                app:scale_left="20"
-                app:scale_top="158"
-                app:scale_width="610" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-
-        <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_childUser1Layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_base_height="160"
-            app:scale_base_width="650">
-
-            <ImageView
-                android:id="@+id/_childUser1ThumnnailImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="TODO"
-                android:scaleType="fitXY"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser1BadgeBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="TODO"
-                android:visibility="gone"
-                android:src="@drawable/bage_gold_87"
-                android:scaleType="fitXY"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <TextView
-                android:id="@+id/_childUser1TypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_parent_user"
-                android:textColor="@color/color_787a9f"
-                app:scale_width="200"
-                app:scale_height="35"
-                app:scale_left="154"
-                app:scale_top="37"
-                app:scale_textsize="25"
-                />
-
-            <TextView
-                android:id="@+id/_childUser1NameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="다람쥐인 척 하는 여우"
-                android:textColor="@color/color_9192bf"
-                app:scale_width="380"
-                app:scale_height="45"
-                app:scale_left="154"
-                app:scale_top="72"
-                app:scale_textsize="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser1CheckImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside"
-                android:src="@drawable/check_off"
-                app:scale_width="44"
-                app:scale_height="44"
-                app:scale_left="570"
-                app:scale_top="56"
-                />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/color_dbdada"
-                app:scale_height="2"
-                app:scale_left="20"
-                app:scale_top="158"
-                app:scale_width="610" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-
-        <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_childUser2Layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_base_height="160"
-            app:scale_base_width="650">
-
-            <ImageView
-                android:id="@+id/_childUser2ThumnnailImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser2BadgeBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="TODO"
-                android:scaleType="fitXY"
-                android:src="@drawable/bage_gold_87"
-                android:visibility="gone"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <TextView
-                android:id="@+id/_childUser2TypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_parent_user"
-                android:textColor="@color/color_787a9f"
-                app:scale_width="200"
-                app:scale_height="35"
-                app:scale_left="154"
-                app:scale_top="37"
-                app:scale_textsize="25"
-                />
-
-            <TextView
-                android:id="@+id/_childUser2NameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="다람쥐인 척 하는 여우"
-                android:textColor="@color/color_9192bf"
-                app:scale_width="380"
-                app:scale_height="45"
-                app:scale_left="154"
-                app:scale_top="72"
-                app:scale_textsize="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser2CheckImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside"
-                android:src="@drawable/check_off"
-                app:scale_width="44"
-                app:scale_height="44"
-                app:scale_left="570"
-                app:scale_top="56"
-                />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/color_dbdada"
-                app:scale_height="2"
-                app:scale_left="20"
-                app:scale_top="158"
-                app:scale_width="610" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-
-        <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_childUser3Layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_base_height="160"
-            app:scale_base_width="650">
-
-            <ImageView
-                android:id="@+id/_childUser3ThumnnailImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser3BadgeBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="TODO"
-                android:scaleType="fitXY"
-                android:src="@drawable/bage_gold_87"
-                android:visibility="gone"
-                app:scale_width="87"
-                app:scale_height="87"
-                app:scale_left="43"
-                app:scale_top="32"
-                />
-
-            <TextView
-                android:id="@+id/_childUser3TypeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_parent_user"
-                android:textColor="@color/color_787a9f"
-                app:scale_width="200"
-                app:scale_height="35"
-                app:scale_left="154"
-                app:scale_top="37"
-                app:scale_textsize="25"
-                />
-
-            <TextView
-                android:id="@+id/_childUser3NameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="다람쥐인 척 하는 여우"
-                android:textColor="@color/color_9192bf"
-                app:scale_width="380"
-                app:scale_height="45"
-                app:scale_left="154"
-                app:scale_top="72"
-                app:scale_textsize="32"
-                />
-
-            <ImageView
-                android:id="@+id/_childUser3CheckImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside"
-                android:src="@drawable/check_off"
-                app:scale_width="44"
-                app:scale_height="44"
-                app:scale_left="570"
-                app:scale_top="56"
-                />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shadow"
-                android:visibility="visible"
-                app:scale_height="2"
-                app:scale_left="20"
-                app:scale_top="158"
-                app:scale_width="610" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-
-        <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_addChildUserButtonLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:scale_base_height="150"
-            app:scale_base_width="650"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/_addChildUserButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                android:scaleType="fitXY"
-                android:src="@drawable/btn_b1_tablet"
-                app:scale_width="468"
-                app:scale_height="83"
-                app:scale_left="91"
-                app:scale_top="27"
-                 />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/icon_arrow"
-                app:scale_width="34"
-                app:scale_height="27"
-                app:scale_left="219"
-                app:scale_top="54"
-                 />
-
-            <TextView
-                android:id="@+id/_addChildUserText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_add_child_user"
-                android:textColor="@color/color_ffffff"
-                app:scale_width="200"
-                app:scale_height="83"
-                app:scale_left="271"
-                app:scale_top="27"
-                app:scale_textsize="30"
-
-                 />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shadow"
-                app:scale_height="12"
-                app:scale_left="0"
-                app:scale_top="138"
-                app:scale_width="650" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-    </LinearLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_userStatusLayout"
@@ -645,104 +177,34 @@
         android:layout_height="wrap_content"
         android:background="@color/color_20b1f9"
         app:scale_base_width="650"
-        app:scale_base_height="222"
-        >
-
-        <ImageView
-            android:id="@+id/_userThumbnailImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:visibility="gone"
-            app:scale_width="174"
-            app:scale_height="174"
-            app:scale_left="44"
-            app:scale_top="25"
-            />
-
-        <ImageView
-            android:id="@+id/_userBadgeBackground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/bage_gold_174"
-            android:visibility="gone"
-            app:scale_width="174"
-            app:scale_height="174"
-            app:scale_left="44"
-            app:scale_top="25"
-            />
-
-        <TextView
-            android:id="@+id/_userTypeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:visibility="gone"
-            android:text="@string/text_parent_user"
-            android:textColor="@color/color_d0efff"
-            app:scale_width="200"
-            app:scale_height="35"
-            app:scale_left="245"
-            app:scale_top="86"
-            app:scale_textsize="25"
-             />
+        app:scale_base_height="222">
 
         <TextView
             android:id="@+id/_userNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:text="다람쥐인 척 하는 여우"
+            android:gravity="center_vertical"
+            android:text="김리팍 선생님"
             android:textColor="@color/color_ffffff"
-            app:scale_width="300"
-            app:scale_height="50"
-            app:scale_left="245"
-            app:scale_top="122"
-            app:scale_textsize="32"
-             />
-
-        <ImageView
-            android:id="@+id/_userSelectMenuButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerInside"
-            android:visibility="gone"
-            android:src="@drawable/icon_arrow1_tablet"
-            app:scale_width="72"
-            app:scale_height="68"
-            app:scale_left="565"
-            app:scale_top="90"
-             />
-
-        <ImageView
-            android:id="@+id/_loginThumbnailImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/img_hello"
-            android:visibility="visible"
-            app:scale_width="134"
-            app:scale_height="178"
-            app:scale_left="96"
-            app:scale_top="30"/>
+            app:scale_left="46"
+            app:scale_top="14"
+            app:scale_width="400"
+            app:scale_height="76"
+            app:scale_textsize="28"/>
 
         <TextView
-            android:id="@+id/_loginMessageText"
+            android:id="@+id/_userInfoButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:visibility="visible"
-            android:text="@string/message_menu_login_message"
-            android:textColor="@color/color_ffffff"
-            app:scale_width="350"
-            app:scale_height="90"
-            app:scale_left="270"
-            app:scale_top="74"
-            app:scale_textsize="36" />
+            android:background="@drawable/round_box_empty_light_blue_97"
+            android:text="@string/text_my_info"
+            android:textColor="@color/color_29c8e6"
+            android:gravity="center"
+            app:scale_left="46"
+            app:scale_top="90"
+            app:scale_width="140"
+            app:scale_height="55"
+            app:scale_textsize="22"/>
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
 

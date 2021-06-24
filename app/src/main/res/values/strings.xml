@@ -50,22 +50,22 @@
     <string name="text_count_songs">%s곡</string>
     <string name="text_login">로그인</string>
     <string name="text_payment_membership">유료회원가입</string>
-    <string name="text_parent_user">기본 사용자</string>
-    <string name="text_child_user">추가 사용자</string>
-    <string name="text_detail_view">자세히 보기</string>
     <string name="text_learning_log">학습기록</string>
-    <string name="text_attendance">출석부</string>
+    <string name="text_record_log">녹음기록</string>
+    <string name="text_homework_manage">숙제관리</string>
+    <string name="text_school_news">학교 소식</string>
+    <string name="text_foxschool_news">팍스스쿨 소식</string>
+    <string name="text_teacher_manual">교사 메뉴얼</string>
+    <string name="text_home_newspaper">가정 통신문</string>
     <string name="text_my_info">나의 정보</string>
-    <string name="text_schedule">발표일정</string>
     <string name="text_news">새소식</string>
-    <string name="text_testimonials">활용수기</string>
     <string name="text_faqs">자주 묻는 질문</string>
     <string name="text_about_us">서비스 소개</string>
     <string name="text_1_1_ask">1:1 문의하기</string>
     <string name="text_about_app">앱 이용안내</string>
-    <string name="text_add_child_user">사용자 추가</string>
     <string name="text_logout">로그아웃</string>
-    <string name="text_free_using">무료 이용 중</string>
+
+
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
     <string name="text_foxschool_introduce">팍스스쿨 소개</string>
