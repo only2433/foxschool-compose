@@ -194,7 +194,7 @@
                 android:id="@+id/_loginButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_b1_tablet"
+                android:background="@drawable/round_box_light_blue_84"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:text="@string/text_login"
@@ -202,7 +202,7 @@
                 app:scale_left="665"
                 app:scale_top="463"
                 app:scale_width="550"
-                app:scale_height="83"
+                app:scale_height="84"
                 app:scale_textsize="30"/>
 
 

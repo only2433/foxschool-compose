@@ -39,7 +39,7 @@ class BottomBookAddDialog : BottomSheetDialog
     private var mBookAddListener : BookAddListener? = null
     private var mMyBookshelfResultList : ArrayList<MyBookshelfResult> = ArrayList<MyBookshelfResult>()
     private var mMyVocabularyResultList : ArrayList<MyVocabularyResult> = ArrayList<MyVocabularyResult>()
-    private var isFullScreen = false
+    private var isFullScreen : Boolean = false
     private val mContext : Context
 
     constructor(context : Context) : super(context)
@@ -126,6 +126,7 @@ class BottomBookAddDialog : BottomSheetDialog
     private fun initRecyclerView()
     {
         val params : LinearLayout.LayoutParams = _BooksAddList.getLayoutParams() as LinearLayout.LayoutParams
+
         if(Feature.IS_TABLET)
             params.height = CommonUtils.getInstance(mContext).getHeightPixel(578)
         else
