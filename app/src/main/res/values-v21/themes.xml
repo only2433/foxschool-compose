@@ -2,10 +2,11 @@
 <resources>
 
     <style name="AppTheme_Default" parent="AppTheme">
-        <item name="android:statusBarColor">@color/color_42c2cc</item>
+        <item name="android:statusBarColor">@color/color_1fb77c</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActivityTransitions">true</item>
     </style>
+
 </resources>

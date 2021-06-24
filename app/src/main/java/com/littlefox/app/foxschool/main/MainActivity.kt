@@ -226,8 +226,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         private val CHILD_USER_2_INDEX : Int                = 2
         private val CHILD_USER_3_INDEX : Int                = 3
 
+
+
         private val TAB_INDICATOR_COLOR_STUDENT : Int = R.color.color_23cc8a
         private val TAB_INDICATOR_COLOR_TEACHER : Int = R.color.color_29c8e6
+
         private val TAB_IMAGE_ICONS_STUDENT = intArrayOf(
             R.drawable.choice_top_bar_icon_story_student,
             R.drawable.choice_top_bar_icon_song_student,
@@ -928,7 +931,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     private fun setStatusBarColor()
     {
-        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(TAB_INDICATOR_COLOR_STUDENT))
+        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(R.color.color_1fb77c))
     }
 
     private fun setIndicatorBarColor()

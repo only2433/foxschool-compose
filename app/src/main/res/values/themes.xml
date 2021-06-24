@@ -8,6 +8,9 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="AppTheme_Default" parent="AppTheme">
+        <item name="android:statusBarColor">@color/color_42c2cc</item>
+    </style>
 
 
 </resources>

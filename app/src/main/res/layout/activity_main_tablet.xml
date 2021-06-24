@@ -34,7 +34,7 @@
                 app:scale_top="0"
                 app:scale_width="1920"
                 app:scale_height="96"
-                android:background="@color/color_20b1f9" />
+                android:background="@color/color_23cc8a" />
 
             <FrameLayout
                 android:id="@+id/_mainBackgroundAnimationLayout"
