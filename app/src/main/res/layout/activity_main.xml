@@ -31,7 +31,7 @@
                     android:id="@+id/_mainBackgroundView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/color_20b1f9" />
+                    android:background="@color/color_23cc8a" />
 
                 <FrameLayout
                     android:id="@+id/_mainBackgroundAnimationLayout"

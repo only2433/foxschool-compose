@@ -16,8 +16,6 @@ import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.viewpager.widget.ViewPager
 import butterknife.*
 import butterknife.Optional
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.littlefox.app.foxschool.R
@@ -32,7 +30,6 @@ import com.littlefox.app.foxschool.main.contract.MainContract
 import com.littlefox.app.foxschool.main.presenter.MainPresenter
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
@@ -40,8 +37,6 @@ import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 import java.lang.reflect.Field
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
@@ -89,86 +84,13 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._userStatusLayout)
     lateinit var _UserStatusLayout : ScalableLayout
 
-    @BindView(R.id._userThumbnailImage)
-    lateinit var _UserThumbnailImage : ImageView
-
-    @BindView(R.id._userBadgeBackground)
-    lateinit var _UserBadgeBackground : ImageView
-
-    @BindView(R.id._userTypeText)
-    lateinit var _UserTypeText : TextView
 
     @BindView(R.id._userNameText)
     lateinit var _UserNameText : TextView
 
-    @BindView(R.id._userSelectMenuButton)
-    lateinit var _UserSelectMenuButton : ImageView
+    @BindView(R.id._userInfoButtonText)
+    lateinit var _UserInfoButtonText : TextView
 
-    @BindView(R.id._userSelectMenuLayout)
-    lateinit  var _UserSelectMenuLayout : LinearLayout
-
-    @BindViews(
-        R.id._parentUserLayout,
-        R.id._childUser1Layout,
-        R.id._childUser2Layout,
-        R.id._childUser3Layout
-    )
-    lateinit var _UserSelectMenuItemLayoutList : List<@JvmSuppressWildcards ScalableLayout>
-
-    @BindViews(
-        R.id._parentUserThumnnailImage,
-        R.id._childUser1ThumnnailImage,
-        R.id._childUser2ThumnnailImage,
-        R.id._childUser3ThumnnailImage
-    )
-    lateinit var _UserSelectMenuItemThumnnailList : List<@JvmSuppressWildcards ImageView>
-
-    @BindViews(
-        R.id._parentUserBadgeBackground,
-        R.id._childUser1BadgeBackground,
-        R.id._childUser2BadgeBackground,
-        R.id._childUser3BadgeBackground
-    )
-    lateinit var _UserSelectMenuItemBadgeList : List<@JvmSuppressWildcards ImageView>
-
-    @BindViews(
-        R.id._parentUserTypeText,
-        R.id._childUser1TypeText,
-        R.id._childUser2TypeText,
-        R.id._childUser3TypeText
-    )
-    lateinit var _UserSelectMenuItemTypeList : List<@JvmSuppressWildcards TextView>
-
-    @BindViews(
-        R.id._parentUserNameText,
-        R.id._childUser1NameText,
-        R.id._childUser2NameText,
-        R.id._childUser3NameText
-    )
-    lateinit var _UserSelectMenuItemNameList : List<@JvmSuppressWildcards TextView>
-
-    @BindViews(
-        R.id._parentUserCheckImage,
-        R.id._childUser1CheckImage,
-        R.id._childUser2CheckImage,
-        R.id._childUser3CheckImage
-    )
-    lateinit var _UserSelectMenuItemCheckImageList : List<@JvmSuppressWildcards ImageView>
-
-    @BindView(R.id._addChildUserButtonLayout)
-    lateinit var _AddChildUserButtonLayout : ScalableLayout
-
-    @BindView(R.id._addChildUserButton)
-    lateinit var _AddChildUserButton : ImageView
-
-    @BindView(R.id._addChildUserText)
-    lateinit var _AddChildUserText : TextView
-
-    @BindView(R.id._paymentInfoLayout)
-    lateinit var _PaymentInfoLayout : ScalableLayout
-
-    @BindView(R.id._paymentRemainingDateText)
-    lateinit var _PaymentRemainingDateText : TextView
 
     @BindView(R.id._studyInfoLayout)
     lateinit var _StudyInfoLayout : ScalableLayout
@@ -179,17 +101,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._leaningLogMenuText)
     lateinit var _LeaningLogMenuText : TextView
 
-    @BindView(R.id._attendanceMenuButton)
-    lateinit var _AttendanceMenuButton : ImageView
-
-    @BindView(R.id._attendanceMenuText)
-    lateinit var _AttendanceMenuText : TextView
-
-    @BindView(R.id._myInfoMenuButton)
-    lateinit var _MyInfoMenuButton : ImageView
-
-    @BindView(R.id._myInfoMenuText)
-    lateinit var _MyInfoMenuText : TextView
 
     @BindView(R.id._menuItemScrollView)
     lateinit var _MenuItemScrollView : ScrollView
@@ -197,17 +108,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._menuItemLayout)
     lateinit var _MenuItemLayout : LinearLayout
 
-    @BindView(R.id._loginEnterButton)
-    lateinit var _LoginEnterButton : TextView
-
-    @BindView(R.id._signEnterButton)
-    lateinit var _SignEnterButton : TextView
-
-    @BindView(R.id._loginThumbnailImage)
-    lateinit var _LoginThumbnailImage : ImageView
-
-    @BindView(R.id._loginMessageText)
-    lateinit var _LoginMessageText : TextView
 
     @BindView(R.id._menuLogoutLayout)
     lateinit var _MenuLogoutLayout : ScalableLayout
@@ -220,12 +120,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         private val MESSAGE_FORCE_CLOSE_DRAWER_MENU : Int   = 10
         private val MESSAGE_SEND_CHANGE_USER : Int          = 11
         private val MAX_USER_SIZE : Int                     = 4
-
-        private val PARENT_USER_INDEX : Int                 = 0
-        private val CHILD_USER_1_INDEX : Int                = 1
-        private val CHILD_USER_2_INDEX : Int                = 2
-        private val CHILD_USER_3_INDEX : Int                = 3
-
 
 
         private val TAB_INDICATOR_COLOR_STUDENT : Int = R.color.color_23cc8a
@@ -332,21 +226,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun initFont()
     {
-        _UserTypeText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _UserNameText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _PaymentRemainingDateText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _UserInfoButtonText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _LeaningLogMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _AttendanceMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MyInfoMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        for(i in 0 until MAX_USER_SIZE)
-        {
-            _UserSelectMenuItemTypeList[i].setTypeface(Font.getInstance(this).getRobotoMedium())
-            _UserSelectMenuItemNameList[i].setTypeface(Font.getInstance(this).getRobotoMedium())
-        }
-        _AddChildUserText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _LoginMessageText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _SignEnterButton.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _LoginEnterButton.setTypeface(Font.getInstance(this).getRobotoMedium())
+
     }
 
     override fun onBackPressed()
@@ -406,123 +289,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun settingUserInformation(userInformationResult : UserInformationResult?)
     {
-        setMenuLoginStatus()
-        if(Feature.IS_FREE_USER)
-        {
-            return
-        }
-        for(i in _UserSelectMenuItemLayoutList.indices)
-        {
-            _UserSelectMenuItemLayoutList[i].setVisibility(View.GONE)
-        }
-        mCurrentUserStatusSize = userInformationResult!!.getUserInformationList().size
-        for(i in 0 until mCurrentUserStatusSize)
-        {
-            val position = i
-            _UserSelectMenuItemLayoutList[i].setVisibility(View.VISIBLE)
-            if(userInformationResult!!.getUserInformationList().get(i).getID().equals(userInformationResult!!.getCurrentUserID()))
-            {
-                mCurrentUserPosition = i
-                Glide.with(this)
-                    .load(userInformationResult!!.getUserInformationList().get(i).getThumbnail())
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .into(_UserThumbnailImage)
-                if(userInformationResult!!.getUserInformationList().get(i).isCustomAvatar)
-                {
-                    _UserBadgeBackground.visibility = View.VISIBLE
-                } else
-                {
-                    _UserBadgeBackground.visibility = View.GONE
-                }
-                if(i == 0)
-                {
-                    _UserTypeText.setText(getResources().getString(R.string.text_parent_user))
-                } else
-                {
-                    _UserTypeText.setText(getResources().getString(R.string.text_child_user).toString() + i.toString())
-                }
-                _UserNameText.setText(userInformationResult!!.getUserInformationList().get(i).getNickName())
-                _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_787a9f))
-                _UserSelectMenuItemNameList[i].setTextColor(getResources().getColor(R.color.color_2e3192))
-                _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_on)
-            } else
-            {
-                _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_a7a7bf))
-                _UserSelectMenuItemNameList[i].setTextColor(getResources().getColor(R.color.color_9192bf))
-                _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_off)
-            }
-            Glide.with(this)
-                .load(userInformationResult!!.getUserInformationList().get(i).getThumbnail())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(_UserSelectMenuItemThumnnailList[i])
-            if(userInformationResult!!.getUserInformationList().get(i).isCustomAvatar)
-            {
-                _UserSelectMenuItemBadgeList.get(i).visibility = View.VISIBLE
-            } else
-            {
-                _UserSelectMenuItemBadgeList.get(i).visibility = View.GONE
-            }
-            if(i == 0)
-            {
-                _UserSelectMenuItemTypeList[i].setText(getResources().getString(R.string.text_parent_user))
-            } else
-            {
-                _UserSelectMenuItemTypeList[i].setText(getResources().getString(R.string.text_add_child_user).toString() + i.toString())
-            }
-            _UserSelectMenuItemNameList[i].setText(userInformationResult!!.getUserInformationList().get(i).getNickName())
-        }
-        if((userInformationResult!!.getUserInformationList().size === MAX_USER_SIZE
-                    || mCurrentUserPosition != 0))
-        {
-            _AddChildUserButtonLayout.setVisibility(View.GONE)
-        }
-        else
-        {
-            _AddChildUserButtonLayout.setVisibility(View.VISIBLE)
-        }
-        Log.f("Feature.IS_REMAIN_DAY_END_USER : " + Feature.IS_REMAIN_DAY_END_USER)
-        if(Feature.IS_REMAIN_DAY_END_USER)
-        {
-            _PaymentRemainingDateText.setText(getResources().getString(R.string.text_free_using))
-        } else
-        {
-            if((Locale.getDefault().toString().contains(Locale.KOREA.toString())
-                        || Locale.getDefault().toString().contains(Locale.JAPAN.toString())
-                        || Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString())
-                        || Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString()))
-            )
-            {
-                _PaymentRemainingDateText.setText(
-                    java.lang.String.format(
-                        getResources().getString(R.string.text_remaining_day),
-                        userInformationResult!!.getRemainingDay()
-                    )
-                )
-            } else
-            {
-                var remainingDate = ""
-                try
-                {
-                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(userInformationResult!!.getExpireDate())
-                    remainingDate = SimpleDateFormat("MM/dd/yyyy").format(date)
-                } catch(e : ParseException)
-                {
-                    e.printStackTrace()
-                }
-                _PaymentRemainingDateText.setText(String.format(getResources().getString(R.string.text_remaining_day_name)) + " : " + remainingDate)
-            }
-        }
-        _UserSelectMenuLayout.getViewTreeObserver()
-            .addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
-            {
-                override fun onGlobalLayout()
-                {
-                    _UserSelectMenuLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this)
-                    mSelectMenuLayoutHeight = _UserSelectMenuLayout.getHeight()
-                    Log.f("mSelectMenuLayoutHeight : $mSelectMenuLayoutHeight")
-                }
-            })
+
     }
+
 
     override fun setCurrentPage(page : Int)
     {
@@ -547,16 +316,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     @Optional
     @OnClick(
-        R.id._userSelectMenuButton,
-        R.id._parentUserLayout,
-        R.id._childUser1Layout,
-        R.id._childUser2Layout,
-        R.id._childUser3Layout,
-        R.id._loginEnterButton,
-        R.id._myInfoMenuButton,
-        R.id._addChildUserButtonLayout,
-        R.id._attendanceMenuButton,
-        R.id._signEnterButton,
+        R.id._userInfoButtonText,
         R.id._menuLogoutLayout,
         R.id._leaningLogMenuButton,
         R.id._topMenuSetting,
@@ -566,73 +326,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     {
         when(view.id)
         {
-            R.id._userSelectMenuButton ->
-            if(_UserSelectMenuLayout.getVisibility() == View.INVISIBLE)
-            {
-                showUserSelectLayoutAnimation()
-            } else
-            {
-                hideUserSelectLayoutAnimation()
-            }
-            R.id._parentUserLayout ->
-            if(mCurrentUserPosition != PARENT_USER_INDEX)
-            {
-                mCurrentUserPosition = PARENT_USER_INDEX
-                selectUserStatus(mCurrentUserPosition)
-                hideUserSelectLayoutAnimation()
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_FORCE_CLOSE_DRAWER_MENU,
-                    Common.DURATION_SHORT
-                )
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_SEND_CHANGE_USER,
-                    Common.DURATION_CHANGE_USER
-                )
-            }
-            R.id._childUser1Layout ->
-            if(mCurrentUserPosition != CHILD_USER_1_INDEX)
-            {
-                mCurrentUserPosition = CHILD_USER_1_INDEX
-                selectUserStatus(mCurrentUserPosition)
-                hideUserSelectLayoutAnimation()
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_FORCE_CLOSE_DRAWER_MENU,
-                    Common.DURATION_SHORT
-                )
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_SEND_CHANGE_USER,
-                    Common.DURATION_CHANGE_USER
-                )
-            }
-            R.id._childUser2Layout ->
-            if(mCurrentUserPosition != CHILD_USER_2_INDEX)
-            {
-                mCurrentUserPosition = CHILD_USER_2_INDEX
-                selectUserStatus(mCurrentUserPosition)
-                hideUserSelectLayoutAnimation()
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_FORCE_CLOSE_DRAWER_MENU,
-                    Common.DURATION_SHORT
-                )
-                mWeakReferenceHandler.sendEmptyMessageDelayed(
-                    MESSAGE_SEND_CHANGE_USER,
-                    Common.DURATION_CHANGE_USER
-                )
-            }
-            R.id._childUser3Layout ->
-            if(mCurrentUserPosition != CHILD_USER_3_INDEX)
-            {
-                mCurrentUserPosition = CHILD_USER_3_INDEX
-                hideUserSelectLayoutAnimation()
-                mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_FORCE_CLOSE_DRAWER_MENU, Common.DURATION_SHORT)
-                mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_SEND_CHANGE_USER, Common.DURATION_CHANGE_USER)
-            }
-            R.id._loginEnterButton ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuLogin()
-            }
-            R.id._myInfoMenuButton ->
+            R.id._userInfoButtonText ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuMyInformation()
@@ -641,16 +335,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuLearningLog()
-            }
-            R.id._addChildUserButtonLayout ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuAddUser()
-            }
-            R.id._attendanceMenuButton ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuAttendance()
             }
             R.id._menuLogoutLayout ->
             {
@@ -692,42 +376,26 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private fun initMenuView()
     {
         val MENU_TEXTVIEW_ID_LIST = intArrayOf(
-            R.id._menuScheduleText,
-            R.id._menuNewsText,
-            R.id._menuTestimonialText,
             R.id._menuFAQsText,
             R.id._menu1on1AskText,
             R.id._menuAboutAppText
         )
         val MENU_IMAGEVIEW_ID_LIST = intArrayOf(
-            R.id._menuScheduleButtonRect,
-            R.id._menuNewsButtonRect,
-            R.id._menuTestimonialButtonRect,
             R.id._menuFAQsButtonRect,
             R.id._menu1on1AskButtonRect,
             R.id._menuAboutAppButtonRect
         )
         var addLayout : LinearLayout? = null
         _MenuItemLayout.removeAllViews()
-        if(Feature.IS_FREE_USER)
+
+        if(Feature.IS_TABLET)
         {
-            if(Feature.IS_TABLET)
-            {
-                addLayout = View.inflate(this, R.layout.drawer_item_free_user_tablet, null) as LinearLayout
-            } else
-            {
-                addLayout = View.inflate(this, R.layout.drawer_item_free_user_phone, null) as LinearLayout
-            }
+            addLayout = View.inflate(this, R.layout.drawer_item_user_tablet, null) as LinearLayout
         } else
         {
-            if(Feature.IS_TABLET)
-            {
-                addLayout = View.inflate(this, R.layout.drawer_item_paid_user_tablet, null) as LinearLayout
-            } else
-            {
-                addLayout = View.inflate(this, R.layout.drawer_item_paid_user_phone, null) as LinearLayout
-            }
+            addLayout = View.inflate(this, R.layout.drawer_item_user_phone, null) as LinearLayout
         }
+
         _MenuItemLayout.addView(addLayout)
         for(i in MENU_TEXTVIEW_ID_LIST.indices)
         {
@@ -737,86 +405,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             imageView.setOnClickListener(mMenuClickListener)
         }
         _MenuLogoutText.setTypeface(Font.getInstance(this).getRobotoMedium())
-    }
-
-    private fun setMenuLoginStatus()
-    {
-        Log.i("Feature.IS_FREE_USER : " + Feature.IS_FREE_USER)
-        initMenuView()
-        if(Feature.IS_FREE_USER)
-        {
-            _LoginThumbnailImage.visibility = View.VISIBLE
-            _LoginMessageText.setVisibility(View.VISIBLE)
-            _SignEnterButton.setVisibility(View.VISIBLE)
-            _LoginEnterButton.setVisibility(View.VISIBLE)
-            _StudyInfoLayout.setVisibility(View.GONE)
-            _UserThumbnailImage.visibility = View.GONE
-            _UserTypeText.setVisibility(View.GONE)
-            _UserNameText.setVisibility(View.GONE)
-            _UserSelectMenuButton.visibility = View.GONE
-            _PaymentRemainingDateText.setVisibility(View.GONE)
-            _MenuLogoutLayout.setVisibility(View.GONE)
-        } else
-        {
-            _LoginThumbnailImage.visibility = View.GONE
-            _LoginMessageText.setVisibility(View.GONE)
-            _SignEnterButton.setVisibility(View.GONE)
-            _LoginEnterButton.setVisibility(View.GONE)
-            _StudyInfoLayout.setVisibility(View.VISIBLE)
-            _UserThumbnailImage.visibility = View.VISIBLE
-            _UserTypeText.setVisibility(View.VISIBLE)
-            _UserNameText.setVisibility(View.VISIBLE)
-            _UserSelectMenuButton.visibility = View.VISIBLE
-            _PaymentRemainingDateText.setVisibility(View.VISIBLE)
-            _MenuLogoutLayout.setVisibility(View.VISIBLE)
-        }
-    }
-
-    private fun showUserSelectLayoutAnimation()
-    {
-        Log.f("height : $mSelectMenuLayoutHeight")
-        if(_UserSelectMenuLayout.getVisibility() == View.INVISIBLE)
-        {
-            ViewAnimator.animate(_UserSelectMenuLayout)
-                .translationY(-mSelectMenuLayoutHeight.toFloat(), 0.0f)
-                .duration(Common.DURATION_SHORT)
-                .onStart {_UserSelectMenuLayout.setVisibility(View.VISIBLE)}
-                .onStop {_UserSelectMenuButton.setImageResource(if(Feature.IS_TABLET) R.drawable.icon_arrow2_tablet else R.drawable.icon_arrow2)}
-                .start()
-        }
-    }
-
-    private fun hideUserSelectLayoutAnimation()
-    {
-        Log.f("")
-        if(_UserSelectMenuLayout.getVisibility() == View.VISIBLE)
-        {
-            ViewAnimator.animate(_UserSelectMenuLayout)
-                .translationY(0.0f, -mSelectMenuLayoutHeight.toFloat())
-                .duration(Common.DURATION_SHORT)
-                .onStart {_UserSelectMenuLayout.setVisibility(View.VISIBLE)}.onStop {
-                    _UserSelectMenuLayout.setVisibility(View.INVISIBLE)
-                    _UserSelectMenuButton.setImageResource(if(Feature.IS_TABLET) R.drawable.icon_arrow1_tablet else R.drawable.icon_arrow1)
-                }.start()
-        }
-    }
-
-    private fun selectUserStatus(index : Int)
-    {
-        for(i in 0 until mCurrentUserStatusSize)
-        {
-            if(i == index)
-            {
-                _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_787a9f))
-                _UserSelectMenuItemNameList[i].setTextColor(getResources().getColor(R.color.color_2e3192))
-                _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_on)
-            } else
-            {
-                _UserSelectMenuItemTypeList[i].setTextColor(getResources().getColor(R.color.color_a7a7bf))
-                _UserSelectMenuItemNameList[i].setTextColor(getResources().getColor(R.color.color_9192bf))
-                _UserSelectMenuItemCheckImageList[i].setImageResource(R.drawable.check_off)
-            }
-        }
     }
 
     private fun settingViewPagerInformation(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
@@ -940,7 +528,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             if(Feature.IS_TABLET)
                 getResources().getColor(TAB_BACKGROUND_COLOR_TABLET)
             else
-                getResources().getColor(TAB_BACKGROUND_COLOR_STUDENT)
+                getResources().getColor(TAB_BACKGROUND_COLOR_TABLET)
         )
     }
 
@@ -966,7 +554,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         override fun onDrawerClosed(drawerView : View)
         {
             Log.f("")
-            hideUserSelectLayoutAnimation()
         }
 
         override fun onDrawerStateChanged(newState : Int) {}
@@ -978,16 +565,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
             when(view.id)
             {
-                R.id._menuScheduleButtonRect ->
-                {
-                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuPublishSchedule()
-                }
-                R.id._menuNewsButtonRect ->
-                {
-                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuNews()
-                }
                 R.id._menuFAQsButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)

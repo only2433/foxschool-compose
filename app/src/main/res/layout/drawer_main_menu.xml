@@ -170,7 +170,7 @@
             android:id="@+id/_menuItemLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/drawer_item_paid_user_phone"
+            layout="@layout/drawer_item_user_phone"
             />
     </ScrollView>
 
@@ -179,7 +179,7 @@
         android:id="@+id/_userStatusLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/color_29c8e6"
+        android:background="@color/color_23cc8a"
         app:scale_base_height="316"
         app:scale_base_width="930">
 
@@ -188,7 +188,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="김리팍 선생님"
+            android:text="이소유 학생"
             android:textColor="@color/color_ffffff"
             app:scale_left="80"
             app:scale_textsize="46"
@@ -200,9 +200,9 @@
             android:id="@+id/_userInfoButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_box_empty_light_blue_97"
+            android:background="@drawable/round_box_empty_green_60"
             android:text="@string/text_my_info"
-            android:textColor="@color/color_29c8e6"
+            android:textColor="@color/color_23cc8a"
             android:gravity="center"
             app:scale_left="80"
             app:scale_top="157"
