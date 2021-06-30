@@ -12,6 +12,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -198,6 +199,15 @@ class IntentManagementFactory
                 }
             }
             ActivityMode.SEARCH -> intent = Intent(mContext, SearchListActivity::class.java)
+
+            ActivityMode.VOCABULARY ->
+            {
+                intent = Intent(mContext, VocabularyActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_VOCABULARY_DATA, `object` as MyVocabularyResult?)
+                }
+            }
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)

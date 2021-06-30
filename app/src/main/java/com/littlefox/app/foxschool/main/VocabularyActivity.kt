@@ -166,7 +166,6 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
 
     override fun initView()
     {
-        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(R.color.color_5c42a6))
         _BackButton.visibility = View.VISIBLE
         _BackButtonRect.visibility = View.VISIBLE
         _WordItemList.setLayoutManager(LinearLayoutScrollerManager(this))
@@ -186,7 +185,16 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
             params.gravity = Gravity.CENTER_HORIZONTAL
             _WordItemList.setLayoutParams(params)
         }
-        _TitleBaselayout.setBackgroundColor(getResources().getColor(R.color.color_8d65ff))
+
+        settingLayoutColor()
+    }
+
+    private fun settingLayoutColor()
+    {
+        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
+        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
+        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(statusBarColor))
+        _TitleBaselayout.setBackgroundColor(getResources().getColor(backgroundColor))
     }
 
     override fun onBackPressed()

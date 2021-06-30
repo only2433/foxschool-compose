@@ -205,7 +205,7 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
                 CONTENTS_WIDTH.toFloat(),
                 mVocabularyItemList[position].getContentViewSize().toFloat())
         mTitleText = ""
-        if(mVocabularySelectData.isSelectedWord() == false)
+        if(mVocabularySelectData.isSelectedWord())
         {
             mTitleText = mVocabularyItemList[position].getWordText()
         }
@@ -214,11 +214,11 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
             mTitleText = ""
         }
         mContentsText = ""
-        if(mVocabularySelectData.isSelectedMeaning() == false)
+        if(mVocabularySelectData.isSelectedMeaning())
         {
             mContentsText = mVocabularyItemList[position].getMeaningText()
         }
-        if(mVocabularySelectData.isSelectedExample() == false)
+        if(mVocabularySelectData.isSelectedExample())
         {
             if((mContentsText == "") == false)
             {

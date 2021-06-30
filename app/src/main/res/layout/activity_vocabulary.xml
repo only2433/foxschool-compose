@@ -30,7 +30,7 @@
                 android:id="@+id/_checkAllIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_off"
+                android:src="@drawable/check_on"
                 android:scaleType="fitXY"
                 app:scale_left="140"
                 app:scale_top="40"
@@ -54,7 +54,7 @@
                 android:id="@+id/_checkWordIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_off"
+                android:src="@drawable/check_on"
                 android:scaleType="fitXY"
                 app:scale_left="360"
                 app:scale_top="40"
@@ -78,7 +78,7 @@
                 android:id="@+id/_checkMeaningIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_off"
+                android:src="@drawable/check_on"
                 android:scaleType="fitXY"
                 app:scale_left="580"
                 app:scale_top="40"
@@ -102,7 +102,7 @@
                 android:id="@+id/_checkExampleIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/check_off"
+                android:src="@drawable/check_on"
                 android:scaleType="fitXY"
                 app:scale_left="800"
                 app:scale_top="40"
@@ -175,8 +175,7 @@
                 android:layout_height="wrap_content"
                 app:scale_base_width="1080"
                 app:scale_base_height="176"
-
-                android:background="@color/color_8d65ff"
+                android:background="@color/color_29c8e6"
                 android:layout_alignParentBottom="true">
 
                 <ImageView

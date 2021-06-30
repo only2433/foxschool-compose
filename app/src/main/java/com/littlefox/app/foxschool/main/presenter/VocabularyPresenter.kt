@@ -51,6 +51,18 @@ import java.util.*
 
 class VocabularyPresenter : VocabularyContract.Presenter
 {
+    companion object
+    {
+        private const val DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS : Int = 10001
+        private const val REQUEST_CODE_UPDATE_VOCABULARY : Int          = 1001
+        private const val MESSAGE_REQUEST_VOCABULARY_DETAIL_LIST : Int  = 100
+        private const val MESSAGE_SETTING_LIST : Int                    = 101
+        private const val MESSAGE_COMPLETE_CONTENTS : Int               = 102
+        private const val MESSAGE_PLAY_LIST_ITEM : Int                  = 103
+        private const val MESSAGE_NOTIFY_DATA_ALL : Int                 = 104
+        private const val MESSAGE_NOTIFY_DATA_SELECT : Int              = 105
+    }
+
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mVocabularyContractView : VocabularyContract.View
     private var mVocabularyItemList : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
@@ -316,9 +328,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
         {
             mVocabularyItemListAdapter.initChangedDataValue()
         }
-        catch(e : Exception)
-        {
-        }
+        catch(e : Exception) { }
     }
 
     private fun setVocabularyControlPlay()
@@ -753,15 +763,5 @@ class VocabularyPresenter : VocabularyContract.Presenter
         }
     }
 
-    companion object
-    {
-        private const val DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS : Int = 10001
-        private const val REQUEST_CODE_UPDATE_VOCABULARY : Int          = 1001
-        private const val MESSAGE_REQUEST_VOCABULARY_DETAIL_LIST : Int  = 100
-        private const val MESSAGE_SETTING_LIST : Int                    = 101
-        private const val MESSAGE_COMPLETE_CONTENTS : Int               = 102
-        private const val MESSAGE_PLAY_LIST_ITEM : Int                  = 103
-        private const val MESSAGE_NOTIFY_DATA_ALL : Int                 = 104
-        private const val MESSAGE_NOTIFY_DATA_SELECT : Int              = 105
-    }
+
 }

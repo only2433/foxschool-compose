@@ -10,12 +10,12 @@ class VocabularySelectData
     private var isSelectedMeaning = false
     private var isSelectedExample = false
 
-    init
+    constructor()
     {
-        isSelectAll = false
-        isSelectedWord = false
-        isSelectedMeaning = false
-        isSelectedExample = false
+        isSelectAll = true
+        isSelectedWord = true
+        isSelectedMeaning = true
+        isSelectedExample = true
     }
 
     fun setSelectWord()
@@ -54,9 +54,9 @@ class VocabularySelectData
     fun setData(vocabularySelectData : VocabularySelectData)
     {
         isSelectAll = vocabularySelectData.isSelectAll()
-        isSelectedWord = vocabularySelectData.isSelectedWord
-        isSelectedMeaning = vocabularySelectData.isSelectedMeaning
-        isSelectedExample = vocabularySelectData.isSelectedExample
+        isSelectedWord = vocabularySelectData.isSelectedWord()
+        isSelectedMeaning = vocabularySelectData.isSelectedMeaning()
+        isSelectedExample = vocabularySelectData.isSelectedExample()
     }
 
     fun isSelectAll() : Boolean

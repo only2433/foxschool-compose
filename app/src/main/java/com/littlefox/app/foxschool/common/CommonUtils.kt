@@ -122,8 +122,7 @@ class CommonUtils
         return if(hours > 0)
         {
             mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-        }
-        else
+        } else
         {
             mFormatter.format("%02d:%02d", minutes, seconds).toString()
         }
@@ -150,8 +149,7 @@ class CommonUtils
         return if(hours > 0)
         {
             mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-        }
-        else
+        } else
         {
             mFormatter.format("%02d:%02d", minutes, seconds).toString()
         }
@@ -185,8 +183,7 @@ class CommonUtils
         if(isTabletModel)
         {
             Feature.IS_TABLET = true
-        }
-        else
+        } else
         {
             Feature.IS_TABLET = false
         }
@@ -195,8 +192,7 @@ class CommonUtils
         {
             Log.f("HAVE NAVIGATION BAR")
             Feature.HAVE_NAVIGATION_BAR = true
-        }
-        else
+        } else
         {
             Log.f("NOT NAVIGATION BAR")
             Feature.HAVE_NAVIGATION_BAR = false
@@ -205,8 +201,7 @@ class CommonUtils
         {
             Log.f("MINIMUM DISPLAY SIZE")
             Feature.IS_MINIMUM_DISPLAY_SIZE = true
-        }
-        else
+        } else
         {
             Log.f("SUITABLE DISPLAY SIZE")
             Feature.IS_MINIMUM_DISPLAY_SIZE = false
@@ -214,8 +209,7 @@ class CommonUtils
         if(Feature.IS_TABLET)
         {
             Log.f("비율 : " + displayWidthPixel.toFloat() / displayHeightPixel.toFloat())
-        }
-        else
+        } else
         {
             Log.f("비율 : " + displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
 
@@ -227,8 +221,7 @@ class CommonUtils
             {
                 Log.f("4 : 3 비율 ")
                 Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = true
-            }
-            else
+            } else
             {
                 Log.f("16 : 9 비율 ")
                 Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = false
@@ -237,8 +230,7 @@ class CommonUtils
         if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
         {
             Feature.IS_SUPPORT_LITTLEFOX_CLASS = true
-        }
-        else
+        } else
         {
             Feature.IS_SUPPORT_LITTLEFOX_CLASS = false
         }
@@ -275,8 +267,7 @@ class CommonUtils
                 MainApplication.sDisPlayMetrics!!.widthPixels = height
                 MainApplication.sDisPlayMetrics!!.heightPixels = width
             }
-        }
-        else
+        } else
         {
             if(MainApplication.sDisPlayMetrics!!.widthPixels > MainApplication.sDisPlayMetrics!!.heightPixels)
             {
@@ -284,7 +275,10 @@ class CommonUtils
                 MainApplication.sDisPlayMetrics!!.heightPixels = width
             }
         }
-        val `object` = DisPlayMetricsObject(MainApplication.sDisPlayMetrics!!.widthPixels.toFloat(), MainApplication.sDisPlayMetrics!!.heightPixels.toFloat())
+        val `object` = DisPlayMetricsObject(
+            MainApplication.sDisPlayMetrics!!.widthPixels.toFloat(),
+            MainApplication.sDisPlayMetrics!!.heightPixels.toFloat()
+        )
         setPreferenceObject(Common.PARAMS_DISPLAY_METRICS, `object`)
     }
 
@@ -301,18 +295,20 @@ class CommonUtils
             {
                 if(Feature.IS_TABLET)
 
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
-                else
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
+                    MainApplication.sDisplayFactor =
+                        MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
+                else MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
-        }
-        catch(e : NullPointerException)
+        } catch(e : NullPointerException)
         {
-            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET)
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1920.0f
-            else
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
+            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                Common.PARAMS_DISPLAY_METRICS,
+                DisPlayMetricsObject::class.java
+            ) as DisPlayMetricsObject?
+            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                disPlayMetricsObject!!.widthPixel / 1920.0f
+            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
         return (value * MainApplication.sDisplayFactor).toInt()
     }
@@ -330,18 +326,20 @@ class CommonUtils
             {
                 if(Feature.IS_TABLET)
                 {
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
-                }
-                else MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
+                    MainApplication.sDisplayFactor =
+                        MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
+                } else MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
-        }
-        catch(e : NullPointerException)
+        } catch(e : NullPointerException)
         {
-            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET)
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1920.0f
-            else
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
+            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                Common.PARAMS_DISPLAY_METRICS,
+                DisPlayMetricsObject::class.java
+            ) as DisPlayMetricsObject?
+            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                disPlayMetricsObject!!.widthPixel / 1920.0f
+            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
         return value * MainApplication.sDisplayFactor
     }
@@ -357,19 +355,20 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET)
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
-                else
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
+                if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
+                else MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
-        }
-        catch(e : NullPointerException)
+        } catch(e : NullPointerException)
         {
-            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET)
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1200.0f
-            else
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1920.0f
+            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                Common.PARAMS_DISPLAY_METRICS,
+                DisPlayMetricsObject::class.java
+            ) as DisPlayMetricsObject?
+            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                disPlayMetricsObject!!.heightPixel / 1200.0f
+            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1920.0f
         }
         return (value * MainApplication.sDisplayFactor).toInt()
     }
@@ -385,19 +384,20 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET)
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
-                else
-                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
+                if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
+                else MainApplication.sDisplayFactor =
+                    MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
-        }
-        catch(e : NullPointerException)
+        } catch(e : NullPointerException)
         {
-            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET)
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1200.0f
-            else
-                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
+            val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                Common.PARAMS_DISPLAY_METRICS,
+                DisPlayMetricsObject::class.java
+            ) as DisPlayMetricsObject?
+            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
+                disPlayMetricsObject!!.heightPixel / 1200.0f
+            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
         }
         return value * MainApplication.sDisplayFactor
     }
@@ -451,12 +451,10 @@ class CommonUtils
         if(data is Boolean)
         {
             editor.putBoolean(key, (data as Boolean))
-        }
-        else if(data is Int)
+        } else if(data is Int)
         {
             editor.putInt(key, (data as Int))
-        }
-        else if(data is String)
+        } else if(data is String)
         {
             editor.putString(key, data as String)
         }
@@ -472,12 +470,14 @@ class CommonUtils
         {
             if(MainApplication.sDisPlayMetrics == null)
             {
-                val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
+                val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                    Common.PARAMS_DISPLAY_METRICS,
+                    DisPlayMetricsObject::class.java
+                ) as DisPlayMetricsObject?
                 if(disPlayMetricsObject != null)
                 {
                     return disPlayMetricsObject.widthPixel.toInt()
-                }
-                else
+                } else
                 {
                     return 0
                 }
@@ -494,12 +494,14 @@ class CommonUtils
         {
             if(MainApplication.sDisPlayMetrics == null)
             {
-                val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(Common.PARAMS_DISPLAY_METRICS, DisPlayMetricsObject::class.java) as DisPlayMetricsObject?
+                val disPlayMetricsObject : DisPlayMetricsObject? = getPreferenceObject(
+                    Common.PARAMS_DISPLAY_METRICS,
+                    DisPlayMetricsObject::class.java
+                ) as DisPlayMetricsObject?
                 if(disPlayMetricsObject != null)
                 {
                     return disPlayMetricsObject.heightPixel.toInt()
-                }
-                else
+                } else
                 {
                     return 0
                 }
@@ -517,9 +519,8 @@ class CommonUtils
             Log.i("CommonUtils.getDisplayWidthPixel(context) : $displayWidthPixel")
             if(minDisplayWidth > displayWidthPixel)
             {
-               return true
-            }
-            else
+                return true
+            } else
             {
                 return false
             }
@@ -532,16 +533,18 @@ class CommonUtils
     val isTabletModel : Boolean
         get() = if(Build.VERSION.SDK_INT >= 19)
         {
-            checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties() && checkTabletDeviceWithUserAgent(sContext)
-        }
-        else
+            checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties() && checkTabletDeviceWithUserAgent(
+                sContext
+            )
+        } else
         {
             checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties()
         }
 
     private fun checkTabletDeviceWithScreenSize(context : Context) : Boolean
     {
-        val device_large = context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
+        val device_large =
+            context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
         Log.f("device_large : $device_large")
         if(device_large)
         {
@@ -549,22 +552,7 @@ class CommonUtils
             val activity = context as Activity
             activity!!.windowManager.defaultDisplay.getMetrics(metrics)
             Log.f("metrics.densityDpi : " + metrics.densityDpi)
-            if(metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_TV
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH
-                    || metrics.densityDpi == 136
-                    || metrics.densityDpi == 180
-                    || metrics.densityDpi == 240
-                    || metrics.densityDpi == 300
-                    || metrics.densityDpi == 306
-                    || metrics.densityDpi == 330
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_280
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_340
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_360
-                    || metrics.densityDpi == 372
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_420
-                    || metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
+            if(metrics.densityDpi == DisplayMetrics.DENSITY_DEFAULT || metrics.densityDpi == DisplayMetrics.DENSITY_HIGH || metrics.densityDpi == DisplayMetrics.DENSITY_TV || metrics.densityDpi == DisplayMetrics.DENSITY_XHIGH || metrics.densityDpi == 136 || metrics.densityDpi == 180 || metrics.densityDpi == 240 || metrics.densityDpi == 300 || metrics.densityDpi == 306 || metrics.densityDpi == 330 || metrics.densityDpi == DisplayMetrics.DENSITY_280 || metrics.densityDpi == DisplayMetrics.DENSITY_340 || metrics.densityDpi == DisplayMetrics.DENSITY_360 || metrics.densityDpi == 372 || metrics.densityDpi == DisplayMetrics.DENSITY_420 || metrics.densityDpi == DisplayMetrics.DENSITY_XXHIGH)
             {
                 return true
             }
@@ -582,8 +570,7 @@ class CommonUtils
             ism.read(bts)
             ism.close()
             String(bts).toLowerCase().contains("tablet")
-        }
-        catch(t : Throwable)
+        } catch(t : Throwable)
         {
             t.printStackTrace()
             return false
@@ -602,25 +589,16 @@ class CommonUtils
             var webView : WebView? = WebView(context)
             val ua : String = webView?.getSettings()?.getUserAgentString().toString()
             webView = null
-            if(ua.contains("Mobile Safari")
-                    && Build.MODEL == "BTV-W09" == false
-                    && Build.MODEL == "BTV-DL09" == false
-                    && Build.MODEL == "SHT-W09" == false
-                    && Build.MODEL == "SM-T380" == false
-                    && Build.MODEL == "SM-T385K" == false
-                    && Build.MODEL == "M40" == false
-                    && Build.MODEL == "SM-T295N" == false)
+            if(ua.contains("Mobile Safari") && Build.MODEL == "BTV-W09" == false && Build.MODEL == "BTV-DL09" == false && Build.MODEL == "SHT-W09" == false && Build.MODEL == "SM-T380" == false && Build.MODEL == "SM-T385K" == false && Build.MODEL == "M40" == false && Build.MODEL == "SM-T295N" == false)
             {
                 Log.f("Mobile Safari")
-                return  false
-            }
-            else
+                return false
+            } else
             {
                 Log.f("Tablet Safari")
-                return  true
+                return true
             }
-        }
-        catch(e : Exception)
+        } catch(e : Exception)
         {
             return false
         }
@@ -637,20 +615,19 @@ class CommonUtils
             var result = -1
             try
             {
-                val pi : PackageInfo? = sContext.packageManager.getPackageInfo(Common.PACKAGE_NAME, 0)
+                val pi : PackageInfo? =
+                    sContext.packageManager.getPackageInfo(Common.PACKAGE_NAME, 0)
                 if(pi != null)
                 {
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
                     {
                         result = pi.longVersionCode.toInt()
-                    }
-                    else
+                    } else
                     {
                         result = pi.versionCode
                     }
                 }
-            }
-            catch(ex : Exception)
+            } catch(ex : Exception)
             {
                 Log.f("getPackageVersionCode Error : " + ex.message)
             }
@@ -668,8 +645,7 @@ class CommonUtils
         {
             val pi : PackageInfo? = sContext.packageManager.getPackageInfo(packageName, 0)
             if(pi != null) result = pi.versionName
-        }
-        catch(ex : Exception)
+        } catch(ex : Exception)
         {
             Log.f("getPackageVersionName Error : " + ex.message)
         }
@@ -691,8 +667,7 @@ class CommonUtils
             {
                 result = false
             }
-        }
-        catch(e : Exception)
+        } catch(e : Exception)
         {
             result = false
         }
@@ -740,8 +715,7 @@ class CommonUtils
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2)
             {
                 result = stat.getAvailableBlocksLong() * stat.getBlockSizeLong()
-            }
-            else
+            } else
             {
                 result = stat.getAvailableBlocks() as Long * stat.getBlockSize() as Long
             }
@@ -762,8 +736,7 @@ class CommonUtils
                 {
                     val dirSize = browseFiles(f)
                     dirSize
-                }
-                else
+                } else
                 {
                     f.length()
                 }
@@ -788,7 +761,11 @@ class CommonUtils
 
     fun getDrawableResourceFromString(context : Context, name : String) : Int
     {
-        return context.resources.getIdentifier(name, "drawable", context.applicationContext.packageName)
+        return context.resources.getIdentifier(
+            name,
+            "drawable",
+            context.applicationContext.packageName
+        )
     }
 
     fun getBitmapFromDrawable(mDrawable : Drawable, width : Int, height : Int) : Bitmap
@@ -802,7 +779,8 @@ class CommonUtils
 
     fun getRoundedCornerBitmap(bitmap : Bitmap) : Bitmap
     {
-        val output : Bitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888)
+        val output : Bitmap =
+            Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888)
         val canvas = Canvas(output)
         val color = -0xbdbdbe
         val paint = Paint()
@@ -863,7 +841,8 @@ class CommonUtils
      */
     fun verifyCurrentVersionCode() : Boolean
     {
-        val registerVersion = getSharedPreference(Common.PARAMS_REGISTER_APP_VERSION, DataType.TYPE_INTEGER) as Int
+        val registerVersion =
+            getSharedPreference(Common.PARAMS_REGISTER_APP_VERSION, DataType.TYPE_INTEGER) as Int
         val currentVersion = packageVersionCode
         Log.i("registerVersion : $registerVersion, currentVersion : $currentVersion")
         if(currentVersion != registerVersion)
@@ -915,10 +894,24 @@ class CommonUtils
         return getTranslateYAnimation(duration, fromYValue, toYValue, null)
     }
 
-    fun getTranslateYAnimation(duration : Long, fromYValue : Float, toYValue : Float, interpolator : Interpolator?) : Animation?
+    fun getTranslateYAnimation(
+        duration : Long,
+        fromYValue : Float,
+        toYValue : Float,
+        interpolator : Interpolator?
+    ) : Animation?
     {
         var anim : Animation? = null
-        anim = TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.ABSOLUTE, fromYValue, Animation.ABSOLUTE, toYValue)
+        anim = TranslateAnimation(
+            Animation.RELATIVE_TO_SELF,
+            0.0f,
+            Animation.RELATIVE_TO_SELF,
+            0.0f,
+            Animation.ABSOLUTE,
+            fromYValue,
+            Animation.ABSOLUTE,
+            toYValue
+        )
         anim.setDuration(duration)
         anim.setFillAfter(true)
         if(interpolator != null)
@@ -933,10 +926,24 @@ class CommonUtils
         return getTranslateXAnimation(duration, fromXValue, toXValue, null)
     }
 
-    fun getTranslateXAnimation(duration : Long, fromXValue : Float, toXValue : Float, interpolator : Interpolator?) : Animation?
+    fun getTranslateXAnimation(
+        duration : Long,
+        fromXValue : Float,
+        toXValue : Float,
+        interpolator : Interpolator?
+    ) : Animation?
     {
         var anim : Animation? = null
-        anim = TranslateAnimation(Animation.ABSOLUTE, fromXValue, Animation.ABSOLUTE, toXValue, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f)
+        anim = TranslateAnimation(
+            Animation.ABSOLUTE,
+            fromXValue,
+            Animation.ABSOLUTE,
+            toXValue,
+            Animation.RELATIVE_TO_SELF,
+            0.0f,
+            Animation.RELATIVE_TO_SELF,
+            0.0f
+        )
         anim.setDuration(duration)
         anim.setFillAfter(true)
         if(interpolator != null)
@@ -958,7 +965,14 @@ class CommonUtils
     fun getRotateAnimation(duration : Long, fromValue : Float, toValue : Float) : Animation?
     {
         var anim : Animation? = null
-        anim = RotateAnimation(fromValue, toValue, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f)
+        anim = RotateAnimation(
+            fromValue,
+            toValue,
+            Animation.RELATIVE_TO_SELF,
+            0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        )
         anim.setDuration(duration)
         anim.setFillAfter(false)
         anim.setInterpolator(LinearInterpolator())
@@ -978,34 +992,61 @@ class CommonUtils
 
     fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showErrorSnackMessage(coordinatorLayout,
+        showErrorSnackMessage(
+            coordinatorLayout,
             message,
             sContext.resources.getColor(R.color.color_fff348),
             R.drawable.snackbar_warning,
-            Gravity.CENTER)
+            Gravity.CENTER
+        )
     }
 
     fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_57e2ff), Gravity.CENTER)
+        showSnackMessage(
+            coordinatorLayout,
+            message,
+            sContext.resources.getColor(R.color.color_57e2ff),
+            Gravity.CENTER
+        )
     }
 
-    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
+    fun showErrorSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : String,
+        gravity : Int
+    )
     {
-        showErrorSnackMessage(coordinatorLayout,
+        showErrorSnackMessage(
+            coordinatorLayout,
             message,
             sContext.resources.getColor(R.color.color_fff348),
             R.drawable.snackbar_warning,
-            gravity)
+            gravity
+        )
     }
 
-    fun showSuccessSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, gravity : Int)
+    fun showSuccessSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : String,
+        gravity : Int
+    )
     {
-        showSnackMessage(coordinatorLayout, message, sContext.resources.getColor(R.color.color_57e2ff), gravity)
+        showSnackMessage(
+            coordinatorLayout,
+            message,
+            sContext.resources.getColor(R.color.color_57e2ff),
+            gravity
+        )
     }
 
     @JvmOverloads
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, color : Int, gravity : Int = -1)
+    fun showSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : String,
+        color : Int,
+        gravity : Int = -1
+    )
     {
         Log.f("gravity : $gravity")
         val snackbar : Snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT)
@@ -1024,7 +1065,13 @@ class CommonUtils
         snackbar.show()
     }
 
-    fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String, color : Int, icon : Int , gravity : Int = -1)
+    fun showErrorSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : String,
+        color : Int,
+        icon : Int,
+        gravity : Int = -1
+    )
     {
         val builder = SpannableStringBuilder()
         builder.append(" ")
@@ -1032,7 +1079,8 @@ class CommonUtils
         builder.append(" " + message)
         val snackbar = Snackbar.make(coordinatorLayout, builder, Snackbar.LENGTH_LONG)
         val view = snackbar.view
-        val textView = view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        val textView =
+            view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
 
         if(gravity != -1)
         {
@@ -1046,7 +1094,11 @@ class CommonUtils
         snackbar.show()
     }
 
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : Array<String>, color : IntArray)
+    fun showSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : Array<String>,
+        color : IntArray
+    )
     {
         var beforeCount = 0
         var messageText : String = ""
@@ -1063,17 +1115,28 @@ class CommonUtils
             {
                 currentCount += message[j].length
             }
-            spannableStringBuilder.setSpan(ForegroundColorSpan(color[i]), beforeCount, currentCount, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableStringBuilder.setSpan(
+                ForegroundColorSpan(color[i]),
+                beforeCount,
+                currentCount,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             beforeCount = currentCount
         }
-        val snackbar : Snackbar = Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
+        val snackbar : Snackbar =
+            Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
         textView.setText(spannableStringBuilder)
         snackbar.show()
     }
 
-    fun showSnackMessage(coordinatorLayout : CoordinatorLayout, message : Array<String>, color : IntArray, listener : View.OnClickListener?)
+    fun showSnackMessage(
+        coordinatorLayout : CoordinatorLayout,
+        message : Array<String>,
+        color : IntArray,
+        listener : View.OnClickListener?
+    )
     {
         var beforeCount = 0
         var messageText : String = ""
@@ -1090,10 +1153,16 @@ class CommonUtils
             {
                 currentCount += message[j].length
             }
-            spannableStringBuilder.setSpan(ForegroundColorSpan(color[i]), beforeCount, currentCount, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableStringBuilder.setSpan(
+                ForegroundColorSpan(color[i]),
+                beforeCount,
+                currentCount,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             beforeCount = currentCount
         }
-        val snackbar : Snackbar = Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
+        val snackbar : Snackbar =
+            Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
         textView.setText(spannableStringBuilder)
@@ -1121,8 +1190,7 @@ class CommonUtils
             if(totalPlayTime < MIN_TOTAL_PLAY_TIME + count * TERM_PLAY_TIME)
             {
                 result = MIN_PREVIEW_TIME + TERM_PREVIEW_TIME * count
-            }
-            else if(totalPlayTime >= MAX_TOTAL_PLAY_TIME)
+            } else if(totalPlayTime >= MAX_TOTAL_PLAY_TIME)
             {
                 result = MAX_PREVIEW_TIME
             }
@@ -1143,8 +1211,7 @@ class CommonUtils
         if(System.currentTimeMillis() >= subscribeEndMiliseconds)
         {
             return true
-        }
-        else
+        } else
         {
             return false
         }
@@ -1177,8 +1244,7 @@ class CommonUtils
         try
         {
             date = dateFormat.parse(timeInfo)
-        }
-        catch(e : ParseException)
+        } catch(e : ParseException)
         {
             e.printStackTrace()
         }
@@ -1192,8 +1258,7 @@ class CommonUtils
         try
         {
             date = format.parse(dateText)
-        }
-        catch(e : ParseException)
+        } catch(e : ParseException)
         {
         }
         return date!!.time
@@ -1217,69 +1282,64 @@ class CommonUtils
         if(appUsableSize.y < realScreenSize.y)
         {
             return true
-        }
-        else
+        } else
         {
             return false
         }
     }
+
     /**
      * 네이게이션바 사이즈를 리턴한다.
      * @return
      */
     fun getNavigationBarSize() : Point
     {
-            val appUsableSize = getAppUsableScreenSize()
-            val realScreenSize = getRealScreenSize()
+        val appUsableSize = getAppUsableScreenSize()
+        val realScreenSize = getRealScreenSize()
 
-            // avigation bar on the right
-            if(appUsableSize.x < realScreenSize.x)
-            {
-                return Point(realScreenSize.x - appUsableSize.x, appUsableSize.y)
-            }
-            // navigation bar at the bottom
-            return if(appUsableSize.y < realScreenSize.y)
-            {
-                Point(appUsableSize.x, realScreenSize.y - appUsableSize.y)
-            }
-            else Point()
-            // navigation bar is not present
-        }
+        // avigation bar on the right
+        if(appUsableSize.x < realScreenSize.x)
+        {
+            return Point(realScreenSize.x - appUsableSize.x, appUsableSize.y)
+        } // navigation bar at the bottom
+        return if(appUsableSize.y < realScreenSize.y)
+        {
+            Point(appUsableSize.x, realScreenSize.y - appUsableSize.y)
+        } else Point() // navigation bar is not present
+    }
 
     fun getAppUsableScreenSize() : Point
     {
-            val windowManager : WindowManager = sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val display : Display = windowManager.getDefaultDisplay()
-            val size = Point()
-            display.getSize(size)
-            return size
+        val windowManager : WindowManager =
+            sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display : Display = windowManager.getDefaultDisplay()
+        val size = Point()
+        display.getSize(size)
+        return size
     }
 
     fun getRealScreenSize() : Point
     {
-        val windowManager : WindowManager = sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val windowManager : WindowManager =
+            sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display : Display = windowManager.getDefaultDisplay()
         val size = Point()
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
         {
             display.getRealSize(size)
-        }
-        else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         {
             try
             {
                 size.x = (Display::class.java.getMethod("getRawWidth").invoke(display) as Int)
                 size.y = (Display::class.java.getMethod("getRawHeight").invoke(display) as Int)
-            }
-            catch(e : IllegalAccessException)
+            } catch(e : IllegalAccessException)
             {
                 Log.f("getRealScreenSize Error : " + e.message)
-            }
-            catch(e : InvocationTargetException)
+            } catch(e : InvocationTargetException)
             {
                 Log.f("getRealScreenSize Error : " + e.message)
-            }
-            catch(e : NoSuchMethodException)
+            } catch(e : NoSuchMethodException)
             {
                 Log.f("getRealScreenSize Error : " + e.message)
             }
@@ -1290,30 +1350,34 @@ class CommonUtils
     fun inquireForDeveloper(sendUrl : String?)
     {
         var userID = ""
-        val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData
+        val userLoginData : UserLoginData? = getPreferenceObject(
+            Common.PARAMS_USER_LOGIN,
+            UserLoginData::class.java
+        ) as UserLoginData
         if(userLoginData != null)
         {
             userID = userLoginData.userID
             Log.f("User ID : $userID")
-        }
-        else
+        } else
         {
             userID = "FREE USER"
         }
         val i : Intent
         val strTitle = sContext!!.resources.getString(R.string.app_name)
-        val text = ("[" + Build.BRAND.toString() + "]" + " Model: " + Build.MODEL + ", OS: " + Build.VERSION.RELEASE + ", Ver: " + getPackageVersionName(Common.PACKAGE_NAME) + ", ID : " + userID)
+        val text =
+            ("[" + Build.BRAND.toString() + "]" + " Model: " + Build.MODEL + ", OS: " + Build.VERSION.RELEASE + ", Ver: " + getPackageVersionName(
+                Common.PACKAGE_NAME
+            ) + ", ID : " + userID)
         if(Build.VERSION.SDK_INT >= 24)
         {
             i = Intent(Intent.ACTION_SEND)
             i.putExtra(Intent.EXTRA_TEXT, text)
             val file = File(Log.getLogfilePath())
-            val uri : Uri = FileProvider.getUriForFile(sContext , BuildConfig.APPLICATION_ID, file)
+            val uri : Uri = FileProvider.getUriForFile(sContext, BuildConfig.APPLICATION_ID, file)
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             i.setDataAndType(uri, sContext.contentResolver.getType(uri))
             i.putExtra(Intent.EXTRA_STREAM, uri)
-        }
-        else
+        } else
         {
             i = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendUrl, null))
             i.putExtra(Intent.EXTRA_TEXT, text)
@@ -1328,8 +1392,7 @@ class CommonUtils
         if(day >= 11 && day <= 13)
         {
             return "th"
-        }
-        else when(day % 10)
+        } else when(day % 10)
         {
             1 -> return "st"
             2 -> return "nd"
@@ -1367,7 +1430,13 @@ class CommonUtils
      * @param duration 애니메이션 시간
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun showAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, duration : Int)
+    fun showAnimateReveal(
+        view : View,
+        color : Int,
+        positionX : Int,
+        positionY : Int,
+        duration : Int
+    )
     {
         showAnimateReveal(view, color, positionX, positionY, false, duration)
     }
@@ -1382,11 +1451,19 @@ class CommonUtils
      * @param duration 애니메이션 시간
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun showAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, isAlphaAnimation : Boolean, duration : Int)
+    fun showAnimateReveal(
+        view : View,
+        color : Int,
+        positionX : Int,
+        positionY : Int,
+        isAlphaAnimation : Boolean,
+        duration : Int
+    )
     {
         val finalRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
         val animaterSet = AnimatorSet()
-        val revealAnimation : Animator = ViewAnimationUtils.createCircularReveal(view, positionX, positionY, 0f, finalRadius)
+        val revealAnimation : Animator =
+            ViewAnimationUtils.createCircularReveal(view, positionX, positionY, 0f, finalRadius)
         view.setBackgroundColor(ContextCompat.getColor(sContext, color))
         if(isAlphaAnimation)
         {
@@ -1407,7 +1484,13 @@ class CommonUtils
      * @param duration 애니메이션 시간
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun hideAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, duration : Int)
+    fun hideAnimateReveal(
+        view : View,
+        color : Int,
+        positionX : Int,
+        positionY : Int,
+        duration : Int
+    )
     {
         hideAnimateReveal(view, color, positionX, positionY, false, duration)
     }
@@ -1422,11 +1505,19 @@ class CommonUtils
      * @param duration 애니메이션 시간
      */
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    fun hideAnimateReveal(view : View, color : Int, positionX : Int, positionY : Int, isAlphaAnimation : Boolean, duration : Int)
+    fun hideAnimateReveal(
+        view : View,
+        color : Int,
+        positionX : Int,
+        positionY : Int,
+        isAlphaAnimation : Boolean,
+        duration : Int
+    )
     {
         val initialRadius = Math.hypot(view.width.toDouble(), view.height.toDouble()).toFloat()
         val animaterSet = AnimatorSet()
-        val revealAnimation : Animator = ViewAnimationUtils.createCircularReveal(view, positionX, positionY, initialRadius, 0f)
+        val revealAnimation : Animator =
+            ViewAnimationUtils.createCircularReveal(view, positionX, positionY, initialRadius, 0f)
         view.setBackgroundColor(ContextCompat.getColor(sContext, color))
         if(isAlphaAnimation)
         {
@@ -1444,7 +1535,11 @@ class CommonUtils
         val unAuthorizeList = ArrayList<String>()
         for(i in permissionList.indices)
         {
-            if(ContextCompat.checkSelfPermission(sContext, permissionList[i]) != PackageManager.PERMISSION_GRANTED)
+            if(ContextCompat.checkSelfPermission(
+                    sContext,
+                    permissionList[i]
+                ) != PackageManager.PERMISSION_GRANTED
+            )
             {
                 unAuthorizeList.add(permissionList[i])
             }
@@ -1453,7 +1548,10 @@ class CommonUtils
         {
             var unAuthorizePermissions : Array<String?>? = arrayOfNulls(unAuthorizeList.size)
             unAuthorizePermissions = unAuthorizeList.toArray(unAuthorizePermissions)
-            (sContext as AppCompatActivity?)!!.requestPermissions(unAuthorizePermissions, requestCode)
+            (sContext as AppCompatActivity?)!!.requestPermissions(
+                unAuthorizePermissions,
+                requestCode
+            )
         }
     }
 
@@ -1509,99 +1607,58 @@ class CommonUtils
         }
         if(quizCount < 6)
         {
-            if(quizCount - 1 == correctCount)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(quizCount - 1 == correctCount) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(quizCount - 2 <= correctCount)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
-        }
-        else if(quizCount < 11)
+                if(quizCount - 2 <= correctCount) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
+        } else if(quizCount < 11)
         {
-            if(quizCount - 1 == correctCount)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(quizCount - 1 == correctCount) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(quizCount - 3 <= correctCount)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
-        }
-        else if(quizCount < 15)
+                if(quizCount - 3 <= correctCount) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
+        } else if(quizCount < 15)
         {
-            if(correctCount >= 8)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(correctCount >= 8) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 6)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
-        }
-        else if(quizCount < 17)
+                if(correctCount >= 6) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
+        } else if(quizCount < 17)
         {
-            if(correctCount >= 13)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(correctCount >= 13) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 11)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
-        }
-        else if(quizCount < 20)
+                if(correctCount >= 11) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
+        } else if(quizCount < 20)
         {
-            if(correctCount >= 15)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(correctCount >= 15) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 13)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
-        }
-        else
+                if(correctCount >= 13) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
+        } else
         {
-            if(correctCount >= 18)
-                isGradeVeryGood = true
-            else
-                isGradeVeryGood = false
+            if(correctCount >= 18) isGradeVeryGood = true
+            else isGradeVeryGood = false
             if(isGradeVeryGood == false)
             {
-                if(correctCount >= 16)
-                    return Grade.GOODS
-                else
-                    return Grade.POOL
-            }
-            else
-                return Grade.VERYGOOD
+                if(correctCount >= 16) return Grade.GOODS
+                else return Grade.POOL
+            } else return Grade.VERYGOOD
         }
     }
 
@@ -1610,24 +1667,19 @@ class CommonUtils
         if(color == "red")
         {
             return BookColor.RED
-        }
-        else if(color == "orange")
+        } else if(color == "orange")
         {
             return BookColor.ORANGE
-        }
-        else if(color == "green")
+        } else if(color == "green")
         {
             return BookColor.GREEN
-        }
-        else if(color == "blue")
+        } else if(color == "blue")
         {
             return BookColor.BLUE
-        }
-        else if(color == "purple")
+        } else if(color == "purple")
         {
             return BookColor.PURPLE
-        }
-        else if(color == "pink")
+        } else if(color == "pink")
         {
             return BookColor.PINK
         }
@@ -1665,15 +1717,14 @@ class CommonUtils
     fun hideKeyboard()
     {
         Log.f("")
-        val inputMethodManager = sContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        //Find the currently focused view, so we can grab the correct window token from it.
-        var view : View = (sContext as AppCompatActivity).getCurrentFocus()!!
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        val inputMethodManager =
+            sContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager //Find the currently focused view, so we can grab the correct window token from it.
+        var view : View =
+            (sContext as AppCompatActivity).getCurrentFocus()!! //If no view currently has focus, create a new one, just so we can grab a window token from it
         if(view == null)
         {
             view = View(sContext)
-        }
-        else
+        } else
         {
             view.clearFocus()
         }
@@ -1682,7 +1733,10 @@ class CommonUtils
 
     fun loadMainData() : MainInformationResult
     {
-        return getPreferenceObject(Common.PARAMS_FILE_MAIN_INFO, MainInformationResult::class.java) as MainInformationResult
+        return getPreferenceObject(
+            Common.PARAMS_FILE_MAIN_INFO,
+            MainInformationResult::class.java
+        ) as MainInformationResult
     }
 
     fun saveMainData(data : MainInformationResult)
@@ -1707,7 +1761,11 @@ class CommonUtils
         return list
     }
 
-    fun splitWordsIntoStringsThatFit(source : String, maxWidthPx : Float, paint : Paint) : List<String>
+    fun splitWordsIntoStringsThatFit(
+        source : String,
+        maxWidthPx : Float,
+        paint : Paint
+    ) : List<String>
     {
         val result = ArrayList<String>()
         val currentLine = ArrayList<String>()
@@ -1717,10 +1775,8 @@ class CommonUtils
             if(paint.measureText(chunk) < maxWidthPx)
             {
                 processFitChunk(maxWidthPx, paint, result, currentLine, chunk)
-            }
-            else
-            {
-                //the chunk is too big, split it.
+            } else
+            { //the chunk is too big, split it.
                 val splitChunk = splitIntoStringsThatFit(chunk, maxWidthPx, paint)
                 for(chunkChunk in splitChunk)
                 {
@@ -1739,7 +1795,11 @@ class CommonUtils
      * Splits a string to multiple strings each of which does not exceed the width
      * of maxWidthPx.
      */
-    private fun splitIntoStringsThatFit(source : String, maxWidthPx : Float, paint : Paint) : List<String>
+    private fun splitIntoStringsThatFit(
+        source : String,
+        maxWidthPx : Float,
+        paint : Paint
+    ) : List<String>
     {
         if(TextUtils.isEmpty(source) || paint.measureText(source) <= maxWidthPx)
         {
@@ -1751,8 +1811,7 @@ class CommonUtils
         {
             val substr = source.substring(start, i)
             if(paint.measureText(substr) >= maxWidthPx)
-            {
-                //this one doesn't fit, take the previous one which fits
+            { //this one doesn't fit, take the previous one which fits
                 val fits = source.substring(start, i - 1)
                 result.add(fits)
                 start = i - 1
@@ -1769,17 +1828,21 @@ class CommonUtils
     /**
      * Processes the chunk which does not exceed maxWidth.
      */
-    private fun processFitChunk(maxWidth : Float, paint : Paint, result : ArrayList<String>, currentLine : ArrayList<String>, chunk : String)
+    private fun processFitChunk(
+        maxWidth : Float,
+        paint : Paint,
+        result : ArrayList<String>,
+        currentLine : ArrayList<String>,
+        chunk : String
+    )
     {
         currentLine.add(chunk)
         val currentLineStr : String = TextUtils.join(" ", currentLine)
         if(paint.measureText(currentLineStr) >= maxWidth)
-        {
-            //remove chunk
+        { //remove chunk
             currentLine.removeAt(currentLine.size - 1)
             result.add(TextUtils.join(" ", currentLine))
-            currentLine.clear()
-            //ok because chunk fits
+            currentLine.clear() //ok because chunk fits
             currentLine.add(chunk)
         }
     }
@@ -1799,8 +1862,7 @@ class CommonUtils
             html = html.replaceFirst("(.*?)\\>".toRegex(), " ")
             html = html.replace("&nbsp;".toRegex(), " ")
             html = html.replace("&amp;".toRegex(), " ")
-        }
-        catch(e : NullPointerException)
+        } catch(e : NullPointerException)
         {
             return ""
         }
@@ -1815,15 +1877,22 @@ class CommonUtils
     fun getHeaderInformation(needToken : Boolean) : Map<String, String>
     {
         var token : String = ""
-        val deviceType : String = if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
+        val deviceType : String =
+            if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
         val result : MutableMap<String, String> = HashMap()
         if(needToken)
         {
-            token = "Bearer " + getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
+            token = "Bearer " + getSharedPreference(
+                Common.PARAMS_ACCESS_TOKEN,
+                DataType.TYPE_STRING
+            ) as String
             result["Authorization"] = token
         }
         result["api-locale"] = Locale.getDefault().toString()
-        result["api-user-agent"] = Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
+        result["api-user-agent"] =
+            Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + getPackageVersionName(
+                Common.PACKAGE_NAME
+            ) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
         return result
     }
 
@@ -1836,36 +1905,18 @@ class CommonUtils
     {
         when(lineCount)
         {
-            1, 2 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(122)
-                else
-                    return getPixel(174)
-            3 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(160)
-                else
-                    return getPixel(174)
-            4 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(196)
-                else
-                    return getPixel(230)
-            5 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(232)
-                else
-                    return getPixel(280)
-            6 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(268)
-                else
-                    return getPixel(330)
-            else ->
-                if(Feature.IS_TABLET)
-                    return getPixel(304)
-                else
-                    return getPixel(380)
+            1, 2 -> if(Feature.IS_TABLET) return getPixel(122)
+            else return getPixel(174)
+            3 -> if(Feature.IS_TABLET) return getPixel(160)
+            else return getPixel(174)
+            4 -> if(Feature.IS_TABLET) return getPixel(196)
+            else return getPixel(230)
+            5 -> if(Feature.IS_TABLET) return getPixel(232)
+            else return getPixel(280)
+            6 -> if(Feature.IS_TABLET) return getPixel(268)
+            else return getPixel(330)
+            else -> if(Feature.IS_TABLET) return getPixel(304)
+            else return getPixel(380)
         }
     }
 
@@ -1873,21 +1924,12 @@ class CommonUtils
     {
         when(lineCount)
         {
-            4 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(158)
-                else
-                    return getPixel(226)
-            5 ->
-                if(Feature.IS_TABLET)
-                    return getPixel(198)
-                else
-                    return getPixel(282)
-            else ->
-                if(Feature.IS_TABLET)
-                    return getPixel(118)
-                else
-                    return getPixel(170)
+            4 -> if(Feature.IS_TABLET) return getPixel(158)
+            else return getPixel(226)
+            5 -> if(Feature.IS_TABLET) return getPixel(198)
+            else return getPixel(282)
+            else -> if(Feature.IS_TABLET) return getPixel(118)
+            else return getPixel(170)
         }
     }
 
@@ -1903,20 +1945,16 @@ class CommonUtils
         if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
         {
             result = "KO_$label"
-        }
-        else if(Locale.getDefault().toString().contains(Locale.JAPAN.toString()))
+        } else if(Locale.getDefault().toString().contains(Locale.JAPAN.toString()))
         {
             result = "JP_$label"
-        }
-        else if(Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString()))
+        } else if(Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString()))
         {
             result = "CN_$label"
-        }
-        else if(Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString()))
+        } else if(Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString()))
         {
             result = "TW_$label"
-        }
-        else
+        } else
         {
             result = "EN_$label"
         }
@@ -1946,8 +1984,7 @@ class CommonUtils
         if(data.getSubName().equals(""))
         {
             result = data.getName()
-        }
-        else
+        } else
         {
             result = data.getName() + ": " + data.getSubName()
         }
@@ -1966,8 +2003,7 @@ class CommonUtils
         if(subName == "")
         {
             result = name
-        }
-        else
+        } else
         {
             result = "$name: $subName"
         }
@@ -1981,18 +2017,16 @@ class CommonUtils
      */
     fun getVocabularyTitleName(data : ContentsBaseResult) : String
     {
-        var result : String  = ""
+        var result : String = ""
         if(data.getSubName().equals(""))
         {
             result = data.getName()
-        }
-        else
+        } else
         {
             result = data.getSubName()
         }
         return result
     }
-
 
 
     /**
@@ -2026,8 +2060,7 @@ class CommonUtils
         if(data.length == 8)
         {
             result = data.replaceFirst("^([0-9]{4})([0-9]{4})$".toRegex(), "$1-$2")
-        }
-        else if(data.length == 12)
+        } else if(data.length == 12)
         {
             result = data.replaceFirst("(^[0-9]{4})([0-9]{4})([0-9]{4})$".toRegex(), "$1-$2-$3")
         }
@@ -2049,21 +2082,18 @@ class CommonUtils
                 if(i == 0)
                 {
                     result[i] = sContext!!.resources.getString(R.string.text_no_select)
-                }
-                else
+                } else
                 {
                     result[i] = data[i - 1]
                 }
             }
             return result
-        }
-        else
+        } else
         {
             result = sContext.resources.getStringArray(R.array.text_list_gender)
             return result
         }
     }
-
 
 
     fun getYearItemList(isNoneNecessary : Boolean) : Array<String?>
@@ -2079,13 +2109,11 @@ class CommonUtils
                 if(i == 0)
                 {
                     result[i] = sContext!!.resources.getString(R.string.text_no_select)
-                }
-                else
+                } else
                 {
                     result[i] = maxYear--.toString()
                 }
-            }
-            else
+            } else
             {
                 result[i] = maxYear--.toString()
             }
@@ -2103,18 +2131,15 @@ class CommonUtils
             fileCacheItem.createNewFile()
             out = FileOutputStream(fileCacheItem)
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
-        }
-        catch(e : Exception)
+        } catch(e : Exception)
         {
             e.printStackTrace()
-        }
-        finally
+        } finally
         {
             try
             {
                 out?.close()
-            }
-            catch(e : IOException)
+            } catch(e : IOException)
             {
                 e.printStackTrace()
             }
@@ -2175,7 +2200,8 @@ class CommonUtils
             ConnectionResult.SUCCESS -> return true
             ConnectionResult.SERVICE_DISABLED, ConnectionResult.SERVICE_INVALID, ConnectionResult.SERVICE_MISSING, ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED ->
             {
-                val dialog : Dialog = googleApiAvailability.getErrorDialog(sContext as Activity?, resultCode, 0)
+                val dialog : Dialog =
+                    googleApiAvailability.getErrorDialog(sContext as Activity?, resultCode, 0)
                 dialog.setOnCancelListener(object : DialogInterface.OnCancelListener
                 {
                     override fun onCancel(dialogInterface : DialogInterface)
@@ -2188,6 +2214,54 @@ class CommonUtils
         }
         return false
     }
+
+    fun getTopBarStatusBarColor() : Int
+    {
+        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
+
+        if(isTeacherMode)
+        {
+            return R.color.color_25b4cf
+        }
+        else
+        {
+            return R.color.color_1fb77c
+        }
+    }
+
+    fun getTopBarBackgroundColor() : Int
+    {
+        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
+
+        if(isTeacherMode)
+        {
+            return R.color.color_29c8e6
+        }
+        else
+        {
+            return R.color.color_23cc8a
+        }
+    }
+
+    fun getTopBarIndicatorColor() : Int
+    {
+        if(Feature.IS_TABLET)
+        {
+            return R.color.color_fff55a
+        }
+
+        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
+
+        if(isTeacherMode)
+        {
+            return R.color.color_29c8e6
+        }
+        else
+        {
+            return R.color.color_23cc8a
+        }
+    }
+
 
 
 }

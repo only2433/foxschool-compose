@@ -16,7 +16,7 @@ class VocabularyContentsListCoroutine : BaseCoroutine
 
     override fun doInBackground() : Any?
     {
-        if(isRunning == false)
+        if(isRunning == true)
         {
             return null
         }

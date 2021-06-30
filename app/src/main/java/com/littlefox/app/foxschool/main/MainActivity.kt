@@ -122,8 +122,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         private val MAX_USER_SIZE : Int                     = 4
 
 
-        private val TAB_INDICATOR_COLOR_STUDENT : Int = R.color.color_23cc8a
-        private val TAB_INDICATOR_COLOR_TEACHER : Int = R.color.color_29c8e6
 
         private val TAB_IMAGE_ICONS_STUDENT = intArrayOf(
             R.drawable.choice_top_bar_icon_story_student,
@@ -140,9 +138,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             R.drawable.choice_top_bar_icon_song_tablet,
             R.drawable.choice_top_bar_icon_my_books_tablet
         )
-        private val TAB_BACKGROUND_COLOR_STUDENT : Int = R.color.color_23cc8a;
-        private val TAB_BACKGROUND_COLOR_TEACHER : Int = R.color.color_29c8e6;
-        private val TAB_BACKGROUND_COLOR_TABLET : Int = R.color.color_fff55a;
+
     }
 
     private lateinit var mMainPresenter : MainPresenter
@@ -519,17 +515,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     private fun setStatusBarColor()
     {
-        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(R.color.color_1fb77c))
+        val color : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
+        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(color))
     }
 
     private fun setIndicatorBarColor()
     {
-        _MainTabsLayout.setSelectedTabIndicatorColor(
-            if(Feature.IS_TABLET)
-                getResources().getColor(TAB_BACKGROUND_COLOR_TABLET)
-            else
-                getResources().getColor(TAB_BACKGROUND_COLOR_TABLET)
-        )
+        val color : Int = CommonUtils.getInstance(this).getTopBarIndicatorColor()
+        _MainTabsLayout.setSelectedTabIndicatorColor(getResources().getColor(color))
     }
 
     private val mOnPageChangeListener : ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener
