@@ -17,10 +17,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.main.MainActivity
-import com.littlefox.app.foxschool.main.PlayerHlsActivity
-import com.littlefox.app.foxschool.main.SeriesContentsListActivity
-import com.littlefox.app.foxschool.main.StoryCategoryListActivity
+import com.littlefox.app.foxschool.main.*
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
@@ -200,6 +197,7 @@ class IntentManagementFactory
                     intent.putParcelableArrayListExtra(Common.INTENT_PLAYER_DATA_PARAMS, `object` as ArrayList<ContentsBaseResult?>?)
                 }
             }
+            ActivityMode.SEARCH -> intent = Intent(mContext, SearchListActivity::class.java)
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)

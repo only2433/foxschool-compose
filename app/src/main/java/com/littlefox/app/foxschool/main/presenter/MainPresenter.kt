@@ -81,7 +81,7 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_FAQ : Int                       = 116
         private const val MESSAGE_START_RESULT_SERIES : Int             = 117
         private const val MESSAGE_START_LOGOUT : Int                    = 118
-        private const val MESSAGE_START_GAME_STARWARS : Int             = 119
+        private const val MESSAGE_START_GAME_STARWORDS : Int             = 119
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 120
         private const val MESSAGE_APP_SERVER_ERROR : Int                = 121
 
@@ -337,7 +337,7 @@ class MainPresenter : MainContract.Presenter
                 DIALOG_EVENT_LOGOUT,
                 DialogButtonType.BUTTON_2
             )
-            MESSAGE_START_GAME_STARWARS -> startGameStarwarsActivity()
+            MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_APP_SERVER_ERROR ->
             {
@@ -492,7 +492,7 @@ class MainPresenter : MainContract.Presenter
             .startActivity()
     }
 
-    private fun startGameStarwarsActivity()
+    private fun startGameStarwordsActivity()
     {
         Log.f("")
         IntentManagementFactory.getInstance()

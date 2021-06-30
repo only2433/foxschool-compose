@@ -80,7 +80,11 @@
     <string name="text_flashcards">플래시카드</string>
     <string name="text_introduction">Introduction</string>
     <string name="text_auto_play">이어보기</string>
-
+    <string name="text_story">동화</string>
+    <string name="text_song">동요</string>
+    <string name="text_input_search">검색어를 입력해주세요.</string>
+    <string name="text_look_up">조회</string>
+    <string name="text_search">검색</string>
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -121,6 +125,8 @@
     <string name="message_not_seleted_contents_list">선택보기할 콘텐츠를 선택해 주세요.</string>
     <string name="message_ar_information">* AR 지수란  단어, 문장의 길이 및  복잡성 등을 분석하여 영어원서의 종합적인  난이도를  나타낸  수치입니다.\n\n* 미국 학교의  학년  개념과 연계해 표현됩니다. 예) AR 3.5: 초등 3학년 5개월 수준의 학생이 읽는 평균 난이도</string>
     <string name="message_company_information_from_login">고객센터 02-538-8770<br></br>월 ` 금 (오전 9시 - 오후 6시), 공휴일 제외</string>
+    <string name="message_last_page">마지막 페이지입니다.</string>
+    <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

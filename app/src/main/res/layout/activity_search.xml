@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix, NewApi"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <include
+            android:id="@+id/_titleBaselayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/topbar_common_menu"/>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="130"
+            app:scale_base_width="1080"
+            android:background="@color/color_ffffff">
+
+            <ImageView
+                android:id="@+id/_searchAllRect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_top="20"
+                app:scale_left="200"
+                app:scale_width="100"
+                app:scale_height="100"/>
+
+            <ImageView
+                android:id="@+id/_searchAllIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_on"
+                android:scaleType="fitXY"
+                app:scale_top="42"
+                app:scale_left="221"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <TextView
+                android:id="@+id/_searchAllText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_all"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                app:scale_left="299"
+                app:scale_top="42"
+                app:scale_width="150"
+                app:scale_height="60"
+                app:scale_textsize="36"/>
+
+            <ImageView
+                android:id="@+id/_searchStoryRect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_top="20"
+                app:scale_left="445"
+                app:scale_width="100"
+                app:scale_height="100"/>
+
+            <ImageView
+                android:id="@+id/_searchStoryIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_top="42"
+                app:scale_left="468"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <TextView
+                android:id="@+id/_searchStoryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_story"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                app:scale_left="544"
+                app:scale_top="42"
+                app:scale_width="150"
+                app:scale_height="60"
+                app:scale_textsize="36"/>
+
+            <ImageView
+                android:id="@+id/_searchSongRect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_top="20"
+                app:scale_left="690"
+                app:scale_width="100"
+                app:scale_height="100"/>
+
+            <ImageView
+                android:id="@+id/_searchSongIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/check_off"
+                android:scaleType="fitXY"
+                app:scale_top="42"
+                app:scale_left="713"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <TextView
+                android:id="@+id/_searchSongText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_song"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                app:scale_left="791"
+                app:scale_top="42"
+                app:scale_width="150"
+                app:scale_height="60"
+                app:scale_textsize="36"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="160"
+            app:scale_base_width="1080"
+            android:background="@color/color_ffffff">
+
+            <ImageView
+                android:id="@+id/_searchEditBackgroundImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_box1"
+                app:scale_left="98"
+                app:scale_top="1"
+                app:scale_width="764"
+                app:scale_height="120"/>
+
+            <ImageView
+                android:id="@+id/_searchCancelIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_tex_del"
+                android:scaleType="fitXY"
+                app:scale_left="782"
+                app:scale_top="31"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <ImageView
+                android:id="@+id/_searchConfirmIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/search_box2"
+                app:scale_left="861"
+                app:scale_top="1"
+                app:scale_width="120"
+                app:scale_height="120" />
+
+            <ImageView
+                android:id="@+id/_searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_search_3"
+                app:scale_left="892"
+                app:scale_top="32"
+                app:scale_width="58"
+                app:scale_height="60" />
+
+            <EditText
+                android:id="@+id/_searchEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:hint="@string/text_input_search"
+                android:gravity="center_vertical"
+                android:imeOptions="actionSearch"
+                android:background="@null"
+                app:scale_left="128"
+                app:scale_top="1"
+                app:scale_width="600"
+                app:scale_height="120"
+                app:scale_textsize="40"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="40"
+            app:scale_base_width="1080" >
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
+                android:id="@+id/_searchSwipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:srl_direction="bottom">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/_searchItemList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_progressWheelLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                app:scale_base_height="150"
+                app:scale_base_width="1080" >
+
+                <com.littlefox.library.view.dialog.ProgressWheel
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:matProg_barColor="@color/color_20b1f9"
+                    app:matProg_progressIndeterminate="true"
+                    app:scale_height="150"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="150" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
