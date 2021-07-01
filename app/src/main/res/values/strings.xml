@@ -4,6 +4,8 @@
     <string name="title_play_list_title">재생목록</string>
     <string name="title_play_speed_title">재생속도</string>
     <string name="title_quiz">퀴즈</string>
+    <string name="title_introduce">소개</string>
+
     <string name="text_no_select">선택안함</string>
     <string name="text_all">전체</string>
     <string name="text_confirm">OK</string>
@@ -64,7 +66,8 @@
     <string name="text_1_1_ask">1:1 문의하기</string>
     <string name="text_about_app">앱 이용안내</string>
     <string name="text_logout">로그아웃</string>
-
+    <string name="text_character">Character</string>
+    <string name="text_creators">Creators</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>

@@ -41,6 +41,10 @@ class IntroduceSeriesCreatorsResult
 
         fun getPart() : String
         {
+            if (part == null)
+            {
+                return ""
+            }
             return part
         }
 

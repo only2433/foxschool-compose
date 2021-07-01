@@ -11,7 +11,7 @@
         android:id="@+id/_titleBaselayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/topbar_common_menu"/>
+        layout="@layout/topbar_common_menu_tablet"/>
 
     <ScrollView
         android:id="@+id/_introduceInformationScrollView"
@@ -22,24 +22,25 @@
             android:id="@+id/_introduceBaseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical">
 
             <com.ssomai.android.scalablelayout.ScalableLayout
                 android:id="@+id/_introductionTitleLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:scale_base_width="1080"
-                app:scale_base_height="775">
+                app:scale_base_width="1920"
+                app:scale_base_height="525">
 
                 <ImageView
                     android:id="@+id/_introductionContentsBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/info_box_w"
-                    app:scale_top="150"
-                    app:scale_left="30"
-                    app:scale_width="1020"
-                    app:scale_height="590"/>
+                    app:scale_top="123"
+                    app:scale_left="480"
+                    app:scale_width="960"
+                    app:scale_height="374"/>
 
                 <TextView
                     android:id="@+id/_introductionTitleText"
@@ -49,23 +50,23 @@
                     android:text="@string/text_introduction"
                     android:gravity="center_vertical"
                     android:textColor="@color/color_ffffff"
-                    app:scale_top="30"
-                    app:scale_left="30"
-                    app:scale_width="1020"
-                    app:scale_height="121"
-                    app:scale_textsize="46"/>
+                    app:scale_top="32"
+                    app:scale_left="480"
+                    app:scale_width="960"
+                    app:scale_height="92"
+                    app:scale_textsize="31"/>
 
                 <ImageView
                     android:id="@+id/_introductionContentsImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:scaleType="fitXY"
+                    android:visibility="gone"
                     android:alpha="0.85"
-                    app:scale_top="197"
-                    app:scale_left="74"
-                    app:scale_width="931"
-                    app:scale_height="523"/>
+                    app:scale_top="166"
+                    app:scale_left="522"
+                    app:scale_width="873"
+                    app:scale_height="490"/>
 
                 <ImageView
                     android:id="@+id/_introductionContentsPlayButton"
@@ -74,10 +75,10 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/info_play"
                     android:visibility="gone"
-                    app:scale_top="375"
-                    app:scale_left="465"
-                    app:scale_width="150"
-                    app:scale_height="150"   />
+                    app:scale_top="341"
+                    app:scale_left="889"
+                    app:scale_width="140"
+                    app:scale_height="140" />
 
                 <TextView
                     android:id="@+id/_introduceInformationText"
@@ -86,22 +87,23 @@
                     android:text=""
                     android:textColor="@color/color_23a3e5"
                     android:gravity="center_vertical"
-                    app:scale_top="185"
-                    app:scale_left="74"
-                    app:scale_width="939"
-                    app:scale_height="100"
-                    app:scale_textsize="40"/>
+                    app:scale_top="135"
+                    app:scale_left="521"
+                    app:scale_width="884"
+                    app:scale_height="88"
+                    app:scale_textsize="29"/>
 
                 <TextView
                     android:id="@+id/_introductionContentsText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_444444"
-                    app:scale_top="287"
-                    app:scale_left="74"
-                    app:scale_width="939"
-                    app:scale_height="425"
-                    app:scale_textsize="44"/>
+                    android:scrollbars="vertical"
+                    app:scale_top="223"
+                    app:scale_left="521"
+                    app:scale_width="884"
+                    app:scale_height="243"
+                    app:scale_textsize="31"/>
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
         </LinearLayout>

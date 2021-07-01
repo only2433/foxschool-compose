@@ -55,8 +55,8 @@
                 android:text="@string/text_all"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="299"
                 app:scale_top="42"
+                app:scale_left="299"
                 app:scale_width="150"
                 app:scale_height="60"
                 app:scale_textsize="36"/>
@@ -88,8 +88,8 @@
                 android:text="@string/text_story"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="544"
                 app:scale_top="42"
+                app:scale_left="544"
                 app:scale_width="150"
                 app:scale_height="60"
                 app:scale_textsize="36"/>
@@ -121,8 +121,8 @@
                 android:text="@string/text_song"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="791"
                 app:scale_top="42"
+                app:scale_left="791"
                 app:scale_width="150"
                 app:scale_height="60"
                 app:scale_textsize="36"/>
@@ -141,8 +141,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/search_box1"
-                app:scale_left="98"
                 app:scale_top="1"
+                app:scale_left="98"
                 app:scale_width="764"
                 app:scale_height="120"/>
 
@@ -152,8 +152,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_tex_del"
                 android:scaleType="fitXY"
-                app:scale_left="782"
                 app:scale_top="31"
+                app:scale_left="782"
                 app:scale_width="60"
                 app:scale_height="60"/>
 
@@ -163,8 +163,8 @@
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/search_box2"
-                app:scale_left="861"
                 app:scale_top="1"
+                app:scale_left="861"
                 app:scale_width="120"
                 app:scale_height="120" />
 
@@ -173,8 +173,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_search_3"
-                app:scale_left="892"
                 app:scale_top="32"
+                app:scale_left="892"
                 app:scale_width="58"
                 app:scale_height="60" />
 
@@ -187,8 +187,8 @@
                 android:gravity="center_vertical"
                 android:imeOptions="actionSearch"
                 android:background="@null"
-                app:scale_left="128"
                 app:scale_top="1"
+                app:scale_left="128"
                 app:scale_width="600"
                 app:scale_height="120"
                 app:scale_textsize="40"/>
@@ -235,10 +235,10 @@
                     android:layout_gravity="center"
                     app:matProg_barColor="@color/color_20b1f9"
                     app:matProg_progressIndeterminate="true"
-                    app:scale_height="150"
-                    app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="150" />
+                    app:scale_left="0"
+                    app:scale_width="150"
+                    app:scale_height="150" />
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
 

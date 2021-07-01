@@ -17,7 +17,7 @@ class IntroduceSeriesCoroutine: BaseCoroutine
 
     override fun doInBackground() : Any?
     {
-        if(isRunning == false)
+        if(isRunning == true)
         {
             return null
         }
@@ -25,9 +25,9 @@ class IntroduceSeriesCoroutine: BaseCoroutine
         lateinit var result : IntroduceSeriesBaseObject
         synchronized(mSync) {
             isRunning = true
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_INTRODUCE_SERIES.toString() + mSeriesID, null, NetworkUtil.GET_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_INTRODUCE_SERIES + mSeriesID, null, NetworkUtil.GET_METHOD)
             result = Gson().fromJson(response, IntroduceSeriesBaseObject::class.java)
-            if(result.getAccessToken().equals("") == false)
+            if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

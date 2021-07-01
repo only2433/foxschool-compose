@@ -22,7 +22,7 @@ class SearchListCoroutine: BaseCoroutine
 
     override fun doInBackground() : Any?
     {
-        if (isRunning == true)
+        if(isRunning == true)
         {
             return null
         }

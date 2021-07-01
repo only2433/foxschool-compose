@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/color_ffffff"
-                app:scale_left="0"
                 app:scale_top="0"
+                app:scale_left="0"
                 app:scale_width ="1920"
                 app:scale_height = "116"/>
 
@@ -63,8 +63,8 @@
                 android:text="@string/text_all"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="361"
                 app:scale_top="37"
+                app:scale_left="361"
                 app:scale_width="120"
                 app:scale_height="42"
                 app:scale_textsize="26"/>
@@ -96,8 +96,8 @@
                 android:text="@string/text_story"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="536"
                 app:scale_top="37"
+                app:scale_left="536"
                 app:scale_width="120"
                 app:scale_height="42"
                 app:scale_textsize="26"/>
@@ -129,8 +129,8 @@
                 android:text="@string/text_song"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
-                app:scale_left="712"
                 app:scale_top="37"
+                app:scale_left="712"
                 app:scale_width="120"
                 app:scale_height="42"
                 app:scale_textsize="26"/>
@@ -140,8 +140,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_box"
-                app:scale_left="820"
                 app:scale_top="16"
+                app:scale_left="820"
                 app:scale_width="620"
                 app:scale_height="84"/>
 
@@ -151,8 +151,8 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/btn_tex_del"
                 android:scaleType="fitXY"
-                app:scale_left="1378"
                 app:scale_top="38"
+                app:scale_left="1378"
                 app:scale_width="42"
                 app:scale_height="42"/>
 
@@ -165,8 +165,8 @@
                 android:gravity="center"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:background="@drawable/round_box_light_blue_84"
-                app:scale_left="1460"
                 app:scale_top="15"
+                app:scale_left="1460"
                 app:scale_width="156"
                 app:scale_height="84"
                 app:scale_textsize="30"/>
@@ -180,8 +180,8 @@
                 android:gravity="center_vertical"
                 android:imeOptions="actionSearch"
                 android:background="@null"
-                app:scale_left="836"
                 app:scale_top="16"
+                app:scale_left="836"
                 app:scale_width="500"
                 app:scale_height="84"
                 app:scale_textsize="28"/>
@@ -229,10 +229,10 @@
                     android:layout_gravity="center"
                     app:matProg_barColor="@color/color_20b1f9"
                     app:matProg_progressIndeterminate="true"
-                    app:scale_height="150"
-                    app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="150" />
+                    app:scale_left="0"
+                    app:scale_width="150"
+                    app:scale_height="150" />
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
 

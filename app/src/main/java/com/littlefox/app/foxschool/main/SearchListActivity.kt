@@ -143,8 +143,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
 
     override fun initView()
     {
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_1fb77c))
-        _TitleBaselayout.setBackgroundColor(resources.getColor(R.color.color_23cc8a))
+        settingLayoutColor()
         _TitleText.text = resources.getString(R.string.text_search)
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
@@ -175,6 +174,17 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         {
             _SearchConfirmTabletIcon.typeface = Font.getInstance(this).getRobotoMedium()
         }
+    }
+
+    /**
+     * 상단바 색상 설정
+     */
+    private fun settingLayoutColor()
+    {
+        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
+        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+        _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
 
     override fun handlerMessage(message : Message)

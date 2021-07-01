@@ -199,6 +199,14 @@ class IntentManagementFactory
                 }
             }
             ActivityMode.SEARCH -> intent = Intent(mContext, SearchListActivity::class.java)
+            ActivityMode.INTRODUCE_SERIES ->
+            {
+                intent = Intent(mContext, IntroduceSeriesActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_SERIES_INFORMATION_ID, `object` as String?)
+                }
+            }
 
             ActivityMode.VOCABULARY ->
             {

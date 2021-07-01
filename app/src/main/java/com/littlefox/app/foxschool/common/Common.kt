@@ -61,6 +61,7 @@ class Common
         const val INTENT_RESULT_SERIES_ID : String                  = "series_id"
         const val INTENT_STORY_SERIES_DATA : String                 = "story_series_data"
         const val INTENT_STORY_CATEGORY_DATA : String               = "story_category_data"
+        const val INTENT_SERIES_INFORMATION_ID : String             = "series_information_id"
 
 
         const val COROUTINE_CODE_INIT : String                          = "init"

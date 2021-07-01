@@ -81,8 +81,8 @@ class SearchListPresenter : SearchListContract.Presenter
         mContext = context
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         mSearchListContractView = mContext as SearchListContract.View
-        mSearchListContractView.initFont()
         mSearchListContractView.initView()
+        mSearchListContractView.initFont()
 
         Log.f("onCreate")
         init()
@@ -399,12 +399,11 @@ class SearchListPresenter : SearchListContract.Presenter
             title,
             VocabularyType.VOCABULARY_CONTENTS)
 
-        // TODO : VOCABULARY 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.VOCABULARY)
-//            .setData(myVocabularyResult)
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.VOCABULARY)
+            .setData(myVocabularyResult)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -560,9 +559,9 @@ class SearchListPresenter : SearchListContract.Presenter
     {
         override fun onRunningStart(code : String?) { }
 
-        override fun onRunningEnd(code : String?, mObject : Any?)
+        override fun onRunningEnd(code : String?, `object` : Any?)
         {
-            val result : BaseResult = mObject as BaseResult
+            val result : BaseResult = `object` as BaseResult
 
             Log.f("code : " + code + ", status : " + result.getStatus())
 
@@ -571,13 +570,13 @@ class SearchListPresenter : SearchListContract.Presenter
                 if(code == Common.COROUTINE_CODE_SEARCH_LIST)
                 {
                     mSearchListContractView.hideContentsListLoading()
-                    mCurrentSearchListBaseObject = mObject as SearchListBaseObject
+                    mCurrentSearchListBaseObject = `object` as SearchListBaseObject
                     notifyData()
                 }
                 else if(code == Common.COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD)
                 {
                     mSearchListContractView.hideLoading()
-                    val myBookshelfResult : MyBookshelfResult = (mObject as BookshelfBaseObject).getData()
+                    val myBookshelfResult : MyBookshelfResult = (`object` as BookshelfBaseObject).getData()
                     updateBookshelfData(myBookshelfResult)
 
                     val messsage = Message.obtain()
