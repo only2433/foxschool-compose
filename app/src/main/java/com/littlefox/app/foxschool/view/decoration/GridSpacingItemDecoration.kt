@@ -31,7 +31,7 @@ class GridSpacingItemDecoration : ItemDecoration
             return
         }
         column = position % spanCount
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             setLocationGridItem(outRect, column, position)
         } else

@@ -94,7 +94,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         mStoryDetailListContractView.initFont()
         mStoryDetailListContractView.initTransition(mCurrentSeriesBaseResult.getTransitionType())
         mStoryDetailListContractView.setStatusBar(mCurrentSeriesBaseResult.statusBarColor)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             mStoryDetailListContractView.settingTitleViewTablet(mCurrentSeriesBaseResult.getSeriesName())
             mStoryDetailListContractView.settingBackgroundViewTablet(
@@ -168,7 +168,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 {
                     mStoryDetailListContractView.showSeriesInformationView()
                 }
-                if(Feature.IS_TABLET)
+                if(CommonUtils.getInstance(mContext).checkTablet)
                 {
                     mStoryDetailListContractView.showSeriesInformationIntroduceTablet(
                         mCurrentSeriesBaseResult.introduction

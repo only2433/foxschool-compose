@@ -127,7 +127,7 @@ class MainStoryFragment : Fragment()
     {
         Log.f("")
         var view : View? = null
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = inflater.inflate(R.layout.fragment_main_story_tablet, container, false)
         }
@@ -183,7 +183,6 @@ class MainStoryFragment : Fragment()
 
     private fun updateData(mainInformationResult : MainInformationResult)
     {
-        Log.f("IS_TABLET : " + Feature.IS_TABLET)
         mMainInformationResult = mainInformationResult
         mCurrentSeriesType = SeriesType.LEVEL
         mCurrentScrollDy = 0
@@ -236,9 +235,7 @@ class MainStoryFragment : Fragment()
 
     private fun initView()
     {
-        val isTablet : Boolean = CommonUtils.getInstance(mContext).isTabletModel
-        Log.f("IS_TABLET : " + Feature.IS_TABLET.toString() + ", checkTablet : " + isTablet)
-        if(isTablet)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             COLUMN_COUNT = 5
             SWITCH_TAB_WIDTH = 232.0f

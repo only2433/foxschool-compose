@@ -893,7 +893,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             isNextMovieHave = true
         }
         if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
-                || Feature.IS_TABLET === false
+                || CommonUtils.getInstance(mContext).checkTablet == false
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
         {
             isEbookAvailable = false

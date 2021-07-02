@@ -138,7 +138,11 @@ object NetworkUtil
             connection = url.openConnection() as HttpURLConnection
             connection.readTimeout = CONNECTION_TIMEOUT
             connection.connectTimeout = CONNECTION_TIMEOUT
-            val deviceType = if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
+            val deviceType =
+                if(CommonUtils.getInstance(context).checkTablet)
+                    Common.DEVICE_TYPE_TABLET
+                else
+                    Common.DEVICE_TYPE_PHONE
             val token = "Bearer " + CommonUtils.getInstance(context)!!.getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
             val userAgent = Common.HTTP_HEADER_APP_NAME + ":" + deviceType + File.separator + CommonUtils.getInstance(context)!!.getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
             connection.addRequestProperty("api-user-agent", userAgent)

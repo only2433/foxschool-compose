@@ -126,7 +126,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_vocabulary_tablet)
@@ -177,7 +177,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
                 return isScrollingDisable
             }
         })
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
             val params : LinearLayout.LayoutParams = _WordItemList.getLayoutParams() as LinearLayout.LayoutParams
@@ -260,12 +260,12 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         mVocabularyType = type
         if(type === VocabularyType.VOCABULARY_CONTENTS)
         {
-            _BottomWordsActionIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_voca else R.drawable.bottom_voca)
+            _BottomWordsActionIcon.setImageResource(if(CommonUtils.getInstance(this).checkTablet) R.drawable.tablet_voca else R.drawable.bottom_voca)
             _BottomWordsActionText.setText(getResources().getString(R.string.text_add_vocabulary))
         }
         else if(type === VocabularyType.VOCABULARY_SHELF)
         {
-            _BottomWordsActionIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_delete else R.drawable.bottom_delete)
+            _BottomWordsActionIcon.setImageResource(if(CommonUtils.getInstance(this).checkTablet) R.drawable.tablet_delete else R.drawable.bottom_delete)
             _BottomWordsActionText.setText(getResources().getString(R.string.text_delete))
         }
     }
@@ -300,28 +300,28 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_1)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(Feature.IS_TABLET) 1562.0f else 680.0f,
-                    if(Feature.IS_TABLET) 512.0f else 10.0f,
-                    if(Feature.IS_TABLET) 30.0f else 40.0f,
-                    if(Feature.IS_TABLET) 30.0f else 40.0f)
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
         else if(count < 100)
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_2)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(Feature.IS_TABLET) 1562.0f else 680.0f,
-                    if(Feature.IS_TABLET) 512.0f else 10.0f,
-                    if(Feature.IS_TABLET) 40.0f else 50.0f,
-                    if(Feature.IS_TABLET) 30.0f else 40.0f)
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 40.0f else 50.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
         else
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_3)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(Feature.IS_TABLET) 1562.0f else 680.0f,
-                    if(Feature.IS_TABLET) 512.0f else 10.0f,
-                    if(Feature.IS_TABLET) 50.0f else 60.0f,
-                    if(Feature.IS_TABLET) 30.0f else 40.0f)
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 50.0f else 60.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
         _BottomSelectCountText.setText(count.toString())
     }
@@ -350,9 +350,21 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
             Log.f("Check word: " + vocabularySelectData.isSelectedWord())
             Log.f("Check meaning: " + vocabularySelectData.isSelectedMeaning())
             Log.f("Check example: " + vocabularySelectData.isSelectedExample())
-            _CheckWordIcon.setImageResource(if(vocabularySelectData.isSelectedWord()) R.drawable.check_on else R.drawable.check_off)
-            _CheckMeaningIcon.setImageResource(if(vocabularySelectData.isSelectedMeaning()) R.drawable.check_on else R.drawable.check_off)
-            _CheckExampleIcon.setImageResource(if(vocabularySelectData.isSelectedExample()) R.drawable.check_on else R.drawable.check_off)
+            _CheckWordIcon.setImageResource(
+                if(vocabularySelectData.isSelectedWord())
+                    R.drawable.check_on
+                else
+                    R.drawable.check_off)
+            _CheckMeaningIcon.setImageResource(
+                if(vocabularySelectData.isSelectedMeaning())
+                    R.drawable.check_on
+                else
+                    R.drawable.check_off)
+            _CheckExampleIcon.setImageResource(
+                if(vocabularySelectData.isSelectedExample())
+                    R.drawable.check_on
+                else
+                    R.drawable.check_off)
         }
     }
 
@@ -361,7 +373,11 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         enableMenu(false)
         isScrollingDisable = true
         _BottomSelectCountText.setVisibility(View.INVISIBLE)
-        _BottomPlayIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_stop else R.drawable.bottom_stop)
+        _BottomPlayIcon.setImageResource(
+            if(CommonUtils.getInstance(this).checkTablet)
+                R.drawable.tablet_stop
+            else
+                R.drawable.bottom_stop)
         _BottomPlayText.setText(getResources().getString(R.string.text_stop_play))
     }
 
@@ -370,7 +386,11 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         enableMenu(true)
         isScrollingDisable = false
         _BottomSelectCountText.setVisibility(View.VISIBLE)
-        _BottomPlayIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_play else R.drawable.bottom_play)
+        _BottomPlayIcon.setImageResource(
+            if(CommonUtils.getInstance(this).checkTablet)
+                R.drawable.tablet_play
+            else
+                R.drawable.bottom_play)
         _BottomPlayText.setText(getResources().getString(R.string.text_select_play))
     }
 
@@ -441,12 +461,20 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         if(isItemSelected)
         {
             _BottomSelectText.setText(getResources().getString(R.string.text_select_init))
-            _BottomSelectIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_close else R.drawable.bottom_close)
+            _BottomSelectIcon.setImageResource(
+                if(CommonUtils.getInstance(this).checkTablet)
+                    R.drawable.tablet_close
+                else
+                    R.drawable.bottom_close)
         }
         else
         {
             _BottomSelectText.setText(getResources().getString(R.string.text_select_all))
-            _BottomSelectIcon.setImageResource(if(Feature.IS_TABLET) R.drawable.tablet_all else R.drawable.bottom_all)
+            _BottomSelectIcon.setImageResource(
+                if(CommonUtils.getInstance(this).checkTablet)
+                    R.drawable.tablet_all
+                else
+                    R.drawable.bottom_all)
         }
     }
 

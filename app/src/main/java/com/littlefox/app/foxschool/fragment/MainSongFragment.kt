@@ -119,9 +119,7 @@ class MainSongFragment : Fragment()
 
     private fun initView()
     {
-        val isTablet : Boolean = CommonUtils.getInstance(mContext).isTabletModel
-        Log.f("IS_TABLET : " + Feature.IS_TABLET + ", checkTablet : " + isTablet)
-        if(isTablet)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             COLUMN_COUNT = 5
             COLUMN_MARGIN = 20

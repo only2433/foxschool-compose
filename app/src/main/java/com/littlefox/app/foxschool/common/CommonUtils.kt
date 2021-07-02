@@ -182,12 +182,15 @@ class CommonUtils
     {
         if(isTabletModel)
         {
-            Feature.IS_TABLET = true
-        } else
-        {
-            Feature.IS_TABLET = false
+            setSharedPreference(Common.PARAMS_CHECK_TABLET, true)
+            Log.f("IS_TABLET TRUE")
         }
-        Log.f("IS_TABLET : " + Feature.IS_TABLET)
+        else
+        {
+            setSharedPreference(Common.PARAMS_CHECK_TABLET, false)
+            Log.f("IS_TABLET FALSE")
+        }
+
         if(isHaveNavigationBar())
         {
             Log.f("HAVE NAVIGATION BAR")
@@ -206,7 +209,7 @@ class CommonUtils
             Log.f("SUITABLE DISPLAY SIZE")
             Feature.IS_MINIMUM_DISPLAY_SIZE = false
         }
-        if(Feature.IS_TABLET)
+        if(checkTablet)
         {
             Log.f("비율 : " + displayWidthPixel.toFloat() / displayHeightPixel.toFloat())
         } else
@@ -214,7 +217,7 @@ class CommonUtils
             Log.f("비율 : " + displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
 
         }
-        if(Feature.IS_TABLET)
+        if(checkTablet)
         {
             var currentDisplayRadio : Float = (displayWidthPixel.toFloat() / displayHeightPixel);
             if(currentDisplayRadio < Common.MINIMUM_TABLET_DISPLAY_RADIO)
@@ -293,12 +296,10 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET)
-
-                    MainApplication.sDisplayFactor =
-                        MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
-                else MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
+                if(checkTablet)
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
+                else
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
         } catch(e : NullPointerException)
         {
@@ -306,9 +307,10 @@ class CommonUtils
                 Common.PARAMS_DISPLAY_METRICS,
                 DisPlayMetricsObject::class.java
             ) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                disPlayMetricsObject!!.widthPixel / 1920.0f
-            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
+            if(checkTablet)
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1920.0f
+            else
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
         return (value * MainApplication.sDisplayFactor).toInt()
     }
@@ -324,12 +326,12 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET)
+                if(checkTablet)
                 {
-                    MainApplication.sDisplayFactor =
-                        MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
-                } else MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1920.0f
+                }
+                else
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.widthPixels / 1080.0f
             }
         } catch(e : NullPointerException)
         {
@@ -337,9 +339,10 @@ class CommonUtils
                 Common.PARAMS_DISPLAY_METRICS,
                 DisPlayMetricsObject::class.java
             ) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                disPlayMetricsObject!!.widthPixel / 1920.0f
-            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
+            if(checkTablet)
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1920.0f
+            else
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.widthPixel / 1080.0f
         }
         return value * MainApplication.sDisplayFactor
     }
@@ -355,10 +358,10 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
-                else MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
+                if(checkTablet)
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
+                else
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
         } catch(e : NullPointerException)
         {
@@ -366,9 +369,10 @@ class CommonUtils
                 Common.PARAMS_DISPLAY_METRICS,
                 DisPlayMetricsObject::class.java
             ) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                disPlayMetricsObject!!.heightPixel / 1200.0f
-            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1920.0f
+            if(checkTablet)
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1200.0f
+            else
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1920.0f
         }
         return (value * MainApplication.sDisplayFactor).toInt()
     }
@@ -384,10 +388,10 @@ class CommonUtils
         {
             if(MainApplication.sDisplayFactor == 0.0f)
             {
-                if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
-                else MainApplication.sDisplayFactor =
-                    MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
+                if(checkTablet)
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1200.0f
+                else
+                    MainApplication.sDisplayFactor = MainApplication.sDisPlayMetrics!!.heightPixels / 1920.0f
             }
         } catch(e : NullPointerException)
         {
@@ -395,9 +399,10 @@ class CommonUtils
                 Common.PARAMS_DISPLAY_METRICS,
                 DisPlayMetricsObject::class.java
             ) as DisPlayMetricsObject?
-            if(Feature.IS_TABLET) MainApplication.sDisplayFactor =
-                disPlayMetricsObject!!.heightPixel / 1200.0f
-            else MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
+            if(checkTablet)
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1200.0f
+            else
+                MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
         }
         return value * MainApplication.sDisplayFactor
     }
@@ -533,12 +538,20 @@ class CommonUtils
     val isTabletModel : Boolean
         get() = if(Build.VERSION.SDK_INT >= 19)
         {
-            checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties() && checkTabletDeviceWithUserAgent(
-                sContext
-            )
-        } else
+            checkTabletDeviceWithScreenSize(sContext)
+                    && checkTabletDeviceWithProperties()
+                    && checkTabletDeviceWithUserAgent(sContext)
+        }
+        else
         {
-            checkTabletDeviceWithScreenSize(sContext) && checkTabletDeviceWithProperties()
+            checkTabletDeviceWithScreenSize(sContext)
+                    && checkTabletDeviceWithProperties()
+        }
+
+    val checkTablet : Boolean
+        get()
+        {
+            return getSharedPreference(Common.PARAMS_CHECK_TABLET, DataType.TYPE_BOOLEAN) as Boolean
         }
 
     private fun checkTabletDeviceWithScreenSize(context : Context) : Boolean
@@ -1878,14 +1891,11 @@ class CommonUtils
     {
         var token : String = ""
         val deviceType : String =
-            if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
+            if(checkTablet) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
         val result : MutableMap<String, String> = HashMap()
         if(needToken)
         {
-            token = "Bearer " + getSharedPreference(
-                Common.PARAMS_ACCESS_TOKEN,
-                DataType.TYPE_STRING
-            ) as String
+            token = "Bearer " + getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
             result["Authorization"] = token
         }
         result["api-locale"] = Locale.getDefault().toString()
@@ -1905,18 +1915,38 @@ class CommonUtils
     {
         when(lineCount)
         {
-            1, 2 -> if(Feature.IS_TABLET) return getPixel(122)
-            else return getPixel(174)
-            3 -> if(Feature.IS_TABLET) return getPixel(160)
-            else return getPixel(174)
-            4 -> if(Feature.IS_TABLET) return getPixel(196)
-            else return getPixel(230)
-            5 -> if(Feature.IS_TABLET) return getPixel(232)
-            else return getPixel(280)
-            6 -> if(Feature.IS_TABLET) return getPixel(268)
-            else return getPixel(330)
-            else -> if(Feature.IS_TABLET) return getPixel(304)
-            else return getPixel(380)
+            1, 2 ->
+                if(checkTablet)
+                    return getPixel(122)
+                else
+                    return getPixel(174)
+            3 ->
+                if(checkTablet)
+                    return getPixel(160)
+                else
+                    return getPixel(174)
+            4 ->
+                if(checkTablet)
+                    return getPixel(196)
+                else
+                    return getPixel(230)
+
+            5 ->
+                if(checkTablet)
+                    return getPixel(232)
+                else
+                    return getPixel(280)
+
+            6 ->
+                if(checkTablet)
+                    return getPixel(268)
+                else
+                    return getPixel(330)
+            else ->
+                if(checkTablet)
+                    return getPixel(304)
+                else
+                    return getPixel(380)
         }
     }
 
@@ -1924,12 +1954,21 @@ class CommonUtils
     {
         when(lineCount)
         {
-            4 -> if(Feature.IS_TABLET) return getPixel(158)
-            else return getPixel(226)
-            5 -> if(Feature.IS_TABLET) return getPixel(198)
-            else return getPixel(282)
-            else -> if(Feature.IS_TABLET) return getPixel(118)
-            else return getPixel(170)
+            4 ->
+                if(checkTablet)
+                    return getPixel(158)
+                else
+                    return getPixel(226)
+            5 ->
+                if(checkTablet)
+                    return getPixel(198)
+                else
+                    return getPixel(282)
+            else ->
+                if(checkTablet)
+                    return getPixel(118)
+                else
+                    return getPixel(170)
         }
     }
 
@@ -2245,7 +2284,7 @@ class CommonUtils
 
     fun getTopBarIndicatorColor() : Int
     {
-        if(Feature.IS_TABLET)
+        if(checkTablet)
         {
             return R.color.color_fff55a
         }
@@ -2261,7 +2300,4 @@ class CommonUtils
             return R.color.color_23cc8a
         }
     }
-
-
-
 }

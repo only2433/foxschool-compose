@@ -425,8 +425,16 @@ class VocabularyPresenter : VocabularyContract.Presenter
      */
     private fun measureContentsViewSize()
     {
-        val fontSize : Float = if(Feature.IS_TABLET) CommonUtils.getInstance(mContext).getPixel(28.0f) else CommonUtils.getInstance(mContext).getPixel(38.0f)
-        var widthSize : Float = if(Feature.IS_TABLET) CommonUtils.getInstance(mContext).getPixel(864.0f) else CommonUtils.getInstance(mContext).getPixel(940.0f)
+        val fontSize : Float =
+            if(CommonUtils.getInstance(mContext).checkTablet)
+                CommonUtils.getInstance(mContext).getPixel(28.0f)
+            else
+                CommonUtils.getInstance(mContext).getPixel(38.0f)
+        var widthSize : Float =
+            if(CommonUtils.getInstance(mContext).checkTablet)
+                CommonUtils.getInstance(mContext).getPixel(864.0f)
+            else
+                CommonUtils.getInstance(mContext).getPixel(940.0f)
         var meaningLineSize = 0
         var ExampleLineSize = 0
         var meaningText = ""

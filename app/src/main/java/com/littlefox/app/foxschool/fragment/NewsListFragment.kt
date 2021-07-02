@@ -74,7 +74,7 @@ class NewsListFragment : Fragment()
     {
         Log.f("")
         val view : View
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = inflater.inflate(R.layout.fragment_news_list, container, false)
         } else
@@ -114,7 +114,7 @@ class NewsListFragment : Fragment()
     {
         _ProgressWheelLayout.setVisibility(View.VISIBLE)
         _NewsSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
             val params : RelativeLayout.LayoutParams = _NewsSwipeRefreshLayout.getLayoutParams() as RelativeLayout.LayoutParams

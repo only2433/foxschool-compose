@@ -9,12 +9,6 @@ object Feature {
     var HAVE_NAVIGATION_BAR : Boolean = false
 
     /**
-     * 태블릿인지의 유무
-     */
-	@JvmField
-	var IS_TABLET : Boolean  = false
-
-    /**
      * 최저 해상도 이하인지의 여부
      */
     var IS_MINIMUM_DISPLAY_SIZE : Boolean  = false

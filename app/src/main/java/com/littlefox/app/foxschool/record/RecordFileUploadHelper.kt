@@ -95,7 +95,11 @@ class RecordFileUploadHelper(private val mContext : Context)
         val audioFile : File = File(mRecordInfoData.getFilePath() + mRecordInfoData.getFileName())
         val request : Request
         val requestBody : RequestBody
-        val deviceType : String = if(Feature.IS_TABLET) Common.DEVICE_TYPE_TABLET else Common.DEVICE_TYPE_PHONE
+        val deviceType : String =
+            if(CommonUtils.getInstance(mContext).checkTablet)
+                Common.DEVICE_TYPE_TABLET
+            else
+                Common.DEVICE_TYPE_PHONE
         val token = "Bearer " + CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
         val userAgent : String = Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + CommonUtils.getInstance(mContext).getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
         val userInformationResult : UserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult

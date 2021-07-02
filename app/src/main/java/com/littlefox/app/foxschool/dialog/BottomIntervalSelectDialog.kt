@@ -40,7 +40,7 @@ class BottomIntervalSelectDialog : BottomSheetDialog
     protected override fun onCreate(savedInstanceState : Bundle)
     {
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             getWindow()!!.setLayout(CommonUtils.getInstance(mContext).getPixel(800), ViewGroup.LayoutParams.MATCH_PARENT)
         }

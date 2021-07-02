@@ -13,12 +13,12 @@ public class MainApplication : Application() {
 
     companion object {
         /** 1920 pixel 을 기준으로 각 pixel 에 곱해야 하는 factor  */
-        var sDisplayFactor: Float = 0.0f;
+        var sDisplayFactor: Float = 0.0f
 
         /** 1080 height pixel 을 기준으로 각 pixel 에 곱해야 하는 factor  */
         var sDisplayHeightFactor = 0.0f
 
         /** 해당 변수는 static 변수도 어느순간 값을 회수되기 때문에 값을 가지고 있어야 하기 때문  */
-        var sDisPlayMetrics: DisplayMetrics? = null;
+        var sDisPlayMetrics: DisplayMetrics? = null
     }
 }

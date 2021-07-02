@@ -318,7 +318,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             mCurrentOrientation = Configuration.ORIENTATION_LANDSCAPE
@@ -335,7 +335,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mPlayerContractPresenter = PlayerHlsPresenter(this, _PlayerView, mCurrentOrientation)
         mOrientationManager = OrientationManager.getInstance(this)
         mOrientationManager?.setOrientationChangedListener(this)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             mOrientationManager?.disable()
         }
@@ -449,7 +449,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _SeekbarPortraitPlayBar.progress = 0
         _SeekbarPortraitPlayBar.secondaryProgress = 0
         _SeekbarPortraitPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             Log.i("")
             val params = _SeekbarPortraitPlayBar!!.layoutParams as RelativeLayout.LayoutParams
@@ -459,7 +459,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
         {
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 _PlayerBottomBaseLayout.moveChildView(_SeekbarPlayBar, 266f, 8f, 1480f, 50f)
                 _PlayerBottomBaseLayout.moveChildView(_PlayerRemainPlayTime, 1764f, 0f, 94f, 71f)
@@ -472,7 +472,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
         else
         {
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 _PlayerBottomBaseLayout.moveChildView(_SeekbarPlayBar, 266f, 8f, 1230f, 62f)
                 _PlayerBottomBaseLayout.moveChildView(_PlayerRemainPlayTime, 1514f, 0f, 94f, 71f)
@@ -595,7 +595,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _PlayerSpeedButton.visibility = View.INVISIBLE
             _PlayerSpeedText.visibility = View.INVISIBLE
             _PlayerPageByPageButton.visibility = View.INVISIBLE
-            if(Feature.IS_TABLET == false)
+            if(CommonUtils.getInstance(this).checkTablet == false)
                 _PlayerChangePortraitButton.visibility = View.INVISIBLE
         }
         else
@@ -614,8 +614,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _PlayerSpeedButton.visibility = View.VISIBLE
             _PlayerSpeedText.visibility = View.VISIBLE
             _PlayerPageByPageButton.visibility = View.VISIBLE
-            if(Feature.IS_TABLET == false)
-            _PlayerChangePortraitButton.visibility = View.VISIBLE
+            if(CommonUtils.getInstance(this).checkTablet == false)
+                _PlayerChangePortraitButton.visibility = View.VISIBLE
         }
     }
 
@@ -657,7 +657,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
             _PlayerBackground.layoutParams = baseLayoutParams
             _PlayerOptionBackground.layoutParams = baseLayoutParams
-            if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+            if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
             {
                 baseLayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
                 baseLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL)
@@ -850,7 +850,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 _PlayerSpeedButton.visibility = View.GONE
                 _PlayerSpeedText.visibility = View.GONE
             }
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 _PlayerChangePortraitButton.visibility = View.GONE
                 _PlayerChangeLandscapeButton.visibility = View.GONE
@@ -874,7 +874,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerRepeatButton.visibility = View.GONE
         _PlayerSpeedButton.visibility = View.GONE
         _PlayerSpeedText.visibility = View.GONE
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             _PlayerChangePortraitButton.visibility = View.GONE
             _PlayerChangeLandscapeButton.visibility = View.GONE
@@ -1545,7 +1545,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     private val coachmarkStoryDrawable : Int
         private get()
         {
-            Log.f("isTablet : " + Feature.IS_TABLET + ", Feature.IS_MINIMUM_SUPPORT_TABLET_RADIO_DISPLAY : " + Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
             if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
             {
                 if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
@@ -1554,7 +1553,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         R.drawable.coachmark_story_landscape_kr_tablet_4_3
                     }
@@ -1569,7 +1568,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         R.drawable.coachmark_story_landscape_jp_tablet_4_3
                     }
@@ -1584,7 +1583,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         R.drawable.coachmark_story_landscape_cn_tablet_4_3
                     }
@@ -1599,7 +1598,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         R.drawable.coachmark_story_landscape_tw_tablet_4_3
                     }
@@ -1614,7 +1613,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         R.drawable.coachmark_story_landscape_en_tablet_4_3
                     }
@@ -1634,7 +1633,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         return R.drawable.coachmark_song_landscape_kr_tablet_4_3
                     }
@@ -1650,7 +1649,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         return R.drawable.coachmark_song_landscape_jp_tablet_4_3
                     }
@@ -1666,7 +1665,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         return R.drawable.coachmark_song_landscape_cn_tablet_4_3
                     }
@@ -1682,7 +1681,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         return R.drawable.coachmark_song_landscape_tw_tablet_4_3
                     }
@@ -1698,7 +1697,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(Feature.IS_TABLET && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
                     {
                         return R.drawable.coachmark_song_landscape_en_tablet_4_3
                     }

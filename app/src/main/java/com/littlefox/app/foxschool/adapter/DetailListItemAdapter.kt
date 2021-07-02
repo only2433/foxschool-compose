@@ -96,7 +96,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         val view : View
         if(mIndexColor == "")
         {
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(mContext).checkTablet)
             {
                 view = LayoutInflater.from(mContext).inflate(R.layout.detail_list_not_index_item_tablet, parent, false)
             } else
@@ -106,7 +106,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         }
         else
         {
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(mContext).checkTablet)
             {
                 view = LayoutInflater.from(mContext).inflate(R.layout.detail_list_item_tablet, parent, false)
             }
@@ -209,7 +209,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             mDetailItemListener?.onItemClickOption(position)
         }
 
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(mContext).checkTablet == false)
         {
             if(isBottomViewDisable)
             {

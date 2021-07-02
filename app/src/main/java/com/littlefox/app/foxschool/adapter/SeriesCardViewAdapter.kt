@@ -84,8 +84,10 @@ class SeriesCardViewAdapter : RecyclerView.Adapter<SeriesCardViewAdapter.ViewHol
 
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
-        Glide.with(mContext).load(mCurrentSeriesBaseResultList[position].getThumbnailUrl())
-            .transition(DrawableTransitionOptions.withCrossFade()).into(holder._ThumbnailImage)
+        Glide.with(mContext)
+            .load(mCurrentSeriesBaseResultList[position].getThumbnailUrl())
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder._ThumbnailImage)
         if(mCurrentSeriesType === SeriesType.LEVEL && mCurrentSeriesBaseResultList[position].getLevel() > 0)
         {
             holder._IndexImage.setImageResource(RESOURCE_INDEX_IMAGE[mCurrentSeriesBaseResultList[position].getLevel() - 1])

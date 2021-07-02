@@ -53,6 +53,7 @@ class Common
         const val PARAMS_FIREBASE_PUSH_TOKEN : String           = "firebase_access_token"
         const val PARAMS_IS_PUSH_SEND : String                  = "is_push_send"
         const val PARAMS_IS_TEACHER_MODE : String               = "is_teacher_mode";
+        const val PARAMS_CHECK_TABLET : String                  = "check_tablet"
 
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"

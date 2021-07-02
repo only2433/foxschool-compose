@@ -95,11 +95,8 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
     @BindView(R.id._titleText)
     lateinit var _TitleText : TextView
 
-    companion object
-    {
-        private val COLUMN_COUNT = if(Feature.IS_TABLET) 3 else 2
-        private val COLUMN_MARGIN = if(Feature.IS_TABLET) 40 else 24
-    }
+    private var COLUMN_COUNT : Int = 0
+    private var COLUMN_MARGIN : Int = 0
 
     private lateinit var mStoryCategoryListPresenter : StoryCategoryListPresenter
     private lateinit var _TopbarTitleText : TextView
@@ -110,7 +107,7 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
     {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_story_category_list_tablet)
@@ -160,12 +157,19 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
 
     override fun initView()
     {
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
+            COLUMN_COUNT = 3
+            COLUMN_MARGIN = 40
             val TOP_MARGIN = 50
             val params : LinearLayout.LayoutParams = _CategoryInformationListView.getLayoutParams() as LinearLayout.LayoutParams
             params.topMargin = CommonUtils.getInstance(this).getPixel(TOP_MARGIN)
             _CategoryInformationListView.setLayoutParams(params)
+        }
+        else
+        {
+            COLUMN_COUNT = 2
+            COLUMN_MARGIN = 24
         }
     }
 

@@ -85,7 +85,7 @@ class MainMyBooksFragment() : Fragment()
         initView()
         initFont()
         setupObserverViewModel()
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             settingBooksInformationTablet()
         } else
@@ -97,7 +97,7 @@ class MainMyBooksFragment() : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = inflater.inflate(R.layout.fragment_main_my_books_tablet, container, false)
         } else
@@ -146,9 +146,7 @@ class MainMyBooksFragment() : Fragment()
             _SwitchButtonLayout.setVisibility(View.GONE)
         }
 
-        val isTablet : Boolean = CommonUtils.getInstance(mContext).isTabletModel
-        Log.f("IS_TABLET : " + Feature.IS_TABLET + ", checkTablet : " + isTablet)
-        if(isTablet)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             SWITCH_TAB_WIDTH = 231.0f
         } else
@@ -167,7 +165,7 @@ class MainMyBooksFragment() : Fragment()
     {
         Log.f("")
         mMainInformationResult = mainInformationResult
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             settingBooksInformationTablet()
         } else
@@ -412,7 +410,7 @@ class MainMyBooksFragment() : Fragment()
                 mCurrentBookType = BookType.BOOKSHELF
                 switchTabsAnimation(mCurrentBookType)
                 switchTabsTextColor(mCurrentBookType)
-                if(Feature.IS_TABLET)
+                if(CommonUtils.getInstance(mContext).checkTablet)
                 {
                     settingBooksInformationTablet()
                 } else
@@ -426,7 +424,7 @@ class MainMyBooksFragment() : Fragment()
                 mCurrentBookType = BookType.VOCABULARY
                 switchTabsAnimation(mCurrentBookType)
                 switchTabsTextColor(mCurrentBookType)
-                if(Feature.IS_TABLET)
+                if(CommonUtils.getInstance(mContext).checkTablet)
                 {
                     settingBooksInformationTablet()
                 } else

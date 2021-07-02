@@ -103,7 +103,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_search_tablet)
@@ -148,7 +148,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
 
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
             val params = _SearchSwipeRefreshLayout.layoutParams as RelativeLayout.LayoutParams
@@ -170,7 +170,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         _SearchSongText.typeface = Font.getInstance(this).getRobotoRegular()
         _SearchEditText.typeface = Font.getInstance(this).getRobotoRegular()
 
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             _SearchConfirmTabletIcon.typeface = Font.getInstance(this).getRobotoMedium()
         }
@@ -412,7 +412,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
                 R.id._searchEditText ->
                     if(hasFocus)
                     {
-                        if(Feature.IS_TABLET)
+                        if(CommonUtils.getInstance(this@SearchListActivity).checkTablet)
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.text_box_b)
                         } else
@@ -424,7 +424,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
                     }
                     else
                     {
-                        if(Feature.IS_TABLET)
+                        if(CommonUtils.getInstance(this@SearchListActivity).checkTablet)
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.box_list)
                         } else

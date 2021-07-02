@@ -80,40 +80,40 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
     private lateinit var mIntroduceSeriesPresenter: IntroduceSeriesPresenter
     private var mLoadingDialog : MaterialLoadingDialog? = null
 
-    private var DISPLAY_WIDTH                           = 1080  // 디스플레이 가로 사이즈
-    private var LAYOUT_CONTENTS_VIEW_WIDTH              = 1020  // 컨텐츠박스 가로 사이즈 (하얀색)
-    private var LAYOUT_TITLE_VIEW_HEIGHT                = 121   // 컨텐츠 타이틀박스 높이 (파란색)
-    private var LAYOUT_CONTENTS_VIEW_MARGIN_LEFT        = 30    // 컨텐츠박스 외부 왼쪽 여백 (하얀색)
-    private var LAYOUT_VIEW_PADDING                     = 44    // 컨텐츠박스 내부 여백 (하얀색)
-    private var LAYOUT_BASE_VIEW_LAST_MARGIN_HEIGHT     = 32    // 컨텐츠박스 외부 하단 여백 (하얀색)
+    private var DISPLAY_WIDTH : Int                           = 1080  // 디스플레이 가로 사이즈
+    private var LAYOUT_CONTENTS_VIEW_WIDTH : Int              = 1020  // 컨텐츠박스 가로 사이즈 (하얀색)
+    private var LAYOUT_TITLE_VIEW_HEIGHT : Int                = 121   // 컨텐츠 타이틀박스 높이 (파란색)
+    private var LAYOUT_CONTENTS_VIEW_MARGIN_LEFT : Int        = 30    // 컨텐츠박스 외부 왼쪽 여백 (하얀색)
+    private var LAYOUT_VIEW_PADDING : Int                     = 44    // 컨텐츠박스 내부 여백 (하얀색)
+    private var LAYOUT_BASE_VIEW_LAST_MARGIN_HEIGHT : Int     = 32    // 컨텐츠박스 외부 하단 여백 (하얀색)
 
-    private var CHARACTER_THUMBNAIL_IMAGE_WIDTH         = 282   // 캐릭터 썸네일 가로 사이즈
-    private var CHARACTER_THUMBNAIL_IMAGE_HEIGHT        = 282   // 캐릭터 썸네일 높이
-    private var CHARACTER_THUMBNAIL_TITLE_WIDTH         = 282   // 캐릭터 타이틀박스 가로 사이즈 (파란색)
-    private var CHARACTER_THUMBNAIL_TITLE_HEIGHT        = 80    // 캐릭터 타이틀박스 높이 (파란색)
+    private var CHARACTER_THUMBNAIL_IMAGE_WIDTH : Int         = 282   // 캐릭터 썸네일 가로 사이즈
+    private var CHARACTER_THUMBNAIL_IMAGE_HEIGHT : Int        = 282   // 캐릭터 썸네일 높이
+    private var CHARACTER_THUMBNAIL_TITLE_WIDTH : Int         = 282   // 캐릭터 타이틀박스 가로 사이즈 (파란색)
+    private var CHARACTER_THUMBNAIL_TITLE_HEIGHT : Int        = 80    // 캐릭터 타이틀박스 높이 (파란색)
 
-    private var CREATOR_TEXTVIEW_HEIGHT                 = 55    // 제작자 텍스트 높이
-    private var CREATOR_TEXTVIEW_TITLE_MARGIN_TERM      = 20    // 제작자 텍스트 간격
+    private var CREATOR_TEXTVIEW_HEIGHT : Int                 = 55    // 제작자 텍스트 높이
+    private var CREATOR_TEXTVIEW_TITLE_MARGIN_TERM : Int      = 20    // 제작자 텍스트 간격
 
-    private var DIVIDE_LINE_HEIGHT                      = 2     // 구분선 두께
-    private var DIVIDE_TITLE_MARGIN_TERM                = 40    // 구분선 위아래 여백
+    private var DIVIDE_LINE_HEIGHT : Int                     = 2     // 구분선 두께
+    private var DIVIDE_TITLE_MARGIN_TERM : Int               = 40    // 구분선 위아래 여백
 
-    private var MAX_INTRODUCTION_CONTENTS_SIZE_TABLET   = 6     // 텍스트 사이즈 (태블릿)
-    private var MAX_INTRODUCTION_CONTENTS_SIZE_PHONE    = 8     // 텍스트 사이즈 (폰)
-    private val TITLE_TEXT_SIZE = if(Feature.IS_TABLET) 32 else 46  // 글씨 크기 (타이틀)
+    private var MAX_INTRODUCTION_CONTENTS_SIZE_TABLET : Int   = 6     // 텍스트 사이즈 (태블릿)
+    private var MAX_INTRODUCTION_CONTENTS_SIZE_PHONE : Int    = 8     // 텍스트 사이즈 (폰)
+    private var TITLE_TEXT_SIZE : Int = 0
 
     private val CREATORS_TYPE_NAME = arrayOf("Story", "Animation", "Cast")
 
-    private var mContentsBaseLayoutHeight = -1
-    private var mContentsBackgroundHeight = -1
-    private var mCurrentViewMarginTop = -1
+    private var mContentsBaseLayoutHeight : Int = -1
+    private var mContentsBackgroundHeight : Int= -1
+    private var mCurrentViewMarginTop : Int= -1
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
 
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_introduce_series_tablet)
@@ -148,7 +148,6 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
     override fun initView()
     {
         initViewSize()
-
         settingLayoutColor()
         _TitleText.text = resources.getString(R.string.title_introduce)
         _CloseButton.visibility = View.VISIBLE
@@ -165,7 +164,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
 
     private fun initViewSize()
     {
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             // 태블릿 사이즈 설정
             DISPLAY_WIDTH = 1920
@@ -182,6 +181,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             CREATOR_TEXTVIEW_TITLE_MARGIN_TERM = 20
             DIVIDE_LINE_HEIGHT = 2
             DIVIDE_TITLE_MARGIN_TERM = 38
+            TITLE_TEXT_SIZE = 32
         }
         else
         {
@@ -200,6 +200,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             CREATOR_TEXTVIEW_TITLE_MARGIN_TERM = 20
             DIVIDE_LINE_HEIGHT = 2
             DIVIDE_TITLE_MARGIN_TERM = 40
+            TITLE_TEXT_SIZE = 46
         }
     }
 
@@ -253,16 +254,16 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
      */
     private fun createIntroductionLayout(result : IntroduceSeriesInformationResult)
     {
-        val BASE_LAYOUT_HEIGHT = if(Feature.IS_TABLET) 1055 else 1330       // 베이스 영역 높이 (회색포함)
-        val BASE_BACKGROUND_HEIGHT = if(Feature.IS_TABLET) 905 else 1140    // 컨텐츠박스 높이 (하얀색)
-        val INFORMATION_TEXTVIEW_TOP = if(Feature.IS_TABLET) 668 else 750   // 키워드 영역 위쪽 여백백
-        val CONTENTS_TEXTVIEW_TOP = if(Feature.IS_TABLET) 756 else 850      // 컨텐츠 영역 위쪽 여백
+        val BASE_LAYOUT_HEIGHT = if(CommonUtils.getInstance(this).checkTablet) 1055 else 1330       // 베이스 영역 높이 (회색포함)
+        val BASE_BACKGROUND_HEIGHT = if(CommonUtils.getInstance(this).checkTablet) 905 else 1140    // 컨텐츠박스 높이 (하얀색)
+        val INFORMATION_TEXTVIEW_TOP = if(CommonUtils.getInstance(this).checkTablet) 668 else 750   // 키워드 영역 위쪽 여백백
+        val CONTENTS_TEXTVIEW_TOP = if(CommonUtils.getInstance(this).checkTablet) 756 else 850      // 컨텐츠 영역 위쪽 여백
 
         Log.f("result.getIntroduceThumbnail() : ${result.getIntroduceThumbnail()}, Locale.getDefault().toString() : ${Locale.getDefault().toString()}")
         if(result.getIntroduceThumbnail() != "" && Locale.getDefault().toString().contains(Locale.KOREA.toString()))
         {
             // 조건 : 한국이용자 이면서 Introduction 영상이 있는 경우
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 // 태블릿 레이아웃 설정
                 _IntroductionTitleLayout.setScaleSize(
@@ -349,7 +350,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
 
         _IntroductionContentsText.post {
             // 컨텐츠영역 라인수 최대값 넘어가면 스크롤 활성화
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 Log.f("태블릿 _IntroductionContentsText.getLineCount() : " + _IntroductionContentsText.lineCount)
                 if(_IntroductionContentsText.lineCount > MAX_INTRODUCTION_CONTENTS_SIZE_TABLET)
@@ -389,8 +390,8 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
         val MAX_ROW_COUNT = 3                                   // 표시 개수 (가로 최대 3개)
         val BASE_ROW_MARGIN_TOP = 44                            // 윗쪽 여백
         val COLUMN_SPACING = 22                                 // 줄간격
-        val ROW_SPACING = if(Feature.IS_TABLET) 35 else 42      // 가로 여백
-        val NAME_TEXT_SIZE = if(Feature.IS_TABLET) 28 else 30   // 글씨 크기 (캐릭터 이름)
+        val ROW_SPACING = if(CommonUtils.getInstance(this).checkTablet) 35 else 42      // 가로 여백
+        val NAME_TEXT_SIZE = if(CommonUtils.getInstance(this).checkTablet) 28 else 30   // 글씨 크기 (캐릭터 이름)
         var maxColumnCount = characterList.size / 3             // 줄 수 계산
         if(characterList.size % 3 > 0)
         {
@@ -628,7 +629,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
      */
     private fun drawCreatorInformationView(contentsLayout : ScalableLayout, title : String, data : ArrayList<IntroduceSeriesCreatorsResult.CreatorsData>)
     {
-        val TEXT_SIZE = if(Feature.IS_TABLET) 32 else 44
+        val TEXT_SIZE = if(CommonUtils.getInstance(this).checkTablet) 32 else 44
         val titleView = TextView(this)
         titleView.setTextColor(resources.getColor(R.color.color_23a3e5))
         titleView.text = title

@@ -15,6 +15,7 @@ import com.littlefox.app.foxschool.`object`.result.story.StoryCategoryListResult
 import com.littlefox.app.foxschool.adapter.SeriesCardViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.SeriesCardItemListener
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.coroutine.StoryCategoryListInformationCoroutine
 import com.littlefox.app.foxschool.enumerate.ActivityMode
@@ -54,7 +55,7 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
         mStoryCategoryListContractView.initFont()
         mStoryCategoryListContractView.initTransition(mCurrentCategoryBaseData.getTransitionType())
         mStoryCategoryListContractView.setStatusBar(mCurrentCategoryBaseData.statusBarColor)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             mStoryCategoryListContractView.settingTitleViewTablet(mCurrentCategoryBaseData.getSeriesName())
             mStoryCategoryListContractView.settingBackgroundViewTablet(mCurrentCategoryBaseData.getThumbnailUrl(), mCurrentCategoryBaseData.titleColor)

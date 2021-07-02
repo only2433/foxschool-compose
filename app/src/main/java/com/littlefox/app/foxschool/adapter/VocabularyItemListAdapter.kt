@@ -17,6 +17,7 @@ import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.adapter.listener.VocabularyItemListener
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.library.view.animator.AnimationListener
@@ -27,16 +28,13 @@ import java.util.*
 
 class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter.ViewHolder>
 {
-    companion object
-    {
-        private val BASE_LAYOUT_WIDTH = if(Feature.IS_TABLET) 960 else 1080
-        private val BASE_LAYOUT_LEFT_MARGIN = if(Feature.IS_TABLET) 0 else 30
-        private val BASE_LAYOUT_BOTTOM_MARGIN = if(Feature.IS_TABLET) 10 else 30
-        private val BACKGROUND_WIDTH = if(Feature.IS_TABLET) 960 else 1020
-        private val TITLE_HEIGHT = if(Feature.IS_TABLET) 84 else 134
-        private val CONTENTS_LEFT_MARGIN = if(Feature.IS_TABLET) 60 else 70
-        private val CONTENTS_WIDTH = if(Feature.IS_TABLET) 864 else 940
-    }
+    private var BASE_LAYOUT_WIDTH : Int = 0
+    private var BASE_LAYOUT_LEFT_MARGIN : Int = 0
+    private var BASE_LAYOUT_BOTTOM_MARGIN : Int = 0
+    private var BACKGROUND_WIDTH : Int = 0
+    private var TITLE_HEIGHT : Int = 0
+    private var CONTENTS_LEFT_MARGIN : Int = 0
+    private var CONTENTS_WIDTH : Int = 0
 
     private lateinit var mVocabularyItemList : ArrayList<VocabularyDataResult>
     private var mVocabularyItemListener : VocabularyItemListener? = null
@@ -49,11 +47,22 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
     private var isPlaying = false
     private val mContext : Context;
 
-
     constructor(context : Context)
     {
         mContext = context;
         mVocabularySelectData = VocabularySelectData()
+        initViewData()
+    }
+
+    private fun initViewData()
+    {
+        BASE_LAYOUT_WIDTH = if(CommonUtils.getInstance(mContext).checkTablet) 960 else 1080
+        BASE_LAYOUT_LEFT_MARGIN = if(CommonUtils.getInstance(mContext).checkTablet) 0 else 30
+        BASE_LAYOUT_BOTTOM_MARGIN = if(CommonUtils.getInstance(mContext).checkTablet) 10 else 30
+        BACKGROUND_WIDTH = if(CommonUtils.getInstance(mContext).checkTablet) 960 else 1020
+        TITLE_HEIGHT = if(CommonUtils.getInstance(mContext).checkTablet) 84 else 134
+        CONTENTS_LEFT_MARGIN = if(CommonUtils.getInstance(mContext).checkTablet) 60 else 70
+        CONTENTS_WIDTH = if(CommonUtils.getInstance(mContext).checkTablet) 864 else 940
     }
 
     fun setData(list : ArrayList<VocabularyDataResult>)
@@ -179,7 +188,7 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder
     {
         val view : View
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = LayoutInflater.from(mContext).inflate(R.layout.vocabulary_list_item_tablet, parent, false)
         }

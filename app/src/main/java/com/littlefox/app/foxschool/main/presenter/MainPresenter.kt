@@ -129,7 +129,6 @@ class MainPresenter : MainContract.Presenter
 
     private fun init()
     {
-        Log.f("IS TABLET : " + Feature.IS_TABLET)
         MainObserver.clearAll()
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mMainFragmentSelectionPagerAdapter = MainFragmentSelectionPagerAdapter((mContext as AppCompatActivity).getSupportFragmentManager())

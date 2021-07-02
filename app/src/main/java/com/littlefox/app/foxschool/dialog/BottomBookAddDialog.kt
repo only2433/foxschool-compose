@@ -45,7 +45,7 @@ class BottomBookAddDialog : BottomSheetDialog
     constructor(context : Context) : super(context)
     {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(context).checkTablet)
         {
             setContentView(R.layout.dialog_bookshelf_add_option_tablet)
         }
@@ -60,7 +60,7 @@ class BottomBookAddDialog : BottomSheetDialog
     protected override fun onCreate(savedInstanceState : Bundle)
     {
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             getWindow()!!.setLayout(CommonUtils.getInstance(mContext).getPixel(800), ViewGroup.LayoutParams.MATCH_PARENT)
         }
@@ -127,7 +127,7 @@ class BottomBookAddDialog : BottomSheetDialog
     {
         val params : LinearLayout.LayoutParams = _BooksAddList.getLayoutParams() as LinearLayout.LayoutParams
 
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
             params.height = CommonUtils.getInstance(mContext).getHeightPixel(578)
         else
             params.height = CommonUtils.getInstance(mContext).getHeightPixel(699)
@@ -144,7 +144,7 @@ class BottomBookAddDialog : BottomSheetDialog
         override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder
         {
             val view : View
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(mContext).checkTablet)
             {
                 view = LayoutInflater.from(mContext).inflate(R.layout.mybooks_add_item_tablet_dialog, parent, false)
             }

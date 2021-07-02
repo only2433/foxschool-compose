@@ -197,7 +197,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         //TODO: 단어장 리스트, 스탑이미지, 디테일리스트 가이드 보자
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_series_contents_list_tablet)
@@ -225,7 +225,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun onBackPressed()
     {
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(this).checkTablet == false)
         {
             if(_FabToolbarLayout.isToolbar())
             {
@@ -271,13 +271,13 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         Log.i("Feature.IS_FREE_USER : " + Feature.IS_FREE_USER)
         if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
         {
-            if(Feature.IS_TABLET === false)
+            if(CommonUtils.getInstance(this).checkTablet == false)
             {
                 _FloatingMenuButton.setVisibility(View.GONE)
             }
             _FloatingMenuBarLayout.setVisibility(View.GONE)
         }
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH : Int = if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY) 860 else 960
             val LEFT_MARGIN : Int = 60
@@ -301,7 +301,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         _MenuAddBookshelfText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _MenuCancelText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _DetailInformationText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             _TitleText.setTypeface(Font.getInstance(this).getRobotoMedium())
             _ArDataText.setTypeface(Font.getInstance(this).getRobotoMedium())
@@ -460,7 +460,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun showFloatingToolbarLayout()
     {
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(this).checkTablet == false)
         {
             if(_FabToolbarLayout.isToolbar() == false)
             {
@@ -471,7 +471,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun hideFloatingToolbarLayout()
     {
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(this).checkTablet == false)
         {
             Log.f("")
             if(_FabToolbarLayout.isToolbar() == true)
@@ -494,30 +494,30 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
             _MenuSelectCountText.setBackgroundResource(R.drawable.count_1)
             _FloatingMenuBarLayout.moveChildView(
                 _MenuSelectCountText,
-                if(Feature.IS_TABLET) 1787f else 410f,
-                if(Feature.IS_TABLET) 175f else 10f,
-                if(Feature.IS_TABLET) 30f else 40f,
-                if(Feature.IS_TABLET) 30f else 40f
+                if(CommonUtils.getInstance(this).checkTablet) 1787f else 410f,
+                if(CommonUtils.getInstance(this).checkTablet) 175f else 10f,
+                if(CommonUtils.getInstance(this).checkTablet) 30f else 40f,
+                if(CommonUtils.getInstance(this).checkTablet) 30f else 40f
             )
         } else if(count < 100)
         {
             _MenuSelectCountText.setBackgroundResource(R.drawable.count_2)
             _FloatingMenuBarLayout.moveChildView(
                 _MenuSelectCountText,
-                if(Feature.IS_TABLET) 1787f else 410f,
-                if(Feature.IS_TABLET) 175f else 10f,
-                if(Feature.IS_TABLET) 40f else 50f,
-                if(Feature.IS_TABLET) 30f else 40f
+                if(CommonUtils.getInstance(this).checkTablet) 1787f else 410f,
+                if(CommonUtils.getInstance(this).checkTablet) 175f else 10f,
+                if(CommonUtils.getInstance(this).checkTablet) 40f else 50f,
+                if(CommonUtils.getInstance(this).checkTablet) 30f else 40f
             )
         } else
         {
             _MenuSelectCountText.setBackgroundResource(R.drawable.count_3)
             _FloatingMenuBarLayout.moveChildView(
                 _MenuSelectCountText,
-                if(Feature.IS_TABLET) 1787f else 410f,
-                if(Feature.IS_TABLET) 175f else 10f,
-                if(Feature.IS_TABLET) 50f else 60f,
-                if(Feature.IS_TABLET) 30f else 40f
+                if(CommonUtils.getInstance(this).checkTablet) 1787f else 410f,
+                if(CommonUtils.getInstance(this).checkTablet) 175f else 10f,
+                if(CommonUtils.getInstance(this).checkTablet) 50f else 60f,
+                if(CommonUtils.getInstance(this).checkTablet) 30f else 40f
             )
         }
         _MenuSelectCountText.setText(count.toString())
@@ -950,7 +950,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
             {
                 _MenuSelectCountText.setVisibility(View.GONE)
                 mSeriesContentsListPresenter.onClickCancel()
-                if(Feature.IS_TABLET === false)
+                if(CommonUtils.getInstance(this).checkTablet == false)
                 {
                     _FabToolbarLayout.hide()
                 }

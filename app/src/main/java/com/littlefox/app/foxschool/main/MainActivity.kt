@@ -160,7 +160,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
          * 특정 사양 낮은 기기에서 메모리에 문제가 생겨서 onCreate가 되는 상황이 발생. 예외코드
          */
         CommonUtils.getInstance(this).initFeature()
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_main_tablet)
@@ -208,10 +208,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             }
         })
 
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(this).checkTablet == false)
         {
             settingToolbar()
-        } else
+        }
+        else
         {
             val TABLET_DRAWER_MENU_WIDTH = 650
             val params : DrawerLayout.LayoutParams = _NavigationBaseLayout.getLayoutParams() as DrawerLayout.LayoutParams
@@ -259,7 +260,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     {
         settingViewPagerInformation(mainFragmentSelectionPagerAdapter)
         settingViewPagerController()
-        if(Feature.IS_TABLET === false)
+        if(CommonUtils.getInstance(this).checkTablet == false)
         {
             checkToolbarAnimationLayoutSize()
         }
@@ -384,7 +385,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         var addLayout : LinearLayout? = null
         _MenuItemLayout.removeAllViews()
 
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             addLayout = View.inflate(this, R.layout.drawer_item_user_tablet, null) as LinearLayout
         } else
@@ -437,7 +438,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         getSupportActionBar()?.setDisplayShowHomeEnabled(false)
         getSupportActionBar()?.setDisplayShowCustomEnabled(true)
         getSupportActionBar()?.setDisplayShowTitleEnabled(false)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
             customView = inflater.inflate(R.layout.topbar_main_menu_tablet, null)
         } else
@@ -470,7 +471,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         for(i in 0 until tabsSize)
         {
             val index = i
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(this).checkTablet)
             {
                 val image = ImageView(this)
                 params = LinearLayout.LayoutParams(

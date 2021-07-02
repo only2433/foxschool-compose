@@ -73,7 +73,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     {
         Log.f("");
         super.onCreate(savedInstanceState)
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             getWindow()!!.setLayout(CommonUtils.getInstance(mContext).getPixel(800), ViewGroup.LayoutParams.MATCH_PARENT)
         }
@@ -190,7 +190,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(Feature.IS_TABLET)
+            if(CommonUtils.getInstance(mContext).checkTablet)
             {
                 if(mContentsInformationResult.getServiceInformation()!!.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
                 {

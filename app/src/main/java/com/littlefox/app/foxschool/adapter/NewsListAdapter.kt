@@ -12,6 +12,7 @@ import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.news.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 
@@ -41,7 +42,7 @@ class NewsListAdapter : RecyclerView.Adapter<NewsListAdapter.ViewHolder?>
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder
     {
         val view : View
-        if(Feature.IS_TABLET)
+        if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = LayoutInflater.from(mContext).inflate(R.layout.news_list_item_tablet, parent, false)
         } else
