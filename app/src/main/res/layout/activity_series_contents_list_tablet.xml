@@ -255,7 +255,7 @@
                 android:visibility="gone"
                 android:text="1"
                 android:gravity="center"
-                android:textColor="@color/color_1ea6b2"
+                android:textColor="@color/color_1eb8c6"
                 app:scale_left="1787"
                 app:scale_top="175"
                 app:scale_width="30"

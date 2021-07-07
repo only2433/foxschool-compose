@@ -141,7 +141,7 @@
                 android:id="@+id/_floatingMenuBarLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/color_26d0df"
+                android:background="@color/color_29c8e6"
                 android:layout_alignParentBottom="true"
                 app:scale_base_width="1080"
                 app:scale_base_height="176">
@@ -152,9 +152,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/bottom_all"
                     android:scaleType="fitXY"
-                    app:scale_left="30"
+                    app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="210"
+                    app:scale_width="270"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_menuSelectAllText"
@@ -175,9 +175,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/bottom_play"
                     android:scaleType="fitXY"
-                    app:scale_left="300"
+                    app:scale_left="270"
                     app:scale_top="0"
-                    app:scale_width="210"
+                    app:scale_width="270"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_menuSelectPlayText"
@@ -200,7 +200,7 @@
                     android:visibility="gone"
                     android:text="1"
                     android:gravity="center"
-                    android:textColor="@color/color_1ea6b2"
+                    android:textColor="@color/color_1eb8c6"
                     app:scale_left="410"
                     app:scale_top="10"
                     app:scale_width="40"
@@ -213,9 +213,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/bottom_bookshelf"
                     android:scaleType="fitXY"
-                    app:scale_left="570"
+                    app:scale_left="540"
                     app:scale_top="0"
-                    app:scale_width="210"
+                    app:scale_width="270"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_menuAddBookshelfText"
@@ -237,9 +237,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/bottom_close"
                     android:scaleType="fitXY"
-                    app:scale_left="840"
+                    app:scale_left="810"
                     app:scale_top="0"
-                    app:scale_width="210"
+                    app:scale_width="270"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_menuCancelText"

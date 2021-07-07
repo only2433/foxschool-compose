@@ -290,7 +290,7 @@
                     android:visibility="gone"
                     android:text="1"
                     android:gravity="center"
-                    android:textColor="@color/color_8d65ff"
+                    android:textColor="@color/color_1eb8c6"
                     app:scale_left="1562"
                     app:scale_top="512"
                     app:scale_width="30"
