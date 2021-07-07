@@ -217,6 +217,15 @@ class IntentManagementFactory
                 }
             }
 
+            ActivityMode.QUIZ ->
+            {
+                intent = Intent(mContext, QuizActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_QUIZ_PARAMS, `object` as String?)
+                }
+            }
+
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)
             ActivityMode.LOGIN ->

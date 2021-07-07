@@ -63,6 +63,7 @@ class Common
         const val INTENT_STORY_SERIES_DATA : String                 = "story_series_data"
         const val INTENT_STORY_CATEGORY_DATA : String               = "story_category_data"
         const val INTENT_SERIES_INFORMATION_ID : String             = "series_information_id"
+        const val INTENT_QUIZ_PARAMS                                = "quiz_params"
 
 
         const val COROUTINE_CODE_INIT : String                          = "init"
@@ -85,6 +86,8 @@ class Common
         const val COROUTINE_CODE_INTRODUCE_SERIES : String              = "introduce_series";
         const val COROUTINE_CODE_STORY_CATEGORY_LIST_INFO : String      = "story_categoty_list_info";
         const val COROUTINE_CODE_SEARCH_LIST : String                   = "search_list"
+        const val COROUTINE_CODE_QUIZ_INFORMATION : String              = "quiz_information"
+        const val COROUTINE_CODE_QUIZ_SAVE_RECORD : String              = "quiz_save_record"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"
@@ -160,6 +163,12 @@ class Common
         const val PLAYER_TYPE_PROGRESSIVE : String  = "progressive"
 
         const val MAXIMUM_LOG_FILE_SIZE : Long = 1024 * 1024 * 10L
+
+        /** 퀴즈 종류별 코드 */
+        const val QUIZ_CODE_PICTURE = "N"
+        const val QUIZ_CODE_TEXT = "T"
+        const val QUIZ_CODE_PHONICS_SOUND_TEXT = "S"
+        const val QUIZ_CODE_SOUND_TEXT = "E"
     }
 
 }

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:scale_base_height="986"
+        app:scale_base_width="1920" >
+
+        <com.littlefox.library.view.text.SeparateTextView
+            android:id="@+id/_quizMainTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/color_3b3b3b"
+            app:scale_top="49"
+            app:scale_left="0"
+            app:scale_width="1920"
+            app:scale_height="270"
+            app:scale_textsize="74" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_quiz_main"
+            app:scale_top="398"
+            app:scale_left="0"
+            app:scale_width="1920"
+            app:scale_height="334" />
+
+        <com.littlefox.library.view.dialog.ProgressWheel
+            android:id="@+id/_quizIntroLoadingLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            app:matProg_barColor="@color/color_4f6ab4"
+            app:matProg_progressIndeterminate="true"
+            app:scale_top="350"
+            app:scale_left="0"
+            app:scale_width="140"
+            app:scale_height="140" />
+
+        <TextView
+            android:id="@+id/_quizIntroPlayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_quiz_start"
+            android:gravity="center"
+            android:text="@string/text_start"
+            android:textColor="@color/color_ffffff"
+            android:visibility="gone"
+            app:scale_top="791"
+            app:scale_left="754"
+            app:scale_width="412"
+            app:scale_height="120"
+            app:scale_textsize="56"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</RelativeLayout>

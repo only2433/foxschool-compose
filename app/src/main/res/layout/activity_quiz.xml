@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!-- 타이틀 영역 -->
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scale_base_height="94"
+            app:scale_base_width="1920" >
+
+            <ImageView
+                android:id="@+id/_quizTitlelayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_23cc8a"
+                app:scale_top="0"
+                app:scale_left="0"
+                app:scale_width="1920"
+                app:scale_height="94" />
+
+            <TextView
+                android:id="@+id/_quizTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_ffffff"
+                android:text="@string/title_quiz"
+                app:scale_top = "0"
+                app:scale_left="929"
+                app:scale_width="200"
+                app:scale_height="94"
+                app:scale_textsize="34"/>
+
+            <ImageView
+                android:id="@+id/_quizCloseButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_top="0"
+                app:scale_left="1815"
+                app:scale_width="80"
+                app:scale_height="94" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/player_btn_close"
+                app:scale_top="30"
+                app:scale_left="1841"
+                app:scale_width="32"
+                app:scale_height="32" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <!-- 타이머/카운트 영역 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_ffffff" >
+
+            <com.littlefox.library.view.extra.SwipeDisableViewPager
+                android:id="@+id/_quizBaseFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:swipeable="false" />
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_quizTaskBoxLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:scale_base_height="120"
+                app:scale_base_width="1920" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_time"
+                    app:scale_top="36"
+                    app:scale_left="1276"
+                    app:scale_width="47"
+                    app:scale_height="48" />
+
+                <TextView
+                    android:id="@+id/_quizTimerTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_time"
+                    android:textColor="@color/color_444444"
+                    app:scale_top="0"
+                    app:scale_left="1336"
+                    app:scale_width="110"
+                    app:scale_height="120"
+                    app:scale_textsize="40" />
+
+                <TextView
+                    android:id="@+id/_quizTimerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/color_2a4899"
+                    app:scale_top="0"
+                    app:scale_left="1439"
+                    app:scale_width="166"
+                    app:scale_height="120"
+                    app:scale_textsize="46" />
+
+                <ImageView
+                    android:id="@+id/_quizTaskQuestionImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_question"
+                    app:scale_top="38"
+                    app:scale_left="1600"
+                    app:scale_width="48"
+                    app:scale_height="47" />
+
+                <TextView
+                    android:id="@+id/_quizCountTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_score"
+                    android:textColor="@color/color_444444"
+                    app:scale_top="0"
+                    app:scale_left="1661"
+                    app:scale_width="120"
+                    app:scale_height="120"
+                    app:scale_textsize="40" />
+
+                <TextView
+                    android:id="@+id/_quizCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="@color/color_2a4899"
+                    app:scale_top="0"
+                    app:scale_left="1774"
+                    app:scale_width="150"
+                    app:scale_height="120"
+                    app:scale_textsize="46" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_quizAniLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                app:scale_base_height="986"
+                app:scale_base_width="1920" >
+
+                <ImageView
+                    android:id="@+id/_quizAniIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_correct"
+                    android:visibility="gone"
+                    app:scale_top="237"
+                    app:scale_left="742"
+                    app:scale_width="436"
+                    app:scale_height="419" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

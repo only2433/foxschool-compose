@@ -351,12 +351,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
-        // TODO : QUIZ 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.QUIZ)
-//            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.QUIZ)
+            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**

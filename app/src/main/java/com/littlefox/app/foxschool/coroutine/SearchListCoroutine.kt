@@ -13,10 +13,10 @@ import java.net.URLEncoder
 
 class SearchListCoroutine: BaseCoroutine
 {
-    private var mSearchType = ""
-    private var mCurrentPage = 0
-    private var mPageItemCount = 0
-    private var mKeyword = ""
+    private var mSearchType : String    = ""
+    private var mCurrentPage : Int      = 0
+    private var mPageItemCount : Int    = 0
+    private var mKeyword : String       = ""
 
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_SEARCH_LIST)
 
@@ -60,7 +60,7 @@ class SearchListCoroutine: BaseCoroutine
             }
             result = Gson().fromJson(response, SearchListBaseObject::class.java)
 
-            if(result.getAccessToken().equals("") == false)
+            if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

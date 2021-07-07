@@ -68,6 +68,14 @@
     <string name="text_logout">로그아웃</string>
     <string name="text_character">Character</string>
     <string name="text_creators">Creators</string>
+    <string name="text_time">Time</string>
+    <string name="text_score">Score</string>
+    <string name="text_correct">Correct</string>
+    <string name="text_incorrect">Incorrect</string>
+    <string name="text_start">Start</string>
+    <string name="text_next">Next</string>
+    <string name="text_savescore">Save Score</string>
+    <string name="text_tryagain">Try Again</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -130,6 +138,9 @@
     <string name="message_company_information_from_login">고객센터 02-538-8770<br></br>월 ` 금 (오전 9시 - 오후 6시), 공휴일 제외</string>
     <string name="message_last_page">마지막 페이지입니다.</string>
     <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
+    <string name="message_quiz_save_record_success">퀴즈 결과가 저장되었습니다. \n학습기록에서 확인 가능합니다.</string>
+    <string name="message_quiz_limit_not_save">풀이 시간이 초과된 결과는 저장할 수 없습니다.</string>
+    <string name="message_sound_text_title">Listen and choose the correct word.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>
