@@ -332,13 +332,12 @@ class IntroPresenter : IntroContract.Presenter
         release()
     }
 
-
-
     override fun onClickLogin()
     {
         Log.f("")
         //startLoginActivity()
-        startFreeUser()
+       // startFreeUser()
+        requestInitAsync()
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)

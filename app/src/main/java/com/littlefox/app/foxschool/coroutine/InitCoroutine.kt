@@ -39,7 +39,7 @@ class InitCoroutine : BaseCoroutine
             }
             val response = requestServerPair(mContext, Common.API_INIT, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, VersionBaseObject::class.java)
-            if(result.getAccessToken().equals("") === false)
+            if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }

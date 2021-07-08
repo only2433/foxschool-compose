@@ -9,9 +9,13 @@ class Common
         const val APP_LINK : String     = "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME
 
         const val BASE_URL : String                 = "https://apis.littlefox.com/"
+        const val DEVELOP_API_BASE_URL : String     = "https://apis-foxschool.littlefox.co.kr/"
+        const val DEVELOP_BASE_API : String         = DEVELOP_API_BASE_URL + "api/"
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
-        const val API_INIT : String                 = BASE_PUBLIC_API + "app/version"
+
+        const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
+        const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
         const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
         const val API_ME : String                   = BASE_PUBLIC_API + "auth/me"
@@ -20,6 +24,7 @@ class Common
         const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
         const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
         const val API_INTRODUCE_SERIES : String     = BASE_PUBLIC_API + "contents/story/series/"
+
         const val API_QUIZ : String                 = API_CONTENTS
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS
         const val API_STUDY_LOG_SAVE : String       = API_CONTENTS
@@ -67,6 +72,7 @@ class Common
 
 
         const val COROUTINE_CODE_INIT : String                          = "init"
+        const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
         const val COROUTINE_CODE_MAIN : String                          = "main"
         const val COROUTINE_CODE_ME : String                            = "me"
         const val COROUTINE_CODE_CHANGE_USER : String                   = "change_user"
