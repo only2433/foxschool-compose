@@ -14,7 +14,7 @@ class Common
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
 
-        const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
+        const val API_INIT : String                 = BASE_PUBLIC_API + "app/version"
         const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
         const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"

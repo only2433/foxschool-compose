@@ -336,8 +336,7 @@ class IntroPresenter : IntroContract.Presenter
     {
         Log.f("")
         //startLoginActivity()
-       // startFreeUser()
-        requestInitAsync()
+        startFreeUser()
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
