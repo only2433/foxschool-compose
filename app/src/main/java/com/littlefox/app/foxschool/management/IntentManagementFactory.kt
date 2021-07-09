@@ -19,6 +19,10 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.*
+import com.littlefox.app.foxschool.main.webview.WebviewFAQActivity
+import com.littlefox.app.foxschool.main.webview.WebviewLearningLogActivity
+import com.littlefox.app.foxschool.main.webview.WebviewPolicyPrivacyActivity
+import com.littlefox.app.foxschool.main.webview.WebviewPolicyTermsActivity
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
@@ -182,6 +186,7 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_STORY_SERIES_DATA, `object` as SeriesBaseResult?)
                 }
             }
+
             ActivityMode.STORY_CATEGORY_LIST ->
             {
                 intent = Intent(mContext, StoryCategoryListActivity::class.java)
@@ -190,6 +195,7 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_STORY_CATEGORY_DATA, `object` as SeriesBaseResult?)
                 }
             }
+
             ActivityMode.PLAYER ->
             {
                 intent = Intent(mContext, PlayerHlsActivity::class.java)
@@ -198,7 +204,9 @@ class IntentManagementFactory
                     intent.putParcelableArrayListExtra(Common.INTENT_PLAYER_DATA_PARAMS, `object` as ArrayList<ContentsBaseResult?>?)
                 }
             }
+
             ActivityMode.SEARCH -> intent = Intent(mContext, SearchListActivity::class.java)
+
             ActivityMode.INTRODUCE_SERIES ->
             {
                 intent = Intent(mContext, IntroduceSeriesActivity::class.java)
@@ -225,6 +233,16 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_QUIZ_PARAMS, `object` as String?)
                 }
             }
+
+            ActivityMode.APP_USE_GUIDE -> intent = Intent(mContext, AppUseGuideActivity::class.java)
+
+            ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
+
+            ActivityMode.WEBVIEW_FAQS -> intent = Intent(mContext, WebviewFAQActivity::class.java)
+
+            ActivityMode.WEBVIEW_POLICY_PRIVACY -> intent = Intent(mContext, WebviewPolicyPrivacyActivity::class.java)
+
+            ActivityMode.WEBVIEW_POLICY_TERMS -> intent = Intent(mContext, WebviewPolicyTermsActivity::class.java)
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)

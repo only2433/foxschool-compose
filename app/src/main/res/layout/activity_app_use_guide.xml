@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaselayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/topbar_common_menu"/>
+
+        <ScrollView
+            android:id="@+id/_appUseGuideScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/_titleBaselayout">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="44"/>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:id="@+id/_menuVersionLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="165">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/box_list"
+                        app:scale_top="0"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="165"/>
+
+                    <com.littlefox.library.view.text.SeparateTextView
+                        android:id="@+id/_versionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/text_version"
+                        app:scale_top="0"
+                        app:scale_left="98"
+                        app:scale_width="500"
+                        app:scale_height="162"
+                        app:scale_textsize="40"/>
+
+                    <TextView
+                        android:id="@+id/_versionUpdateButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_b_small"
+                        android:gravity="center"
+                        android:text="@string/text_update"
+                        android:textColor="@color/color_ffffff"
+                        app:scale_top="30"
+                        app:scale_left="676"
+                        app:scale_width="344"
+                        app:scale_height="97"
+                        app:scale_textsize="40"/>
+
+                </com.ssomai.android.scalablelayout.ScalableLayout>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="20"/>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:id="@+id/_menuServiceLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="320">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/box_list"
+                        app:scale_top="0"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="320" />
+
+                    <ImageView
+                        android:id="@+id/_termsOfServiceButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:scale_top="0"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="159"/>
+
+                    <TextView
+                        android:id="@+id/_termsOfServiceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="@string/text_service_terms_use"
+                        app:scale_top="0"
+                        app:scale_left="99"
+                        app:scale_width="800"
+                        app:scale_height="159"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_guide_more"
+                        app:scale_top="30"
+                        app:scale_left="920"
+                        app:scale_width="100"
+                        app:scale_height="100"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="159"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <ImageView
+                        android:id="@+id/_privacyPolicyButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        app:scale_top="160"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="159"/>
+
+                    <TextView
+                        android:id="@+id/_privacyPolicyText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/text_privacy_policy"
+                        android:textColor="@color/color_444444"
+                        app:scale_top="160"
+                        app:scale_left="99"
+                        app:scale_width="800"
+                        app:scale_height="159"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/icon_guide_more"
+                        app:scale_top="190"
+                        app:scale_left="930"
+                        app:scale_width="100"
+                        app:scale_height="100"/>
+                </com.ssomai.android.scalablelayout.ScalableLayout>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="21"/>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:id="@+id/_menuKoreaCompanyInformationLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="1284">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/box_list"
+                        app:scale_top="0"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="1284" />
+
+                    <TextView
+                        android:id="@+id/_companyNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="(주)리틀팍스"
+                        app:scale_top="0"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="160"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="160"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_ceoTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="대표이사"
+                        app:scale_top="180"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32" />
+
+                    <TextView
+                        android:id="@+id/_ceoNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text=""
+                        app:scale_top="230"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="320"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_addressTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="주소"
+                        app:scale_top="340"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_addressNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text=""
+                        app:scale_top="390"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="480"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_companyRegistrationNumberTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="사업자등록번호"
+                        app:scale_top="500"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_companyRegistrationNumberNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text=""
+                        app:scale_top="550"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="640"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_reportCompanyTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="통신판매업신고"
+                        app:scale_top="660"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_reportCompanyNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="강남-1600호"
+                        app:scale_top="710"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="800"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_electronicPublishingCertificationTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="전자출판물인증"
+                        app:scale_top="820"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_electronicPublishingCertificationNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="I410-ECN-0108-2018-740-001616024"
+                        app:scale_top="870"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="960"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_phoneTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="전화번호"
+                        app:scale_top="980"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_phoneNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="02-538-8770"
+                        app:scale_top="1030"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/color_cacaca"
+                        app:scale_top="1120"
+                        app:scale_left="30"
+                        app:scale_width="1020"
+                        app:scale_height="2"/>
+
+                    <TextView
+                        android:id="@+id/_faxTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_b7b7b7"
+                        android:text="팩스"
+                        app:scale_top="1140"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="50"
+                        app:scale_textsize="32"/>
+
+                    <TextView
+                        android:id="@+id/_faxNameText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/color_444444"
+                        android:text="02-538-3848"
+                        app:scale_top="1190"
+                        app:scale_left="99"
+                        app:scale_width="900"
+                        app:scale_height="60"
+                        app:scale_textsize="40"/>
+
+                </com.ssomai.android.scalablelayout.ScalableLayout>
+
+                <com.ssomai.android.scalablelayout.ScalableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:scale_base_width="1080"
+                    app:scale_base_height="30"/>
+
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

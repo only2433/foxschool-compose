@@ -42,8 +42,8 @@ import androidx.preference.PreferenceManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.BuildConfig
 import com.google.gson.Gson
+import com.littlefox.app.foxschool.BuildConfig
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
@@ -1360,44 +1360,48 @@ class CommonUtils
         return size
     }
 
+    /**
+     * 1:1문의 메일 보내기
+     */
     fun inquireForDeveloper(sendUrl : String?)
     {
         var userID = ""
-        val userLoginData : UserLoginData? = getPreferenceObject(
-            Common.PARAMS_USER_LOGIN,
-            UserLoginData::class.java
-        ) as UserLoginData
+        val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+
         if(userLoginData != null)
         {
             userID = userLoginData.userID
             Log.f("User ID : $userID")
-        } else
+        }
+        else
         {
             userID = "FREE USER"
         }
+
         val i : Intent
-        val strTitle = sContext!!.resources.getString(R.string.app_name)
-        val text =
-            ("[" + Build.BRAND.toString() + "]" + " Model: " + Build.MODEL + ", OS: " + Build.VERSION.RELEASE + ", Ver: " + getPackageVersionName(
-                Common.PACKAGE_NAME
-            ) + ", ID : " + userID)
+        val strTitle = sContext.resources.getString(R.string.app_name)
+        val text = "[${Build.BRAND}] Model: ${Build.MODEL}, OS: ${Build.VERSION.RELEASE}, Ver: ${getPackageVersionName(Common.PACKAGE_NAME)}, ID : $userID"
+
         if(Build.VERSION.SDK_INT >= 24)
         {
             i = Intent(Intent.ACTION_SEND)
+            i.putExtra(Intent.EXTRA_EMAIL, arrayOf(sendUrl))
             i.putExtra(Intent.EXTRA_TEXT, text)
             val file = File(Log.getLogfilePath())
             val uri : Uri = FileProvider.getUriForFile(sContext, BuildConfig.APPLICATION_ID, file)
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             i.setDataAndType(uri, sContext.contentResolver.getType(uri))
             i.putExtra(Intent.EXTRA_STREAM, uri)
-        } else
+        }
+        else
         {
             i = Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", sendUrl, null))
             i.putExtra(Intent.EXTRA_TEXT, text)
             val uri = Uri.parse("file://" + Log.getLogfilePath())
             i.putExtra(Intent.EXTRA_STREAM, uri)
         }
-        sContext!!.startActivity(Intent.createChooser(i, strTitle))
+
+        sContext.startActivity(Intent.createChooser(i, strTitle))
     }
 
     fun getDayNumberSuffixToEN(day : Int) : String

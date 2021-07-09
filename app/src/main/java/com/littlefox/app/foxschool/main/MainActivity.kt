@@ -286,9 +286,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun settingUserInformation(userInformationResult : UserInformationResult?)
     {
-
+        // 팍스영어 에서는 setMenuLoginStatus()에 들어있었는데, 현재 작업이 안되어있는 상태인 듯 하여 임시로 밖으로 빼놓았습니다.
+        initMenuView()
     }
-
 
     override fun setCurrentPage(page : Int)
     {

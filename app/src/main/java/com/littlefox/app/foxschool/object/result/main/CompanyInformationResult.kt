@@ -53,7 +53,7 @@ class CompanyInformationResult
         return phone
     }
 
-    fun getFax() : String
+    fun getFaxNumber() : String
     {
         return fax
     }
