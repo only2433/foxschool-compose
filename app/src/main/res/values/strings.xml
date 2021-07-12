@@ -88,6 +88,7 @@
     <string name="text_customer_working_day">월 - 금(오전 9시 - 오후6시), 공휴일 제외</string>
     <string name="text_school_search">학교 검색</string>
     <string name="text_email_id_input">이메일 또는 아이디 입력</string>
+    <string name="text_id_input">아이디 입력</string>
     <string name="text_password_input">비밀번호 입력</string>
     <string name="text_auto_login">로그인 상태 유지</string>
     <string name="text_find_login">아이디 찾기</string>
@@ -100,6 +101,7 @@
     <string name="text_input_search">검색어를 입력해주세요.</string>
     <string name="text_look_up">조회</string>
     <string name="text_search">검색</string>
+    <string name="text_result_empty">결과가 없습니다.</string>
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -139,7 +141,7 @@
     <string name="message_login_littlefox_information">리틀팍스는 유료회원가입을 하지 않아도 \n약 350 편의 콘텐츠를 무료로 체험하실 수 있습니다.</string>
     <string name="message_not_seleted_contents_list">선택보기할 콘텐츠를 선택해 주세요.</string>
     <string name="message_ar_information">* AR 지수란  단어, 문장의 길이 및  복잡성 등을 분석하여 영어원서의 종합적인  난이도를  나타낸  수치입니다.\n\n* 미국 학교의  학년  개념과 연계해 표현됩니다. 예) AR 3.5: 초등 3학년 5개월 수준의 학생이 읽는 평균 난이도</string>
-    <string name="message_company_information_from_login">고객센터 02-538-8770<br></br>월 ` 금 (오전 9시 - 오후 6시), 공휴일 제외</string>
+    <string name="message_company_information_from_login">고객센터 02-538-8770\n월 - 금 (오전 9시 - 오후 6시), 공휴일 제외</string>
     <string name="message_last_page">마지막 페이지입니다.</string>
     <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
     <string name="message_quiz_save_record_success">퀴즈 결과가 저장되었습니다. \n학습기록에서 확인 가능합니다.</string>

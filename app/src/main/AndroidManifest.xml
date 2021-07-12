@@ -134,6 +134,13 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
+        <activity android:name=".main.LoginActivity"
+            android:screenOrientation="sensor"
+            android:windowSoftInputMode="adjustNothing"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
         <service
             android:name=".fcm.LittlefoxFirebaseMessagingService"
             android:enabled="true"

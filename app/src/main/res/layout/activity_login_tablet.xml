@@ -2,62 +2,67 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingPrefix, NewApi"
     android:id="@+id/_mainBaseLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:ignore="MissingPrefix, NewApi">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/color_edeef2"
         android:orientation="vertical">
+
         <include
             android:id="@+id/_titleBaselayout"
+            layout="@layout/topbar_common_menu_tablet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/topbar_common_menu_tablet"/>
+            android:layout_height="wrap_content" />
 
         <com.ssomai.android.scalablelayout.ScalableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:scale_base_width="1920"
-            app:scale_base_height="40"/>
+            app:scale_base_height="40"
+            app:scale_base_width="1920" />
 
         <com.ssomai.android.scalablelayout.ScalableLayout
             android:id="@+id/_contentsLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:scale_base_width="1920"
-            app:scale_base_height="800">
+            app:scale_base_height="750"
+            app:scale_base_width="1920">
 
             <ImageView
+                android:id="@+id/_inputLayoutBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/box_list"
+                app:scale_height="750"
                 app:scale_left="448"
                 app:scale_top="0"
-                app:scale_width="1024"
-                app:scale_height="800"/>
+                app:scale_width="1024" />
 
             <ImageView
                 android:id="@+id/_inputIdEditBackground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_box"
+                app:scale_height="84"
                 app:scale_left="562"
                 app:scale_top="146"
-                app:scale_width="796"
-                app:scale_height="84"/>
+                app:scale_width="796" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_id"
-                app:scale_left="562"
-                app:scale_top="146"
-                app:scale_width="84"
-                app:scale_height="84"/>
+                app:scale_height="40"
+                app:scale_left="590"
+                app:scale_top="167"
+                app:scale_width="40" />
 
             <EditText
                 android:id="@+id/_inputIdEditText"
@@ -65,34 +70,34 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="center_vertical"
-                android:hint="@string/text_email_id_input"
+                android:hint="@string/text_id_input"
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
-                app:scale_left="646"
-                app:scale_top="146"
-                app:scale_width="628"
                 app:scale_height="84"
-                app:scale_textsize="30"/>
+                app:scale_left="667"
+                app:scale_textsize="30"
+                app:scale_top="146"
+                app:scale_width="628" />
 
             <ImageView
                 android:id="@+id/_inputPasswordEditBackground"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_box"
+                app:scale_height="84"
                 app:scale_left="562"
                 app:scale_top="242"
-                app:scale_width="796"
-                app:scale_height="84"/>
+                app:scale_width="796" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_lock"
-                app:scale_left="562"
-                app:scale_top="242"
-                app:scale_width="84"
-                app:scale_height="84"/>
+                app:scale_height="40"
+                app:scale_left="590"
+                app:scale_top="263"
+                app:scale_width="40" />
 
             <EditText
                 android:id="@+id/_inputPasswordEditText"
@@ -103,11 +108,79 @@
                 android:hint="@string/text_password_input"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                app:scale_left="646"
-                app:scale_top="242"
-                app:scale_width="628"
                 app:scale_height="84"
-                app:scale_textsize="30"/>
+                app:scale_left="667"
+                app:scale_textsize="30"
+                app:scale_top="242"
+                app:scale_width="628" />
+
+            <ImageView
+                android:id="@+id/_inputSchoolEditBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_height="84"
+                app:scale_left="562"
+                app:scale_top="50"
+                app:scale_width="796" />
+
+            <ImageView
+                android:id="@+id/_inputSchoolLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_b3b3b3"
+                android:visibility="gone"
+                app:scale_height="1"
+                app:scale_left="562"
+                app:scale_top="134"
+                app:scale_width="796" />
+
+            <ImageView
+                android:id="@+id/_inputSchoolDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_tex_del"
+                android:visibility="gone"
+                app:scale_height="50"
+                app:scale_left="1288"
+                app:scale_top="67"
+                app:scale_width="50" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                android:src="@drawable/icon_search_2"
+                app:scale_height="40"
+                app:scale_left="590"
+                app:scale_top="73"
+                app:scale_width="40" />
+
+            <EditText
+                android:id="@+id/_inputSchoolEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:cursorVisible="false"
+                android:gravity="center_vertical"
+                android:hint="@string/text_school_search"
+                android:singleLine="true"
+                app:scale_height="84"
+                app:scale_left="667"
+                app:scale_textsize="30"
+                app:scale_top="50"
+                app:scale_width="628" />
+
+            <ScrollView
+                android:id="@+id/_searchSchoolView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:scale_height="84"
+                app:scale_left="562"
+                app:scale_top="50"
+                app:scale_width="796"/>
 
             <ImageView
                 android:id="@+id/_autoLoginIcon"
@@ -115,10 +188,10 @@
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside"
                 android:src="@drawable/radio_off"
+                app:scale_height="45"
                 app:scale_left="818"
                 app:scale_top="368"
-                app:scale_width="45"
-                app:scale_height="45"/>
+                app:scale_width="45" />
 
             <TextView
                 android:id="@+id/_autoLoginText"
@@ -127,68 +200,11 @@
                 android:gravity="center_vertical"
                 android:text="@string/text_auto_login"
                 android:textColor="@color/color_444444"
-                app:scale_left="883"
-                app:scale_top="368"
-                app:scale_width="300"
                 app:scale_height="45"
-                app:scale_textsize="26"/>
-
-            <ImageView
-                android:id="@+id/_inputSchoolEditBackground"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/text_box"
-                app:scale_left="562"
-                app:scale_top="50"
-                app:scale_width="796"
-                app:scale_height="84"/>
-
-            <ImageView
-                android:id="@+id/_inputSchoolLine"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/color_b3b3b3"
-                android:visibility="gone"
-                app:scale_left="562"
-                app:scale_top="134"
-                app:scale_width="796"
-                app:scale_height="1"/>
-
-            <ImageView
-                android:id="@+id/_inputSchoolDeleteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/btn_tex_del"
-                android:visibility="visible"
-                app:scale_left="1288"
-                app:scale_top="67"
-                app:scale_width="50"
-                app:scale_height="50"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_search_2"
-                app:scale_height="120"
-                app:scale_left="98"
-                app:scale_top="75"
-                app:scale_width="120" />
-
-            <EditText
-                android:id="@+id/_inputSchoolEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:hint="@string/text_school_search"
-                android:singleLine="true"
-                app:scale_left="646"
-                app:scale_top="50"
-                app:scale_width="628"
-                app:scale_height="84"
-                app:scale_textsize="30"/>
+                app:scale_left="883"
+                app:scale_textsize="26"
+                app:scale_top="368"
+                app:scale_width="300" />
 
             <TextView
                 android:id="@+id/_loginButtonText"
@@ -199,51 +215,48 @@
                 android:gravity="center"
                 android:text="@string/text_login"
                 android:textColor="@color/color_ffffff"
+                app:scale_height="83"
                 app:scale_left="665"
+                app:scale_textsize="30"
                 app:scale_top="463"
-                app:scale_width="550"
-                app:scale_height="84"
-                app:scale_textsize="30"/>
-
+                app:scale_width="550" />
 
             <TextView
                 android:id="@+id/_forgetIDText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:text="@string/text_find_login"
                 android:textColor="@color/color_444444"
-                android:gravity="center_vertical"
-                app:scale_left="780"
-                app:scale_top="585"
-                app:scale_width="170"
                 app:scale_height="70"
+                app:scale_left="780"
                 app:scale_textsize="26"
-                />
+                app:scale_top="585"
+                app:scale_width="170" />
 
             <ImageView
                 android:id="@+id/_forgetDividerLine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@color/color_444444"
                 android:scaleType="fitXY"
+                android:src="@color/color_444444"
+                app:scale_height="30"
                 app:scale_left="955"
                 app:scale_top="605"
-                app:scale_width="2"
-                app:scale_height="30"/>
+                app:scale_width="2" />
 
             <TextView
                 android:id="@+id/_forgetPasswordText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
                 android:text="@string/text_find_passoword"
                 android:textColor="@color/color_444444"
-                android:gravity="center_vertical"
-                app:scale_left="995"
-                app:scale_top="585"
-                app:scale_width="250"
                 app:scale_height="70"
+                app:scale_left="995"
                 app:scale_textsize="26"
-                />
+                app:scale_top="585"
+                app:scale_width="250" />
 
         </com.ssomai.android.scalablelayout.ScalableLayout>
 
@@ -265,11 +278,11 @@
                     android:gravity="center"
                     android:text="@string/message_sign_only_web"
                     android:textColor="@color/color_000000"
-                    app:scale_left="448"
-                    app:scale_top="46"
-                    app:scale_width="1024"
                     app:scale_height="50"
-                    app:scale_textsize="28"/>
+                    app:scale_left="448"
+                    app:scale_textsize="28"
+                    app:scale_top="46"
+                    app:scale_width="1024" />
 
                 <TextView
                     android:id="@+id/_customerCenterInfoText"
@@ -278,11 +291,11 @@
                     android:gravity="center_horizontal"
                     android:text="@string/message_company_information_from_login"
                     android:textColor="@color/color_666666"
-                    app:scale_left="448"
-                    app:scale_top="106"
-                    app:scale_width="1020"
                     app:scale_height="100"
-                    app:scale_textsize="28"/>
+                    app:scale_left="448"
+                    app:scale_textsize="28"
+                    app:scale_top="106"
+                    app:scale_width="1020" />
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
         </RelativeLayout>
