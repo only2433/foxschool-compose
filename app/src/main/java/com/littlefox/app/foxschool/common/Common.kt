@@ -38,6 +38,13 @@ class Common
         const val SECOND : Int = 1000;
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f
 
+        const val BASE_WEBVIEW_URL : String         = BASE_URL + "web/"
+        const val URL_LEARNING_LOG : String         = BASE_WEBVIEW_URL + "studylog/summary"
+        const val URL_FAQS : String                 = BASE_WEBVIEW_URL + "help/faq/list"
+        const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
+        const val URL_TERMS : String                = BASE_WEBVIEW_URL + "policy/terms"
+        const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
+
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
         const val PARAMS_VERSION_INFORMATION : String           = "version_information"

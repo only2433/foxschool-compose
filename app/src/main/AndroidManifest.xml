@@ -98,6 +98,42 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
 
+        <activity android:name=".main.webview.WebviewLearningLogActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.webview.WebviewFAQActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.webview.Webview1On1AskActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.AppUseGuideActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.webview.WebviewPolicyTermsActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.webview.WebviewPolicyPrivacyActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
         <service
             android:name=".fcm.LittlefoxFirebaseMessagingService"
             android:enabled="true"

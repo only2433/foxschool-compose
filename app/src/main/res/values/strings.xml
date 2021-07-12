@@ -76,6 +76,10 @@
     <string name="text_next">Next</string>
     <string name="text_savescore">Save Score</string>
     <string name="text_tryagain">Try Again</string>
+    <string name="text_version">버전</string>
+    <string name="text_update">업데이트</string>
+    <string name="text_service_terms_use">서비스 이용약관</string>
+    <string name="text_privacy_policy">개인정보 처리방침</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -141,6 +145,7 @@
     <string name="message_quiz_save_record_success">퀴즈 결과가 저장되었습니다. \n학습기록에서 확인 가능합니다.</string>
     <string name="message_quiz_limit_not_save">풀이 시간이 초과된 결과는 저장할 수 없습니다.</string>
     <string name="message_sound_text_title">Listen and choose the correct word.</string>
+    <string name="message_company_introduce">© 2019 Little Fox Co., Ltd. All rights reserved.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>
