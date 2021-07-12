@@ -29,6 +29,7 @@ import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.AuthMeCoroutine
 import com.littlefox.app.foxschool.coroutine.InitCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
+import com.littlefox.app.foxschool.coroutine.SchoolListCoroutine
 import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.*
@@ -337,6 +338,7 @@ class IntroPresenter : IntroContract.Presenter
         Log.f("")
         //startLoginActivity()
         startFreeUser()
+
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)

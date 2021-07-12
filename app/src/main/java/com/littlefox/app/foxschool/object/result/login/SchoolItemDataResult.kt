@@ -2,16 +2,16 @@ package com.littlefox.app.foxschool.`object`.result.login
 
 class SchoolItemDataResult
 {
-    private var fg_id : String      = ""
-    private var group_name : String = ""
+    private var id : String         = ""
+    private var name : String       = ""
 
     fun getSchoolID() : String
     {
-        return fg_id
+        return id
     }
 
     fun getSchoolName() : String
     {
-        return group_name
+        return name
     }
 }
