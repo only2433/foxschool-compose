@@ -78,9 +78,9 @@ class MyInformationPresenter : MyInformationContract.Presenter
     /**
      * 스위치 플래그 변경
      */
-    override fun setSwitchState(switch : Int)
+    override fun setSwitchState(switchPosition : Int)
     {
-        when(switch)
+        when(switchPosition)
         {
             SWITCH_AUTO_LOGIN ->
             {

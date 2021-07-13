@@ -283,15 +283,15 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     /**
      * 스위치 ON/OFF 이미지 변경
      */
-    override fun setSwitchView(switch : Int, state : Boolean)
+    override fun setSwitchView(switchPosition : Int, isEnable : Boolean)
     {
-        if (state)
+        if (isEnable)
         {
-            _SwitchList[switch].setBackgroundResource(R.drawable.icon_switch_on)
+            _SwitchList[switchPosition].setBackgroundResource(R.drawable.icon_switch_on)
         }
         else
         {
-            _SwitchList[switch].setBackgroundResource(R.drawable.icon_switch_off)
+            _SwitchList[switchPosition].setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
 

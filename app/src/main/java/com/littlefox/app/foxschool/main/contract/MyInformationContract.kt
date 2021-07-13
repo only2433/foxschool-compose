@@ -6,11 +6,11 @@ class MyInformationContract
 {
     interface View : BaseContract.View
     {
-        fun setSwitchView(switch : Int, state : Boolean)
+        fun setSwitchView(switchPosition : Int, isEnable : Boolean)
     }
 
     interface Presenter : BaseContract.Presenter
     {
-        fun setSwitchState(switch : Int)
+        fun setSwitchState(switchPosition : Int)
     }
 }
