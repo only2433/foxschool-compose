@@ -101,6 +101,12 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._leaningLogMenuText)
     lateinit var _LeaningLogMenuText : TextView
 
+    @BindView(R.id._recordLogText)
+    lateinit var _RecordLogText : TextView
+
+    @BindView(R.id._homeworkManageText)
+    lateinit var _HomeworkManageText : TextView
+
 
     @BindView(R.id._menuItemScrollView)
     lateinit var _MenuItemScrollView : ScrollView
@@ -226,6 +232,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         _UserNameText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _UserInfoButtonText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _LeaningLogMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _RecordLogText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _HomeworkManageText.setTypeface(Font.getInstance(this).getRobotoMedium())
 
     }
 
@@ -373,14 +381,22 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private fun initMenuView()
     {
         val MENU_TEXTVIEW_ID_LIST = intArrayOf(
+            R.id._menuSchoolNewsText,
+            R.id._menuFoxschoolNewsText,
             R.id._menuFAQsText,
             R.id._menu1on1AskText,
-            R.id._menuAboutAppText
+            R.id._menuAboutAppText,
+            R.id._menuTeacherManualText,
+            R.id._menuHomeNewspaperText
         )
         val MENU_IMAGEVIEW_ID_LIST = intArrayOf(
+            R.id._menuSchoolNewsButtonRect,
+            R.id._menuFoxschoolNewsButtonRect,
             R.id._menuFAQsButtonRect,
             R.id._menu1on1AskButtonRect,
-            R.id._menuAboutAppButtonRect
+            R.id._menuAboutAppButtonRect,
+            R.id._menuTeacherManualButtonRect,
+            R.id._menuHomeNewspaperButtonRect
         )
         var addLayout : LinearLayout? = null
         _MenuItemLayout.removeAllViews()
