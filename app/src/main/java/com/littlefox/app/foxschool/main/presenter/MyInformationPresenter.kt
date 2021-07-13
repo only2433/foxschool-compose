@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Message
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.enumerate.MyInformationSwitch
 import com.littlefox.app.foxschool.main.contract.MyInformationContract
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -11,13 +12,6 @@ import com.littlefox.logmonitor.Log
 
 class MyInformationPresenter : MyInformationContract.Presenter
 {
-    companion object
-    {
-        private const val SWITCH_AUTO_LOGIN : Int   = 0
-        private const val SWITCH_BIO_LOGIN : Int    = 1
-        private const val SWITCH_PUSH : Int         = 2
-    }
-
     private lateinit var mContext : Context
     private lateinit var mMyInformationContractView : MyInformationContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
@@ -45,9 +39,9 @@ class MyInformationPresenter : MyInformationContract.Presenter
         // SharedPreference에 저장된 bool값 가져와서 플래그 세팅
 
         // 플래그값에 따라 스위치 상태 세팅
-        mMyInformationContractView.setSwitchView(SWITCH_AUTO_LOGIN, mCheckAutoLogin)
-        mMyInformationContractView.setSwitchView(SWITCH_BIO_LOGIN, mCheckBioLogin)
-        mMyInformationContractView.setSwitchView(SWITCH_PUSH, mCheckPush)
+        mMyInformationContractView.setSwitchAutoLogin(mCheckAutoLogin)
+        mMyInformationContractView.setSwitchBioLogin(mCheckBioLogin)
+        mMyInformationContractView.setSwitchPush(mCheckPush)
     }
 
     override fun resume()
@@ -78,24 +72,24 @@ class MyInformationPresenter : MyInformationContract.Presenter
     /**
      * 스위치 플래그 변경
      */
-    override fun setSwitchState(switchPosition : Int)
+    override fun setSwitchState(switch : MyInformationSwitch)
     {
-        when(switchPosition)
+        when(switch)
         {
-            SWITCH_AUTO_LOGIN ->
+            MyInformationSwitch.AUTO_LOGIN ->
             {
                 mCheckAutoLogin = !mCheckAutoLogin
-                mMyInformationContractView.setSwitchView(SWITCH_AUTO_LOGIN, mCheckAutoLogin)
+                mMyInformationContractView.setSwitchAutoLogin(mCheckAutoLogin)
             }
-            SWITCH_BIO_LOGIN ->
+            MyInformationSwitch.BIO_LOGIN ->
             {
                 mCheckBioLogin = !mCheckBioLogin
-                mMyInformationContractView.setSwitchView(SWITCH_BIO_LOGIN, mCheckBioLogin)
+                mMyInformationContractView.setSwitchBioLogin(mCheckBioLogin)
             }
-            SWITCH_PUSH ->
+            MyInformationSwitch.PUSH ->
             {
                 mCheckPush = !mCheckPush
-                mMyInformationContractView.setSwitchView(SWITCH_PUSH, mCheckPush)
+                mMyInformationContractView.setSwitchPush(mCheckPush)
             }
         }
     }

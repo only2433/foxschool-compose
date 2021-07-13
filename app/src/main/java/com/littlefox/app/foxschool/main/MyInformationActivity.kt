@@ -9,15 +9,13 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import butterknife.BindView
-import butterknife.ButterKnife
-import butterknife.OnClick
-import butterknife.Optional
+import butterknife.*
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.MyInformationSwitch
 import com.littlefox.app.foxschool.main.contract.MyInformationContract
 import com.littlefox.app.foxschool.main.presenter.MyInformationPresenter
 import com.littlefox.app.foxschool.main.presenter.SearchListPresenter
@@ -121,14 +119,13 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     @BindView(R.id._switchPush)
     lateinit var _SwitchPush : ImageView
 
-    private val _SwitchList : ArrayList<ImageView> = ArrayList<ImageView>()
+    @BindViews(
+        R.id._switchAutoLogin,
+        R.id._switchBioLogin,
+        R.id._switchPush
+    )
+    lateinit var _SwitchList : List<@JvmSuppressWildcards ImageView>
 
-    companion object
-    {
-        private const val SWITCH_AUTO_LOGIN : Int   = 0 // 자동로그인 스위치
-        private const val SWITCH_BIO_LOGIN : Int    = 1 // 지문인증 로그인 스위치
-        private const val SWITCH_PUSH : Int         = 2 // 알림 스위치
-    }
 
     private lateinit var mMyInformationPresenter : MyInformationPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
@@ -151,11 +148,6 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         }
 
         ButterKnife.bind(this)
-
-        _SwitchList.add(_SwitchAutoLogin)
-        _SwitchList.add(_SwitchBioLogin)
-        _SwitchList.add(_SwitchPush)
-
         mMyInformationPresenter = MyInformationPresenter(this)
     }
 
@@ -283,15 +275,46 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     /**
      * 스위치 ON/OFF 이미지 변경
      */
-    override fun setSwitchView(switchPosition : Int, isEnable : Boolean)
+    override fun setSwitchView(switch : MyInformationSwitch, isEnable : Boolean)
+    {
+
+
+    }
+
+
+    override fun setSwitchAutoLogin(isEnable : Boolean)
     {
         if (isEnable)
         {
-            _SwitchList[switchPosition].setBackgroundResource(R.drawable.icon_switch_on)
+            _SwitchList[0].setBackgroundResource(R.drawable.icon_switch_on)
         }
         else
         {
-            _SwitchList[switchPosition].setBackgroundResource(R.drawable.icon_switch_off)
+            _SwitchList[0].setBackgroundResource(R.drawable.icon_switch_off)
+        }
+    }
+
+    override fun setSwitchBioLogin(isEnable : Boolean)
+    {
+        if (isEnable)
+        {
+            _SwitchList[1].setBackgroundResource(R.drawable.icon_switch_on)
+        }
+        else
+        {
+            _SwitchList[1].setBackgroundResource(R.drawable.icon_switch_off)
+        }
+    }
+
+    override fun setSwitchPush(isEnable : Boolean)
+    {
+        if (isEnable)
+        {
+            _SwitchList[2].setBackgroundResource(R.drawable.icon_switch_on)
+        }
+        else
+        {
+            _SwitchList[2].setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
 
@@ -305,9 +328,9 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._switchAutoLogin -> mMyInformationPresenter.setSwitchState(SWITCH_AUTO_LOGIN)
-            R.id._switchBioLogin -> mMyInformationPresenter.setSwitchState(SWITCH_BIO_LOGIN)
-            R.id._switchPush -> mMyInformationPresenter.setSwitchState(SWITCH_PUSH)
+            R.id._switchAutoLogin -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.AUTO_LOGIN)
+            R.id._switchBioLogin -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.BIO_LOGIN)
+            R.id._switchPush -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.PUSH)
         }
     }
 }
