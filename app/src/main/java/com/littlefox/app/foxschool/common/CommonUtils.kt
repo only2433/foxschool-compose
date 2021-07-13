@@ -2256,10 +2256,14 @@ class CommonUtils
         return false
     }
 
+    val isTeacherMode : Boolean
+        get()
+        {
+            return getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
+        }
+
     fun getTopBarStatusBarColor() : Int
     {
-        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
-
         if(isTeacherMode)
         {
             return R.color.color_25b4cf
@@ -2272,8 +2276,6 @@ class CommonUtils
 
     fun getTopBarBackgroundColor() : Int
     {
-        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
-
         if(isTeacherMode)
         {
             return R.color.color_29c8e6
@@ -2290,8 +2292,6 @@ class CommonUtils
         {
             return R.color.color_fff55a
         }
-
-        val isTeacherMode : Boolean  = getSharedPreference(Common.PARAMS_IS_TEACHER_MODE, DataType.TYPE_BOOLEAN) as Boolean
 
         if(isTeacherMode)
         {

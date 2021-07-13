@@ -103,6 +103,20 @@
     <string name="text_search">검색</string>
     <string name="text_result_empty">결과가 없습니다.</string>
 
+    <string name="text_setting">설정</string>
+    <string name="text_bio_login">지문인증 로그인</string>
+    <string name="text_bio_login_info">기기에 등록된 지문으로 로그인 하려면 ON으로 설정하세요.</string>
+    <string name="text_push">알림</string>
+    <string name="text_push_info">푸시 메시지를 수신하려면 ON으로 설정하세요.</string>
+    <string name="text_change_info">정보 수정</string>
+    <string name="text_change_password">비밀번호 변경</string>
+    <string name="text_id">아이디</string>
+    <string name="text_name">이름</string>
+    <string name="text_class_name">반 이름</string>
+    <string name="text_save">저장</string>
+    <string name="text_mobile_number">휴대폰 번호</string>
+    <string name="text_option">(선택)</string>
+
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
     <string name="message_preview_free_user_end">미리보기가 종료되었습니다.\n회원가입 후 모든 콘텐츠를 이용해 보세요.</string>
@@ -148,6 +162,7 @@
     <string name="message_quiz_limit_not_save">풀이 시간이 초과된 결과는 저장할 수 없습니다.</string>
     <string name="message_sound_text_title">Listen and choose the correct word.</string>
     <string name="message_company_introduce">© 2019 Little Fox Co., Ltd. All rights reserved.</string>
+    <string name="message_my_info_student">학급정보 변경은 담당 선생님께 문의하세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

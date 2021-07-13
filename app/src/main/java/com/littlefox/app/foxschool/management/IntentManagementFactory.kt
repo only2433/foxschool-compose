@@ -234,6 +234,8 @@ class IntentManagementFactory
                 }
             }
 
+            ActivityMode.MY_INFORMATION -> intent = Intent(mContext, MyInformationActivity::class.java)
+
             ActivityMode.APP_USE_GUIDE -> intent = Intent(mContext, AppUseGuideActivity::class.java)
 
             ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)

@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaseLayout"
+            layout="@layout/topbar_common_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_myInfoMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="116"
+            app:scale_base_width="1080">
+
+            <TextView
+                android:id="@+id/_studentMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/message_my_info_student"
+                android:textColor="@color/color_666666"
+                app:scale_height="116"
+                app:scale_left="31"
+                app:scale_textsize="36"
+                app:scale_top="0"
+                app:scale_width="1000" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_studentInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="544"
+            app:scale_base_width="1080">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_ffffff"
+                app:scale_height="540"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1080" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1080" />
+
+            <TextView
+                android:id="@+id/_studentIdTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/text_id"
+                android:textColor="@color/color_666666"
+                app:scale_height="80"
+                app:scale_left="100"
+                app:scale_textsize="32"
+                app:scale_top="0"
+                app:scale_width="500" />
+
+            <TextView
+                android:id="@+id/_studentIdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="@color/color_444444"
+                app:scale_height="90"
+                app:scale_left="100"
+                app:scale_textsize="40"
+                app:scale_top="90"
+                app:scale_width="640" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="180"
+                app:scale_width="1080" />
+
+            <TextView
+                android:id="@+id/_studentNameTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/text_name"
+                android:textColor="@color/color_666666"
+                app:scale_height="80"
+                app:scale_left="100"
+                app:scale_textsize="32"
+                app:scale_top="180"
+                app:scale_width="500" />
+
+            <TextView
+                android:id="@+id/_studentNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="@color/color_444444"
+                app:scale_height="90"
+                app:scale_left="100"
+                app:scale_textsize="40"
+                app:scale_top="270"
+                app:scale_width="640" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="360"
+                app:scale_width="1080" />
+
+            <TextView
+                android:id="@+id/_studentClassTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/text_class_name"
+                android:textColor="@color/color_666666"
+                app:scale_height="80"
+                app:scale_left="100"
+                app:scale_textsize="32"
+                app:scale_top="360"
+                app:scale_width="500" />
+
+            <TextView
+                android:id="@+id/_studentClassText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="@color/color_444444"
+                app:scale_height="90"
+                app:scale_left="100"
+                app:scale_textsize="40"
+                app:scale_top="450"
+                app:scale_width="640" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="540"
+                app:scale_width="1080" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_teacherInfoLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:scale_base_height="360"
+            app:scale_base_width="1080">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_ffffff"
+                app:scale_height="360"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1080" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1080" />
+
+            <TextView
+                android:id="@+id/_teacherIdTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/text_id"
+                android:textColor="@color/color_666666"
+                app:scale_height="80"
+                app:scale_left="100"
+                app:scale_textsize="32"
+                app:scale_top="0"
+                app:scale_width="500" />
+
+            <TextView
+                android:id="@+id/_teacherIdText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="@color/color_444444"
+                app:scale_height="90"
+                app:scale_left="100"
+                app:scale_textsize="40"
+                app:scale_top="90"
+                app:scale_width="640" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="180"
+                app:scale_width="1080" />
+
+            <TextView
+                android:id="@+id/_teacherNameTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="@string/text_name"
+                android:textColor="@color/color_666666"
+                app:scale_height="80"
+                app:scale_left="100"
+                app:scale_textsize="32"
+                app:scale_top="180"
+                app:scale_width="500" />
+
+            <TextView
+                android:id="@+id/_teacherNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:textColor="@color/color_444444"
+                app:scale_height="90"
+                app:scale_left="100"
+                app:scale_textsize="40"
+                app:scale_top="270"
+                app:scale_width="640" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_d2d1d1"
+                app:scale_height="2"
+                app:scale_left="0"
+                app:scale_top="358"
+                app:scale_width="1080" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_height="300"
+            app:scale_base_width="1080">
+
+            <TextView
+                android:id="@+id/_changeInfoButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_box_light_blue_84"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="@string/text_change_info"
+                android:textColor="@color/color_ffffff"
+                app:scale_height="120"
+                app:scale_left="100"
+                app:scale_textsize="42"
+                app:scale_top="40"
+                app:scale_width="880" />
+
+            <TextView
+                android:id="@+id/_changePasswordButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_box_empty_light_blue_84"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="@string/text_change_password"
+                android:textColor="@color/color_29c8e6"
+                app:scale_height="120"
+                app:scale_left="100"
+                app:scale_textsize="42"
+                app:scale_top="180"
+                app:scale_width="880" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_settingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:scale_base_height="640"
+                app:scale_base_width="1080">
+
+                <TextView
+                    android:id="@+id/_settingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_setting"
+                    android:textColor="@color/color_000000"
+                    app:scale_height="100"
+                    app:scale_left="31"
+                    app:scale_textsize="40"
+                    app:scale_top="0"
+                    app:scale_width="1000" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_ffffff"
+                    app:scale_height="540"
+                    app:scale_left="0"
+                    app:scale_top="100"
+                    app:scale_width="1080" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_d2d1d1"
+                    app:scale_height="2"
+                    app:scale_left="0"
+                    app:scale_top="100"
+                    app:scale_width="1080" />
+
+                <TextView
+                    android:id="@+id/_autoLoginText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_auto_login"
+                    android:textColor="@color/color_444444"
+                    app:scale_height="90"
+                    app:scale_left="100"
+                    app:scale_textsize="40"
+                    app:scale_top="145"
+                    app:scale_width="640" />
+
+                <ImageView
+                    android:id="@+id/_switchAutoLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_switch_off"
+                    app:scale_height="62"
+                    app:scale_left="838"
+                    app:scale_top="166"
+                    app:scale_width="144" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_d2d1d1"
+                    app:scale_height="2"
+                    app:scale_left="0"
+                    app:scale_top="280"
+                    app:scale_width="1080" />
+
+                <TextView
+                    android:id="@+id/_bioLoginText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_bio_login"
+                    android:textColor="@color/color_444444"
+                    app:scale_height="90"
+                    app:scale_left="100"
+                    app:scale_textsize="40"
+                    app:scale_top="280"
+                    app:scale_width="640" />
+
+                <TextView
+                    android:id="@+id/_bioLoginInfoText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_bio_login_info"
+                    android:textColor="@color/color_666666"
+                    app:scale_height="120"
+                    app:scale_left="100"
+                    app:scale_textsize="32"
+                    app:scale_top="335"
+                    app:scale_width="640" />
+
+                <ImageView
+                    android:id="@+id/_switchBioLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_switch_off"
+                    app:scale_height="62"
+                    app:scale_left="838"
+                    app:scale_top="332"
+                    app:scale_width="144" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/color_d2d1d1"
+                    app:scale_height="2"
+                    app:scale_left="0"
+                    app:scale_top="460"
+                    app:scale_width="1080" />
+
+                <TextView
+                    android:id="@+id/_pushText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:text="@string/text_push"
+                    android:textColor="@color/color_444444"
+                    app:scale_height="90"
+                    app:scale_left="100"
+                    app:scale_textsize="40"
+                    app:scale_top="460"
+                    app:scale_width="640" />
+
+                <TextView
+                    android:id="@+id/_pushInfoText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:text="@string/text_push_info"
+                    android:textColor="@color/color_666666"
+                    app:scale_height="90"
+                    app:scale_left="100"
+                    app:scale_textsize="32"
+                    app:scale_top="550"
+                    app:scale_width="640" />
+
+                <ImageView
+                    android:id="@+id/_switchPush"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_switch_off"
+                    app:scale_height="62"
+                    app:scale_left="838"
+                    app:scale_top="511"
+                    app:scale_width="144" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

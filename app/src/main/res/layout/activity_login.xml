@@ -38,7 +38,7 @@
                 android:id="@+id/_inputLayoutBackground"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/box_list"
+                android:background="@drawable/info_box_1w"
                 app:scale_height="1000"
                 app:scale_left="30"
                 app:scale_top="0"

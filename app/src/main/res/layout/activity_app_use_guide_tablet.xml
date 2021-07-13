@@ -46,7 +46,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/box_list"
+                        android:background="@drawable/info_box_1w"
                         app:scale_top="0"
                         app:scale_left="480"
                         app:scale_width="960"
@@ -96,7 +96,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/box_list"
+                        android:background="@drawable/info_box_1w"
                         app:scale_top="0"
                         app:scale_left="480"
                         app:scale_width="960"
@@ -194,7 +194,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/box_list"
+                        android:background="@drawable/info_box_1w"
                         app:scale_top="0"
                         app:scale_left="480"
                         app:scale_width="960"
