@@ -272,16 +272,6 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         mMyInformationPresenter.sendMessageEvent(message)
     }
 
-    /**
-     * 스위치 ON/OFF 이미지 변경
-     */
-    override fun setSwitchView(switch : MyInformationSwitch, isEnable : Boolean)
-    {
-
-
-    }
-
-
     override fun setSwitchAutoLogin(isEnable : Boolean)
     {
         if (isEnable)

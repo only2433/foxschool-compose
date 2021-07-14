@@ -28,7 +28,7 @@ import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
@@ -194,7 +194,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
     protected var mJob: Job? = null;
-    private lateinit var mUserInformationResult : UserInformationResult
+    private lateinit var mLoginInformationResult : LoginInformationResult
     private lateinit var _PlayerView : PlayerView
 
     private val testUserInformation : String = "{\"data\":{\"current_user_id\":\"U201501051459287843\",\"login_id\":\"only2433\",\"country_code\":\"KR\",\"language_code\":\"ko\",\"www_url\":\"https:\\/\\/www.littlefox.co.kr\\/ko\",\"mobile_url\":\"https:\\/\\/m.littlefox.co.kr\\/ko\",\"users\":[{\"id\":\"U201501051459287843\",\"type\":\"M\",\"name\":\"\\uc7ac\\ud604\",\"nickname\":\"only2433\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201602221544353888\",\"type\":\"S\",\"nickname\":\"\\ud551\\ud4015\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201603021547356385\",\"type\":\"S\",\"name\":\"\\ucd94\\uac00 \\uc0ac\\uc6a9\\uc790\",\"nickname\":\"You12\",\"birth_year\":2016,\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"}],\"expire_date\":\"2021-07-01 09:12:44\",\"remaining_day\":16},\"status\":200,\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpcy5saXR0bGVmb3guY29tXC9hcGlcL3YxXC9hdXRoXC9tZSIsImlhdCI6MTYyMzcyNDAxMywiZXhwIjoxNjI2MzE2MDEzLCJuYmYiOjE2MjM3MjQwMTMsImp0aSI6IkRoNWx4VGlRZUhjVzdFdXQiLCJzdWIiOiJVMjAxNTAxMDUxNDU5Mjg3ODQzIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImF1dGhfa2V5IjoiNTAxMDE0NTk5NTE1ODQ3MCIsImN1cnJlbnRfdXNlcl9pZCI6IlUyMDE1MDEwNTE0NTkyODc4NDMiLCJleHBpcmVfZGF0ZSI6MTYyNTA5ODM2NH0.FfjT2ypwKE2e1HQ9T9ULlsln_q5NE6-nnZm6eMDtDf-O5wLWw6n63CJVjQ4rUIvURLWtjQrSynAqcuTpVpzWhQ\"}"
@@ -336,7 +336,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
-        mUserInformationResult = Gson().fromJson(testUserInformation, UserInformationResult::class.java)
+        mLoginInformationResult = Gson().fromJson(testUserInformation, LoginInformationResult::class.java)
         accessDataBase()
         //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
     }
@@ -776,7 +776,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun isNeverSeeAgainCheck(type : String) : Boolean
     {
         var isNeverSeeAgain = false
-        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mUserInformationResult.getCurrentUserID()
+        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mLoginInformationResult.getUserInformation().getFoxUserID()
         Log.f("userID : $userID, type : $type")
         if(type == Common.CONTENT_TYPE_STORY)
         {
@@ -1498,7 +1498,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     override fun onCoachMarkNeverSeeAgain(type : String)
     {
-        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mUserInformationResult.getCurrentUserID()
+        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mLoginInformationResult.getUserInformation().getFoxUserID()
         Log.f("userID : $userID , type : $type")
         if(type == Common.CONTENT_TYPE_STORY)
         {

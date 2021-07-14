@@ -19,7 +19,7 @@ import butterknife.Optional
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
@@ -124,10 +124,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     companion object
     {
         private val MESSAGE_FORCE_CLOSE_DRAWER_MENU : Int   = 10
-        private val MESSAGE_SEND_CHANGE_USER : Int          = 11
-        private val MAX_USER_SIZE : Int                     = 4
-
-
 
         private val TAB_IMAGE_ICONS_STUDENT = intArrayOf(
             R.drawable.choice_top_bar_icon_story_student,
@@ -153,7 +149,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mWeakReferenceHandler : WeakReferenceHandler
-    private var mCurrentUserPosition = 0
     private var mSelectMenuLayoutHeight = 0
     private var mCurrentUserStatusSize = 0
 
@@ -253,7 +248,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         when(message.what)
         {
             MESSAGE_FORCE_CLOSE_DRAWER_MENU -> _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-            MESSAGE_SEND_CHANGE_USER -> mMainPresenter.changeUser(mCurrentUserPosition)
         }
         mMainPresenter.sendMessageEvent(message)
     }
@@ -292,7 +286,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         )
     }
 
-    override fun settingUserInformation(userInformationResult : UserInformationResult?)
+    override fun settingUserInformation(loginInformationResult : LoginInformationResult?)
     {
         // 팍스영어 에서는 setMenuLoginStatus()에 들어있었는데, 현재 작업이 안되어있는 상태인 듯 하여 임시로 밖으로 빼놓았습니다.
         initMenuView()

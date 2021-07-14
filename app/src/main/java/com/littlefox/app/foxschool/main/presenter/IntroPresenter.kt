@@ -16,10 +16,10 @@ import com.google.firebase.iid.InstanceIdResult
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
-import com.littlefox.app.foxschool.`object`.result.UserInformationBaseObject
+import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.VersionBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.common.Common
@@ -29,7 +29,6 @@ import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.AuthMeCoroutine
 import com.littlefox.app.foxschool.coroutine.InitCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
-import com.littlefox.app.foxschool.coroutine.SchoolListCoroutine
 import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.*
@@ -475,8 +474,8 @@ class IntroPresenter : IntroContract.Presenter
                     startAPIProcess()
                 } else if(code == Common.COROUTINE_CODE_ME)
                 {
-                    val userInformationResult : UserInformationResult = (result as UserInformationBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, userInformationResult)
+                    val loginInformationResult : LoginInformationResult = (result as LoginBaseObject).getData()
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, loginInformationResult)
                     mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                     enableProgressAniamtion(IntroProcess.LOGIN_COMPLTE)
                 }

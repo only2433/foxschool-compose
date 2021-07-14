@@ -5,7 +5,7 @@ import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.littlefox.app.foxschool.`object`.data.record.RecordInfoData
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.record.RecordFileUploadBaseObject
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -102,11 +102,17 @@ class RecordFileUploadHelper(private val mContext : Context)
                 Common.DEVICE_TYPE_PHONE
         val token = "Bearer " + CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
         val userAgent : String = Common.HTTP_HEADER_APP_NAME.toString() + ":" + deviceType + File.separator + CommonUtils.getInstance(mContext).getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
-        val userInformationResult : UserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
+        val loginInformationResult : LoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
         if(audioFile.exists())
         {
             Log.f("파일 있음")
-            requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("application/zip"), audioFile)).addFormDataPart("file_count", java.lang.String.valueOf(mRecordInfoData.getItemCount())).addFormDataPart("class_id", java.lang.String.valueOf(mRecordInfoData.getClassID())).addFormDataPart("fc_id", mRecordInfoData.getContentsID()).addFormDataPart("fu_id", userInformationResult.getCurrentUserID()).addFormDataPart("index_of_day", java.lang.String.valueOf(mRecordInfoData.getIndexOfDay())).build()
+            requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("application/zip"), audioFile))
+                .addFormDataPart("file_count", java.lang.String.valueOf(mRecordInfoData.getItemCount()))
+                .addFormDataPart("class_id", java.lang.String.valueOf(mRecordInfoData.getClassID()))
+                .addFormDataPart("fc_id", mRecordInfoData.getContentsID()).addFormDataPart("fu_id", loginInformationResult.getUserInformation().getFoxUserID())
+                .addFormDataPart("index_of_day", java.lang.String.valueOf(mRecordInfoData.getIndexOfDay()))
+                .build()
             val requestBodyData : RequestBody = ProgressHelper.withProgress(requestBody, object : ProgressListener()
             {
                 override fun onProgressChanged(numBytes : Long, totalBytes : Long, percent : Float, speed : Float)

@@ -17,10 +17,10 @@ import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
-import com.littlefox.app.foxschool.`object`.result.UserInformationBaseObject
+import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.InAppCompaignResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
@@ -33,7 +33,6 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
-import com.littlefox.app.foxschool.coroutine.ChangeUserCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
@@ -97,14 +96,13 @@ class MainPresenter : MainContract.Presenter
     private lateinit var mMainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter
     private lateinit var mFragmentList : List<Fragment>
     private lateinit var mMainInformationResult : MainInformationResult
-    private var mUserInformationResult : UserInformationResult ?= null
+    private var mLoginInformationResult : LoginInformationResult ?= null
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
     private lateinit var mTempleteAlertDialog : TempleteAlertDialog
     private lateinit var mCurrentDetailOptionResult : ContentsBaseResult
     private var mBookshelfContentAddCoroutine : BookshelfContentAddCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
-    private var mChangeUserCoroutine : ChangeUserCoroutine? = null
     private var mManagementBooksData : ManagementBooksData? = null
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult?> = ArrayList<ContentsBaseResult?>()
@@ -138,8 +136,8 @@ class MainPresenter : MainContract.Presenter
 
         mFragmentList = mMainFragmentSelectionPagerAdapter.pagerFragmentList
         mMainContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
-        mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult?
-        mMainContractView.settingUserInformation(mUserInformationResult)
+        mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult?
+        mMainContractView.settingUserInformation(mLoginInformationResult)
         initIACInformation()
 
         mMainStoryFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity)
@@ -166,7 +164,7 @@ class MainPresenter : MainContract.Presenter
     private fun notifyDataChangeAllFragment()
     {
         mMainPresenterDataObserver.notifyDataChangeAll(FragmentDataMode.CREATE, mMainInformationResult)
-        mMainContractView.settingUserInformation(mUserInformationResult)
+        mMainContractView.settingUserInformation(mLoginInformationResult)
     }
 
     private fun initIACInformation()
@@ -269,8 +267,6 @@ class MainPresenter : MainContract.Presenter
         Log.f("")
         mBookshelfContentAddCoroutine?.cancel()
         mBookshelfContentAddCoroutine = null
-        mChangeUserCoroutine?.cancel()
-        mChangeUserCoroutine = null
         mMainInformationCoroutine?.cancel()
         mMainInformationCoroutine = null
         mMainHandler.removeCallbacksAndMessages(null)
@@ -346,13 +342,6 @@ class MainPresenter : MainContract.Presenter
                 IntentManagementFactory.getInstance().initScene()
             }
         }
-    }
-
-    override fun changeUser(index : Int)
-    {
-        Log.f("change ID : " + mUserInformationResult!!.getUserInformationList().get(index).getID())
-        mMainContractView.showLoading()
-        requestChangeUserAsync(mUserInformationResult!!.getUserInformationList().get(index).getID())
     }
 
     override fun onClickMenuLogin()
@@ -674,8 +663,8 @@ class MainPresenter : MainContract.Presenter
         Log.f("update Status : " + MainObserver.isUpdateUserStatus())
         if(MainObserver.isUpdateUserStatus())
         {
-            mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
-            mMainContractView.settingUserInformation(mUserInformationResult)
+            mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
+            mMainContractView.settingUserInformation(mLoginInformationResult)
             MainObserver.clearUserStatus()
         }
     }
@@ -735,14 +724,6 @@ class MainPresenter : MainContract.Presenter
         mBookshelfContentAddCoroutine?.execute()
     }
 
-    private fun requestChangeUserAsync(changeUserID : String)
-    {
-        Log.f("changeUserID : $changeUserID")
-        mChangeUserCoroutine = ChangeUserCoroutine(mContext)
-        mChangeUserCoroutine?.setData(changeUserID)
-        mChangeUserCoroutine?.asyncListener = mAsyncListener
-        mChangeUserCoroutine?.execute()
-    }
 
     private fun requestMainInformationAsync()
     {
@@ -956,10 +937,10 @@ class MainPresenter : MainContract.Presenter
                     messsage.arg1 = Activity.RESULT_OK
                     mMainHandler.sendMessageDelayed(messsage, Common.DURATION_NORMAL)
                 }
-                else if(code == Common.COROUTINE_CODE_CHANGE_USER || code == Common.COROUTINE_CODE_ME)
+                else if(code == Common.COROUTINE_CODE_ME)
                 {
-                    mUserInformationResult = (result as UserInformationBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
+                    mLoginInformationResult = (result as LoginBaseObject).getData()
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mLoginInformationResult)
                     requestMainInformationAsync()
                 }
                 else if(code == Common.COROUTINE_CODE_MAIN)

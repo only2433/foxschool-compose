@@ -1,7 +1,7 @@
 package com.littlefox.app.foxschool.main.contract
 
 
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
 import com.littlefox.app.foxschool.main.contract.base.BaseContract
 
@@ -14,13 +14,12 @@ class MainContract
         override fun hideLoading()
         override fun showSuccessMessage(message : String)
         override fun showErrorMessage(message : String)
-        fun settingUserInformation(userInformationResult : UserInformationResult?)
+        fun settingUserInformation(loginInformationResult : LoginInformationResult?)
         fun setCurrentPage(page : Int)
     }
 
     interface Presenter : BaseContract.Presenter
     {
-        fun changeUser(index : Int)
         fun onClickMenuLogin()
         fun onClickMenuNews()
         fun onClickMenuMyInformation()

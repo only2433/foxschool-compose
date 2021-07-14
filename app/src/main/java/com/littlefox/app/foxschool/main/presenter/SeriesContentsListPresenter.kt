@@ -14,7 +14,7 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
 import com.littlefox.app.foxschool.`object`.result.introduceSeries.IntroduceSeriesInformationResult
-import com.littlefox.app.foxschool.`object`.result.login.UserInformationResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
@@ -341,12 +341,12 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         {
             if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
             {
-                val mUserInformationResult : UserInformationResult =
-                    CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
+                val mLoginInformationResult : LoginInformationResult =
+                    CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
                 val resultIndex = lastStudyMovieIndex
                 mStoryDetailListContractView.showLastWatchSeriesInformation(
                     mCurrentSeriesBaseResult.getSeriesName(),
-                    mUserInformationResult.currentUserNickName,
+                    mLoginInformationResult.getUserInformation().getName(),
                     resultIndex,
                     if(resultIndex == mDetailItemInformationResult.getContentsList().size) true else false
                 )

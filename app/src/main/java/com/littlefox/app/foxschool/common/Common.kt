@@ -16,11 +16,11 @@ class Common
 
         const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
         const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
+        const val API_LOGIN : String                = DEVELOP_BASE_API + "auth/login"
         const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
         const val API_ME : String                   = BASE_PUBLIC_API + "auth/me"
         const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
-        const val API_CHANGE_USER : String          = BASE_PUBLIC_API + "auth/change"
         const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
         const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
         const val API_INTRODUCE_SERIES : String     = BASE_PUBLIC_API + "contents/story/series/"
@@ -82,7 +82,7 @@ class Common
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
         const val COROUTINE_CODE_MAIN : String                          = "main"
         const val COROUTINE_CODE_ME : String                            = "me"
-        const val COROUTINE_CODE_CHANGE_USER : String                   = "change_user"
+        const val COROUTINE_CODE_LOGIN : String                         = "login"
         const val COROUTINE_CODE_FILE_DOWNLOAD : String                 = "file_download"
         const val COROUTINE_CODE_CLASS_RECORD_FILE : String             = "record_file"
         const val COROUTINE_CODE_AUTH_CONTENT_PLAY : String             = "auth_content_play"
@@ -124,6 +124,9 @@ class Common
 
         const val SERVICE_NOT_ENDED : String    = "N"
         const val SERVICE_ENDED : String        = "Y"
+
+        const val USER_TYPE_STUDENT : String = "S"
+        const val USER_TYPE_TEACHER : String = "T"
 
         const val TARGET_PHONE_DISPLAY_WIDTH : Float = 1080.0f
         const val TARGET_TABLET_DISPLAY_WIDTH : Float = 1920.0f
