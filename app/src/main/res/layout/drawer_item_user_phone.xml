@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:scale_base_width="930"
-        app:scale_base_height="45"></com.ssomai.android.scalablelayout.ScalableLayout>
+        app:scale_base_height="45"/>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_itemColumn1Layout"
@@ -21,57 +21,11 @@
         app:scale_base_height="191">
 
         <ImageView
-        android:id="@+id/_menuSchoolNewsButtonRect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:scale_left="41"
-        app:scale_top="0"
-        app:scale_width="283"
-        app:scale_height="181"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/main_option_icon_4"
-            app:scale_left="140"
-            app:scale_top="30"
-            app:scale_width="85"
-            app:scale_height="76"/>
-
-        <TextView
-            android:id="@+id/_menuSchoolNewsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/text_school_news"
-            android:textColor="@color/color_444444"
-            app:scale_left="41"
-            app:scale_top="116"
-            app:scale_width="283"
-            app:scale_height="50"
-            app:scale_textsize="34"
-            />
-
-        <ImageView
-            android:id="@+id/_menuSchoolNewsNewIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/main_option_new"
-            android:scaleType="fitXY"
-            app:scale_left="224"
-            app:scale_top="22"
-            app:scale_width="34"
-            app:scale_height="36"/>
-
-
-        <ImageView
             android:id="@+id/_menuFoxschoolNewsButtonRect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="324"
+            app:scale_left="41"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -81,7 +35,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_5"
-            app:scale_left="423"
+            app:scale_left="140"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -93,12 +47,11 @@
             android:gravity="center"
             android:text="@string/text_foxschool_news"
             android:textColor="@color/color_444444"
-            app:scale_left="324"
+            app:scale_left="41"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
+            app:scale_textsize="34"/>
 
         <ImageView
             android:id="@+id/_menuFoxschoolNewsNewIcon"
@@ -106,7 +59,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/main_option_new"
             android:scaleType="fitXY"
-            app:scale_left="505"
+            app:scale_left="224"
             app:scale_top="22"
             app:scale_width="34"
             app:scale_height="36"/>
@@ -116,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="607"
+            app:scale_left="324"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -126,7 +79,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_6"
-            app:scale_left="705"
+            app:scale_left="423"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -138,28 +91,18 @@
             android:gravity="center"
             android:text="@string/text_faqs"
             android:textColor="@color/color_444444"
-            app:scale_left="607"
+            app:scale_left="324"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
-
-    </com.ssomai.android.scalablelayout.ScalableLayout>
-
-    <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_itemColumn2Layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:scale_base_width="930"
-        app:scale_base_height="191">
+            app:scale_textsize="34"/>
 
         <ImageView
             android:id="@+id/_menu1on1AskButtonRect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="41"
+            app:scale_left="607"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -169,7 +112,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_7"
-            app:scale_left="140"
+            app:scale_left="705"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -181,20 +124,27 @@
             android:gravity="center"
             android:text="@string/text_1_1_ask"
             android:textColor="@color/color_444444"
-            app:scale_left="41"
+            app:scale_left="607"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
+            app:scale_textsize="34"/>
 
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemColumn2Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:scale_base_width="930"
+        app:scale_base_height="191">
 
         <ImageView
             android:id="@+id/_menuAboutAppButtonRect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="324"
+            app:scale_left="41"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -204,7 +154,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_8"
-            app:scale_left="423"
+            app:scale_left="140"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -216,19 +166,18 @@
             android:gravity="center"
             android:text="@string/text_about_app"
             android:textColor="@color/color_444444"
-            app:scale_left="324"
+            app:scale_left="41"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
+            app:scale_textsize="34"/>
 
         <ImageView
             android:id="@+id/_menuTeacherManualButtonRect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="607"
+            app:scale_left="324"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -239,7 +188,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_9"
-            app:scale_left="705"
+            app:scale_left="423"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -251,27 +200,18 @@
             android:gravity="center"
             android:text="@string/text_teacher_manual"
             android:textColor="@color/color_444444"
-            app:scale_left="607"
+            app:scale_left="324"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
-
-    </com.ssomai.android.scalablelayout.ScalableLayout>
-    <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_itemColumn3Layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:scale_base_width="930"
-        app:scale_base_height="191">
+            app:scale_textsize="34"/>
 
         <ImageView
             android:id="@+id/_menuHomeNewspaperButtonRect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
-            app:scale_left="41"
+            app:scale_left="607"
             app:scale_top="0"
             app:scale_width="283"
             app:scale_height="181"/>
@@ -281,7 +221,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_icon_10"
-            app:scale_left="140"
+            app:scale_left="705"
             app:scale_top="30"
             app:scale_width="85"
             app:scale_height="76"/>
@@ -293,11 +233,11 @@
             android:gravity="center"
             android:text="@string/text_home_newspaper"
             android:textColor="@color/color_444444"
-            app:scale_left="41"
+            app:scale_left="607"
             app:scale_top="116"
             app:scale_width="283"
             app:scale_height="50"
-            app:scale_textsize="34"
-            />
+            app:scale_textsize="34" />
+
     </com.ssomai.android.scalablelayout.ScalableLayout>
 </LinearLayout>

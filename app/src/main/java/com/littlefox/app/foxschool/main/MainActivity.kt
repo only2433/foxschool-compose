@@ -381,7 +381,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private fun initMenuView()
     {
         val MENU_TEXTVIEW_ID_LIST = intArrayOf(
-            R.id._menuSchoolNewsText,
             R.id._menuFoxschoolNewsText,
             R.id._menuFAQsText,
             R.id._menu1on1AskText,
@@ -390,7 +389,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             R.id._menuHomeNewspaperText
         )
         val MENU_IMAGEVIEW_ID_LIST = intArrayOf(
-            R.id._menuSchoolNewsButtonRect,
             R.id._menuFoxschoolNewsButtonRect,
             R.id._menuFAQsButtonRect,
             R.id._menu1on1AskButtonRect,
