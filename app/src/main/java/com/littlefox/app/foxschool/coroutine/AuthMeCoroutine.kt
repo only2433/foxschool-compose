@@ -26,7 +26,7 @@ class AuthMeCoroutine : BaseCoroutine
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
-            if(result.getStatus() === BaseResult.SUCCESS_CODE_OK)
+            if(result.getStatus() == BaseResult.SUCCESS_CODE_OK)
             {
                 Feature.IS_FREE_USER = false
                 /*if(result.getData().getRemainingDay() > 0)
