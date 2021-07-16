@@ -1,12 +1,13 @@
 package com.littlefox.app.foxschool.`object`.result.main
 
 import com.littlefox.app.foxschool.`object`.result.main.*
+import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import java.util.*
 
 class MainInformationResult
 {
     private val story : MainStoryInformationResult? = null
-    private val song : MainSongInformationResult? = null
+    private val song : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
     private val bookshelves : ArrayList<MyBookshelfResult> = ArrayList<MyBookshelfResult>()
     private val vocabularies : ArrayList<MyVocabularyResult> = ArrayList<MyVocabularyResult>()
     private val company_information : CompanyInformationResult? = null
@@ -17,9 +18,9 @@ class MainInformationResult
         return story!!
     }
 
-    fun getMainSongInformation() : MainSongInformationResult
+    fun getMainSongInformationList() : ArrayList<SeriesInformationResult>
     {
-        return song!!
+        return song
     }
 
     fun getBookShelvesList() : ArrayList<MyBookshelfResult>

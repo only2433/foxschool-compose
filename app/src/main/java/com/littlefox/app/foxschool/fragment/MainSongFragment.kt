@@ -69,7 +69,7 @@ class MainSongFragment : Fragment()
         Log.f("")
         val view : View = inflater.inflate(R.layout.fragment_main_song, container, false)
         mUnbinder = ButterKnife.bind(this, view)
-        mCurrentSeriesBaseResultList = CommonUtils.getInstance(mContext).loadMainData().getMainSongInformation().getContentByCategoriesToList()
+        mCurrentSeriesBaseResultList = CommonUtils.getInstance(mContext).loadMainData().getMainSongInformationList()
         return view
     }
 
@@ -112,7 +112,7 @@ class MainSongFragment : Fragment()
 
     private fun updateData(mainInformationResult : MainInformationResult)
     {
-        mCurrentSeriesBaseResultList = mainInformationResult.getMainSongInformation().getContentByCategoriesToList()
+        mCurrentSeriesBaseResultList = mainInformationResult.getMainSongInformationList()
         mSeriesCardViewAdapter!!.notifyDataSetChanged()
         _SongGridView.scrollToPosition(0)
     }

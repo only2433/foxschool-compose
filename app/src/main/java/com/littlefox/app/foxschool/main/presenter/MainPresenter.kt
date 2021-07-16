@@ -525,11 +525,11 @@ class MainPresenter : MainContract.Presenter
         }
         if(result != null)
         {
-            for(i in 0 until mMainInformationResult.getMainSongInformation().getContentByCategoriesToList().size)
+            for(i in 0 until mMainInformationResult.getMainSongInformationList().size)
             {
-                if(mMainInformationResult.getMainSongInformation().getContentByCategoriesToList().get(i).getDisplayID().equals(seriesID))
+                if(mMainInformationResult.getMainSongInformationList().get(i).getDisplayID().equals(seriesID))
                 {
-                    result = mMainInformationResult.getMainSongInformation().getContentByCategoriesToList().get(i)
+                    result = mMainInformationResult.getMainSongInformationList().get(i)
                     result.setSeriesType(Common.CONTENT_TYPE_SONG)
                     break
                 }

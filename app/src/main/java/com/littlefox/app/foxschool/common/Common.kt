@@ -18,7 +18,7 @@ class Common
         const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
         const val API_LOGIN : String                = DEVELOP_BASE_API + "auth/login"
         const val API_ME : String                   = DEVELOP_BASE_API + "auth/me"
-        const val API_MAIN : String                 = BASE_PUBLIC_API + "app/main"
+        const val API_MAIN : String                 = DEVELOP_BASE_API + "app/main"
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
         const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
