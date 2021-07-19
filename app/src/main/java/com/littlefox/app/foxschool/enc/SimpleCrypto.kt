@@ -50,6 +50,7 @@ object SimpleCrypto
         IllegalBlockSizeException::class,
         BadPaddingException::class
     )
+
     fun decode(str : String?) : String
     {
         val textBytes = Base64.decode(str, 0)        //byte[] textBytes = str.getBytes("UTF-8");

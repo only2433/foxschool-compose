@@ -12,9 +12,9 @@ import com.littlefox.library.system.coroutine.BaseCoroutine
 
 class InitCoroutine : BaseCoroutine
 {
-    private var mDeviceID = ""
-    private var mPushAddress = ""
-    private var mPushStatus = ""
+    private var mDeviceID : String      = ""
+    private var mPushAddress : String   = ""
+    private var mPushStatus : String    = ""
 
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_INIT) {}
 

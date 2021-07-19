@@ -13,22 +13,22 @@ class CheckUserInput
     companion object
     {
         // [a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?
-        private const val TEXT_EMAIL : String           = "^[a-z0-9!#$%&'*+/=?^_`{|}~-]*$"
-        private const val TEXT_PASSWORD : String        = "^[a-zA-Z0-9\\``\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\[\\]\\{\\}\\;\\'\\:\\\"\\,\\.\\/\\?\\<\\>|\\\\]+$"
-        private const val TEXT_CHECK_NAME : String      = "^[a-zA-Z가-힣ㄱ-ㅎ ]+$"
-        private const val TEXT_CHECK_PHONE : String     = "^(01[016789]{1}|02|0[3-6]{1}[1-5]{1}|070)-?[0-9]{3,4}-?[0-9]{4}$"
+        private const val TEXT_EMAIL : String           = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}\$/i"
+        private const val TEXT_PASSWORD : String        = "^[a-zA-Z0-9\\~!@#\$%^&*()_+-=[]{};':\",./?<>|\\]+\$"
+        private const val TEXT_CHECK_NAME : String      = "^[a-zA-Z가-힣]+[^ㄱ-ㅎ]+\$"
+        private const val TEXT_CHECK_PHONE : String     = "^\\d{2,3}-\\d{3,4}-\\d{4}\$"
 
-        const val INPUT_SUCCESS = 100
-        const val WARNING_PASSWORD_NOT_INPUT = 0
-        const val WARNING_PASSWORD_WRONG_INPUT = 1
-        const val WARNING_PASSWORD_NOT_INPUT_CONFIRM = 2
-        const val WARNING_PASSWORD_NOT_EQUAL_CONFIRM = 3
-        const val WARNING_NAME_NOT_INPUT = 4
-        const val WARNING_NAME_WRONG_INPUT = 5
-        const val WARNING_EMAIL_NOT_INPUT = 6
-        const val WARNING_EMAIL_WRONG_INPUT = 7
-        const val WARNING_PHONE_NOT_INPUT = 8
-        const val WARNING_PHONE_WRONG_INPUT = 9
+        const val INPUT_SUCCESS : Int               = 100
+        const val WARNING_PASSWORD_NOT_INPUT : Int          = 0
+        const val WARNING_PASSWORD_WRONG_INPUT : Int        = 1
+        const val WARNING_PASSWORD_NOT_INPUT_CONFIRM : Int  = 2
+        const val WARNING_PASSWORD_NOT_EQUAL_CONFIRM : Int  = 3
+        const val WARNING_NAME_NOT_INPUT : Int              = 4
+        const val WARNING_NAME_WRONG_INPUT : Int            = 5
+        const val WARNING_EMAIL_NOT_INPUT : Int             = 6
+        const val WARNING_EMAIL_WRONG_INPUT : Int           = 7
+        const val WARNING_PHONE_NOT_INPUT : Int             = 8
+        const val WARNING_PHONE_WRONG_INPUT : Int           = 9
 
         var sCheckUserInput : CheckUserInput? = null
         lateinit var sContext : Context
