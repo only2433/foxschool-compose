@@ -29,7 +29,7 @@ import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.AuthMeCoroutine
 import com.littlefox.app.foxschool.coroutine.InitCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.IntroContract
@@ -256,10 +256,10 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
-    private fun showTempleteAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
+    private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
         Log.f("Update Pop up")
-        val dialog = TempleteAlertDialog(mContext)
+        val dialog = TemplateAlertDialog(mContext)
         dialog.setMessage(message)
         dialog.setDialogEventType(type)
         dialog.setButtonType(buttonType)
@@ -423,14 +423,14 @@ class IntroPresenter : IntroContract.Presenter
                     {
                         if(versionDataResult.isForceUpdate())
                         {
-                            showTempleteAlertDialog(
+                            showTemplateAlertDialog(
                                 DIALOG_TYPE_FORCE_UPDATE,
                                 DialogButtonType.BUTTON_1,
                                 mContext.resources.getString(R.string.message_force_update)
                             )
                         } else
                         {
-                            showTempleteAlertDialog(
+                            showTemplateAlertDialog(
                                 DIALOG_TYPE_SELECT_UPDATE_CONFIRM,
                                 DialogButtonType.BUTTON_2,
                                 mContext.resources.getString(R.string.message_need_update)

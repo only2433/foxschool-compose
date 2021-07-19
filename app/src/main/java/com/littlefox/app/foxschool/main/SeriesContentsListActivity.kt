@@ -54,7 +54,7 @@ import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
 
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.*
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.TransitionType
 import com.littlefox.app.foxschool.main.contract.SeriesContentsListContract
@@ -184,7 +184,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     private lateinit var _TopbarTitleText : TextView
     private lateinit var _TopbarInformationView : ImageView
     private lateinit var mSeriesContentsListPresenter : SeriesContentsListPresenter
-    private lateinit var mTempleteAlertDialog : TempleteAlertDialog
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     private var isCollapsed = false
     private var isListSettingComplete = false
@@ -910,11 +910,11 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     private fun showARInfomrationDialog()
     {
-        mTempleteAlertDialog = TempleteAlertDialog(this)
-        mTempleteAlertDialog.setMessage(getResources().getString(R.string.message_ar_information))
-        mTempleteAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
-        mTempleteAlertDialog.setGravity(Gravity.LEFT)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(this)
+        mTemplateAlertDialog.setMessage(getResources().getString(R.string.message_ar_information))
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
+        mTemplateAlertDialog.setGravity(Gravity.LEFT)
+        mTemplateAlertDialog.show()
     }
 
     @Optional

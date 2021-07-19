@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
@@ -94,6 +95,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
     private lateinit var mAppUseGuidePresenter : AppUseGuidePresenter
 
     /** ========== LifeCycle ========== */
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)

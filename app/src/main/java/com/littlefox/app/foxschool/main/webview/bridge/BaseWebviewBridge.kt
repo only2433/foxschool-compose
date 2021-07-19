@@ -11,7 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -26,7 +26,7 @@ open class BaseWebviewBridge
     private var _TitleView : TextView? = null
     private lateinit var _WebView : WebView
 
-    private var mTempleteAlertDialog : TempleteAlertDialog? = null
+    private var mTemplateAlertDialog : TemplateAlertDialog? = null
 
     constructor(context : Context, coordinatorLayout : CoordinatorLayout, titleView : TextView, webView : WebView)
     {
@@ -112,7 +112,7 @@ open class BaseWebviewBridge
     fun onInterfaceShowPopup(message : String)
     {
         Log.f("message : $message")
-        _WebView.postDelayed(Runnable {showTempleteAlertDialog(message)}, Common.DURATION_SHORTER)
+        _WebView.postDelayed(Runnable {showTemplateAlertDialog(message)}, Common.DURATION_SHORTER)
     }
 
 
@@ -136,15 +136,15 @@ open class BaseWebviewBridge
         )
     }
 
-    private fun showTempleteAlertDialog(message : String)
+    private fun showTemplateAlertDialog(message : String)
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog?.setMessage(message)
-        mTempleteAlertDialog?.setDialogEventType(DIALOG_TYPE_WEBVIEW_RESPONSE)
-        mTempleteAlertDialog?.setButtonType(DialogButtonType.BUTTON_2)
-        mTempleteAlertDialog?.setDialogListener(mDialogListener)
-        mTempleteAlertDialog?.setGravity(Gravity.LEFT)
-        mTempleteAlertDialog?.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog?.setMessage(message)
+        mTemplateAlertDialog?.setDialogEventType(DIALOG_TYPE_WEBVIEW_RESPONSE)
+        mTemplateAlertDialog?.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog?.setDialogListener(mDialogListener)
+        mTemplateAlertDialog?.setGravity(Gravity.LEFT)
+        mTemplateAlertDialog?.show()
     }
 
     private val mDialogListener : DialogListener = object : DialogListener

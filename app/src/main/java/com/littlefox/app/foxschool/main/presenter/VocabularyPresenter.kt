@@ -34,7 +34,7 @@ import com.littlefox.app.foxschool.coroutine.VocabularyContentsListCoroutine
 import com.littlefox.app.foxschool.coroutine.VocabularyShelfListCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomIntervalSelectDialog
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.IntervalSelectListener
@@ -82,7 +82,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentVocabularyAddResult : MyVocabularyResult
     private val mManagementBooksData : ManagementBooksData? = null
-    private var mTempleteAlertDialog : TempleteAlertDialog? = null
+    private var mTemplateAlertDialog : TemplateAlertDialog? = null
     private var mCurrentIntervalSecond = 2
     private var mCurrentPlayIndex = 0
     private var isSequencePlay = false
@@ -412,12 +412,12 @@ class VocabularyPresenter : VocabularyContract.Presenter
 
     private fun showVocabularyContentDeleteDialog()
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog?.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_vocabulary))
-        mTempleteAlertDialog?.setButtonType(DialogButtonType.BUTTON_2)
-        mTempleteAlertDialog?.setDialogEventType(DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS)
-        mTempleteAlertDialog?.setDialogListener(mDialogListener)
-        mTempleteAlertDialog?.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog?.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_vocabulary))
+        mTemplateAlertDialog?.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog?.setDialogEventType(DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS)
+        mTemplateAlertDialog?.setDialogListener(mDialogListener)
+        mTemplateAlertDialog?.show()
     }
 
     /**

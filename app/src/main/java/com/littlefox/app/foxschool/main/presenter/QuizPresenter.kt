@@ -32,7 +32,7 @@ import com.littlefox.app.foxschool.coroutine.FileDownloadCoroutine
 import com.littlefox.app.foxschool.coroutine.QuizInformationRequestCoroutine
 import com.littlefox.app.foxschool.coroutine.QuizSaveRecordCoroutine
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.Grade
 import com.littlefox.app.foxschool.enumerate.QuizStatus
@@ -262,8 +262,8 @@ class QuizPresenter : QuizContract.Presenter
                 if(mQuizLimitTime <= 0)
                 {
                     // 풀이시간 초과는 저장불가
-                    showTempleteAlertDialog(
-                        TempleteAlertDialog.DIALOG_EVENT_DEFAULT,
+                    showTemplateAlertDialog(
+                        TemplateAlertDialog.DIALOG_EVENT_DEFAULT,
                         DialogButtonType.BUTTON_1,
                         mContext.resources.getString(R.string.message_quiz_limit_not_save)
                     )
@@ -902,9 +902,9 @@ class QuizPresenter : QuizContract.Presenter
     /**
      * 알림(메세지) 다이얼로그 표시
      */
-    private fun showTempleteAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
+    private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
-        val dialog = TempleteAlertDialog(mContext)
+        val dialog = TemplateAlertDialog(mContext)
         dialog.setMessage(message)
         dialog.setDialogEventType(type)
         dialog.setButtonType(buttonType)
@@ -1040,8 +1040,8 @@ class QuizPresenter : QuizContract.Presenter
                     // 퀴즈 결과 저장 완료
                     mQuizContractView.hideLoading()
                     mQuizContractView.hideAnswerView()
-                    showTempleteAlertDialog(
-                        TempleteAlertDialog.DIALOG_EVENT_DEFAULT,
+                    showTemplateAlertDialog(
+                        TemplateAlertDialog.DIALOG_EVENT_DEFAULT,
                         DialogButtonType.BUTTON_1,
                         mContext.resources.getString(R.string.message_quiz_save_record_success)
                     )
@@ -1089,8 +1089,8 @@ class QuizPresenter : QuizContract.Presenter
                         mQuizContractView.hideLoading()
                         Log.f("FAIL ASYNC_CODE_QUIZ_SAVE_RECORD")
                         (mQuizDisplayFragmentList[mQuizDisplayFragmentList.size - 1] as QuizResultFragment).enableSaveButton()
-                        showTempleteAlertDialog(
-                            TempleteAlertDialog.DIALOG_EVENT_DEFAULT,
+                        showTemplateAlertDialog(
+                            TemplateAlertDialog.DIALOG_EVENT_DEFAULT,
                             DialogButtonType.BUTTON_1,
                             result.getMessage()
                         )

@@ -3,14 +3,11 @@ package com.littlefox.app.foxschool.main.presenter
 import android.content.Context
 import android.content.Intent
 import android.os.Message
-import android.view.Gravity
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
@@ -34,7 +31,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private lateinit var mMyInformationContractView : MyInformationContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
 
-    private lateinit var mTempleteAlertDialog : TempleteAlertDialog // 지문인증 로그인 활성/비활성 알림 다이얼로그
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog // 지문인증 로그인 활성/비활성 알림 다이얼로그
     private var mLoginInformation : LoginInformationResult? = null  // 로그인 시 응답받은 회원정보
     private var mCheckAutoLogin : Boolean   = false                 // 자동로그인 ON/OFF
     private var mCheckBioLogin : Boolean    = false                 // 생체인증 로그인 ON/OFF
@@ -113,14 +110,14 @@ class MyInformationPresenter : MyInformationContract.Presenter
      * 알림 다이얼로그 표시
      * - 생체인증 로그인 활성/비활성 알림 다이얼로그
      */
-    private fun showTempleteAlertDialog(type : Int, message : String)
+    private fun showTemplateAlertDialog(type : Int, message : String)
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog.setMessage(message)
-        mTempleteAlertDialog.setDialogEventType(type)
-        mTempleteAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTempleteAlertDialog.setDialogListener(mDialogListener)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(message)
+        mTemplateAlertDialog.setDialogEventType(type)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /**
@@ -169,12 +166,12 @@ class MyInformationPresenter : MyInformationContract.Presenter
         if (mCheckBioLogin)
         {
             // 지문인증 ON -> OFF
-            showTempleteAlertDialog(DIALOG_BIO_LOGIN_OFF, mContext.getString(R.string.message_bio_login_off))
+            showTemplateAlertDialog(DIALOG_BIO_LOGIN_OFF, mContext.getString(R.string.message_bio_login_off))
         }
         else
         {
             // 지문인증 OFF -> ON
-            showTempleteAlertDialog(DIALOG_BIO_LOGIN_ON, mContext.getString(R.string.message_bio_login_on))
+            showTemplateAlertDialog(DIALOG_BIO_LOGIN_ON, mContext.getString(R.string.message_bio_login_on))
         }
     }
 

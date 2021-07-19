@@ -35,7 +35,7 @@ import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.*
@@ -99,7 +99,7 @@ class MainPresenter : MainContract.Presenter
     private var mLoginInformationResult : LoginInformationResult ?= null
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
-    private lateinit var mTempleteAlertDialog : TempleteAlertDialog
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private lateinit var mCurrentDetailOptionResult : ContentsBaseResult
     private var mBookshelfContentAddCoroutine : BookshelfContentAddCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
@@ -327,7 +327,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_1ON1_ASK -> startWebview1On1AskActivity()
             MESSAGE_START_FAQ -> startWebviewFAQActivity()
             MESSAGE_START_RESULT_SERIES -> startSelectSeriesActivity(msg.obj as String)
-            MESSAGE_START_LOGOUT -> showTempleteAlertDialog(
+            MESSAGE_START_LOGOUT -> showTemplateAlertDialog(
                 mContext.resources.getString(R.string.message_try_logout),
                 DIALOG_EVENT_LOGOUT,
                 DialogButtonType.BUTTON_2
@@ -428,7 +428,7 @@ class MainPresenter : MainContract.Presenter
     override fun onBackPressed()
     {
         Log.f("Check End App")
-        showTempleteAlertDialog(
+        showTemplateAlertDialog(
             mContext.resources.getString(R.string.message_check_end_app),
             DIALOG_EVENT_APP_END,
             DialogButtonType.BUTTON_2
@@ -499,15 +499,15 @@ class MainPresenter : MainContract.Presenter
     }
 
 
-    private fun showTempleteAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
+    private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog.setMessage(message)
-        mTempleteAlertDialog.setDialogEventType(eventType)
-        mTempleteAlertDialog.setButtonType(buttonType)
-        mTempleteAlertDialog.setDialogListener(mDialogListener)
-        mTempleteAlertDialog.setGravity(Gravity.LEFT)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(message)
+        mTemplateAlertDialog.setDialogEventType(eventType)
+        mTemplateAlertDialog.setButtonType(buttonType)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.setGravity(Gravity.LEFT)
+        mTemplateAlertDialog.show()
     }
 
     private fun startSelectSeriesActivity(seriesID : String)
@@ -700,19 +700,19 @@ class MainPresenter : MainContract.Presenter
 
     private fun showIACInformationDialog(result : InAppCompaignResult)
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog.setTitle(result.getTitle())
-        mTempleteAlertDialog.setMessage(result.getContent())
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setTitle(result.getTitle())
+        mTemplateAlertDialog.setMessage(result.getContent())
         if(result.isButton1Use == false)
         {
-            mTempleteAlertDialog.setButtonText(result.getButton2Text())
+            mTemplateAlertDialog.setButtonText(result.getButton2Text())
         } else
         {
-            mTempleteAlertDialog.setButtonText(result.getButton1Text(), result.getButton2Text())
+            mTemplateAlertDialog.setButtonText(result.getButton1Text(), result.getButton2Text())
         }
-        mTempleteAlertDialog.setDialogEventType(DIALOG_EVENT_IAC)
-        mTempleteAlertDialog.setDialogListener(mDialogListener)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog.setDialogEventType(DIALOG_EVENT_IAC)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     private fun requestBookshelfContentsAddAsync(data : ArrayList<ContentsBaseResult?>)

@@ -135,7 +135,7 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         else
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-            setContentView(R.layout.activitiy_my_info)
+            setContentView(R.layout.activity_my_info)
         }
 
         ButterKnife.bind(this)

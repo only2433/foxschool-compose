@@ -48,7 +48,7 @@ import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
@@ -299,7 +299,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 enableTimer(false)
                 mPlayer?.setPlayWhenReady(false)
-                showTempleteAlertDialog(DIALOG_TYPE_WARNING_WATCH_MOVIE,
+                showTemplateAlertDialog(DIALOG_TYPE_WARNING_WATCH_MOVIE,
                         DialogButtonType.BUTTON_2,
                         mContext.resources.getString(R.string.message_longtime_play_warning))
             }
@@ -921,9 +921,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayerContractView.settingPaymentEndView(isEbookAvailable, isQuizAvaiable, isVocabularyAvailable, isTranslateAvailable, isNextMovieHave)
     }
 
-    private fun showTempleteAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
+    private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
-        val dialog = TempleteAlertDialog(mContext)
+        val dialog = TemplateAlertDialog(mContext)
         dialog.setMessage(message)
         dialog.setDialogEventType(type)
         dialog.setButtonType(buttonType)
@@ -931,9 +931,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         dialog.show()
     }
 
-    private fun showTempleteAlertDialog(type : Int, firstButtonText : String, secondButtonText : String, message : String)
+    private fun showTemplateAlertDialog(type : Int, firstButtonText : String, secondButtonText : String, message : String)
     {
-        val dialog = TempleteAlertDialog(mContext)
+        val dialog = TemplateAlertDialog(mContext)
         dialog.setMessage(message)
         dialog.setDialogEventType(type)
         dialog.setButtonText(firstButtonText, secondButtonText)
@@ -1700,7 +1700,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     {
                         Log.f("Auth Content data error retry popup")
                         mPlayerContractView.hideMovieLoading()
-                        showTempleteAlertDialog(DIALOG_TYPE_WARNING_API_EXCEPTION,
+                        showTemplateAlertDialog(DIALOG_TYPE_WARNING_API_EXCEPTION,
                                 mContext.resources.getString(R.string.text_retry),
                                 mContext.resources.getString(R.string.text_close),
                                 result.getMessage())

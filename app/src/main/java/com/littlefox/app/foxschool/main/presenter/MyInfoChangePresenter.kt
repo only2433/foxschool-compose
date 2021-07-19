@@ -10,7 +10,7 @@ import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.CheckUserInput
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.dialog.TempleteAlertDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
@@ -33,7 +33,7 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
     private lateinit var mMyInfoChangeContractView : MyInfoChangeContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
 
-    private lateinit var mTempleteAlertDialog : TempleteAlertDialog // 비밀번호 확인 다이얼로그
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog // 비밀번호 확인 다이얼로그
     private var mLoginInformation : LoginInformationResult? = null
     private var mLoginData : UserLoginData? = null
     private var mName : String  = ""
@@ -180,13 +180,13 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
      */
     private fun showPasswordCheckDialog()
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog.setMessage(mContext.resources.getString(R.string.message_password_check_for_change_user_info))
-        mTempleteAlertDialog.setPasswordConfirmView(true)
-        mTempleteAlertDialog.setDialogEventType(DIALOG_PASSWORD_CONFIRM)
-        mTempleteAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTempleteAlertDialog.setDialogListener(mDialogListener)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_password_check_for_change_user_info))
+        mTemplateAlertDialog.setPasswordConfirmView(true)
+        mTemplateAlertDialog.setDialogEventType(DIALOG_PASSWORD_CONFIRM)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /**
@@ -194,12 +194,12 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
      */
     private fun showPasswordCheckErrDialog()
     {
-        mTempleteAlertDialog = TempleteAlertDialog(mContext)
-        mTempleteAlertDialog.setMessage(mContext.resources.getString(R.string.message_warning_password_confirm_retry))
-        mTempleteAlertDialog.setDialogEventType(DIALOG_PASSWORD_CONFIRM_ERR)
-        mTempleteAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
-        mTempleteAlertDialog.setDialogListener(mDialogListener)
-        mTempleteAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_warning_password_confirm_retry))
+        mTemplateAlertDialog.setDialogEventType(DIALOG_PASSWORD_CONFIRM_ERR)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /**
@@ -248,7 +248,7 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 입력된 비밀번호 체크 TODO 추후 API 방식에 따라 바로 통신으로 날릴수도 있음
-                        checkPassword(mTempleteAlertDialog.getPasswordInputData())
+                        checkPassword(mTemplateAlertDialog.getPasswordInputData())
                     }
                 }
             }

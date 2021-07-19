@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main.webview
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Message
@@ -61,6 +62,7 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
     private var mMainHandler : WeakReferenceHandler? = null
 
     /** ========== LifeCycle ========== */
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)

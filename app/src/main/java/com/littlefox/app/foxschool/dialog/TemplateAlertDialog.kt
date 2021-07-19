@@ -24,7 +24,7 @@ import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 
-class TempleteAlertDialog(private val mContext : Context)
+class TemplateAlertDialog(private val mContext : Context)
 {
     protected var isCancelable : Boolean = true
     protected var isPasswordConfirm : Boolean = false // 비밀번호 확인 다이얼로그 플래그

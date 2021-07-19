@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main.webview
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
@@ -56,6 +57,7 @@ class WebviewFAQActivity : BaseActivity()
     private var mCurrentURL = ""
 
     /** ========== LifeCycle ========== */
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
