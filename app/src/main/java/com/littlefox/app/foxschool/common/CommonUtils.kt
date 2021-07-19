@@ -24,17 +24,16 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
-import android.text.style.ImageSpan
 import android.util.DisplayMetrics
 import android.view.*
 import android.view.animation.*
 import android.view.animation.Interpolator
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -42,6 +41,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.SnackbarContentLayout
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.BuildConfig
 import com.littlefox.app.foxschool.R
@@ -49,6 +49,7 @@ import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
+import com.littlefox.app.foxschool.enumerate.BioCheckResultType
 import com.littlefox.app.foxschool.enumerate.BookColor
 import com.littlefox.app.foxschool.enumerate.DataType
 import com.littlefox.app.foxschool.enumerate.Grade
@@ -1073,7 +1074,8 @@ class CommonUtils
             }
             textView.setGravity(gravity)
         }
-        textView.setMaxLines(3)
+        textView.maxLines = 3
+        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
         textView.setTextColor(color)
         snackbar.show()
     }
@@ -1086,14 +1088,13 @@ class CommonUtils
         gravity : Int = -1
     )
     {
-        val builder = SpannableStringBuilder()
-        builder.append(" ")
-        builder.setSpan(ImageSpan(sContext, icon), 0, 1, 0)
-        builder.append(" " + message)
-        val snackbar = Snackbar.make(coordinatorLayout, builder, Snackbar.LENGTH_LONG)
-        val view = snackbar.view
-        val textView =
-            view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        val snackbar = Snackbar.make(coordinatorLayout, " $message", Snackbar.LENGTH_LONG)
+
+        val view : View = snackbar.view
+        val textView = view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        textView.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0)
+        (textView.parent as SnackbarContentLayout).gravity = Gravity.CENTER
 
         if(gravity != -1)
         {
@@ -1103,6 +1104,8 @@ class CommonUtils
             }
             textView.gravity = Gravity.CENTER
         }
+        textView.maxLines = 3
+        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
         textView.setTextColor(color)
         snackbar.show()
     }
@@ -1140,6 +1143,7 @@ class CommonUtils
             Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
+        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
         textView.setText(spannableStringBuilder)
         snackbar.show()
     }
@@ -1178,6 +1182,7 @@ class CommonUtils
             Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
+        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
         textView.setText(spannableStringBuilder)
         textView.setOnClickListener(listener)
         snackbar.show()
@@ -1746,6 +1751,17 @@ class CommonUtils
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    /**
+     * EditText 강제포커싱 할 때 키보드 표시
+     */
+    fun showKeyboard(view : EditText)
+    {
+        Log.f("")
+        view.requestFocus()
+        val inputMethodManager = sContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+    }
+
     fun loadMainData() : MainInformationResult
     {
         return getPreferenceObject(
@@ -2301,5 +2317,25 @@ class CommonUtils
         {
             return R.color.color_23cc8a
         }
+    }
+
+    /**
+     * 생체인증 가능한 기기인지 체크
+     */
+    fun checkCanBioLogin() : BioCheckResultType
+    {
+        // 생체인증 기능은 M(23)부터 가능
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            val biometricManager = BiometricManager.from(sContext)
+            when (biometricManager.canAuthenticate()) {
+                BiometricManager.BIOMETRIC_SUCCESS -> return BioCheckResultType.BIO_SUCCESS
+                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE -> return BioCheckResultType.BIO_CANT_USE_HARDWARE
+                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> return BioCheckResultType.BIO_UNABLE
+                BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> return BioCheckResultType.BIO_NONE
+            }
+        }
+
+        return BioCheckResultType.BIO_CANT_USE_HARDWARE
     }
 }

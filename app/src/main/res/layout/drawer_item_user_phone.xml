@@ -217,6 +217,7 @@
             app:scale_height="181"/>
 
         <ImageView
+            android:id="@+id/_menuHomeNewspaperIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="fitXY"

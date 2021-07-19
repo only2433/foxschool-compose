@@ -176,6 +176,17 @@ class IntentManagementFactory
         var intent : Intent? = null
         when(mode)
         {
+            ActivityMode.INTRO -> intent = Intent(mContext, IntroActivity::class.java)
+
+            ActivityMode.LOGIN ->
+            {
+                intent = Intent(mContext, LoginActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_IS_LOGIN_FROM_MAIN, `object` as Boolean?)
+                }
+            }
+
             ActivityMode.MAIN -> intent = Intent(mContext, MainActivity::class.java)
 
             ActivityMode.SERIES_DETAIL_LIST ->
@@ -235,6 +246,10 @@ class IntentManagementFactory
             }
 
             ActivityMode.MY_INFORMATION -> intent = Intent(mContext, MyInformationActivity::class.java)
+
+            ActivityMode.MY_INFORMATION_CHANGE -> intent = Intent(mContext, MyInfoChangeActivity::class.java)
+
+            ActivityMode.PASSWORD_CHANGE -> intent = Intent(mContext, PasswordChangeActivity::class.java)
 
             ActivityMode.APP_USE_GUIDE -> intent = Intent(mContext, AppUseGuideActivity::class.java)
 

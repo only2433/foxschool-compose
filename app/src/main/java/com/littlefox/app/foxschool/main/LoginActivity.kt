@@ -98,13 +98,13 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     @BindView(R.id._searchSchoolView)
     lateinit var _SearchSchoolView : ScrollView
 
-    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mLoginPresenter : LoginPresenter
-    private var isAutoLoginCheck : Boolean = false
+    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
 
     private val mBaseSchoolList : ArrayList<SchoolItemDataResult> = ArrayList<SchoolItemDataResult>() // 학교 베이스 리스트
     private val mSearchSchoolList : ArrayList<SchoolItemDataResult> = ArrayList<SchoolItemDataResult>() // 학교 검색 결과 리스트
     private var mSelectedSchoolData : SchoolItemDataResult? = null
+    private var isAutoLoginCheck : Boolean = false
 
     // 학교 검색 팝업 레이아웃 사이즈
     private var mSearchLayoutHeight : Float = 0f
@@ -123,13 +123,13 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-        if(CommonUtils.getInstance(this).isTabletModel)
+        if(CommonUtils.getInstance(this).checkTablet)
         {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_login_tablet)
         } else
         {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             setContentView(R.layout.activity_login)
         }
 
@@ -178,7 +178,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     /** ========== Init ========== */
     override fun initView()
     {
-        settingLayoutColor()
         _TitleText.text = resources.getString(R.string.text_login)
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
@@ -191,6 +190,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
 
     override fun initFont()
     {
+        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
         _InputIdEditText.typeface = Font.getInstance(this).getRobotoRegular()
         _InputPasswordEditText.typeface = Font.getInstance(this).getRobotoRegular()
         _InputSchoolEditText.typeface = Font.getInstance(this).getRobotoRegular()
@@ -200,17 +200,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _ForgetPasswordText.typeface = Font.getInstance(this).getRobotoRegular()
         _OnlyWebSignPossibleTitleText.typeface = Font.getInstance(this).getRobotoMedium()
         _CustomerCenterInfoText.typeface = Font.getInstance(this).getRobotoMedium()
-    }
-
-    /**
-     * 상단바 색상 설정
-     */
-    private fun settingLayoutColor()
-    {
-        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
-        _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
     /** ========== Init end  ========== */
 
@@ -243,17 +232,20 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
 
     @OnClick(
         R.id._closeButtonRect, R.id._autoLoginIcon, R.id._loginButtonText, R.id._forgetIDText,
-        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton, R.id._inputLayoutBackground,
-        R.id._contentsLayout, R.id._inputIdEditText, R.id._inputPasswordEditText
+        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton, R.id._inputLayoutBackground, R.id._contentsLayout
     )
     fun onClickView(view : View)
     {
+        // 학교 입력필드가 선택되어있는 상태에서 다른 뷰를 탭하면 키보드를 닫고 입력필드의 내용을 초기화 한다.
         if (view.id != R.id._inputSchoolEditText)
         {
-            CommonUtils.getInstance(this).hideKeyboard()
-            _InputSchoolEditText.setText("")
-            _InputSchoolEditText.clearFocus()
-            clearSearchView()
+            if (_InputSchoolEditText.hasFocus())
+            {
+                CommonUtils.getInstance(this).hideKeyboard()
+                _InputSchoolEditText.setText("")
+                _InputSchoolEditText.clearFocus()
+                clearSearchView()
+            }
         }
 
         when(view.id)
@@ -273,11 +265,12 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             }
             R.id._loginButtonText ->
             {
+                val schoolCode = if (_InputSchoolEditText.text.isNotEmpty()) mSelectedSchoolData!!.getSchoolID() else ""
                 mLoginPresenter.onClickLogin(
                     UserLoginData(
                         _InputIdEditText.text.toString().trim(),
                         _InputPasswordEditText.text.toString().trim(),
-                        _InputSchoolEditText.text.toString().trim()
+                        schoolCode
                     )
                 )
             }
@@ -307,7 +300,8 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         val _SearchView = ScalableLayout(this)
         _SearchSchoolView.addView(_SearchView) // 스크롤뷰에 추가
 
-        if(mSearchSchoolList.isNotEmpty()) {
+        if(mSearchSchoolList.isNotEmpty())
+        {
             // 검색 결과가 있는 경우
             for(i in mSearchSchoolList.indices)
             {
@@ -320,9 +314,9 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                     // 선택한 항목으로 학교 검색 필드에 값 입력
                     // 검색한 리스트와 뷰는 초기화
                     CommonUtils.getInstance(this).hideKeyboard()
-                    _InputSchoolEditText.setText((it as TextView).text)
-                    _InputSchoolEditText.clearFocus()
                     mSelectedSchoolData = mSearchSchoolList[i]
+                    _InputSchoolEditText.setText(mSelectedSchoolData!!.getSchoolName())
+                    _InputSchoolEditText.clearFocus()
                     mSearchSchoolList.clear() // 검색결과 리스트 초기화
                     clearSearchView() // 검색화면(팝업)초기화
                 }
@@ -335,11 +329,13 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             _SearchView.setScaleSize(mSearchLayoutWidth, mSearchTextHeight * mSearchSchoolList.size)
 
             // 학교 검색리스트 배경 사이즈 설정
-            // _InputSchoolEditBackground 높이 : 기존 입력필드 높이 + 텍스트 3줄 높이(리스트사이즈)
-            // _SearchSchoolView 높이 : 텍스트 3줄 높이(리스트사이즈)
+            // _InputSchoolEditBackground 높이 : 기존 입력필드 높이 + 리스트사이즈
+            // _SearchSchoolView 높이 : 리스트사이즈
             _ContentsLayout.moveChildView(_InputSchoolEditBackground, mSearchLayoutLeft, mSearchLayoutTop, mSearchLayoutWidth, mSearchLayoutHeight + mSearchTextHeight * listCount)
             _ContentsLayout.moveChildView(_SearchSchoolView, mSearchLayoutLeft, mSearchTextTop, mSearchLayoutWidth, mSearchTextHeight * listCount)
-        } else if(mSearchSchoolList.isEmpty() && _InputSchoolEditText.text.isNotEmpty()) { 
+        }
+        else if(mSearchSchoolList.isEmpty() && _InputSchoolEditText.text.isNotEmpty())
+        {
             // 검색 결과가 없는 경우
             val resultText = TextView(this)
             resultText.typeface = Font.getInstance(this).getRobotoRegular()
@@ -352,11 +348,13 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             _SearchView.setScale_TextSize(resultText, mSearchTextSize)
 
             // 학교 검색리스트 배경 사이즈 설정
-            // _InputSchoolEditBackground 높이 : 기존 입력필드 높이 + 텍스트 1줄 높이
-            // _SearchSchoolView 높이 : 텍스트 1줄 높이
+            // _InputSchoolEditBackground 높이 : 기존 입력필드 높이 + 리스트사이즈
+            // _SearchSchoolView 높이 : 리스트사이즈
             _ContentsLayout.moveChildView(_InputSchoolEditBackground, mSearchLayoutLeft, mSearchLayoutTop, mSearchLayoutWidth, mSearchLayoutHeight + mSearchTextHeight * listCount)
             _ContentsLayout.moveChildView(_SearchSchoolView, mSearchLayoutLeft, mSearchTextTop, mSearchLayoutWidth, mSearchTextHeight * listCount)
-        } else { 
+        }
+        else
+        {
             // 검색 안하는 경우
             // 팝업 뷰 및 데이터 초기화
             clearSearchView()

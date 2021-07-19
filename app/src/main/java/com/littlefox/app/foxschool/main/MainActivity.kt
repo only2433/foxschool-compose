@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Message
 import android.view.*
@@ -28,6 +29,7 @@ import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.contract.MainContract
 import com.littlefox.app.foxschool.main.presenter.MainPresenter
+import com.littlefox.library.common.CommonUtils.setSharedPreference
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
@@ -87,6 +89,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     @BindView(R.id._userNameText)
     lateinit var _UserNameText : TextView
+
+    @BindView(R.id._userClassText)
+    lateinit var _UserClassText : TextView
 
     @BindView(R.id._userInfoButtonText)
     lateinit var _UserInfoButtonText : TextView
@@ -199,7 +204,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         setStatusBarColor()
         setIndicatorBarColor()
         _MainDrawLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        _MainDrawLayout.setFocusableInTouchMode(false)
+        _MainDrawLayout.isFocusableInTouchMode = false
         _MainDrawLayout.addDrawerListener(mDrawerListener)
         _NavigationBaseLayout.setOnTouchListener(object : View.OnTouchListener
         {
@@ -216,20 +221,20 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         else
         {
             val TABLET_DRAWER_MENU_WIDTH = 650
-            val params : DrawerLayout.LayoutParams = _NavigationBaseLayout.getLayoutParams() as DrawerLayout.LayoutParams
+            val params : DrawerLayout.LayoutParams = _NavigationBaseLayout.layoutParams as DrawerLayout.LayoutParams
             params.width = CommonUtils.getInstance(this).getPixel(TABLET_DRAWER_MENU_WIDTH)
-            _NavigationBaseLayout.setLayoutParams(params)
+            _NavigationBaseLayout.layoutParams = params
         }
     }
 
     override fun initFont()
     {
-        _UserNameText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _UserInfoButtonText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _LeaningLogMenuText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _RecordLogText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _HomeworkManageText.setTypeface(Font.getInstance(this).getRobotoMedium())
-
+        _UserNameText.typeface = Font.getInstance(this).getRobotoMedium()
+        _UserClassText.typeface = Font.getInstance(this).getRobotoMedium()
+        _UserInfoButtonText.typeface = Font.getInstance(this).getRobotoMedium()
+        _LeaningLogMenuText.typeface = Font.getInstance(this).getRobotoMedium()
+        _RecordLogText.typeface = Font.getInstance(this).getRobotoMedium()
+        _HomeworkManageText.typeface = Font.getInstance(this).getRobotoMedium()
     }
 
     override fun onBackPressed()
@@ -268,6 +273,21 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
+    override fun showLoading()
+    {
+        mMaterialLoadingDialog = MaterialLoadingDialog(
+            this,
+            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
+        )
+        mMaterialLoadingDialog?.show()
+    }
+
+    override fun hideLoading()
+    {
+        mMaterialLoadingDialog?.dismiss()
+        mMaterialLoadingDialog = null
+    }
+
     override fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(
@@ -286,31 +306,70 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         )
     }
 
+    /**
+     * 사용자 데이터 화면에 세팅
+     */
     override fun settingUserInformation(loginInformationResult : LoginInformationResult?)
     {
-        // 팍스영어 에서는 setMenuLoginStatus()에 들어있었는데, 현재 작업이 안되어있는 상태인 듯 하여 임시로 밖으로 빼놓았습니다.
         initMenuView()
+
+        var name = loginInformationResult?.getUserInformation()?.getName()
+        if (CommonUtils.getInstance(this).isTeacherMode)
+        {
+            name += " 선생님"
+        }
+        else
+        {
+            // 학생인 경우에만 class 데이터 존재
+            val mClass = "${loginInformationResult?.getSchoolInformation()?.getGrade()}학년 ${loginInformationResult?.getSchoolInformation()?.getClassName()}"
+            _UserClassText.text = mClass
+            name += " 학생"
+        }
+        _UserNameText.text = name
+
+        settingLayoutColor()
+    }
+
+    /**
+     * 상단바 & 메뉴화면 색상 설정
+     */
+    private fun settingLayoutColor()
+    {
+        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
+        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+        _MainBackgroundView.setBackgroundColor(resources.getColor(backgroundColor))
+        _UserStatusLayout.setBackgroundColor(resources.getColor(backgroundColor))
+        _UserInfoButtonText.setTextColor(resources.getColor(backgroundColor))
+
+        if (CommonUtils.getInstance(this).isTeacherMode)
+        {
+            if (CommonUtils.getInstance(this).checkTablet)
+            {
+                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_light_blue_60)
+            }
+            else
+            {
+                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_light_blue_84)
+            }
+        }
+        else
+        {
+            if (CommonUtils.getInstance(this).checkTablet)
+            {
+                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_60)
+            }
+            else
+            {
+                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_84)
+            }
+        }
     }
 
     override fun setCurrentPage(page : Int)
     {
         Log.f("page : $page")
-        _MainViewPager.setCurrentItem(page)
-    }
-
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
-
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
+        _MainViewPager.currentItem = page
     }
 
     @Optional
@@ -355,23 +414,26 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     private fun checkToolbarAnimationLayoutSize()
     {
-        _MainToolbar!!.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
+        _MainToolbar.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
         {
             override fun onGlobalLayout()
             {
-                _MainToolbar!!.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                Log.f("Toolbar Height :" + _MainToolbar!!.height + ", _MainTabsLayout height : " + _MainTabsLayout.getMeasuredHeight())
+                _MainToolbar.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                Log.f("Toolbar Height :${_MainToolbar.height}, _MainTabsLayout height : ${_MainTabsLayout.measuredHeight}")
                 var params : RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, _MainToolbar.height)
-                _MainBackgroundView!!.layoutParams = params
+                _MainBackgroundView.layoutParams = params
                 params = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     _MainToolbar.height
                 )
-                _MainBackgroundAnimationLayout.setLayoutParams(params)
+                _MainBackgroundAnimationLayout.layoutParams = params
             }
         })
     }
 
+    /**
+     * 메뉴화면 생성 (팍스스쿨 소식 ~ 로그아웃)
+     */
     private fun initMenuView()
     {
         val MENU_TEXTVIEW_ID_LIST = intArrayOf(
@@ -405,11 +467,31 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         for(i in MENU_TEXTVIEW_ID_LIST.indices)
         {
             val textView : TextView = addLayout.findViewById<View>(MENU_TEXTVIEW_ID_LIST[i]) as TextView
-            textView.setTypeface(Font.getInstance(this).getRobotoMedium())
+            textView.typeface = Font.getInstance(this).getRobotoMedium()
             val imageView = addLayout.findViewById<View>(MENU_IMAGEVIEW_ID_LIST[i]) as ImageView
             imageView.setOnClickListener(mMenuClickListener)
+
+            // 학생의 경우 교사 메뉴얼, 가정 통신문 항목 숨김
+            if (CommonUtils.getInstance(this).isTeacherMode == false)
+            {
+                if ((i > MENU_TEXTVIEW_ID_LIST.size - 3))
+                {
+                    textView.visibility = View.GONE
+                    imageView.visibility = View.GONE
+                }
+            }
         }
-        _MenuLogoutText.setTypeface(Font.getInstance(this).getRobotoMedium())
+
+        // 학생의 경우 교사 메뉴얼, 가정 통신문 항목 숨김
+        if (CommonUtils.getInstance(this).isTeacherMode == false)
+        {
+            val iconTeacherManual = addLayout.findViewById<View>(R.id._menuTeacherManualIcon) as ImageView
+            val iconNewspaper = addLayout.findViewById<View>(R.id._menuHomeNewspaperIcon) as ImageView
+            iconTeacherManual.visibility = View.GONE
+            iconNewspaper.visibility = View.GONE
+        }
+
+        _MenuLogoutText.typeface = Font.getInstance(this).getRobotoMedium()
     }
 
     private fun settingViewPagerInformation(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
@@ -495,7 +577,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                     CommonUtils.getInstance(this).getPixel(72),
                     CommonUtils.getInstance(this).getHeightPixel(68))
                 image.layoutParams = params
-                image.setImageResource(TAB_IMAGE_ICONS_STUDENT[i])
+                if (CommonUtils.getInstance(this).isTeacherMode)
+                {
+                    image.setImageResource(TAB_IMAGE_ICONS_TEACHER[i])
+                }
+                else
+                {
+                    image.setImageResource(TAB_IMAGE_ICONS_STUDENT[i])
+                }
                 _MainTabsLayout.getTabAt(i)?.setCustomView(image)
             }
         }
@@ -507,12 +596,12 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 override fun onTouch(v : View, event : MotionEvent) : Boolean
                 {
-                    if(event.getAction() == MotionEvent.ACTION_UP)
+                    if(event.action == MotionEvent.ACTION_UP)
                     {
                         CommonUtils.getInstance(this@MainActivity).showSnackMessage(
                             _MainContentCoordinatorLayout,
-                            getResources().getString(R.string.message_payment_service_login),
-                            getResources().getColor(R.color.color_d8232a)
+                            resources.getString(R.string.message_payment_service_login),
+                            resources.getColor(R.color.color_d8232a)
                         )
                     }
                     return true
@@ -521,17 +610,16 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-
     private fun setStatusBarColor()
     {
         val color : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        CommonUtils.getInstance(this).setStatusBar(getResources().getColor(color))
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(color))
     }
 
     private fun setIndicatorBarColor()
     {
         val color : Int = CommonUtils.getInstance(this).getTopBarIndicatorColor()
-        _MainTabsLayout.setSelectedTabIndicatorColor(getResources().getColor(color))
+        _MainTabsLayout.setSelectedTabIndicatorColor(resources.getColor(color))
     }
 
     private val mOnPageChangeListener : ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener
@@ -547,6 +635,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
         }
     }
+
     private val mDrawerListener : DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener
     {
         override fun onDrawerSlide(drawerView : View, slideOffset : Float) {}
@@ -585,6 +674,4 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             }
         }
     }
-
-
 }

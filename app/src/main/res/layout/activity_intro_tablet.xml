@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             app:scale_base_width="1920"
             app:scale_base_height="312"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_alignParentBottom="true">
 
 

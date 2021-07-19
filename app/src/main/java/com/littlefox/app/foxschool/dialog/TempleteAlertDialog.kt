@@ -6,11 +6,17 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.text.InputType
+import android.text.InputType.TYPE_CLASS_TEXT
+import android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -21,6 +27,7 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 class TempleteAlertDialog(private val mContext : Context)
 {
     protected var isCancelable : Boolean = true
+    protected var isPasswordConfirm : Boolean = false // 비밀번호 확인 다이얼로그 플래그
     protected var mTitle = ""
     protected var mMessage = ""
     protected var mFirstButtonText : String? = null
@@ -33,6 +40,7 @@ class TempleteAlertDialog(private val mContext : Context)
     private val _BaseTitleLayout : LinearLayout? = null
     private val _TitleText : TextView? = null
     private val _ImageView : ImageView? = null
+    private var _EditText : EditText? = null
     private var mGravityValue = -1
 
     /**
@@ -105,10 +113,30 @@ class TempleteAlertDialog(private val mContext : Context)
         mDialogListener = dialogListener
     }
 
+    /**
+     * [비밀번호 확인 다이얼로그] EditText 표시 여부
+     */
+    fun setPasswordConfirmView(isPasswordConfirm : Boolean)
+    {
+        this.isPasswordConfirm = isPasswordConfirm
+    }
+
+    /**
+     * [비밀번호 확인 다이얼로그] EditText 입력 값 내보내기
+     */
+    fun getPasswordInputData() : String
+    {
+        if (_EditText != null)
+        {
+            return _EditText!!.text.toString().trim()
+        }
+        return ""
+    }
+
     fun show()
     {
         mAlertDialogBuilder = AlertDialog.Builder(mContext)
-        if(mTitle == "" == false)
+        if(mTitle != "")
         {
             mAlertDialogBuilder.setTitle(mTitle)
         }
@@ -121,6 +149,25 @@ class TempleteAlertDialog(private val mContext : Context)
         {
             mAlertDialogBuilder.setCancelable(false)
         }
+
+        if (isPasswordConfirm)
+        {
+            // [비밀번호 확인 다이얼로그] 뷰 세팅
+            // TODO : 비밀번호 입력 다이얼로그 디자인이 나오면 픽셀값 확인 필요합니다.
+            _EditText = EditText(mContext)
+            val coordinatorLayout = CoordinatorLayout(mContext)
+            val layoutParams = CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            layoutParams.marginStart = CommonUtils.getInstance(mContext).getPixel(50)
+            layoutParams.marginEnd = CommonUtils.getInstance(mContext).getPixel(50)
+            _EditText!!.layoutParams = layoutParams
+            _EditText!!.inputType = TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD
+            _EditText!!.height = CommonUtils.getInstance(mContext).getPixel(70)
+            _EditText!!.setPadding(CommonUtils.getInstance(mContext).getPixel(30), 0, CommonUtils.getInstance(mContext).getPixel(30), 0)
+            _EditText!!.setBackgroundResource(R.drawable.text_box)
+            coordinatorLayout.addView(_EditText)
+            mAlertDialogBuilder.setView(coordinatorLayout)
+        }
+
         if(mIconResource != -1)
         {
             if(CommonUtils.getInstance(mContext).displayWidthPixel > Common.TARGET_PHONE_DISPLAY_WIDTH)

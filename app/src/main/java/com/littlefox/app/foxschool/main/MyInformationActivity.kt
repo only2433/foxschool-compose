@@ -11,14 +11,13 @@ import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.enumerate.MyInformationSwitch
 import com.littlefox.app.foxschool.main.contract.MyInformationContract
 import com.littlefox.app.foxschool.main.presenter.MyInformationPresenter
-import com.littlefox.app.foxschool.main.presenter.SearchListPresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -119,14 +118,6 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     @BindView(R.id._switchPush)
     lateinit var _SwitchPush : ImageView
 
-    @BindViews(
-        R.id._switchAutoLogin,
-        R.id._switchBioLogin,
-        R.id._switchPush
-    )
-    lateinit var _SwitchList : List<@JvmSuppressWildcards ImageView>
-
-
     private lateinit var mMyInformationPresenter : MyInformationPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
 
@@ -138,12 +129,12 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             setContentView(R.layout.activity_my_info_tablet)
         }
         else
         {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             setContentView(R.layout.activitiy_my_info)
         }
 
@@ -272,39 +263,68 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         mMyInformationPresenter.sendMessageEvent(message)
     }
 
+    /**
+     * 화면에 사용자 정보 표시
+     */
+    override fun setUserInformation(userInformation : LoginInformationResult)
+    {
+        if (CommonUtils.getInstance(this).isTeacherMode)
+        {
+            // 선생님 화면 세팅
+            _TeacherIdText.text = userInformation.getUserInformation().getLoginID()
+            _TeacherNameText.text = userInformation.getUserInformation().getName()
+        }
+        else
+        {
+            // 학생 화면 세팅
+            _StudentIdText.text = userInformation.getUserInformation().getLoginID()
+            _StudentNameText.text = userInformation.getUserInformation().getName()
+            _StudentClassText.text = userInformation.getSchoolInformation().getClassName()
+        }
+    }
+
+    /**
+     *  자동로그인 스위치 ON/OFF 이미지 변경
+     */
     override fun setSwitchAutoLogin(isEnable : Boolean)
     {
         if (isEnable)
         {
-            _SwitchList[0].setBackgroundResource(R.drawable.icon_switch_on)
+            _SwitchAutoLogin.setBackgroundResource(R.drawable.icon_switch_on)
         }
         else
         {
-            _SwitchList[0].setBackgroundResource(R.drawable.icon_switch_off)
+            _SwitchAutoLogin.setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
 
+    /**
+     *  지문인증로그인 스위치 ON/OFF 이미지 변경
+     */
     override fun setSwitchBioLogin(isEnable : Boolean)
     {
         if (isEnable)
         {
-            _SwitchList[1].setBackgroundResource(R.drawable.icon_switch_on)
+            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_on)
         }
         else
         {
-            _SwitchList[1].setBackgroundResource(R.drawable.icon_switch_off)
+            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
 
+    /**
+     *  푸시알림 스위치 ON/OFF 이미지 변경
+     */
     override fun setSwitchPush(isEnable : Boolean)
     {
         if (isEnable)
         {
-            _SwitchList[2].setBackgroundResource(R.drawable.icon_switch_on)
+            _SwitchPush.setBackgroundResource(R.drawable.icon_switch_on)
         }
         else
         {
-            _SwitchList[2].setBackgroundResource(R.drawable.icon_switch_off)
+            _SwitchPush.setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
 
@@ -318,9 +338,11 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._switchAutoLogin -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.AUTO_LOGIN)
-            R.id._switchBioLogin -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.BIO_LOGIN)
-            R.id._switchPush -> mMyInformationPresenter.setSwitchState(MyInformationSwitch.PUSH)
+            R.id._switchAutoLogin -> mMyInformationPresenter.onClickAutoLoginSwitch()
+            R.id._switchBioLogin -> mMyInformationPresenter.onClickBioLoginSwitch()
+            R.id._switchPush -> mMyInformationPresenter.onClickPushSwitch()
+            R.id._changeInfoButtonText -> mMyInformationPresenter.onClickInfoChange()
+            R.id._changePasswordButtonText -> mMyInformationPresenter.onClickPasswordChange()
         }
     }
 }

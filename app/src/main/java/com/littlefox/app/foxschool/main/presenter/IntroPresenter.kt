@@ -48,31 +48,32 @@ class IntroPresenter : IntroContract.Presenter
         private const val PERMISSION_REQUEST : Int                  = 0x01
         private const val REQUEST_CODE_LOGIN : Int                  = 1001
         private const val REQUEST_CODE_GO_LOGIN : Int               = 1002
+
         private const val DIALOG_TYPE_SELECT_UPDATE_CONFIRM : Int   = 10001
         private const val DIALOG_TYPE_FORCE_UPDATE : Int            = 10002
-        private const val MESSAGE_INIT : Int                    = 100
-        private const val MESSAGE_REQUEST_AUTO_LOGIN : Int      = 101
-        private const val MESSAGE_CHECK_API_MAIN : Int          = 102
-        private const val MESSAGE_REQEUST_COMPLETE_LOGIN : Int  = 103
-        private const val MESSAGE_START_LOGIN : Int             = 104
-        private const val MESSAGE_START_MAIN : Int              = 105
-        private const val MESSAGE_APP_SERVER_ERROR : Int        = 106
-        private const val MAX_PROGRESS_DURATION : Int       = 100
-        private const val PROGRESS_TASK_PERIOD : Int        = 20
-        private val PERCENT_SEQUENCE = floatArrayOf(0f, 30f, 60f, 100f)
+
+        private const val MESSAGE_INIT : Int                        = 100
+        private const val MESSAGE_REQUEST_AUTO_LOGIN : Int          = 101
+        private const val MESSAGE_CHECK_API_MAIN : Int              = 102
+        private const val MESSAGE_REQUEST_COMPLETE_LOGIN : Int      = 103
+        private const val MESSAGE_START_LOGIN : Int                 = 104
+        private const val MESSAGE_START_MAIN : Int                  = 105
+        private const val MESSAGE_APP_SERVER_ERROR : Int            = 106
+
+        private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
 
     private lateinit var mContext : Context
-    private lateinit var mPermissionList : ArrayList<String>
-    private lateinit var mMainHandler : WeakReferenceHandler
     private var mMainContractView : IntroContract.View
-    private var mCurrentIntroProcess : IntroProcess = IntroProcess.NONE
-    private var isAutoLogin = false
-    private var isDisposableLogin = false
-    private var mInitCoroutine : InitCoroutine? = null
+    private lateinit var mMainHandler : WeakReferenceHandler
     private var mAuthMeCoroutine : AuthMeCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
 
+    private lateinit var mPermissionList : ArrayList<String>
+    private var mCurrentIntroProcess : IntroProcess = IntroProcess.NONE
+    private var mInitCoroutine : InitCoroutine? = null
+    private var isAutoLogin : Boolean           = false
+    private var isDisposableLogin : Boolean     = false
 
     constructor(context : Context)
     {
@@ -128,7 +129,49 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
+    override fun resume()
+    {
+        Log.f("")
+    }
 
+    override fun pause()
+    {
+        Log.f("")
+    }
+
+    override fun destroy()
+    {
+        Log.f("")
+        release()
+    }
+
+    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    {
+        Log.f("requestCode : $requestCode, resultCode : $resultCode")
+        when(requestCode)
+        {
+            REQUEST_CODE_LOGIN ->
+                if(resultCode == Activity.RESULT_OK)
+                {
+                    mMainContractView.showProgressView()
+                    /**
+                     * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
+                     */
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
+                }
+
+            REQUEST_CODE_GO_LOGIN ->
+                if(resultCode == Activity.RESULT_OK)
+                {
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
+                }
+        }
+    }
+
+    /**
+     * 사용자 체크 (무료/유료)
+     * 팍스스쿨은 무료 이용자가 없으므로 추후 수정 예정
+     */
     private fun checkUserStatus()
     {
         val `object` : UserLoginData? = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
@@ -171,53 +214,33 @@ class IntroPresenter : IntroContract.Presenter
         if(Feature.IS_FREE_USER)
         {
             mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-            enableProgressAniamtion(IntroProcess.LOGIN_COMPLTE)
+            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
         }
         else
         {
             mCurrentIntroProcess = IntroProcess.INIT_COMPLETE
-            enableProgressAniamtion(IntroProcess.INIT_COMPLETE)
+            enableProgressAnimation(IntroProcess.INIT_COMPLETE)
         }
     }
 
-    private fun enableProgressAniamtion(process : IntroProcess)
+    private fun enableProgressAnimation(process : IntroProcess)
     {
         Log.f("process : $process")
         when(process)
         {
             IntroProcess.INIT_COMPLETE ->
             {
-                mMainContractView.setProgressPercent(
-                    PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[1]
-                )
-                mMainHandler.sendEmptyMessageDelayed(
-                    IntroPresenter.MESSAGE_REQUEST_AUTO_LOGIN,
-                    Common.DURATION_SHORT_LONG
-                )
+                mMainContractView.setProgressPercent(PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[1])
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_AUTO_LOGIN, Common.DURATION_SHORT_LONG)
             }
             IntroProcess.LOGIN_COMPLTE ->
             {
-                if(Feature.IS_FREE_USER)
-                {
-                    mMainContractView.setProgressPercent(
-                        PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[2]
-                    )
-                } else
-                {
-                    mMainContractView.setProgressPercent(
-                        PERCENT_SEQUENCE[1], PERCENT_SEQUENCE[2]
-                    )
-                }
-                mMainHandler.sendEmptyMessageDelayed(
-                    MESSAGE_CHECK_API_MAIN,
-                    Common.DURATION_SHORT_LONG
-                )
+                mMainContractView.setProgressPercent(PERCENT_SEQUENCE[1], PERCENT_SEQUENCE[2])
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHECK_API_MAIN, Common.DURATION_SHORT_LONG)
             }
             IntroProcess.MAIN_COMPELTE ->
             {
-                mMainContractView.setProgressPercent(
-                    PERCENT_SEQUENCE[2], PERCENT_SEQUENCE[3]
-                )
+                mMainContractView.setProgressPercent(PERCENT_SEQUENCE[2], PERCENT_SEQUENCE[3])
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_MAIN, Common.DURATION_SHORT_LONG)
             }
         }
@@ -298,18 +321,6 @@ class IntroPresenter : IntroContract.Presenter
             .startActivity()
     }
 
-    private fun startFreeUser()
-    {
-        Feature.IS_FREE_USER = true
-        CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
-        CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, "")
-        CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, null)
-        CommonUtils.getInstance(mContext)
-            .setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, null)
-        mMainContractView.showProgressView()
-        requestInitAsync()
-    }
-
     private fun release()
     {
         Log.f("")
@@ -323,7 +334,7 @@ class IntroPresenter : IntroContract.Presenter
 
     override fun onClickIntroduce()
     {
-        TODO("Not yet implemented")
+        // TODO 팍스스쿨 소개 (WEB)
     }
 
     override fun onClickHomeButton()
@@ -335,9 +346,7 @@ class IntroPresenter : IntroContract.Presenter
     override fun onClickLogin()
     {
         Log.f("")
-        //startLoginActivity()
-        startFreeUser()
-
+        startLoginActivity()
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
@@ -365,47 +374,8 @@ class IntroPresenter : IntroContract.Presenter
                 }
                 else
                 {
-                    executeSequence();
+                    executeSequence()
                 }
-            }
-        }
-    }
-
-    override fun resume()
-    {
-        Log.f("")
-    }
-
-    override fun pause()
-    {
-        Log.f("")
-    }
-
-    override fun destroy()
-    {
-        Log.f("")
-        release()
-    }
-
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-        when(requestCode)
-        {
-            REQUEST_CODE_LOGIN ->
-            if(resultCode == Activity.RESULT_OK)
-            {
-                mMainContractView.showProgressView()
-                /**
-                 * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
-                 */
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQEUST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
-            }
-
-            REQUEST_CODE_GO_LOGIN ->
-            if(resultCode == Activity.RESULT_OK)
-            {
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
             }
         }
     }
@@ -415,9 +385,9 @@ class IntroPresenter : IntroContract.Presenter
         when(msg.what)
         {
             MESSAGE_INIT -> init()
-            MESSAGE_REQUEST_AUTO_LOGIN -> requestAutoLoginAsync();
+            MESSAGE_REQUEST_AUTO_LOGIN -> requestAutoLoginAsync()
             MESSAGE_CHECK_API_MAIN -> requestMainInformationAsync()
-            MESSAGE_REQEUST_COMPLETE_LOGIN -> requestInitAsync()
+            MESSAGE_REQUEST_COMPLETE_LOGIN -> requestInitAsync()
             MESSAGE_START_LOGIN -> startLoginActivity()
             MESSAGE_START_MAIN ->
             {
@@ -443,13 +413,12 @@ class IntroPresenter : IntroContract.Presenter
             val result : BaseResult = `object` as BaseResult
 
             Log.f("code : " + code + ", status : " + result.getStatus())
-            if(result.getStatus() === BaseResult.SUCCESS_CODE_OK)
+            if(result.getStatus() == BaseResult.SUCCESS_CODE_OK)
             {
                 if(code == Common.COROUTINE_CODE_INIT)
                 {
                     val versionDataResult : VersionDataResult = (result as VersionBaseObject).getData()
-                    CommonUtils.getInstance(mContext)
-                        .setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
                    /* if(versionDataResult.isNeedUpdate)
                     {
                         if(versionDataResult.isForceUpdate())
@@ -477,7 +446,7 @@ class IntroPresenter : IntroContract.Presenter
                     val loginInformationResult : LoginInformationResult = (result as LoginBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, loginInformationResult)
                     mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                    enableProgressAniamtion(IntroProcess.LOGIN_COMPLTE)
+                    enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                 }
                 else if(code == Common.COROUTINE_CODE_MAIN)
                 {
@@ -485,12 +454,12 @@ class IntroPresenter : IntroContract.Presenter
                     val mainInformationResult : MainInformationResult = (`object` as MainInformationBaseObject).getData()
                     CommonUtils.getInstance(mContext).saveMainData(mainInformationResult)
                     mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
-                    enableProgressAniamtion(IntroProcess.MAIN_COMPELTE)
+                    enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
                 }
             } else
             {
                 Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                if(result.isAuthenticationBroken || result.getStatus() === BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
+                if(result.isAuthenticationBroken || result.getStatus() == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
                 {
                     Log.f("== isAuthenticationBroken ==")
                     (mContext as AppCompatActivity).finish()
@@ -514,7 +483,8 @@ class IntroPresenter : IntroContract.Presenter
             mMainHandler.sendEmptyMessage(MESSAGE_APP_SERVER_ERROR)
         }
     }
-    var mDialogListener : DialogListener = object : DialogListener
+
+    private val mDialogListener : DialogListener = object : DialogListener
     {
         override fun onConfirmButtonClick(messageType : Int)
         {

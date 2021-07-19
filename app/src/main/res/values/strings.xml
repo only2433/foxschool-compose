@@ -80,6 +80,7 @@
     <string name="text_update">업데이트</string>
     <string name="text_service_terms_use">서비스 이용약관</string>
     <string name="text_privacy_policy">개인정보 처리방침</string>
+    <string name="text_my_info_change">나의 정보 수정</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -116,6 +117,9 @@
     <string name="text_save">저장</string>
     <string name="text_mobile_number">휴대폰 번호</string>
     <string name="text_option">(선택)</string>
+    <string name="text_password">비밀번호</string>
+    <string name="text_new_password">새 비밀번호 (영문,숫자 조합 4~10자)</string>
+    <string name="text_new_password_confirm">새 비밀번호 확인</string>
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -136,7 +140,6 @@
     <string name="message_not_add_selected_contents_bookshelf">책장에 담을 콘텐츠를 선택해 주세요.</string>
     <string name="message_success_delete_contents">삭제되었습니다.</string>
     <string name="message_try_logout">로그아웃 하시겠습니까?</string>
-    <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_check_end_app">앱을 종료하시겠습니까？</string>
     <string name="message_empty_bookshelf_contents">책장에 담겨있는 콘텐츠가 없습니다.</string>
     <string name="message_empty_vocabulary_contents">콘텐츠가 없습니다.</string>
@@ -144,9 +147,6 @@
     <string name="message_maximum_vocabulary">단어장은 10개까지 생성할 수 있습니다.</string>
     <string name="message_delete_vocabulary">단어장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다. \n삭제하시겠습니까?</string>
     <string name="message_delete_bookshelf">책장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다.\n삭제하시겠습니까?</string>
-    <string name="message_warning_empty_id">아이디를 입력해주세요.</string>
-    <string name="message_warning_empty_password">비밀번호를 입력해주세요.</string>
-    <string name="message_warning_empty_school">학교를 선택해 주세요.</string>
     <string name="message_intro_foxschool">팍스스쿨 회원 전용 앱입니다.\n회원가입은 서비스 신청 후 PC웹에서 가능합니다.</string>
     <string name="message_force_update">중요 업데이트가 있습니다. 원활한 앱 이용을 위해서는 반드시 업데이트 해야 합니다.</string>
     <string name="message_need_update">새로운 버전의 앱이 출시되었습니다. 업데이트하시겠습니까?</string>
@@ -157,12 +157,34 @@
     <string name="message_ar_information">* AR 지수란  단어, 문장의 길이 및  복잡성 등을 분석하여 영어원서의 종합적인  난이도를  나타낸  수치입니다.\n\n* 미국 학교의  학년  개념과 연계해 표현됩니다. 예) AR 3.5: 초등 3학년 5개월 수준의 학생이 읽는 평균 난이도</string>
     <string name="message_company_information_from_login">고객센터 02-538-8770\n월 - 금 (오전 9시 - 오후 6시), 공휴일 제외</string>
     <string name="message_last_page">마지막 페이지입니다.</string>
-    <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
     <string name="message_quiz_save_record_success">퀴즈 결과가 저장되었습니다. \n학습기록에서 확인 가능합니다.</string>
     <string name="message_quiz_limit_not_save">풀이 시간이 초과된 결과는 저장할 수 없습니다.</string>
     <string name="message_sound_text_title">Listen and choose the correct word.</string>
     <string name="message_company_introduce">© 2019 Little Fox Co., Ltd. All rights reserved.</string>
     <string name="message_my_info_student">학급정보 변경은 담당 선생님께 문의하세요.</string>
+    <string name="message_bio_login_on">휴대폰에 등록된 지문정보로 로그인 설정을 등록합니다.</string>
+    <string name="message_bio_login_off">등록된 지문정보 로그인 인증을 해제합니다.</string>
+    <string name="message_bio_login_enable">지문인증 로그인 설정을 완료했습니다.</string>
+    <string name="message_bio_login_disable">지문인증 로그인이 해제되었습니다.</string>
+    <string name="message_password_check_for_change_user_info">회원정보 수정을 위해 비밀번호를 입력해 주세요.</string>
+
+    <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
+    <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>
+    <string name="message_warning_empty_password">비밀번호를 입력해 주세요.</string>
+    <string name="message_warning_empty_school">학교를 선택해 주세요.</string>
+    <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
+    <string name="message_warning_input_name">이름은 한글 2-8자, 영문 4-16자까지 가능합니다.</string>
+    <string name="message_warning_input_email">올바른 형식의 이메일 주소를 입력하세요.</string>
+    <string name="message_warning_input_phone">숫자만 입력해 주세요. ( - 제외)</string>
+    <string name="message_warning_input_password">비밀번호는 4-10자의 숫자 혹은 영문으로 입력해 주세요.</string>
+    <string name="message_warning_inactive_account">이용중인 사용자가 아닙니다.</string>
+    <string name="message_warning_password_confirm">기존 비밀번호가 일치하지 않습니다.</string>
+    <string name="message_warning_input_new_password_confirm">비밀번호 확인을 위해 다시 입력해 주세요.</string>
+    <string name="message_warning_new_password_confirm">비밀번호가 일치하지 않습니다.</string>
+    <string name="message_warning_cant_use_bio">지문인증 기능을 사용할 수 없는 기기입니다.</string>
+    <string name="message_warning_unable_bio">기기의 지문인증 기능을 활성화 해주세요.</string>
+    <string name="message_warning_none_bio">기기에 등록된 지문이 없습니다.</string>
+    <string name="message_warning_password_confirm_retry">비밀번호가 일치하지 않습니다.\n다시 입력해 주세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

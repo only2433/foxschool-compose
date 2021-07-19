@@ -26,7 +26,6 @@ import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.contract.IntroContract
 import com.littlefox.app.foxschool.main.presenter.IntroPresenter
 import com.littlefox.app.foxschool.view.ProgressBarAnimation
-import com.littlefox.app.foxschool.view.WaveDrawable
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -69,15 +68,14 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 
     companion object
     {
-        private const val SYSTEM_DIALOG_REASON_KEY : String = "reason"
-        private const val SYSTEM_DIALOG_REASON_HOME_KEY : String = "homekey"
+        private const val SYSTEM_DIALOG_REASON_KEY : String         = "reason"
+        private const val SYSTEM_DIALOG_REASON_HOME_KEY : String    = "homekey"
     }
 
-
     private lateinit var mIntroPresenter : IntroContract.Presenter
-    private var mHomeKeyIntentFilter : IntentFilter? = null
+    private lateinit var mProgressBarAnimation : ProgressBarAnimation
     private var mFrameAnimationDrawable : AnimationDrawable? = null
-    private lateinit var mProgressBarAnimation : ProgressBarAnimation;
+    private var mHomeKeyIntentFilter : IntentFilter? = null
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -96,26 +94,6 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         mIntroPresenter = IntroPresenter(this)
         mHomeKeyIntentFilter = IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
     }
-
-    override fun handlerMessage(message : Message)
-    {
-        mIntroPresenter.sendMessageEvent(message)
-    }
-
-    override fun initView() {}
-
-    override fun initFont()
-    {
-        _IntroTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _IntroProgressText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _IntroduceTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
-        _LoginTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
-    }
-
-    override fun showLoading() {}
-    override fun hideLoading() {}
-    override fun showSuccessMessage(message : String) {}
-    override fun showErrorMessage(message : String) {}
 
     override fun onResume()
     {
@@ -144,15 +122,30 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         stopFrameAnimation()
     }
 
+    override fun initView() {}
+
+    override fun initFont()
+    {
+        _IntroTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
+        _IntroProgressText.setTypeface(Font.getInstance(this).getRobotoBold())
+        _IntroduceTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
+        _LoginTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
+    }
+
+    override fun handlerMessage(message : Message)
+    {
+        mIntroPresenter.sendMessageEvent(message)
+    }
+
+    override fun showLoading() {}
+    override fun hideLoading() {}
+    override fun showSuccessMessage(message : String) {}
+    override fun showErrorMessage(message : String) {}
+
     override fun onUserLeaveHint()
     {
         super.onUserLeaveHint()
         Log.f("")
-    }
-
-    override fun onBackPressed()
-    {
-        super.onBackPressed()
     }
 
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
@@ -165,7 +158,6 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     {
         mIntroPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
-
 
     override fun onNewIntent(intent : Intent?)
     {
@@ -202,16 +194,6 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         _IntroProgressPercent.startAnimation(mProgressBarAnimation)
     }
 
-    @OnClick( R.id._introduceText, R.id._loginText)
-    fun onClickView(view : View)
-    {
-        when(view.id)
-        {
-            R.id._introduceText -> mIntroPresenter.onClickIntroduce()
-            R.id._loginText -> mIntroPresenter.onClickLogin()
-        }
-    }
-
     private fun startFrameAnimation()
     {
         if(mFrameAnimationDrawable == null)
@@ -226,6 +208,21 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     {
         mFrameAnimationDrawable?.stop()
         mFrameAnimationDrawable = null
+    }
+
+    override fun onBackPressed()
+    {
+        super.onBackPressed()
+    }
+
+    @OnClick( R.id._introduceText, R.id._loginText)
+    fun onClickView(view : View)
+    {
+        when(view.id)
+        {
+            R.id._introduceText -> mIntroPresenter.onClickIntroduce()
+            R.id._loginText -> mIntroPresenter.onClickLogin()
+        }
     }
 
     private val mBroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver()
@@ -247,6 +244,4 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
             }
         }
     }
-
-
 }

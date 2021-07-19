@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/color_ffffff">
 
-
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_studyInfoLayout"
         android:layout_width="wrap_content"
@@ -87,8 +86,7 @@
             app:scale_left="242"
             app:scale_top="42"
             app:scale_width="45"
-            app:scale_height="42"
-             />
+            app:scale_height="42" />
 
         <TextView
             android:id="@+id/_recordLogText"
@@ -101,8 +99,7 @@
             app:scale_top="87"
             app:scale_width="160"
             app:scale_height="40"
-            app:scale_textsize="18"
-             />
+            app:scale_textsize="18" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -111,8 +108,7 @@
             app:scale_left="344"
             app:scale_top="23"
             app:scale_width="1"
-            app:scale_height="114"
-            />
+            app:scale_height="114" />
 
         <ImageView
             android:id="@+id/_homeworkManageMenuButton"
@@ -133,8 +129,7 @@
             app:scale_left="407"
             app:scale_top="42"
             app:scale_width="45"
-            app:scale_height="42"
-            />
+            app:scale_height="42" />
 
         <TextView
             android:id="@+id/_homeworkManageText"
@@ -147,9 +142,7 @@
             app:scale_top="87"
             app:scale_width="160"
             app:scale_height="40"
-            app:scale_textsize="18"
-
-            />
+            app:scale_textsize="18" />
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
@@ -165,11 +158,9 @@
             android:id="@+id/_menuItemLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/drawer_item_user_tablet"
-            />
+            layout="@layout/drawer_item_user_tablet" />
+
     </ScrollView>
-
-
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_userStatusLayout"
@@ -188,15 +179,27 @@
             android:textColor="@color/color_ffffff"
             app:scale_left="46"
             app:scale_top="14"
-            app:scale_width="400"
+            app:scale_width="200"
             app:scale_height="76"
-            app:scale_textsize="28"/>
+            app:scale_textsize="27"/>
+
+        <TextView
+            android:id="@+id/_userClassText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textColor="@color/color_ffffff"
+            app:scale_left="246"
+            app:scale_top="14"
+            app:scale_width="380"
+            app:scale_height="76"
+            app:scale_textsize="22"/>
 
         <TextView
             android:id="@+id/_userInfoButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_box_empty_green_60"
+            android:background="@drawable/round_box_empty_green_84"
             android:text="@string/text_my_info"
             android:textColor="@color/color_23cc8a"
             android:gravity="center"
@@ -205,8 +208,8 @@
             app:scale_width="140"
             app:scale_height="55"
             app:scale_textsize="22"/>
-    </com.ssomai.android.scalablelayout.ScalableLayout>
 
+    </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_menuLogoutLayout"

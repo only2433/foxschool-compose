@@ -36,7 +36,7 @@ class Common
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
         const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
 
-        const val SECOND : Int = 1000;
+        const val SECOND : Int = 1000
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f
 
         const val BASE_WEBVIEW_URL : String         = BASE_URL + "web/"
@@ -61,13 +61,15 @@ class Common
         const val PARAMS_IS_ENABLE_PAGE_BY_PAGE : String        = "is_enable_page_by_page"
         const val PARAMS_VOCABULARY_INTERVAL : String           = "vocabulary_interval"
         const val PARAMS_APP_EXECUTE_DATE : String              = "app_execute_date"
-        const val PARAMS_IAC_CONTROLLER_INFORMATION : String    = "iac_controller_information";
+        const val PARAMS_IAC_CONTROLLER_INFORMATION : String    = "iac_controller_information"
         const val PARAMS_IS_FORCE_PROGRESSIVE_PLAY : String     = "is_force_progressive_play"
         const val PARAMS_FIREBASE_PUSH_TOKEN : String           = "firebase_access_token"
         const val PARAMS_IS_PUSH_SEND : String                  = "is_push_send"
-        const val PARAMS_IS_TEACHER_MODE : String               = "is_teacher_mode";
+        const val PARAMS_IS_TEACHER_MODE : String               = "is_teacher_mode"
         const val PARAMS_CHECK_TABLET : String                  = "check_tablet"
+        const val PARAMS_IS_BIO_LOGIN_DATA : String             = "is_bio_login_data"
 
+        const val INTENT_IS_LOGIN_FROM_MAIN : String                = "init_intro_login"
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
         const val INTENT_PLAYER_INTRODUCE_VIDEO_PARAMS : String     = "introduce_video"
         const val INTENT_VOCABULARY_DATA : String                   = "vocabulary_data"
@@ -97,8 +99,8 @@ class Common
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE : String    = "vocabulary_contents_delete"
         const val COROUTINE_CODE_VOCABULARY_CONTENTS_LIST : String      = "vocabulary_contents_list"
         const val COROUTINE_SERIES_CONTENTS_LIST_INFO : String          = "series_contents_list_info"
-        const val COROUTINE_CODE_INTRODUCE_SERIES : String              = "introduce_series";
-        const val COROUTINE_CODE_STORY_CATEGORY_LIST_INFO : String      = "story_categoty_list_info";
+        const val COROUTINE_CODE_INTRODUCE_SERIES : String              = "introduce_series"
+        const val COROUTINE_CODE_STORY_CATEGORY_LIST_INFO : String      = "story_categoty_list_info"
         const val COROUTINE_CODE_SEARCH_LIST : String                   = "search_list"
         const val COROUTINE_CODE_QUIZ_INFORMATION : String              = "quiz_information"
         const val COROUTINE_CODE_QUIZ_SAVE_RECORD : String              = "quiz_save_record"

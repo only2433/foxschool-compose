@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
     <uses-permission android:name="com.android.vending.BILLING"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -112,6 +113,18 @@
         </activity>
 
         <activity android:name=".main.MyInformationActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.MyInfoChangeActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.PasswordChangeActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default">

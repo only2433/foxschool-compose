@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaseLayout"
+            layout="@layout/topbar_common_menu_tablet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_myInfoChangeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="1066">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_box_1w"
+                app:scale_left="448"
+                app:scale_top="20"
+                app:scale_width="1024"
+                app:scale_height="1026" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="535"
+                app:scale_top="80"
+                app:scale_width="852"
+                app:scale_height="90" />
+
+            <TextView
+                android:id="@+id/_idTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_id"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="566"
+                app:scale_top="80"
+                app:scale_width="280"
+                app:scale_height="90"
+                app:scale_textsize="32" />
+
+            <TextView
+                android:id="@+id/_idText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/color_444444"
+                app:scale_left="844"
+                app:scale_top="80"
+                app:scale_width="450"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:id="@+id/_inputNameBg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="535"
+                app:scale_top="182"
+                app:scale_width="852"
+                app:scale_height="90" />
+
+            <TextView
+                android:id="@+id/_nameTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_name"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="566"
+                app:scale_top="182"
+                app:scale_width="280"
+                app:scale_height="90"
+                app:scale_textsize="32" />
+
+            <EditText
+                android:id="@+id/_inputNameEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/color_444444"
+                app:scale_left="844"
+                app:scale_top="182"
+                app:scale_width="450"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:id="@+id/_inputNameDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_tex_del"
+                app:scale_left="1295"
+                app:scale_top="202"
+                app:scale_width="50"
+                app:scale_height="50" />
+
+            <ImageView
+                android:id="@+id/_inputEmailBg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="535"
+                app:scale_top="284"
+                app:scale_width="489"
+                app:scale_height="90" />
+
+            <EditText
+                android:id="@+id/_inputEmailEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="@color/color_444444"
+                app:scale_left="565"
+                app:scale_top="284"
+                app:scale_width="360"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:id="@+id/_inputEmailDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_tex_del"
+                app:scale_left="937"
+                app:scale_top="304"
+                app:scale_width="50"
+                app:scale_height="50" />
+
+            <TextView
+                android:id="@+id/_emailAtText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="\@"
+                android:textColor="@color/color_333333"
+                app:scale_left="1024"
+                app:scale_top="284"
+                app:scale_width="70"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="1094"
+                app:scale_top="284"
+                app:scale_width="293"
+                app:scale_height="90" />
+
+            <TextView
+                android:id="@+id/_emailEndText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_444444"
+                app:scale_left="1123"
+                app:scale_top="284"
+                app:scale_width="220"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:id="@+id/_inputEndSelectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_pop_down"
+                app:scale_left="1325"
+                app:scale_top="319"
+                app:scale_width="33"
+                app:scale_height="20" />
+
+            <ImageView
+                android:id="@+id/_inputPhoneBg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="535"
+                app:scale_top="386"
+                app:scale_width="852"
+                app:scale_height="90" />
+
+            <TextView
+                android:id="@+id/_phoneTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_mobile_number"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="566"
+                app:scale_top="386"
+                app:scale_width="286"
+                app:scale_height="90"
+                app:scale_textsize="32" />
+
+            <TextView
+                android:id="@+id/_phoneOptionTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_option"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="720"
+                app:scale_top="386"
+                app:scale_width="100"
+                app:scale_height="90"
+                app:scale_textsize="28" />
+
+            <EditText
+                android:id="@+id/_inputPhoneEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:inputType="phone"
+                android:singleLine="true"
+                android:textColor="@color/color_444444"
+                app:scale_left="845"
+                app:scale_top="386"
+                app:scale_width="450"
+                app:scale_height="90"
+                app:scale_textsize="34" />
+
+            <ImageView
+                android:id="@+id/_inputPhoneDeleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_tex_del"
+                app:scale_left="1296"
+                app:scale_top="406"
+                app:scale_width="50"
+                app:scale_height="50" />
+
+            <TextView
+                android:id="@+id/_saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_box_gray_84"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="@string/text_save"
+                android:textColor="@color/color_ffffff"
+                app:scale_left="534"
+                app:scale_top="516"
+                app:scale_width="852"
+                app:scale_height="84"
+                app:scale_textsize="32" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

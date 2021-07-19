@@ -165,6 +165,7 @@
                 android:cursorVisible="false"
                 android:gravity="center_vertical"
                 android:hint="@string/text_school_search"
+                android:inputType="text"
                 android:singleLine="true"
                 app:scale_height="84"
                 app:scale_left="667"

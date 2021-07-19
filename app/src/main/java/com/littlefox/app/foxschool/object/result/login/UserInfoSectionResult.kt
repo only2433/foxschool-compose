@@ -7,6 +7,11 @@ class UserInfoSectionResult
     private var fu_id : String = ""
     private var login_id : String = ""
     private var name : String = ""
+    private var nick_name : String = ""
+    private var sex : String = ""
+    private var birth : String = ""
+    private var email : String = ""
+    private var phone : String = ""
     private var user_type : String = ""
 
     fun getFoxUserID() : String
@@ -22,6 +27,31 @@ class UserInfoSectionResult
     fun getName() : String
     {
         return name
+    }
+
+    fun getNickName() : String
+    {
+        return nick_name
+    }
+
+    fun getSex() : String
+    {
+        return sex
+    }
+
+    fun getBirth() : String
+    {
+        return birth
+    }
+
+    fun getEmail() : String
+    {
+        return email
+    }
+
+    fun getPhone() : String
+    {
+        return phone
     }
 
     fun getUserType() : String
