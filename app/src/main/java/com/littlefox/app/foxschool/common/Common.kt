@@ -188,6 +188,8 @@ class Common
         const val QUIZ_CODE_TEXT = "T"
         const val QUIZ_CODE_PHONICS_SOUND_TEXT = "S"
         const val QUIZ_CODE_SOUND_TEXT = "E"
+
+        const val PUSH_TOPIC_NAME = "allowPushNotification"
     }
 
 }
