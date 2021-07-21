@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.InstanceIdResult
+import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -92,6 +93,19 @@ class IntroPresenter : IntroContract.Presenter
                     CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, instanceIdResult!!.getToken())
                 }
             })
+
+        // 푸쉬 설정값 가져오기
+        val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
+        Log.f("setSubscribeTopic : ${isPushEnable == "Y"}")
+        if (isPushEnable == "Y")
+        {
+            FirebaseMessaging.getInstance().subscribeToTopic(Common.PUSH_TOPIC_NAME)
+        }
+        else
+        {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(Common.PUSH_TOPIC_NAME)
+        }
+
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT, Common.DURATION_NORMAL)
     }
 

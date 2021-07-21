@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.main.presenter
 import android.content.Context
 import android.content.Intent
 import android.os.Message
+import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.Common
@@ -183,6 +184,15 @@ class MyInformationPresenter : MyInformationContract.Presenter
         Log.f("")
         mCheckPush = !mCheckPush
         CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_PUSH_SEND, if(mCheckPush) "Y" else "N")
+        Log.f("setSubscribeTopic : $mCheckPush")
+        if (mCheckPush)
+        {
+            FirebaseMessaging.getInstance().subscribeToTopic(Common.PUSH_TOPIC_NAME)
+        }
+        else
+        {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(Common.PUSH_TOPIC_NAME)
+        }
         mMyInformationContractView.setSwitchPush(mCheckPush)
     }
 
