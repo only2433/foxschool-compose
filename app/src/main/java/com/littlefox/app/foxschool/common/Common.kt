@@ -20,8 +20,9 @@ class Common
         const val API_ME : String                   = DEVELOP_BASE_API + "auth/me"
         const val API_MAIN : String                 = DEVELOP_BASE_API + "app/main"
         const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
-        const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
+        const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
 
+        const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
         const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
         const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
         const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
@@ -106,6 +107,7 @@ class Common
         const val COROUTINE_CODE_QUIZ_INFORMATION : String              = "quiz_information"
         const val COROUTINE_CODE_QUIZ_SAVE_RECORD : String              = "quiz_save_record"
         const val COROUTINE_CODE_MY_INFO_UPDATE : String                = "my_info_update"
+        const val COROUTINE_CODE_PASSWORD_CHANGE : String               = "password_change"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"

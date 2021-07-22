@@ -36,13 +36,13 @@ class LittlefoxFirebaseMessagingService : FirebaseMessagingService()
     override fun onMessageReceived(remoteMessage : RemoteMessage)
     {
         Log.f("remoteMessage data : " + remoteMessage.getData())
-        Log.i(TAG, "From: " + remoteMessage.getFrom())
+        Log.i("From: " + remoteMessage.getFrom())
 
 
         // Check if message contains a data payload.
         if(remoteMessage.getData().size > 0)
         {
-            Log.i(TAG, "Message data payload: " + remoteMessage.getData())
+            Log.i("Message data payload: " + remoteMessage.getData())
             showNotification(remoteMessage.getData().get("msg").toString())
         }
         else
