@@ -95,16 +95,14 @@ class IntroPresenter : IntroContract.Presenter
             })
 
         // 푸쉬 설정값 가져오기
-        val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
+        val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "")
         Log.f("setSubscribeTopic : ${isPushEnable == "Y"}")
-        if (isPushEnable == "Y")
+        if (isPushEnable == "")
         {
             FirebaseMessaging.getInstance().subscribeToTopic(Common.PUSH_TOPIC_NAME)
+            CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_PUSH_SEND, "Y")
         }
-        else
-        {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(Common.PUSH_TOPIC_NAME)
-        }
+
 
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT, Common.DURATION_NORMAL)
     }
