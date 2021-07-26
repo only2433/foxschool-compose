@@ -96,7 +96,7 @@ class IntroPresenter : IntroContract.Presenter
 
         // 푸쉬 설정값 가져오기
         val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "")
-        Log.f("setSubscribeTopic : ${isPushEnable == "Y"}")
+        Log.f("setSubscribeTopic : $isPushEnable")
         if (isPushEnable == "")
         {
             FirebaseMessaging.getInstance().subscribeToTopic(Common.PUSH_TOPIC_NAME)
