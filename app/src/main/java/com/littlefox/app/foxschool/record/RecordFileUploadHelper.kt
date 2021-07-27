@@ -46,7 +46,11 @@ class RecordFileUploadHelper(private val mContext : Context)
         {
             mAsyncListener.onRunningStart(Common.COROUTINE_CODE_CLASS_RECORD_FILE)
             //mOkHttpClient = new OkHttpClient();
-            mOkHttpClient = OkHttpClient.Builder().connectTimeout(1, TimeUnit.MINUTES).readTimeout(20, TimeUnit.SECONDS).writeTimeout(20, TimeUnit.SECONDS).build()
+            mOkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .build()
             mOkHttpClient?.newCall(request)?.enqueue(object : Callback
             {
                 override fun onFailure(call : Call, e : IOException)
@@ -125,11 +129,19 @@ class RecordFileUploadHelper(private val mContext : Context)
 
             if(Feature.IS_FREE_USER === false)
             {
-                request = Request.Builder().addHeader("api-user-agent", userAgent).addHeader("Authorization", token).url(Common.API_CLASS_RECORD_UPLOAD).post(requestBodyData).build()
+                request = Request.Builder()
+                    .addHeader("api-user-agent", userAgent)
+                    .addHeader("Authorization", token)
+                    .url(Common.API_CLASS_RECORD_UPLOAD)
+                    .post(requestBodyData).build()
             }
             else
             {
-                request = Request.Builder().addHeader("api-user-agent", userAgent).url(Common.API_CLASS_RECORD_UPLOAD).post(requestBody).build()
+                request = Request.Builder()
+                    .addHeader("api-user-agent", userAgent)
+                    .url(Common.API_CLASS_RECORD_UPLOAD)
+                    .post(requestBody)
+                    .build()
             }
             return request
         }
