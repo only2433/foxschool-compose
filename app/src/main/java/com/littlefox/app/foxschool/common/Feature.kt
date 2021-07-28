@@ -19,6 +19,11 @@ object Feature {
     var IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY : Boolean  = false
 
     /**
+     * 특정 폰 비율이 16:9 가 아닌 정상적이지 않은 20:9 비율의 폰을 지원하기 위해 사용.
+     */
+    var IS_20_9_SUPPORT_RADIO_DISPLAY = false
+
+    /**
      * 유료사용자 인지 무료 사용자인지 구분하기 위해 사용
      */
     var IS_FREE_USER : Boolean  = true
@@ -52,5 +57,5 @@ object Feature {
     /**
      * 앱 사용자의 타입
      */
-    var CURRENT_USER_TYPE : UserType = UserType.STUDENT;
+    var CURRENT_USER_TYPE : UserType = UserType.STUDENT
 }

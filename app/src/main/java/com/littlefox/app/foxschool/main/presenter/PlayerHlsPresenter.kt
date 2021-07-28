@@ -23,6 +23,7 @@ import com.google.android.exoplayer2.util.Util
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
@@ -136,11 +137,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         private const val MESSAGE_START_TRANSLATE : Int                 = 106
         private const val MESSAGE_START_EBOOK : Int                     = 107
         private const val MESSAGE_START_VOCABULARY : Int                = 108
-        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 109
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 110
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 111
-        private const val MESSAGE_REQUEST_VIDEO : Int                   = 112
-        private const val MESSAGE_CHECK_MOVIE : Int                     = 113
+        private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
+        private const val MESSAGE_START_FLASHCARD : Int                 = 110
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 111
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 112
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 113
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 114
+        private const val MESSAGE_CHECK_MOVIE : Int                     = 115
 
         private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
         private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
@@ -308,6 +311,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             MESSAGE_START_TRANSLATE -> startOriginTranslateActivity()
             MESSAGE_START_EBOOK -> startEbookActivity()
             MESSAGE_START_VOCABULARY -> startVocabularyActivity()
+            MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
+            MESSAGE_START_FLASHCARD -> startFlashcardActivity()
             MESSAGE_REQUEST_CONTENTS_ADD ->
             {
                 mPlayerContractView.showLoading()
@@ -336,7 +341,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
-        mLoginInformationResult = Gson().fromJson(testUserInformation, LoginInformationResult::class.java)
+//        mLoginInformationResult = Gson().fromJson(testUserInformation, LoginInformationResult::class.java)
+        mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
         accessDataBase()
         //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
     }
@@ -883,8 +889,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun settingCurrentMovieStudyOption()
     {
         var isEbookAvailable = true
-        var isQuizAvaiable = true
+        var isQuizAvailable = true
         var isVocabularyAvailable = true
+        var isFlashcardAvailable = true
+        var isStarwordsAvailable = true
         var isTranslateAvailable = true
         val data : ContentsBaseResult = mPlayInformationList[mCurrentPlayMovieIndex]
         var isNextMovieHave = false
@@ -900,11 +908,19 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
         {
-            isQuizAvaiable = false
+            isQuizAvailable = false
         }
         if(data.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED))
         {
             isVocabularyAvailable = false
+        }
+        if(data.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+        {
+            isFlashcardAvailable = false
+        }
+        if(data.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+        {
+            isStarwordsAvailable = false
         }
         if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
         {
@@ -918,7 +934,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             mPlayerContractView.enablePortraitOptionButton()
         }
-        mPlayerContractView.settingPaymentEndView(isEbookAvailable, isQuizAvaiable, isVocabularyAvailable, isTranslateAvailable, isNextMovieHave)
+        mPlayerContractView.settingPaymentEndView(
+            isEbookAvailable = isEbookAvailable,
+            isQuizAvailable = isQuizAvailable,
+            isVocabularyAvailable = isVocabularyAvailable,
+            isFlashcardAvailable = isFlashcardAvailable,
+            isStarwordsAvailable = isStarwordsAvailable,
+            isTranslateAvailable = isTranslateAvailable,
+            isNextButtonVisible = isNextMovieHave
+        )
     }
 
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
@@ -1383,6 +1407,33 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 .startActivity()
     }
 
+    private fun startGameStarwordsActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
+            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        val data = FlashcardDataObject(
+            mPlayInformationList[mSelectItemOptionIndex].getID(),
+            mPlayInformationList[mSelectItemOptionIndex].getName(),
+            mPlayInformationList[mSelectItemOptionIndex].getSubName(),
+            VocabularyType.VOCABULARY_CONTENTS
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
     /**
      * 컨텐츠의 책장 리스트에서 나의단어장으로 컨텐츠를 추가해서 갱신할때 사용하는 메소드 ( 추가됨으로써 서버쪽의 해당 책장의 정보를 갱신하기 위해 사용 )
      * 예) 책장 ID , 컨텐츠의 개수, 책장 컬러 등등
@@ -1643,6 +1694,20 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mMainHandler.sendEmptyMessage(MESSAGE_START_TRANSLATE)
     }
 
+    override fun onClickCurrentMovieStarwordsButton()
+    {
+        Log.f("")
+        mSelectItemOptionIndex = mCurrentPlayMovieIndex
+        mMainHandler.sendEmptyMessage(MESSAGE_START_GAME_STARWORDS)
+    }
+
+    override fun onClickCurrentMovieFlashcardButton()
+    {
+        Log.f("")
+        mSelectItemOptionIndex = mCurrentPlayMovieIndex
+        mMainHandler.sendEmptyMessage(MESSAGE_START_FLASHCARD)
+    }
+
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String)
@@ -1771,6 +1836,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         override fun onClickGameStarwords()
         {
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_STARWORDS, Common.DURATION_SHORT)
         }
 
         override fun onClickGameCrossword()
@@ -1778,7 +1845,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
 
         override fun onClickFlashCard()
-        {}
+        {
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
+        }
 
         override fun onErrorMessage(message : String)
         {

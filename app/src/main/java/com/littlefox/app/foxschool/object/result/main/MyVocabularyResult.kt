@@ -12,7 +12,7 @@ open class MyVocabularyResult : Parcelable
     private var id : String = ""
     private var name : String = ""
     private var color : String = ""
-    private var wordCount : Int = 0
+    private var words_count : Int = 0
 
     /**
      * 해당 컨텐츠 ID
@@ -41,7 +41,7 @@ open class MyVocabularyResult : Parcelable
         contentID = `in`.readString()!!
         name = `in`.readString()!!
         color = `in`.readString()!!
-        wordCount = `in`.readInt()
+        words_count = `in`.readInt()
         vocabularyType = `in`.readSerializable() as VocabularyType
     }
 
@@ -51,7 +51,7 @@ open class MyVocabularyResult : Parcelable
         dest.writeString(contentID)
         dest.writeString(name)
         dest.writeString(color)
-        dest.writeInt(wordCount)
+        dest.writeInt(words_count)
         dest.writeSerializable(vocabularyType)
     }
 
@@ -82,7 +82,7 @@ open class MyVocabularyResult : Parcelable
 
     fun getWordCount() : Int
     {
-        return wordCount
+        return words_count
     }
 
     fun getVocabularyType() : VocabularyType
@@ -92,7 +92,7 @@ open class MyVocabularyResult : Parcelable
 
     fun setWordCount(count : Int)
     {
-        wordCount = count
+        words_count = count
     }
 
     fun setVocabularyType(type : VocabularyType)

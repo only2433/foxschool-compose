@@ -40,6 +40,7 @@ class BottomBookAddDialog : BottomSheetDialog
     private var mMyBookshelfResultList : ArrayList<MyBookshelfResult> = ArrayList<MyBookshelfResult>()
     private var mMyVocabularyResultList : ArrayList<MyVocabularyResult> = ArrayList<MyVocabularyResult>()
     private var isFullScreen : Boolean = false
+    private var isLandScapeMode : Boolean = false
     private val mContext : Context
 
     constructor(context : Context) : super(context)
@@ -57,13 +58,22 @@ class BottomBookAddDialog : BottomSheetDialog
         mContext = context
     }
 
-    protected override fun onCreate(savedInstanceState : Bundle)
+    protected override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(mContext).checkTablet)
         {
             getWindow()!!.setLayout(CommonUtils.getInstance(mContext).getPixel(800), ViewGroup.LayoutParams.MATCH_PARENT)
         }
+        else
+        {
+            // 폰일 때 플래시카드에서 사용하는 BottomDialog 팝업 크기 변경
+            if (isLandScapeMode)
+            {
+                getWindow()!!.setLayout(CommonUtils.getInstance(mContext).getPixel(1000), ViewGroup.LayoutParams.MATCH_PARENT)
+            }
+        }
+
         if(isFullScreen)
         {
             getWindow()!!.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -99,6 +109,11 @@ class BottomBookAddDialog : BottomSheetDialog
     fun setFullScreen()
     {
         isFullScreen = true
+    }
+
+    fun setLandScapeMode()
+    {
+        isLandScapeMode = true
     }
 
     fun setBookSelectListener(bookAddListener : BookAddListener?)

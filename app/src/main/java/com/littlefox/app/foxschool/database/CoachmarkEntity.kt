@@ -16,7 +16,11 @@ data class CoachmarkEntity(
         var isSongCoachmarkViewed : Boolean,
 
         @ColumnInfo(name = "is_record_coachmark_viewed")
-        var isRecordCoachmarkViewed : Boolean)
+        var isRecordCoachmarkViewed : Boolean,
+
+        @ColumnInfo(name = "flashcard_coachmark_viewed")
+        var isFlashcardCoachmarkViewed : Boolean = false
+)
 {
         @PrimaryKey(autoGenerate = true)
         var id : Int = 0

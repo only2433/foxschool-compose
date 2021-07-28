@@ -113,6 +113,7 @@
     <string name="text_change_password">비밀번호 변경</string>
     <string name="text_id">아이디</string>
     <string name="text_name">이름</string>
+    <string name="text_email">이메일</string>
     <string name="text_class_name">반 이름</string>
     <string name="text_save">저장</string>
     <string name="text_mobile_number">휴대폰 번호</string>
@@ -120,6 +121,16 @@
     <string name="text_password">비밀번호</string>
     <string name="text_new_password">새 비밀번호 (영문,숫자 조합 4~10자)</string>
     <string name="text_new_password_confirm">새 비밀번호 확인</string>
+
+    <string name="text_item_count_question"><![CDATA[<b>%d</b>/%d]]></string>
+    <string name="text_study_word"><![CDATA[<font color=\'#FFFF52\'><b>단어로</b></font> 학습하기]]></string>
+    <string name="text_study_meaning"><![CDATA[<font color=\'#FFFF52\'><b>뜻으로</b></font> 학습하기]]></string>
+    <string name="text_flashcard_auto_mode">자동 넘기기</string>
+    <string name="text_flashcard_shuffle_mode">섞어 보기</string>
+    <string name="text_auto_mode_interval">자동 넘기기 간격</string>
+    <string name="text_study_flashcard_replay">다시 학습하기</string>
+    <string name="text_study_flashcard_bookmark">찜 단어 학습하기</string>
+    <string name="text_save_my_books">나의 단어장에 저장</string>
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -185,6 +196,10 @@
     <string name="message_warning_unable_bio">기기의 지문인증 기능을 활성화 해주세요.</string>
     <string name="message_warning_none_bio">기기에 등록된 지문이 없습니다.</string>
     <string name="message_warning_password_confirm_retry">비밀번호가 일치하지 않습니다.\n다시 입력해 주세요.</string>
+    <string name="message_warning_sound_off">버튼을 탭하고 소리를 켜세요.</string>
+    <string name="message_warning_bookmark_init">찜한 단어가 모두 초기화 됩니다. 계속 하시겠습니까?</string>
+    <string name="message_warning_bookmark_empty">찜 단어가 없어요.</string>
+    <string name="message_select_word_to_study">학습할 단어를 선택해 주세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

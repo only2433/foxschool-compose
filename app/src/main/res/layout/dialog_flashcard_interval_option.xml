@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_ffffff"
+    app:layout_behavior="@string/bottom_sheet_behavior"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="142">
+
+        <TextView
+            android:id="@+id/_titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_auto_mode_interval"
+            android:textColor="@color/color_000000"
+            android:gravity="center_vertical"
+            app:scale_left="40"
+            app:scale_top="0"
+            app:scale_width="800"
+            app:scale_height="140"
+            app:scale_textsize="48"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/color_b9b9b9"
+            app:scale_left="0"
+            app:scale_top="140"
+            app:scale_width="1080"
+            app:scale_height="2"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="190">
+
+        <TextView
+            android:id="@+id/_intervalButton1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2초"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/btn_interval_on"
+            app:scale_left="30"
+            app:scale_top="48"
+            app:scale_width="180"
+            app:scale_height="100"
+            app:scale_textsize="36"/>
+
+        <TextView
+            android:id="@+id/_intervalButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3초"
+            android:textColor="@color/color_b9b9b9"
+            android:gravity="center"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/btn_interval_off"
+            app:scale_left="240"
+            app:scale_top="48"
+            app:scale_width="180"
+            app:scale_height="100"
+            app:scale_textsize="36"/>
+
+        <TextView
+            android:id="@+id/_intervalButton3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5초"
+            android:textColor="@color/color_b9b9b9"
+            android:gravity="center"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/btn_interval_off"
+            app:scale_left="450"
+            app:scale_top="48"
+            app:scale_width="180"
+            app:scale_height="100"
+            app:scale_textsize="36"/>
+
+        <TextView
+            android:id="@+id/_intervalButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7초"
+            android:textColor="@color/color_b9b9b9"
+            android:gravity="center"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/btn_interval_off"
+            app:scale_left="660"
+            app:scale_top="48"
+            app:scale_width="180"
+            app:scale_height="100"
+            app:scale_textsize="36"/>
+
+        <TextView
+            android:id="@+id/_intervalButton5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10초"
+            android:textColor="@color/color_b9b9b9"
+            android:gravity="center"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/btn_interval_off"
+            app:scale_left="870"
+            app:scale_top="48"
+            app:scale_width="180"
+            app:scale_height="100"
+            app:scale_textsize="36"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</LinearLayout>

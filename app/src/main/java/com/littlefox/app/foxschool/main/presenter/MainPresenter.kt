@@ -14,10 +14,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
-import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
+import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
@@ -42,19 +43,18 @@ import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.fragment.MainMyBooksFragment
 import com.littlefox.app.foxschool.fragment.MainSongFragment
 import com.littlefox.app.foxschool.fragment.MainStoryFragment
-import com.littlefox.app.foxschool.main.contract.MainContract
-import com.littlefox.app.foxschool.observer.MainObserver
-import com.littlefox.library.system.handler.WeakReferenceHandler
-import com.littlefox.logmonitor.Log
 import com.littlefox.app.foxschool.iac.IACController
+import com.littlefox.app.foxschool.main.contract.MainContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
+import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.viewmodel.MainMyBooksFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MainPresenterDataObserver
 import com.littlefox.app.foxschool.viewmodel.MainSongFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MainStoryFragmentDataObserver
 import com.littlefox.library.system.async.listener.AsyncListener
+import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-
+import com.littlefox.logmonitor.Log
 import java.util.*
 
 class MainPresenter : MainContract.Presenter
@@ -80,9 +80,10 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_FAQ : Int                       = 116
         private const val MESSAGE_START_RESULT_SERIES : Int             = 117
         private const val MESSAGE_START_LOGOUT : Int                    = 118
-        private const val MESSAGE_START_GAME_STARWORDS : Int             = 119
+        private const val MESSAGE_START_GAME_STARWORDS : Int            = 119
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 120
-        private const val MESSAGE_APP_SERVER_ERROR : Int                = 121
+        private const val MESSAGE_START_FLASHCARD : Int                 = 121
+        private const val MESSAGE_APP_SERVER_ERROR : Int                = 122
 
         private const val REQUEST_CODE_GO_LOGIN : Int                   = 1001
         private const val REQUEST_CODE_STUDY_GUIDE : Int                = 1002
@@ -334,6 +335,7 @@ class MainPresenter : MainContract.Presenter
             )
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
+            MESSAGE_START_FLASHCARD -> startFlashcardActivity()
             MESSAGE_APP_SERVER_ERROR ->
             {
                 Log.f("== Server Error  ==")
@@ -498,6 +500,22 @@ class MainPresenter : MainContract.Presenter
             .startActivity()
     }
 
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        val data = FlashcardDataObject(
+            mCurrentDetailOptionResult.getID(),
+            mCurrentDetailOptionResult.getName(),
+            mCurrentDetailOptionResult.getSubName(),
+            VocabularyType.VOCABULARY_CONTENTS
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
     {

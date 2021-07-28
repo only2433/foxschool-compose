@@ -13,7 +13,7 @@ class ServiceSupportedTypeResult : Serializable
     private var ebook : String              = Common.SERVICE_NOT_SUPPORTED
     private var crossword : String          = Common.SERVICE_NOT_SUPPORTED
     private var starwords : String          = Common.SERVICE_NOT_SUPPORTED
-    private var flashcard : String          = Common.SERVICE_NOT_SUPPORTED
+    private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED
 
     fun getStorySupportType() : String
     {
@@ -57,6 +57,6 @@ class ServiceSupportedTypeResult : Serializable
 
     fun getFlashcardSupportType() : String
     {
-        return flashcard
+        return flash_card
     }
 }

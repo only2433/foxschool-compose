@@ -20,6 +20,7 @@ import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.provider.Settings
+import android.text.Html
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
@@ -210,27 +211,45 @@ class CommonUtils
             Log.f("SUITABLE DISPLAY SIZE")
             Feature.IS_MINIMUM_DISPLAY_SIZE = false
         }
+
         if(checkTablet)
         {
             Log.f("비율 : " + displayWidthPixel.toFloat() / displayHeightPixel.toFloat())
-        } else
+        }
+        else
         {
             Log.f("비율 : " + displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
 
         }
+
         if(checkTablet)
         {
-            var currentDisplayRadio : Float = (displayWidthPixel.toFloat() / displayHeightPixel);
+            val currentDisplayRadio : Float = (displayWidthPixel.toFloat() / displayHeightPixel.toFloat())
             if(currentDisplayRadio < Common.MINIMUM_TABLET_DISPLAY_RADIO)
             {
-                Log.f("4 : 3 비율 ")
+                Log.f("TABLET = 4 : 3 비율 ")
                 Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = true
             } else
             {
-                Log.f("16 : 9 비율 ")
+                Log.f("TABLET = 16 : 9 비율 ")
                 Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = false
             }
         }
+        else
+        {
+            val currentDisplayRadio : Float = (displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
+            if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_20_9)
+            {
+                Log.f("PHONE = 20 : 9 비율 ")
+                Feature.IS_20_9_SUPPORT_RADIO_DISPLAY = true
+            }
+            else
+            {
+                Log.f("PHONE = 16 : 9 비율 ")
+                Feature.IS_20_9_SUPPORT_RADIO_DISPLAY = false
+            }
+        }
+
         if(Locale.getDefault().toString().contains(Locale.KOREA.toString()))
         {
             Feature.IS_SUPPORT_LITTLEFOX_CLASS = true
@@ -2337,5 +2356,22 @@ class CommonUtils
         }
 
         return BioCheckResultType.BIO_CANT_USE_HARDWARE
+    }
+
+    fun setTextByHtmlType(baseView : View, itemList : HashMap<Int, String>)
+    {
+        val entries : Set<Map.Entry<Int, String>> = itemList.entries
+
+        for((key, text) in entries)
+        {
+            val textview = baseView.findViewById<View>(key) as TextView
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                textview.text = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY)
+            } else
+            {
+                textview.text = Html.fromHtml(text)
+            }
+        }
     }
 }

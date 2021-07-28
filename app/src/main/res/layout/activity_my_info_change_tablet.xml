@@ -130,8 +130,21 @@
                 android:background="@drawable/text_box"
                 app:scale_left="535"
                 app:scale_top="284"
-                app:scale_width="489"
+                app:scale_width="852"
                 app:scale_height="90" />
+
+            <TextView
+                android:id="@+id/_emailTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_email"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="566"
+                app:scale_top="284"
+                app:scale_width="280"
+                app:scale_height="90"
+                app:scale_textsize="32" />
 
             <EditText
                 android:id="@+id/_inputEmailEditText"
@@ -142,9 +155,9 @@
                 android:inputType="textEmailAddress"
                 android:singleLine="true"
                 android:textColor="@color/color_444444"
-                app:scale_left="565"
+                app:scale_left="844"
                 app:scale_top="284"
-                app:scale_width="360"
+                app:scale_width="450"
                 app:scale_height="90"
                 app:scale_textsize="34" />
 
@@ -154,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@drawable/btn_tex_del"
-                app:scale_left="937"
+                app:scale_left="1295"
                 app:scale_top="304"
                 app:scale_width="50"
                 app:scale_height="50" />
@@ -166,6 +179,7 @@
                 android:gravity="center"
                 android:text="\@"
                 android:textColor="@color/color_333333"
+                android:visibility="gone"
                 app:scale_left="1024"
                 app:scale_top="284"
                 app:scale_width="70"
@@ -176,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/text_box"
+                android:visibility="gone"
                 app:scale_left="1094"
                 app:scale_top="284"
                 app:scale_width="293"
@@ -187,6 +202,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:textColor="@color/color_444444"
+                android:visibility="gone"
                 app:scale_left="1123"
                 app:scale_top="284"
                 app:scale_width="220"
@@ -199,6 +215,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="fitXY"
                 android:src="@drawable/btn_pop_down"
+                android:visibility="gone"
                 app:scale_left="1325"
                 app:scale_top="319"
                 app:scale_width="33"

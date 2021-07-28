@@ -1,13 +1,13 @@
 package com.littlefox.app.foxschool.main.contract
 
-import com.littlefox.app.foxschool.enumerate.PasswordChangeInputType
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.base.BaseContract
 
 class PasswordChangeContract
 {
     interface View : BaseContract.View
     {
-        fun showInputError(type : PasswordChangeInputType, message : String)
+        fun showInputError(type : InputDataType, message : String)
     }
 
     interface Presenter : BaseContract.Presenter

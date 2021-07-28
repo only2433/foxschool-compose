@@ -11,21 +11,19 @@ import android.view.animation.LayoutAnimationController
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
-
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.adapter.VocabularyItemListAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
-
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.VocabularyContract
 import com.littlefox.app.foxschool.main.presenter.VocabularyPresenter
@@ -86,6 +84,10 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
     @BindView(R.id._bottomControlLayout)
     lateinit var _BottomControlLayout : ScalableLayout
 
+    @Nullable
+    @BindView(R.id._menuBarBackground)
+    lateinit var _MenuBarBackground : ImageView
+
     @BindView(R.id._bottomIntervalIcon)
     lateinit var _BottomIntervalIcon : ImageView
 
@@ -112,6 +114,33 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
 
     @BindView(R.id._bottomWordsActionText)
     lateinit var _BottomWordsActionText : TextView
+
+    @Nullable
+    @BindView(R.id._bottomFlashCardActionIcon)
+    lateinit var _BottomFlashCardActionIcon : ImageView
+
+    @Nullable
+    @BindView(R.id._bottomFlashCardActionText)
+    lateinit var _BottomFlashCardActionText : TextView
+
+    @Nullable
+    @BindView(R.id._lineImage1)
+    lateinit var _LineImage1 : ImageView
+
+    @Nullable
+    @BindView(R.id._lineImage2)
+    lateinit var _LineImage2 : ImageView
+
+    @Nullable
+    @BindView(R.id._lineImage3)
+    lateinit var _LineImage3 : ImageView
+
+    @Nullable
+    @BindView(R.id._lineImage4)
+    lateinit var _LineImage4 : ImageView
+
+    private var MARGIN_TOP_TABLET_ITEM_COUNT = 0
+    private var MARGIN_LEFT_PHONE_ITEM_COUNT = 0
 
     private lateinit var mVocabularyPresenter : VocabularyPresenter
     private var isItemSelected = false
@@ -213,6 +242,52 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         _BottomPlayText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _BottomSelectText.setTypeface(Font.getInstance(this).getRobotoMedium())
         _BottomWordsActionText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _BottomFlashCardActionText.setTypeface(Font.getInstance(this).getRobotoMedium())
+    }
+
+    private fun setBottomControllerPhoneLayout()
+    {
+        Log.f("")
+        if(mVocabularyType === VocabularyType.VOCABULARY_CONTENTS)
+        {
+            _BottomControlLayout.setScaleSize(1080f, 176f)
+            _BottomControlLayout.moveChildView(_BottomIntervalIcon, 30f, 0f, 210f, 90f)
+            _BottomControlLayout.moveChildView(_BottomIntervalText, 0f, 90f, 270f, 86f)
+            _BottomControlLayout.moveChildView(_BottomSelectIcon, 300f, 0f, 210f, 90f)
+            _BottomControlLayout.moveChildView(_BottomSelectText, 270f, 90f, 270f, 86f)
+            _BottomControlLayout.moveChildView(_BottomPlayIcon, 570f, 0f, 210f, 90f)
+            _BottomControlLayout.moveChildView(_BottomSelectCountText, 680f, 10f, 30f, 30f)
+            _BottomControlLayout.moveChildView(_BottomPlayText, 540f, 90f, 270f, 86f)
+            _BottomControlLayout.moveChildView(_BottomWordsActionIcon, 840f, 0f, 210f, 90f)
+            _BottomControlLayout.moveChildView(_BottomWordsActionText, 810f, 90f, 270f, 86f)
+            _BottomFlashCardActionIcon.visibility = View.GONE
+            _BottomFlashCardActionText.visibility = View.GONE
+        }
+    }
+
+    private fun setBottomControllerTabletLayout()
+    {
+        Log.f("")
+        if(mVocabularyType === VocabularyType.VOCABULARY_CONTENTS)
+        {
+            _BottomControlLayout.setScaleSize(1920f, 787f)
+            _BottomControlLayout.moveChildView(_MenuBarBackground, 1495f, 193f, 138f, 594f)
+            _BottomControlLayout.moveChildView(_BottomIntervalIcon, 1495f, 200f, 138f, 94f)
+            _BottomControlLayout.moveChildView(_BottomIntervalText, 1495f, 294f, 138f, 50f)
+            _BottomControlLayout.moveChildView(_LineImage1, 1495f, 344f, 138f, 2f)
+            _BottomControlLayout.moveChildView(_BottomSelectIcon, 1495f, 346f, 138f, 94f)
+            _BottomControlLayout.moveChildView(_BottomSelectText, 1495f, 440f, 138f, 50f)
+            _BottomControlLayout.moveChildView(_LineImage2, 1495f, 490f, 138f, 2f)
+            _BottomControlLayout.moveChildView(_BottomPlayIcon, 1495f, 492f, 138f, 94f)
+            _BottomControlLayout.moveChildView(_BottomSelectCountText, 1495f, 512f, 30f, 30f)
+            _BottomControlLayout.moveChildView(_BottomPlayText, 1495f, 586f, 138f, 50f)
+            _BottomControlLayout.moveChildView(_LineImage3, 1495f, 636f, 138f, 2f)
+            _BottomControlLayout.moveChildView(_BottomWordsActionIcon, 1495f, 638f, 138f, 94f)
+            _BottomControlLayout.moveChildView(_BottomWordsActionText, 1495f, 732f, 138f, 50f)
+            _BottomFlashCardActionIcon.visibility = View.GONE
+            _BottomFlashCardActionText.visibility = View.GONE
+            _LineImage4.setVisibility(View.GONE)
+        }
     }
 
     override fun setTitle(title : String)
@@ -260,11 +335,24 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         mVocabularyType = type
         if(type === VocabularyType.VOCABULARY_CONTENTS)
         {
+            if(CommonUtils.getInstance(this).checkTablet)
+            {
+                setBottomControllerTabletLayout()
+            }
+            else
+            {
+                setBottomControllerPhoneLayout()
+            }
+
+            MARGIN_TOP_TABLET_ITEM_COUNT = 512
+            MARGIN_LEFT_PHONE_ITEM_COUNT = 680
             _BottomWordsActionIcon.setImageResource(if(CommonUtils.getInstance(this).checkTablet) R.drawable.tablet_voca else R.drawable.bottom_voca)
             _BottomWordsActionText.setText(getResources().getString(R.string.text_add_vocabulary))
         }
         else if(type === VocabularyType.VOCABULARY_SHELF)
         {
+            MARGIN_TOP_TABLET_ITEM_COUNT = 497
+            MARGIN_LEFT_PHONE_ITEM_COUNT = 548
             _BottomWordsActionIcon.setImageResource(if(CommonUtils.getInstance(this).checkTablet) R.drawable.tablet_delete else R.drawable.bottom_delete)
             _BottomWordsActionText.setText(getResources().getString(R.string.text_delete))
         }
@@ -300,8 +388,8 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_1)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
-                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else MARGIN_LEFT_PHONE_ITEM_COUNT.toFloat(),
+                    if(CommonUtils.getInstance(this).checkTablet) MARGIN_TOP_TABLET_ITEM_COUNT.toFloat() else 10.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
@@ -309,8 +397,8 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_2)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
-                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else MARGIN_LEFT_PHONE_ITEM_COUNT.toFloat(),
+                    if(CommonUtils.getInstance(this).checkTablet) MARGIN_TOP_TABLET_ITEM_COUNT.toFloat() else 10.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 40.0f else 50.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
@@ -318,12 +406,13 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         {
             _BottomSelectCountText.setBackgroundResource(R.drawable.count_3)
             _BottomControlLayout.moveChildView(_BottomSelectCountText,
-                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else 680.0f,
-                    if(CommonUtils.getInstance(this).checkTablet) 512.0f else 10.0f,
+                    if(CommonUtils.getInstance(this).checkTablet) 1562.0f else MARGIN_LEFT_PHONE_ITEM_COUNT.toFloat(),
+                    if(CommonUtils.getInstance(this).checkTablet) MARGIN_TOP_TABLET_ITEM_COUNT.toFloat() else 10.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 50.0f else 60.0f,
                     if(CommonUtils.getInstance(this).checkTablet) 30.0f else 40.0f)
         }
         _BottomSelectCountText.setText(count.toString())
+        _BottomSelectCountText.setTypeface(Font.getInstance(this).getRobotoMedium())
     }
 
     override fun showListView(adapter : VocabularyItemListAdapter)
@@ -407,7 +496,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         }
     }
 
-    @OnClick(R.id._backButtonRect, R.id._checkAllIcon, R.id._checkAllText, R.id._checkWordIcon, R.id._checkWordText, R.id._checkMeaningIcon, R.id._checkMeaningText, R.id._checkExampleIcon, R.id._checkExampleText, R.id._bottomIntervalIcon, R.id._bottomIntervalText, R.id._bottomSelectIcon, R.id._bottomSelectText, R.id._bottomPlayIcon, R.id._bottomPlayText, R.id._bottomWordsActionIcon, R.id._bottomWordsActionText)
+    @OnClick(R.id._backButtonRect, R.id._checkAllIcon, R.id._checkAllText, R.id._checkWordIcon, R.id._checkWordText, R.id._checkMeaningIcon, R.id._checkMeaningText, R.id._checkExampleIcon, R.id._checkExampleText, R.id._bottomIntervalIcon, R.id._bottomIntervalText, R.id._bottomSelectIcon, R.id._bottomSelectText, R.id._bottomPlayIcon, R.id._bottomPlayText, R.id._bottomWordsActionIcon, R.id._bottomWordsActionText, R.id._bottomFlashCardActionIcon, R.id._bottomFlashCardActionText)
     fun onClickView(view : View)
     {
         if(_LoadingProgressLayout.getVisibility() == View.VISIBLE)
@@ -440,6 +529,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
                 mVocabularyPresenter.onClickBottomSelectAll()
             }
             R.id._bottomPlayIcon, R.id._bottomPlayText -> mVocabularyPresenter.onClickBottomPlayAction()
+            R.id._bottomFlashCardActionIcon, R.id._bottomFlashCardActionText -> mVocabularyPresenter.onClickBottomFlashcard()
         }
     }
 

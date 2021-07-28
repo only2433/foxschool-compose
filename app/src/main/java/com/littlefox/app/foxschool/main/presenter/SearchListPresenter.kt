@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Message
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.base.SearchListBaseObject
@@ -50,6 +51,7 @@ class SearchListPresenter : SearchListContract.Presenter
         private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 107
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 108
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 109
+        private const val MESSAGE_START_FLASHCARD : Int                 = 110
     }
 
     private lateinit var mContext : Context
@@ -206,6 +208,7 @@ class SearchListPresenter : SearchListContract.Presenter
             }
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
+            MESSAGE_START_FLASHCARD -> startFlashcardActivity()
         }
     }
 
@@ -411,12 +414,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        // TODO : WEBVIEW_GAME_STARWORDS 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-//            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
+            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -431,6 +433,26 @@ class SearchListPresenter : SearchListContract.Presenter
 //            .setData(mSearchItemList[mCurrentOptionIndex].getID())
 //            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
 //            .startActivity()
+    }
+
+    /**
+     * 플래시카드 학습화면으로 이동
+     */
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        val data = FlashcardDataObject(
+            mSearchItemList[mCurrentOptionIndex].getID(),
+            mSearchItemList[mCurrentOptionIndex].getName(),
+            mSearchItemList[mCurrentOptionIndex].getSubName(),
+            VocabularyType.VOCABULARY_CONTENTS
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -541,7 +563,8 @@ class SearchListPresenter : SearchListContract.Presenter
 
         override fun onClickFlashCard()
         {
-            TODO("Not yet implemented")
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
         }
 
         override fun onErrorMessage(message : String)

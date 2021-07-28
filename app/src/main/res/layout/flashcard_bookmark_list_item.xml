@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:scale_base_width="592"
+        app:scale_base_height="178">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_bookmark_item_bg"
+            android:scaleType="fitXY"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="592"
+            app:scale_height="178"/>
+
+        <TextView
+            android:id="@+id/_wordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Happliy"
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="574"
+            app:scale_height="160"
+            app:scale_textsize="44"/>
+
+        <ImageView
+            android:id="@+id/_bookmarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_bookmark_off"
+            android:scaleType="fitXY"
+            app:scale_left="528"
+            app:scale_top="12"
+            app:scale_width="34"
+            app:scale_height="34"/>
+
+        <ImageView
+            android:id="@+id/_bookmarkRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_left="508"
+            app:scale_top="2"
+            app:scale_width="64"
+            app:scale_height="64"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</LinearLayout>

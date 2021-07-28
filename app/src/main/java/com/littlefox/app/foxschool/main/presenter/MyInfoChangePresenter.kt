@@ -14,7 +14,7 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
-import com.littlefox.app.foxschool.enumerate.MyInfoInputType
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.MyInfoChangeContract
 import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.handler.WeakReferenceHandler
@@ -90,47 +90,63 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
 
     /**
      * 이름 입력값 유효성 체크
+     * showMessage default = true
      */
-    override fun checkNameAvailable(name : String)
+    override fun checkNameAvailable(name : String, showMessage : Boolean) : Boolean
     {
         val nameResult = CheckUserInput.getInstance(mContext).checkNameData(name).getResultValue()
         if(nameResult == CheckUserInput.WARNING_NAME_WRONG_INPUT)
         {
-            mMyInfoChangeContractView.showInputError(
-                MyInfoInputType.NAME,
-                mContext.resources.getString(R.string.message_warning_input_name)
-            )
+            if (showMessage)
+            {
+                mMyInfoChangeContractView.showInputError(
+                    CheckUserInput().getErrorTypeFromResult(nameResult),
+                    CheckUserInput().getErrorMessage(nameResult)
+                )
+            }
+            return false
         }
+        return true
     }
 
     /**
      * 이메일 입력값 유효성 체크
+     * showMessage default = true
      */
-    override fun checkEmailAvailable(email : String)
+    override fun checkEmailAvailable(email : String, showMessage : Boolean) : Boolean
     {
         val emailResult = CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
         if(emailResult == CheckUserInput.WARNING_EMAIL_WRONG_INPUT)
         {
-            mMyInfoChangeContractView.showInputError(
-                MyInfoInputType.EMAIL,
-                mContext.resources.getString(R.string.message_warning_input_email)
-            )
+            if (showMessage)
+            {
+                mMyInfoChangeContractView.showInputError(
+                    CheckUserInput().getErrorTypeFromResult(emailResult),
+                    CheckUserInput().getErrorMessage(emailResult)
+                )
+            }
+            return false
         }
+        return true
     }
 
     /**
      * 전화번호 입력값 유효성 체크
+     * showMessage default = true
      */
     override fun checkPhoneAvailable(phone : String, showMessage : Boolean) : Boolean
     {
-        val phoneResult = CheckUserInput.getInstance(mContext).checkPhoneData(phone).getResultValue()
+        val data = CommonUtils.getInstance(mContext).getReplaceBothEndTrim(phone)
+        val convertData = CommonUtils.getInstance(mContext).getPhoneTypeNumber(data)
+        val phoneResult = CheckUserInput.getInstance(mContext).checkPhoneData(convertData).getResultValue()
+
         if(phoneResult == CheckUserInput.WARNING_PHONE_WRONG_INPUT)
         {
             if (showMessage)
             {
                 mMyInfoChangeContractView.showInputError(
-                    MyInfoInputType.PHONE,
-                    mContext.resources.getString(R.string.message_warning_input_phone)
+                    CheckUserInput().getErrorTypeFromResult(phoneResult),
+                    CheckUserInput().getErrorMessage(phoneResult)
                 )
             }
             return false
@@ -140,15 +156,24 @@ class MyInfoChangePresenter : MyInfoChangeContract.Presenter
 
     /**
      * 입력값 유효한지 체크
-     * 이름과 이메일만 체크, 전화번호는 선택사항이기 때문에 체크하지 않는다.
+     * 이름과 이메일만 체크,
+     * 전화번호는 선택사항이기 때문에 입력된 경우에만 유효성을 체크한다.
      */
     override fun checkInputData(name : String, email : String, phone : String) : Boolean
     {
-        if (phone.isNotEmpty() && (checkPhoneAvailable(phone, showMessage = false) == false))
+        if (name.isEmpty() || (checkNameAvailable(name, showMessage = false) == false))
         {
             return false
         }
-        return (name.isNotEmpty() && email.isNotEmpty())
+        else if (email.isEmpty() || (checkEmailAvailable(email, showMessage = false) == false))
+        {
+            return false
+        }
+        else if (phone.isNotEmpty() && (checkPhoneAvailable(phone, showMessage = false) == false))
+        {
+            return false
+        }
+        return true
     }
 
     /**

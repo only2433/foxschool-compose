@@ -209,8 +209,14 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._vocabularyButtonImage)
     lateinit var _VocabulraryButtonImage : ImageView
 
+    @BindView(R.id._starwordsButtonImage)
+    lateinit var _StarwordsButtonImage : ImageView
+
     @BindView(R.id._translateButtonImage)
     lateinit var _OriginalTranslateButtonImage : ImageView
+
+    @BindView(R.id._flashcardButtonImage)
+    lateinit var _FlashcardButtonImage : ImageView
 
     @BindView(R.id._replayButtonBoxImage)
     lateinit var _ReplayButtonBoxImage : ImageView
@@ -1296,10 +1302,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         showPlayerEndLayoutAnimation()
     }
 
-    override fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
+    override fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
     {
         mPlayEndStudyOptionIconList.clear()
         isNextMovieVisibleFromEndView = isNextButtonVisible
+
         if(isEbookAvailable)
         {
             mPlayEndStudyOptionIconList.add(_EbookButtonImage)
@@ -1308,6 +1315,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _EbookButtonImage!!.visibility = View.GONE
         }
+
         if(isQuizAvailable)
         {
             mPlayEndStudyOptionIconList.add(_QuizButtonImage)
@@ -1316,6 +1324,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _QuizButtonImage!!.visibility = View.GONE
         }
+
         if(isVocabularyAvailable)
         {
             mPlayEndStudyOptionIconList.add(_VocabulraryButtonImage)
@@ -1324,6 +1333,25 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _VocabulraryButtonImage!!.visibility = View.GONE
         }
+
+        if(isFlashcardAvailable)
+        {
+            mPlayEndStudyOptionIconList.add(_FlashcardButtonImage)
+        }
+        else
+        {
+            _FlashcardButtonImage!!.visibility = View.GONE
+        }
+
+        if(isStarwordsAvailable)
+        {
+            mPlayEndStudyOptionIconList.add(_StarwordsButtonImage)
+        }
+        else
+        {
+            _StarwordsButtonImage!!.visibility = View.GONE
+        }
+
         if(isTranslateAvailable)
         {
             mPlayEndStudyOptionIconList.add(_OriginalTranslateButtonImage)
@@ -1332,6 +1360,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _OriginalTranslateButtonImage!!.visibility = View.GONE
         }
+
         if(isNextButtonVisible)
         {
             _NextButtonBoxImage!!.visibility = View.VISIBLE
@@ -1344,6 +1373,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _NextButtonIconImage!!.visibility = View.GONE
             _NextButtonIconText!!.visibility = View.GONE
         }
+
         settingPlayEndButtonLayout(isNextMovieVisibleFromEndView, mPlayEndStudyOptionIconList)
     }
 
@@ -2169,7 +2199,14 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
-    @OnClick(R.id._playerPlayButton, R.id._playerPrevButton, R.id._playerNextButton, R.id._playerCaptionButton, R.id._playerCloseButton, R.id._playerListButton, R.id._playerEndCloseButton, R.id._playListCloseButtonRect, R.id._playerChangePortraitButton, R.id._playerChangeLandscapeButton, R.id._nextButtonBoxImage, R.id._replayButtonBoxImage, R.id._paymentButtonBoxImage, R.id._playerRepeatButton, R.id._playerPortraitTitleOption, R.id._ebookButtonImage, R.id._quizButtonImage, R.id._vocabularyButtonImage, R.id._translateButtonImage, R.id._playerPageByPageButton, R.id._player1PageButton, R.id._player2PageButton, R.id._player3PageButton, R.id._player4PageButton, R.id._player5PageButton, R.id._playerPrevPageButton, R.id._playerNextPageButton, R.id._playerSpeedButton, R.id._playerSpeedText, R.id._playSpeedListCloseButtonRect)
+    @OnClick(
+        R.id._playerPlayButton, R.id._playerPrevButton, R.id._playerNextButton, R.id._playerCaptionButton, R.id._playerCloseButton, R.id._playerListButton,
+        R.id._playerEndCloseButton, R.id._playListCloseButtonRect, R.id._playerChangePortraitButton, R.id._playerChangeLandscapeButton,
+        R.id._nextButtonBoxImage, R.id._replayButtonBoxImage, R.id._paymentButtonBoxImage, R.id._playerRepeatButton, R.id._playerPortraitTitleOption,
+        R.id._ebookButtonImage, R.id._quizButtonImage, R.id._vocabularyButtonImage, R.id._translateButtonImage, R.id._flashcardButtonImage, R.id._starwordsButtonImage,
+        R.id._playerPageByPageButton, R.id._player1PageButton, R.id._player2PageButton, R.id._player3PageButton, R.id._player4PageButton, R.id._player5PageButton,
+        R.id._playerPrevPageButton, R.id._playerNextPageButton, R.id._playerSpeedButton, R.id._playerSpeedText, R.id._playSpeedListCloseButtonRect,
+    )
     fun onClickView(view : View)
     {
         Log.f("View Click id : " + view.id)
@@ -2255,6 +2292,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             R.id._quizButtonImage -> mPlayerContractPresenter.onClickCurrentMovieQuizButton()
             R.id._vocabularyButtonImage -> mPlayerContractPresenter.onClickCurrentMovieVocabularyButton()
             R.id._translateButtonImage -> mPlayerContractPresenter.onClickCurrentMovieTranslateButton()
+            R.id._starwordsButtonImage -> mPlayerContractPresenter.onClickCurrentMovieStarwordsButton()
+            R.id._flashcardButtonImage -> mPlayerContractPresenter.onClickCurrentMovieFlashcardButton()
             R.id._player1PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
             R.id._player2PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
             R.id._player3PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))

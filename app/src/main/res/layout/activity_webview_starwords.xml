@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <WebView
+            android:id="@+id/_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_baseTopMenuLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="200">
+
+            <ImageView
+                android:id="@+id/_closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                app:scale_left="1720"
+                app:scale_top="0"
+                app:scale_width="200"
+                app:scale_height="200"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

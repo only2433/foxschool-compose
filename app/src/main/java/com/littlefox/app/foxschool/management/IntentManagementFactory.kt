@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
@@ -19,10 +20,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.*
-import com.littlefox.app.foxschool.main.webview.WebviewFAQActivity
-import com.littlefox.app.foxschool.main.webview.WebviewLearningLogActivity
-import com.littlefox.app.foxschool.main.webview.WebviewPolicyPrivacyActivity
-import com.littlefox.app.foxschool.main.webview.WebviewPolicyTermsActivity
+import com.littlefox.app.foxschool.main.webview.*
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
@@ -253,6 +251,15 @@ class IntentManagementFactory
 
             ActivityMode.APP_USE_GUIDE -> intent = Intent(mContext, AppUseGuideActivity::class.java)
 
+            ActivityMode.FLASHCARD ->
+            {
+                intent = Intent(mContext, FlashCardActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_FLASHCARD_DATA, `object` as FlashcardDataObject?)
+                }
+            }
+
             ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
 
             ActivityMode.WEBVIEW_FAQS -> intent = Intent(mContext, WebviewFAQActivity::class.java)
@@ -260,6 +267,15 @@ class IntentManagementFactory
             ActivityMode.WEBVIEW_POLICY_PRIVACY -> intent = Intent(mContext, WebviewPolicyPrivacyActivity::class.java)
 
             ActivityMode.WEBVIEW_POLICY_TERMS -> intent = Intent(mContext, WebviewPolicyTermsActivity::class.java)
+
+            ActivityMode.WEBVIEW_GAME_STARWORDS ->
+            {
+                intent = Intent(mContext, WebviewGameStarwordsActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_GAME_STARWORDS_ID, `object` as String?)
+                }
+            }
 
             /*ActivityMode.INTRO ->
                 intent = Intent(mContext, IntroActivity::class.java)

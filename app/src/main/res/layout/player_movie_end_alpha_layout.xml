@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_ebook_player"
             android:scaleType="fitXY"
-            app:scale_left="570"
+            app:scale_left="360"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_quiz_player"
             android:scaleType="fitXY"
-            app:scale_left="780"
+            app:scale_left="570"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -123,17 +123,40 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_voca_player"
             android:scaleType="fitXY"
+            app:scale_left="780"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_flashcardButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_flashcard_player"
+            android:scaleType="fitXY"
             app:scale_left="990"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_starwordsButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_starwords_player"
+            android:scaleType="fitXY"
+            app:scale_left="1200"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
         <ImageView
             android:id="@+id/_translateButtonImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_org_player"
             android:scaleType="fitXY"
-            app:scale_left="1200"
+            app:scale_left="1410"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>

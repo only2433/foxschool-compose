@@ -39,15 +39,13 @@ class Common
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
         const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
 
-        const val SECOND : Int = 1000
-        const val MINIMUM_TABLET_DISPLAY_RADIO : Float = 1.4f
-
         const val BASE_WEBVIEW_URL : String         = BASE_URL + "web/"
         const val URL_LEARNING_LOG : String         = BASE_WEBVIEW_URL + "studylog/summary"
         const val URL_FAQS : String                 = BASE_WEBVIEW_URL + "help/faq/list"
         const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
         const val URL_TERMS : String                = BASE_WEBVIEW_URL + "policy/terms"
         const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
+        const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
@@ -81,8 +79,9 @@ class Common
         const val INTENT_STORY_SERIES_DATA : String                 = "story_series_data"
         const val INTENT_STORY_CATEGORY_DATA : String               = "story_category_data"
         const val INTENT_SERIES_INFORMATION_ID : String             = "series_information_id"
-        const val INTENT_QUIZ_PARAMS                                = "quiz_params"
-
+        const val INTENT_QUIZ_PARAMS : String                       = "quiz_params"
+        const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
+        const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -136,6 +135,10 @@ class Common
 
         const val USER_TYPE_STUDENT : String = "S"
         const val USER_TYPE_TEACHER : String = "T"
+
+        const val SECOND : Int = 1000
+        const val MINIMUM_TABLET_DISPLAY_RADIO : Float  = 1.4f
+        const val PHONE_DISPLAY_RADIO_20_9 : Float      = 1.9f
 
         const val TARGET_PHONE_DISPLAY_WIDTH : Float = 1080.0f
         const val TARGET_TABLET_DISPLAY_WIDTH : Float = 1920.0f

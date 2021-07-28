@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_c1f8ff">
+
+        <com.littlefox.library.view.extra.SwipeDisableViewPager
+            android:id="@+id/_flashcardBaseViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:swipeable="false" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="210">
+
+            <ImageView
+                android:id="@+id/_backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                android:src="@drawable/btn_flashcard_back"
+                app:scale_left="16"
+                app:scale_top="16"
+                app:scale_width="84"
+                app:scale_height="90"/>
+
+            <ImageView
+                android:id="@+id/_soundCheckButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_flashcard_sound_on"
+                app:scale_left="16"
+                app:scale_top="16"
+                app:scale_width="84"
+                app:scale_height="90"/>
+
+            <TextView
+                android:id="@+id/_soundOffMessageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_warning_sound_off"
+                android:background="@drawable/btn_flashcard_sound_off_message_bg"
+                android:textColor="@color/color_ffffff"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingTop="7dp"
+                app:scale_left="16"
+                app:scale_top="112"
+                app:scale_width="522"
+                app:scale_height="98"
+                app:scale_textsize="36"/>
+
+            <ImageView
+                android:id="@+id/_closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@drawable/btn_flashcard_close"
+                app:scale_left="1820"
+                app:scale_top="16"
+                app:scale_width="84"
+                app:scale_height="90"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_bottomViewLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="122"
+            android:layout_alignParentBottom="true">
+
+
+            <ImageView
+                android:id="@+id/_autoModeCheckButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/flashcard_select_off"
+                android:scaleType="fitXY"
+                app:scale_left="634"
+                app:scale_top="38"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <TextView
+                android:id="@+id/_autoModeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_flashcard_auto_mode"
+                android:textColor="@color/color_444444"
+                android:gravity="center_vertical"
+                app:scale_left="708"
+                app:scale_top="38"
+                app:scale_width="186"
+                app:scale_height="60"
+                app:scale_textsize="36" />
+
+            <TextView
+                android:id="@+id/_autoModeTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/flashcard_auto_time_bg"
+                android:textColor="@color/color_333333"
+                android:visibility="gone"
+                android:text="3초"
+                android:gravity="center"
+                app:scale_left="890"
+                app:scale_top="40"
+                app:scale_width="100"
+                app:scale_height="56"
+                app:scale_textsize="36"/>
+
+            <ImageView
+                android:id="@+id/_autoModeStudyBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/flashcard_auto_time_bg"
+                android:visibility="gone"
+                app:scale_left="974"
+                app:scale_top="40"
+                app:scale_width="156"
+                app:scale_height="56"
+                app:scale_textsize="36"/>
+
+            <ImageView
+                android:id="@+id/_autoModeStudyPlayIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_autoplay_off"
+                android:visibility="gone"
+                app:scale_left="974"
+                app:scale_top="40"
+                app:scale_width="56"
+                app:scale_height="56"/>
+
+            <TextView
+                android:id="@+id/_autoModeStudyTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_b3b3b3"
+                android:visibility="gone"
+                android:text="3초"
+                android:gravity="center"
+                app:scale_left="1024"
+                app:scale_top="40"
+                app:scale_width="100"
+                app:scale_height="56"
+                app:scale_textsize="34"/>
+
+            <ImageView
+                android:id="@+id/_shuffleModeCheckButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/flashcard_select_off"
+                android:scaleType="fitXY"
+                app:scale_left="1072"
+                app:scale_top="38"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+            <TextView
+                android:id="@+id/_shuffleModeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_flashcard_shuffle_mode"
+                android:textColor="@color/color_444444"
+                android:gravity="center_vertical"
+                app:scale_left="1146"
+                app:scale_top="38"
+                app:scale_width="200"
+                app:scale_height="60"
+                app:scale_textsize="36" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <ImageView
+            android:id="@+id/_coachmarkImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:src="@drawable/coachmark_flashcard_1920_1080" />
+
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

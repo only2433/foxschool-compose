@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingPrefix">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_topTermsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1920"
+        app:scale_base_height="90"/>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_effectLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1920"
+        app:scale_base_height="996">
+
+        <ImageView
+            android:id="@+id/_effectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_result_bg_effect"
+            android:scaleType="fitXY"
+            app:scale_left="161"
+            app:scale_top="20"
+            app:scale_width="1598"
+            app:scale_height="976"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1920"
+        app:scale_base_height="920"
+        android:layout_below="@id/_topTermsLayout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_result_title"
+            android:scaleType="fitXY"
+            app:scale_left="597"
+            app:scale_top="0"
+            app:scale_width="726"
+            app:scale_height="164"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_result_image"
+            android:scaleType="fitXY"
+            app:scale_left="688"
+            app:scale_top="200"
+            app:scale_width="510"
+            app:scale_height="478"/>
+
+        <ImageView
+            android:id="@+id/_replayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_flashcard_start_bg"
+            app:scale_left="474"
+            app:scale_top="762"
+            app:scale_width="456"
+            app:scale_height="158"/>
+
+        <ImageView
+            android:id="@+id/_replayIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_result_icon_replay"
+            android:scaleType="fitXY"
+            app:scale_left="559"
+            app:scale_top="813"
+            app:scale_width="49"
+            app:scale_height="56"/>
+
+        <TextView
+            android:id="@+id/_replayText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_study_flashcard_replay"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center_vertical"
+            app:scale_left="624"
+            app:scale_top="762"
+            app:scale_width="310"
+            app:scale_height="158"
+            app:scale_textsize="36"/>
+
+        <ImageView
+            android:id="@+id/_bookmarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_flashcard_start_bg02"
+            app:scale_left="990"
+            app:scale_top="762"
+            app:scale_width="456"
+            app:scale_height="158"/>
+
+        <ImageView
+            android:id="@+id/_bookmarkIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_result_icon_bookmark"
+            android:scaleType="fitXY"
+            app:scale_left="1060"
+            app:scale_top="818"
+            app:scale_width="44"
+            app:scale_height="45"/>
+
+        <TextView
+            android:id="@+id/_bookmarkText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_study_flashcard_bookmark"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center_vertical"
+            app:scale_left="1120"
+            app:scale_top="762"
+            app:scale_width="310"
+            app:scale_height="158"
+            app:scale_textsize="36"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</RelativeLayout>

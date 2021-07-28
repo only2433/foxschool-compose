@@ -5,14 +5,11 @@ import android.content.Intent
 import android.os.Message
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.CheckUserInput
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enc.SimpleCrypto
-import com.littlefox.app.foxschool.enumerate.MyInfoInputType
-import com.littlefox.app.foxschool.enumerate.PasswordChangeInputType
-import com.littlefox.app.foxschool.main.contract.MyInfoChangeContract
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.PasswordChangeContract
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -85,7 +82,7 @@ class PasswordChangePresenter : PasswordChangeContract.Presenter
             if (result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
             {
                 mPasswordChangeView.showInputError(
-                    PasswordChangeInputType.PASSWORD,
+                    InputDataType.PASSWORD,
                     mContext.resources.getString(R.string.message_warning_password_confirm)
                 )
             }
@@ -103,8 +100,8 @@ class PasswordChangePresenter : PasswordChangeContract.Presenter
         if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
         {
             mPasswordChangeView.showInputError(
-                PasswordChangeInputType.NEW_PASSWORD,
-                mContext.resources.getString(R.string.message_warning_input_password)
+                InputDataType.NEW_PASSWORD,
+                CheckUserInput().getErrorMessage(result)
             )
         }
     }
@@ -121,18 +118,12 @@ class PasswordChangePresenter : PasswordChangeContract.Presenter
             newPasswordConfirm
         ).getResultValue()
 
-        if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM)
+        if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
+            result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
         {
             mPasswordChangeView.showInputError(
-                PasswordChangeInputType.NEW_PASSWORD_CONFIRM,
-                mContext.resources.getString(R.string.message_warning_input_new_password_confirm)
-            )
-        }
-        else if (result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
-        {
-            mPasswordChangeView.showInputError(
-                PasswordChangeInputType.NEW_PASSWORD_CONFIRM,
-                mContext.resources.getString(R.string.message_warning_new_password_confirm)
+                CheckUserInput().getErrorTypeFromResult(result),
+                CheckUserInput().getErrorMessage(result)
             )
         }
     }

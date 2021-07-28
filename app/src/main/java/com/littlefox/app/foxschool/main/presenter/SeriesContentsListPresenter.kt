@@ -7,6 +7,7 @@ import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.IntroduceSeriesBaseObject
@@ -60,6 +61,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         private const val MESSAGE_START_VOCABULARY : Int                = 108
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 110
+        private const val MESSAGE_START_FLASHCARD : Int                 = 111
     }
 
     private lateinit var mContext : Context
@@ -209,6 +211,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             MESSAGE_START_VOCABULARY -> startVocabularyActivity()
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
+            MESSAGE_START_FLASHCARD -> startFlashcardActivity()
         }
     }
 
@@ -436,6 +439,23 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
             .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        val data = FlashcardDataObject(
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getID(),
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getName(),
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getSubName(),
+            VocabularyType.VOCABULARY_CONTENTS
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -690,7 +710,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 
         override fun onClickFlashCard()
         {
-            TODO("Not yet implemented")
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
         }
 
         override fun onErrorMessage(message : String)

@@ -186,7 +186,7 @@
                     android:scaleType="fitXY"
                     app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_bottomIntervalText"
@@ -197,7 +197,7 @@
                     android:gravity="center"
                     app:scale_left="0"
                     app:scale_top="90"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="86"
                     app:scale_textsize="36"/>
 
@@ -207,9 +207,9 @@
                     android:layout_height="wrap_content"
                     android:src ="@drawable/bottom_all"
                     android:scaleType="fitXY"
-                    app:scale_left="270"
+                    app:scale_left="216"
                     app:scale_top="0"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_bottomSelectText"
@@ -218,9 +218,9 @@
                     android:text="@string/text_select_all"
                     android:textColor="@color/color_ffffff"
                     android:gravity="center"
-                    app:scale_left="270"
+                    app:scale_left="216"
                     app:scale_top="90"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="86"
                     app:scale_textsize="36"/>
 
@@ -230,9 +230,9 @@
                     android:layout_height="wrap_content"
                     android:src ="@drawable/bottom_play"
                     android:scaleType="fitXY"
-                    app:scale_left="540"
+                    app:scale_left="432"
                     app:scale_top="0"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_bottomPlayText"
@@ -241,9 +241,9 @@
                     android:text="@string/text_select_play"
                     android:textColor="@color/color_ffffff"
                     android:gravity="center"
-                    app:scale_left="540"
+                    app:scale_left="432"
                     app:scale_top="90"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="86"
                     app:scale_textsize="36"/>
 
@@ -256,11 +256,35 @@
                     android:text="1"
                     android:gravity="center"
                     android:textColor="@color/color_1eb8c6"
-                    app:scale_left="680"
+                    app:scale_left="548"
                     app:scale_top="10"
                     app:scale_width="40"
                     app:scale_height="40"
                     app:scale_textsize="28"/>
+
+                <ImageView
+                    android:id="@+id/_bottomFlashCardActionIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/bottom_flashcard"
+                    android:scaleType="fitXY"
+                    app:scale_left="648"
+                    app:scale_top="0"
+                    app:scale_width="216"
+                    app:scale_height="90"/>
+
+                <TextView
+                    android:id="@+id/_bottomFlashCardActionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_flashcards"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center"
+                    app:scale_left="648"
+                    app:scale_top="90"
+                    app:scale_width="216"
+                    app:scale_height="86"
+                    app:scale_textsize="36"/>
 
                 <ImageView
                     android:id="@+id/_bottomWordsActionIcon"
@@ -268,9 +292,9 @@
                     android:layout_height="wrap_content"
                     android:src ="@drawable/bottom_voca"
                     android:scaleType="fitXY"
-                    app:scale_left="810"
+                    app:scale_left="864"
                     app:scale_top="0"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="90"/>
                 <TextView
                     android:id="@+id/_bottomWordsActionText"
@@ -279,9 +303,9 @@
                     android:text="@string/text_add_vocabulary"
                     android:textColor="@color/color_ffffff"
                     android:gravity="center"
-                    app:scale_left="810"
+                    app:scale_left="864"
                     app:scale_top="90"
-                    app:scale_width="270"
+                    app:scale_width="216"
                     app:scale_height="86"
                     app:scale_textsize="36"/>
             </com.ssomai.android.scalablelayout.ScalableLayout>

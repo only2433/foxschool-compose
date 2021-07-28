@@ -20,10 +20,8 @@ import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.enumerate.MyInfoInputType
-import com.littlefox.app.foxschool.enumerate.PasswordChangeInputType
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.PasswordChangeContract
-import com.littlefox.app.foxschool.main.presenter.MyInfoChangePresenter
 import com.littlefox.app.foxschool.main.presenter.PasswordChangePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
@@ -206,13 +204,13 @@ class PasswordChangeActivity : BaseActivity(), MessageHandlerCallback, PasswordC
     /**
      * 입력값 에러 표시
      */
-    override fun showInputError(type : PasswordChangeInputType, message : String)
+    override fun showInputError(type : InputDataType, message : String)
     {
         when(type)
         {
-            PasswordChangeInputType.PASSWORD -> _InputPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
-            PasswordChangeInputType.NEW_PASSWORD -> _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
-            PasswordChangeInputType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.PASSWORD -> _InputPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.NEW_PASSWORD -> _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
         }
 
         val msg = Message.obtain()

@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.`object`.result.VocabularyContentsBaseObject
 import com.littlefox.app.foxschool.`object`.result.VocabularyShelfBaseObject
@@ -38,6 +39,8 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.IntervalSelectListener
+import com.littlefox.app.foxschool.enumerate.ActivityMode
+import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.VocabularyContract
@@ -319,6 +322,11 @@ class VocabularyPresenter : VocabularyContract.Presenter
         mVocabularyContractView.setBottomPlayItemCount(mVocabularyItemListAdapter.selectedCount)
     }
 
+    override fun onClickBottomFlashcard()
+    {
+        startFlashcardActivity()
+    }
+
     /**
      * onBindHolder가 끝난후 호출. 뜻, 예문, 단어의 애니메이션 동작이 스크롤시 동작하지않게 하기위해 사용
      */
@@ -391,6 +399,31 @@ class VocabularyPresenter : VocabularyContract.Presenter
         mVocabularyContentsDeleteCoroutine?.setData(mCurrentMyVocabularyResult.getID(), mRequestItemList)
         mVocabularyContentsDeleteCoroutine?.asyncListener = mAsyncListener
         mVocabularyContentsDeleteCoroutine?.execute()
+    }
+
+    private fun startFlashcardActivity()
+    {
+        mSelectedPlayItemList = mVocabularyItemListAdapter.selectedList
+        Log.f("mSelectedPlayItemList.size() : " + mSelectedPlayItemList.size)
+        if(mSelectedPlayItemList.size <= 0)
+        {
+            mVocabularyContractView.showErrorMessage(mContext.resources.getString(R.string.message_select_word_to_study))
+            return
+        }
+
+        val data = FlashcardDataObject(
+            mCurrentMyVocabularyResult.getID(),
+            mCurrentMyVocabularyResult.getName(),
+            "",
+            VocabularyType.VOCABULARY_SHELF,
+            mSelectedPlayItemList
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun showBottomIntervalDialog()

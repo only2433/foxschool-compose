@@ -21,7 +21,7 @@ import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.enumerate.MyInfoInputType
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.MyInfoChangeContract
 import com.littlefox.app.foxschool.main.presenter.MyInfoChangePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -65,6 +65,9 @@ class MyInfoChangeActivity : BaseActivity(), MessageHandlerCallback, MyInfoChang
 
     @BindView(R.id._inputNameBg)
     lateinit var _InputNameBg : ImageView
+
+    @BindView(R.id._emailTitleText)
+    lateinit var _EmailTitleText : TextView
 
     @BindView(R.id._inputEmailEditText)
     lateinit var _InputEmailEditText : EditText
@@ -118,6 +121,7 @@ class MyInfoChangeActivity : BaseActivity(), MessageHandlerCallback, MyInfoChang
             {
                 MESSAGE_DATA_CHECK_ERROR ->
                 {
+                    CommonUtils.getInstance(this@MyInfoChangeActivity).hideKeyboard()
                     showErrorMessage(msg.obj as String)
                 }
             }
@@ -188,6 +192,7 @@ class MyInfoChangeActivity : BaseActivity(), MessageHandlerCallback, MyInfoChang
         _IdTitleText.typeface = Font.getInstance(this).getRobotoRegular()
         _IdText.typeface = Font.getInstance(this).getRobotoMedium()
         _NameTitleText.typeface = Font.getInstance(this).getRobotoRegular()
+        _EmailTitleText.typeface = Font.getInstance(this).getRobotoRegular()
         _EmailAtText.typeface = Font.getInstance(this).getRobotoRegular()
         _InputNameEditText.typeface = Font.getInstance(this).getRobotoMedium()
         _EmailEndText.typeface = Font.getInstance(this).getRobotoRegular()
@@ -253,13 +258,13 @@ class MyInfoChangeActivity : BaseActivity(), MessageHandlerCallback, MyInfoChang
     /**
      * 입력값 에러 표시
      */
-    override fun showInputError(type : MyInfoInputType, message : String)
+    override fun showInputError(type : InputDataType, message : String)
     {
         when(type)
         {
-            MyInfoInputType.NAME -> _InputNameBg.setBackgroundResource(R.drawable.box_list_error)
-            MyInfoInputType.EMAIL -> _InputEmailBg.setBackgroundResource(R.drawable.box_list_error)
-            MyInfoInputType.PHONE -> _InputPhoneBg.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.NAME -> _InputNameBg.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.EMAIL -> _InputEmailBg.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.PHONE -> _InputPhoneBg.setBackgroundResource(R.drawable.box_list_error)
         }
 
         val msg = Message.obtain()
@@ -385,7 +390,7 @@ class MyInfoChangeActivity : BaseActivity(), MessageHandlerCallback, MyInfoChang
                     else
                     {
                         _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangePresenter.checkPhoneAvailable(_InputPhoneEditText.text.toString().trim(), showMessage = true)
+                        mMyInfoChangePresenter.checkPhoneAvailable(_InputPhoneEditText.text.toString().trim())
                     }
                 }
             }

@@ -35,6 +35,7 @@ class VocabularyContract
         fun onClickBottomDeleteInVocabularyShelf()
         fun onClickBottomSelectAll()
         fun onClickBottomRemoveAll()
+        fun onClickBottomFlashcard()
         fun onListLayoutChangedComplete()
     }
 }

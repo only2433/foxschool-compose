@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemBackLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="2192"
+        app:scale_base_height="690">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/flashcard_item_main_bg"
+            app:scale_height="690"
+            app:scale_left="222"
+            app:scale_top="0"
+            app:scale_width="1748" />
+
+        <ImageView
+            android:id="@+id/_itemBackMeaningRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/flashcard_item_word_bg_back"
+            app:scale_height="505"
+            app:scale_left="297"
+            app:scale_top="95"
+            app:scale_width="1598" />
+
+        <TextView
+            android:id="@+id/_itemMeaningTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/color_333333"
+            app:scale_height="505"
+            app:scale_left="297"
+            app:scale_textsize="82"
+            app:scale_top="95"
+            app:scale_width="1598" />
+
+        <TextView
+            android:id="@+id/_itemBackStatusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="1/10"
+            android:textColor="@color/color_444444"
+            app:scale_height="59"
+            app:scale_left="297"
+            app:scale_textsize="40"
+            app:scale_top="25"
+            app:scale_width="200" />
+
+        <ImageView
+            android:id="@+id/_itemBackBookmarkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            android:src="@drawable/flashcard_bookmark_off"
+            app:scale_height="80"
+            app:scale_left="1830"
+            app:scale_top="18"
+            app:scale_width="80" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</LinearLayout>

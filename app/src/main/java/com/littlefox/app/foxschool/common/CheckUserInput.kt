@@ -1,6 +1,8 @@
 package com.littlefox.app.foxschool.common
 
 import android.content.Context
+import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.logmonitor.Log
 import java.io.UnsupportedEncodingException
 import java.util.regex.Pattern
@@ -18,7 +20,7 @@ class CheckUserInput
         private const val TEXT_CHECK_NAME : String      = "^[a-zA-Z가-힣]+[^ㄱ-ㅎ]+\$"
         private const val TEXT_CHECK_PHONE : String     = "^\\d{2,3}-\\d{3,4}-\\d{4}\$"
 
-        const val INPUT_SUCCESS : Int               = 100
+        const val INPUT_SUCCESS : Int                       = 100
         const val WARNING_PASSWORD_NOT_INPUT : Int          = 0
         const val WARNING_PASSWORD_WRONG_INPUT : Int        = 1
         const val WARNING_PASSWORD_NOT_INPUT_CONFIRM : Int  = 2
@@ -194,6 +196,10 @@ class CheckUserInput
         {
             sResultValue = WARNING_EMAIL_NOT_INPUT
         }
+        else if(isByteSizeFit(email, 1, 50) == false)
+        {
+            sResultValue = WARNING_EMAIL_WRONG_INPUT
+        }
         else if(isExceptTextHave(TEXT_EMAIL, email) == false)
         {
             sResultValue = WARNING_EMAIL_WRONG_INPUT
@@ -233,5 +239,63 @@ class CheckUserInput
     {
         Log.f("sResultValue : $sResultValue")
         return sResultValue
+    }
+
+    /**
+     * 오류 결과값에 따른 InputDataType 추출
+     */
+    fun getErrorTypeFromResult(result : Int) : InputDataType
+    {
+        Log.f("result : $result")
+        when(result)
+        {
+            WARNING_PASSWORD_NOT_INPUT,
+            WARNING_PASSWORD_WRONG_INPUT ->
+                return InputDataType.PASSWORD
+
+            WARNING_PASSWORD_NOT_INPUT_CONFIRM,
+            WARNING_PASSWORD_NOT_EQUAL_CONFIRM ->
+                return InputDataType.NEW_PASSWORD_CONFIRM
+
+            WARNING_NAME_NOT_INPUT,
+            WARNING_NAME_WRONG_INPUT ->
+                return InputDataType.NAME
+
+            WARNING_EMAIL_NOT_INPUT,
+            WARNING_EMAIL_WRONG_INPUT ->
+                return InputDataType.EMAIL
+
+            WARNING_PHONE_NOT_INPUT,
+            WARNING_PHONE_WRONG_INPUT ->
+                return InputDataType.PHONE
+        }
+        return InputDataType.NONE
+    }
+
+    /**
+     * 오류 메세지를 호출하는 메소드
+     * @param type
+     * @return
+     */
+    fun getErrorMessage(type : Int) : String
+    {
+        when(type)
+        {
+            WARNING_PASSWORD_NOT_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_empty_password)
+            WARNING_PASSWORD_WRONG_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_input_password)
+            WARNING_PASSWORD_NOT_INPUT_CONFIRM ->
+                return sContext.resources.getString(R.string.message_warning_input_new_password_confirm)
+            WARNING_PASSWORD_NOT_EQUAL_CONFIRM ->
+                return sContext.resources.getString(R.string.message_warning_new_password_confirm)
+            WARNING_NAME_WRONG_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_input_name)
+            WARNING_EMAIL_WRONG_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_input_email)
+            WARNING_PHONE_WRONG_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_input_phone)
+        }
+        return ""
     }
 }

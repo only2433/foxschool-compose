@@ -192,10 +192,9 @@
                 android:id="@+id/_bottomControlLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_centerVertical="true"
                 app:scale_base_width="1920"
-                app:scale_base_height="787">
+                app:scale_base_height="901">
 
                 <ImageView
                     android:id="@+id/_menuBarBackground"
@@ -204,8 +203,8 @@
                     android:background="@drawable/popup_b_tablet"
                     app:scale_left="1495"
                     app:scale_top="193"
-                    app:scale_width="136"
-                    app:scale_height="594"/>
+                    app:scale_width="138"
+                    app:scale_height="708"/>
 
                 <ImageView
                     android:id="@+id/_bottomIntervalIcon"
@@ -214,9 +213,10 @@
                     android:src="@drawable/tablet_interval"
                     android:scaleType="fitXY"
                     app:scale_left="1495"
-                    app:scale_top="200"
+                    app:scale_top="193"
                     app:scale_width="138"
                     app:scale_height="94"/>
+
                 <TextView
                     android:id="@+id/_bottomIntervalText"
                     android:layout_width="wrap_content"
@@ -225,17 +225,18 @@
                     android:textColor="@color/color_ffffff"
                     android:gravity="center_horizontal|top"
                     app:scale_left="1495"
-                    app:scale_top="294"
+                    app:scale_top="287"
                     app:scale_width="138"
-                    app:scale_height="50"
+                    app:scale_height="46"
                     app:scale_textsize="24"/>
 
                 <ImageView
+                    android:id="@+id/_lineImage1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/tablet_line"
                     app:scale_left="1495"
-                    app:scale_top="344"
+                    app:scale_top="335"
                     app:scale_width="138"
                     app:scale_height="2"/>
 
@@ -246,9 +247,10 @@
                     android:src="@drawable/tablet_all"
                     android:scaleType="fitXY"
                     app:scale_left="1495"
-                    app:scale_top="346"
+                    app:scale_top="337"
                     app:scale_width="138"
                     app:scale_height="94"/>
+
                 <TextView
                     android:id="@+id/_bottomSelectText"
                     android:layout_width="wrap_content"
@@ -257,17 +259,18 @@
                     android:textColor="@color/color_ffffff"
                     android:gravity="center_horizontal|top"
                     app:scale_left="1495"
-                    app:scale_top="440"
+                    app:scale_top="431"
                     app:scale_width="138"
-                    app:scale_height="50"
+                    app:scale_height="46"
                     app:scale_textsize="24"/>
 
                 <ImageView
+                    android:id="@+id/_lineImage2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/tablet_line"
                     app:scale_left="1495"
-                    app:scale_top="490"
+                    app:scale_top="477"
                     app:scale_width="138"
                     app:scale_height="2"/>
 
@@ -278,7 +281,7 @@
                     android:src="@drawable/tablet_play"
                     android:scaleType="fitXY"
                     app:scale_left="1495"
-                    app:scale_top="492"
+                    app:scale_top="477"
                     app:scale_width="138"
                     app:scale_height="94"/>
 
@@ -286,13 +289,13 @@
                     android:id="@+id/_bottomSelectCountText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/count_1"
+                    android:background="@drawable/count_3"
                     android:visibility="gone"
                     android:text="1"
                     android:gravity="center"
-                    android:textColor="@color/color_1eb8c6"
+                    android:textColor="@color/color_8d65ff"
                     app:scale_left="1562"
-                    app:scale_top="512"
+                    app:scale_top="497"
                     app:scale_width="30"
                     app:scale_height="30"
                     app:scale_textsize="22"/>
@@ -305,19 +308,55 @@
                     android:textColor="@color/color_ffffff"
                     android:gravity="center_horizontal|top"
                     app:scale_left="1495"
-                    app:scale_top="586"
+                    app:scale_top="571"
                     app:scale_width="138"
-                    app:scale_height="50"
+                    app:scale_height="46"
                     app:scale_textsize="24"/>
 
                 <ImageView
+                    android:id="@+id/_lineImage3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/tablet_line"
                     app:scale_left="1495"
-                    app:scale_top="636"
+                    app:scale_top="617"
                     app:scale_width="138"
                     app:scale_height="2"/>
+
+                <ImageView
+                    android:id="@+id/_bottomFlashCardActionIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/tablet_flashcard"
+                    android:scaleType="fitXY"
+                    app:scale_left="1495"
+                    app:scale_top="619"
+                    app:scale_width="138"
+                    app:scale_height="94"/>
+
+                <TextView
+                    android:id="@+id/_bottomFlashCardActionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_flashcards"
+                    android:textColor="@color/color_ffffff"
+                    android:gravity="center_horizontal|top"
+                    app:scale_left="1495"
+                    app:scale_top="713"
+                    app:scale_width="138"
+                    app:scale_height="46"
+                    app:scale_textsize="24"/>
+
+                <ImageView
+                    android:id="@+id/_lineImage4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/tablet_line"
+                    app:scale_left="1495"
+                    app:scale_top="759"
+                    app:scale_width="138"
+                    app:scale_height="2"/>
+
 
                 <ImageView
                     android:id="@+id/_bottomWordsActionIcon"
@@ -326,9 +365,10 @@
                     android:src="@drawable/tablet_voca"
                     android:scaleType="fitXY"
                     app:scale_left="1495"
-                    app:scale_top="638"
+                    app:scale_top="761"
                     app:scale_width="138"
                     app:scale_height="94"/>
+
                 <TextView
                     android:id="@+id/_bottomWordsActionText"
                     android:layout_width="wrap_content"
@@ -337,9 +377,9 @@
                     android:textColor="@color/color_ffffff"
                     android:gravity="center_horizontal|top"
                     app:scale_left="1495"
-                    app:scale_top="732"
+                    app:scale_top="855"
                     app:scale_width="138"
-                    app:scale_height="50"
+                    app:scale_height="46"
                     app:scale_textsize="24"/>
             </com.ssomai.android.scalablelayout.ScalableLayout>
         </RelativeLayout>
