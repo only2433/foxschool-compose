@@ -344,25 +344,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
         if (CommonUtils.getInstance(this).isTeacherMode)
         {
-            if (CommonUtils.getInstance(this).checkTablet)
-            {
-                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_light_blue_60)
-            }
-            else
-            {
-                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_light_blue_84)
-            }
+            _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_light_blue_60)
         }
         else
         {
-            if (CommonUtils.getInstance(this).checkTablet)
-            {
-                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_60)
-            }
-            else
-            {
-                _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_84)
-            }
+            _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_60)
         }
     }
 

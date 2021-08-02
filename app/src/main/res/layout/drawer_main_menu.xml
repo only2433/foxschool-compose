@@ -208,7 +208,7 @@
             android:id="@+id/_userInfoButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_box_empty_green_84"
+            android:background="@drawable/round_box_empty_green_60"
             android:text="@string/text_my_info"
             android:textColor="@color/color_23cc8a"
             android:gravity="center"
