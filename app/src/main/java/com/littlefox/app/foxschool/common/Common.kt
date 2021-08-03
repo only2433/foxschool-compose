@@ -14,6 +14,7 @@ class Common
         const val BASE_PUBLIC_API : String          = BASE_URL + "api/v1/"
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
 
+
         const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
         const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
         const val API_LOGIN : String                = DEVELOP_BASE_API + "auth/login"
@@ -22,9 +23,11 @@ class Common
         const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
         const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
         const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry/store"
+        const val API_NEWS : String                 = DEVELOP_BASE_API + "forum/boardlist/news";
+        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/boardlist/faq";
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
-        const val API_NEWS : String                 = BASE_PUBLIC_API + "forum/news"
+
         const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
         const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
         const val API_INTRODUCE_SERIES : String     = BASE_PUBLIC_API + "contents/story/series/"
@@ -108,7 +111,8 @@ class Common
         const val COROUTINE_CODE_QUIZ_SAVE_RECORD : String              = "quiz_save_record"
         const val COROUTINE_CODE_MY_INFO_UPDATE : String                = "my_info_update"
         const val COROUTINE_CODE_PASSWORD_CHANGE : String               = "password_change"
-        const val COROUTINE_CODE_INQUIRE : String                       = "inquire";
+        const val COROUTINE_CODE_INQUIRE : String                       = "inquire"
+        const val COROUTINE_CODE_FORUM : String                         = "forum"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"

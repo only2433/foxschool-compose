@@ -1,7 +1,7 @@
 package com.littlefox.app.foxschool.`object`.result.base
 
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
-import com.littlefox.app.foxschool.`object`.result.news.MetaDataResult
+import com.littlefox.app.foxschool.`object`.result.forum.MetaDataResult
 import java.util.*
 
 class SearchListBaseObject : BaseResult()

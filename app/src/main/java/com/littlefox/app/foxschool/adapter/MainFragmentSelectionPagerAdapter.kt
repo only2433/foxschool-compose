@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
-import com.littlefox.app.foxschool.fragment.NewsListFragment
+import com.littlefox.app.foxschool.fragment.ForumListFragment
 import java.util.ArrayList
 
 class MainFragmentSelectionPagerAdapter : FragmentStatePagerAdapter
@@ -42,7 +42,7 @@ class MainFragmentSelectionPagerAdapter : FragmentStatePagerAdapter
 
     override fun getItemPosition(`object` : Any) : Int
     {
-        if(`object` is NewsListFragment)
+        if(`object` is ForumListFragment)
         {
             return PagerAdapter.POSITION_UNCHANGED
         } else

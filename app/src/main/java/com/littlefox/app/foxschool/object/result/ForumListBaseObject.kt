@@ -2,11 +2,11 @@ package com.littlefox.app.foxschool.`object`.result
 
 
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.news.ForumBaseResult
-import com.littlefox.app.foxschool.`object`.result.news.MetaDataResult
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
+import com.littlefox.app.foxschool.`object`.result.forum.MetaDataResult
 import java.util.*
 
-class NewsListBaseObject : BaseResult()
+class ForumListBaseObject : BaseResult()
 {
     private val data : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
     private val meta : MetaDataResult? = null

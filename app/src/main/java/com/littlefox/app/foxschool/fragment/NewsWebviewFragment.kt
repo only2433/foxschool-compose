@@ -49,7 +49,7 @@ class NewsWebviewFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         Log.f("")
-        val view : View = inflater.inflate(R.layout.fragment_news_webview, container, false)
+        val view : View = inflater.inflate(R.layout.fragment_forum_webview, container, false)
         mUnbinder = ButterKnife.bind(this, view)
         return view
     }

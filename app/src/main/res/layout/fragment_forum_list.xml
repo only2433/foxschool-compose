@@ -10,19 +10,19 @@
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:scale_base_width="1920"
-        app:scale_base_height="30"></com.ssomai.android.scalablelayout.ScalableLayout>
+        app:scale_base_width="1080"
+        app:scale_base_height="40"></com.ssomai.android.scalablelayout.ScalableLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
-            android:id="@+id/_newsSwipeRefreshLayout"
+            android:id="@+id/_forumSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:srl_direction="bottom">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/_newsListView"
+                android:id="@+id/_forumListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 

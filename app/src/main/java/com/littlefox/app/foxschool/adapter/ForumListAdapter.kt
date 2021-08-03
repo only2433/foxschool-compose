@@ -10,15 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.news.ForumBaseResult
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 
 import java.util.ArrayList
 
-class NewsListAdapter : RecyclerView.Adapter<NewsListAdapter.ViewHolder?>
+class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
 {
     private var mDataList : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
     private var mOnItemViewClickListener : OnItemViewClickListener? = null

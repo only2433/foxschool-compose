@@ -19,12 +19,11 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.NewsListBaseObject
-import com.littlefox.app.foxschool.`object`.result.news.ForumBaseResult
-import com.littlefox.app.foxschool.adapter.NewsListAdapter
+import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
+import com.littlefox.app.foxschool.adapter.ForumListAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.viewmodel.CommunicateFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.NewsCommunicatePresenterObserver
 import com.littlefox.logmonitor.Log
@@ -34,26 +33,26 @@ import com.ssomai.android.scalablelayout.ScalableLayout
 
 import java.util.ArrayList
 
-class NewsListFragment : Fragment()
+class ForumListFragment : Fragment()
 {
-    @BindView(R.id._newsSwipeRefreshLayout)
-    lateinit var _NewsSwipeRefreshLayout : SwipyRefreshLayout
+    @BindView(R.id._forumSwipeRefreshLayout)
+    lateinit var _ForumSwipeRefreshLayout : SwipyRefreshLayout
 
-    @BindView(R.id._newsListView)
-    lateinit var _NewsListView : RecyclerView
+    @BindView(R.id._forumListView)
+    lateinit var _ForumListView : RecyclerView
 
     @BindView(R.id._progressWheelLayout)
     lateinit var _ProgressWheelLayout : ScalableLayout
 
     companion object
     {
-        val instance : NewsListFragment
-            get() = NewsListFragment()
+        val instance : ForumListFragment
+            get() = ForumListFragment()
     }
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private var mNewsListAdapter : NewsListAdapter? = null
+    private var mForumListAdapter : ForumListAdapter? = null
     private val mTotalNewsDataList : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
     private lateinit var mCommunicateFragmentObserver : CommunicateFragmentObserver
     private lateinit var mNewsCommunicatePresenterObserver : NewsCommunicatePresenterObserver
@@ -76,10 +75,10 @@ class NewsListFragment : Fragment()
         val view : View
         if(CommonUtils.getInstance(mContext).checkTablet)
         {
-            view = inflater.inflate(R.layout.fragment_news_list, container, false)
+            view = inflater.inflate(R.layout.fragment_forum_list, container, false)
         } else
         {
-            view = inflater.inflate(R.layout.fragment_news_list_tablet, container, false)
+            view = inflater.inflate(R.layout.fragment_forum_list_tablet, container, false)
         }
         mUnbinder = ButterKnife.bind(this, view)
         return view
@@ -106,21 +105,21 @@ class NewsListFragment : Fragment()
     override fun onDestroyView()
     {
         super.onDestroyView()
-        mNewsListAdapter = null
+        mForumListAdapter = null
         mUnbinder.unbind()
     }
 
     private fun initView()
     {
         _ProgressWheelLayout.setVisibility(View.VISIBLE)
-        _NewsSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener)
+        _ForumSwipeRefreshLayout.setOnRefreshListener(mOnRefreshListener)
         if(CommonUtils.getInstance(mContext).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
-            val params : RelativeLayout.LayoutParams = _NewsSwipeRefreshLayout.getLayoutParams() as RelativeLayout.LayoutParams
+            val params : RelativeLayout.LayoutParams = _ForumSwipeRefreshLayout.getLayoutParams() as RelativeLayout.LayoutParams
             params.width = CommonUtils.getInstance(mContext).getPixel(TABLET_LIST_WIDTH)
             params.addRule(RelativeLayout.CENTER_HORIZONTAL)
-            _NewsSwipeRefreshLayout.setLayoutParams(params)
+            _ForumSwipeRefreshLayout.setLayoutParams(params)
         }
     }
 
@@ -128,11 +127,11 @@ class NewsListFragment : Fragment()
     {
         mCommunicateFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(CommunicateFragmentObserver::class.java)
         mNewsCommunicatePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(NewsCommunicatePresenterObserver::class.java)
-        mNewsCommunicatePresenterObserver.settingNewsListData.observe(mContext as AppCompatActivity,
+        mNewsCommunicatePresenterObserver.settingForumListData.observe(mContext as AppCompatActivity,
             Observer<Any> {newsListBaseObject ->
                 if(viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.CREATED)
                 {
-                    setData(newsListBaseObject as NewsListBaseObject)
+                    setData(newsListBaseObject as ForumListBaseObject)
                 }
             })
         mNewsCommunicatePresenterObserver.cancelRefreshData.observe(mContext as AppCompatActivity, Observer<Boolean?> {
@@ -143,12 +142,12 @@ class NewsListFragment : Fragment()
         })
     }
 
-    private fun setData(result : NewsListBaseObject)
+    private fun setData(result : ForumListBaseObject)
     {
         Log.f("setData size : " + result.getNewsList().size)
-        if(_NewsSwipeRefreshLayout.isRefreshing())
+        if(_ForumSwipeRefreshLayout.isRefreshing())
         {
-            _NewsSwipeRefreshLayout.setRefreshing(false)
+            _ForumSwipeRefreshLayout.setRefreshing(false)
         }
         if(_ProgressWheelLayout.getVisibility() == View.VISIBLE)
         {
@@ -161,30 +160,30 @@ class NewsListFragment : Fragment()
     private fun cancelRefreshData()
     {
         Log.f("")
-        if(_NewsSwipeRefreshLayout.isRefreshing())
+        if(_ForumSwipeRefreshLayout.isRefreshing())
         {
-            _NewsSwipeRefreshLayout.setRefreshing(false)
+            _ForumSwipeRefreshLayout.setRefreshing(false)
         }
     }
 
     private fun initRecyclerView()
     {
-        if(mNewsListAdapter == null)
+        if(mForumListAdapter == null)
         {
-            mNewsListAdapter = NewsListAdapter(mContext)
-            mNewsListAdapter?.setData(mTotalNewsDataList)
-            mNewsListAdapter?.setOnItemViewClickListener(mNewsListItemListener)
+            mForumListAdapter = ForumListAdapter(mContext)
+            mForumListAdapter?.setData(mTotalNewsDataList)
+            mForumListAdapter?.setOnItemViewClickListener(mNewsListItemListener)
             val linearLayoutManager = LinearLayoutManager(mContext)
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL)
-            _NewsListView.setLayoutManager(linearLayoutManager)
+            _ForumListView.setLayoutManager(linearLayoutManager)
             val animationController : LayoutAnimationController =
                 AnimationUtils.loadLayoutAnimation(mContext, R.anim.listview_layoutanimation)
-            _NewsListView.setLayoutAnimation(animationController)
-            _NewsListView.setAdapter(mNewsListAdapter)
+            _ForumListView.setLayoutAnimation(animationController)
+            _ForumListView.setAdapter(mForumListAdapter)
         } else
         {
             Log.f("mTextNormalItemListAdapter  notifyDataSetChanged")
-            mNewsListAdapter?.notifyDataSetChanged()
+            mForumListAdapter?.notifyDataSetChanged()
         }
     }
 
