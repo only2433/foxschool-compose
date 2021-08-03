@@ -9,9 +9,11 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.viewpager.widget.ViewPager
 import butterknife.*
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.adapter.MyInformationPagerAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -20,8 +22,16 @@ import com.littlefox.app.foxschool.main.contract.MyInformationContract
 import com.littlefox.app.foxschool.main.presenter.MyInformationPresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.library.view.extra.SwipeDisableViewPager
+import com.littlefox.library.view.scroller.FixedSpeedScroller
+import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import java.lang.reflect.Field
 
+/**
+ * 나의 정보 화면
+ * @author 김태은
+ */
 class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformationContract.View
 {
     @BindView(R.id._mainBaseLayout)
@@ -39,87 +49,18 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     @BindView(R.id._closeButtonRect)
     lateinit var _CloseButtonRect : ImageView
 
-    @BindView(R.id._myInfoMessageLayout)
-    lateinit var _MyInfoMessageLayout : ScalableLayout
+    @BindView(R.id._backButton)
+    lateinit var _BackButton : ImageView
 
-    /** 학생용 뷰 */
-    @BindView(R.id._studentMessageText)
-    lateinit var _StudentMessageText : TextView
+    @BindView(R.id._backButtonRect)
+    lateinit var _BackButtonRect : ImageView
 
-    @BindView(R.id._studentInfoLayout)
-    lateinit var _StudentInfoLayout : ScalableLayout
-
-    @BindView(R.id._studentIdTitleText)
-    lateinit var _StudentIdTitleText : TextView
-
-    @BindView(R.id._studentIdText)
-    lateinit var _StudentIdText : TextView
-
-    @BindView(R.id._studentNameTitleText)
-    lateinit var _StudentNameTitleText : TextView
-
-    @BindView(R.id._studentNameText)
-    lateinit var _StudentNameText : TextView
-
-    @BindView(R.id._studentClassTitleText)
-    lateinit var _StudentClassTitleText : TextView
-
-    @BindView(R.id._studentClassText)
-    lateinit var _StudentClassText : TextView
-
-    /** 선생님용 뷰 */
-    @BindView(R.id._teacherInfoLayout)
-    lateinit var _TeacherInfoLayout : ScalableLayout
-
-    @BindView(R.id._teacherIdTitleText)
-    lateinit var _TeacherIdTitleText : TextView
-
-    @BindView(R.id._teacherIdText)
-    lateinit var _TeacherIdText : TextView
-
-    @BindView(R.id._teacherNameTitleText)
-    lateinit var _TeacherNameTitleText : TextView
-
-    @BindView(R.id._teacherNameText)
-    lateinit var _TeacherNameText : TextView
-
-    /** 버튼 */
-    @BindView(R.id._changeInfoButtonText)
-    lateinit var _ChangeInfoButtonText : TextView
-
-    @BindView(R.id._changePasswordButtonText)
-    lateinit var _ChangePasswordButtonText : TextView
-
-    /** 설정영역 */
-    @BindView(R.id._settingText)
-    lateinit var _SettingText : TextView
-
-    @BindView(R.id._autoLoginText)
-    lateinit var _AutoLoginText : TextView
-
-    @BindView(R.id._bioLoginText)
-    lateinit var _BioLoginText : TextView
-
-    @BindView(R.id._bioLoginInfoText)
-    lateinit var _BioLoginInfoText : TextView
-
-    @BindView(R.id._pushText)
-    lateinit var _PushText : TextView
-
-    @BindView(R.id._pushInfoText)
-    lateinit var _PushInfoText : TextView
-
-    @BindView(R.id._switchAutoLogin)
-    lateinit var _SwitchAutoLogin : ImageView
-
-    @BindView(R.id._switchBioLogin)
-    lateinit var _SwitchBioLogin : ImageView
-
-    @BindView(R.id._switchPush)
-    lateinit var _SwitchPush : ImageView
+    @BindView(R.id._myInfoViewpager)
+    lateinit var _MyInfoViewpager : SwipeDisableViewPager
 
     private lateinit var mMyInformationPresenter : MyInformationPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
+    private lateinit var mFixedSpeedScroller : FixedSpeedScroller
 
     /** LifeCycle **/
     @SuppressLint("SourceLockedOrientationActivity")
@@ -171,54 +112,34 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
     override fun initView()
     {
         settingLayoutColor()
-        _TitleText.text = resources.getString(R.string.text_my_info)
-        _CloseButton.visibility = View.VISIBLE
-        _CloseButtonRect.visibility = View.VISIBLE
-
-        if(CommonUtils.getInstance(this).isTeacherMode)
-        {
-            _StudentMessageText.visibility = View.GONE
-            _StudentInfoLayout.visibility = View.GONE
-            _TeacherInfoLayout.visibility = View.VISIBLE
-        }
-        else
-        {
-            _StudentMessageText.visibility = View.VISIBLE
-            _StudentInfoLayout.visibility = View.VISIBLE
-            _TeacherInfoLayout.visibility = View.GONE
-        }
+        setTitleView(Common.PAGE_MY_INFO)
     }
 
     override fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+    }
 
-        // 학생 영역
-        _StudentMessageText.typeface = Font.getInstance(this).getRobotoRegular()
-        _StudentIdTitleText.typeface = Font.getInstance(this).getRobotoRegular()
-        _StudentNameTitleText.typeface = Font.getInstance(this).getRobotoRegular()
-        _StudentClassTitleText.typeface = Font.getInstance(this).getRobotoRegular()
-        _StudentIdText.typeface = Font.getInstance(this).getRobotoMedium()
-        _StudentNameText.typeface = Font.getInstance(this).getRobotoMedium()
-        _StudentClassText.typeface = Font.getInstance(this).getRobotoMedium()
+    override fun initViewPager(myInformationPagerAdapter : MyInformationPagerAdapter)
+    {
+        _MyInfoViewpager.adapter = myInformationPagerAdapter
+        _MyInfoViewpager.addOnPageChangeListener(mOnPageChangeListener)
+        settingViewPagerController()
+    }
 
-        // 선생님 영역
-        _TeacherIdTitleText.typeface = Font.getInstance(this).getRobotoRegular()
-        _TeacherNameTitleText.typeface = Font.getInstance(this).getRobotoRegular()
-        _TeacherIdText.typeface = Font.getInstance(this).getRobotoMedium()
-        _TeacherNameText.typeface = Font.getInstance(this).getRobotoMedium()
-
-        // 버튼 영역
-        _ChangeInfoButtonText.typeface = Font.getInstance(this).getRobotoMedium()
-        _ChangePasswordButtonText.typeface = Font.getInstance(this).getRobotoMedium()
-
-        // 설정 영역
-        _SettingText.typeface = Font.getInstance(this).getRobotoMedium()
-        _AutoLoginText.typeface = Font.getInstance(this).getRobotoMedium()
-        _BioLoginText.typeface = Font.getInstance(this).getRobotoMedium()
-        _PushText.typeface = Font.getInstance(this).getRobotoMedium()
-        _BioLoginInfoText.typeface = Font.getInstance(this).getRobotoRegular()
-        _PushInfoText.typeface = Font.getInstance(this).getRobotoRegular()
+    private fun settingViewPagerController()
+    {
+        mFixedSpeedScroller = FixedSpeedScroller(this, LinearOutSlowInInterpolator())
+        mFixedSpeedScroller.setDuration(Common.DURATION_NORMAL.toInt())
+        try
+        {
+            val scroller : Field = ViewPager::class.java.getDeclaredField("mScroller")
+            scroller.isAccessible = true
+            scroller[_MyInfoViewpager] = mFixedSpeedScroller
+        } catch(e : Exception)
+        {
+            e.printStackTrace()
+        }
     }
 
     /**
@@ -232,6 +153,52 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
     /** Init end **/
+
+    /**
+     * ViewPager 페이지 변경
+     */
+    override fun setCurrentViewPage(position : Int)
+    {
+        if (position == Common.PAGE_MY_INFO)
+        {
+            _MyInfoViewpager.currentItem = Common.PAGE_MY_INFO
+        }
+        else
+        {
+            _MyInfoViewpager.currentItem = 1
+        }
+        setTitleView(position)
+    }
+
+    /**
+     * 타이틀 영역 세팅
+     * 나의 정보 화면 : X버튼 표시
+     * 나의 정보 수정, 비밀번호 변경 화면 : <-버튼 표시
+     */
+    private fun setTitleView(position : Int)
+    {
+        when(position)
+        {
+            Common.PAGE_MY_INFO -> _TitleText.text = resources.getString(R.string.text_my_info)
+            Common.PAGE_MY_INFO_CHANGE -> _TitleText.text = resources.getString(R.string.text_my_info_change)
+            Common.PAGE_PASSWORD_CHANGE -> _TitleText.text = resources.getString(R.string.text_change_password)
+        }
+
+        if (position == Common.PAGE_MY_INFO)
+        {
+            _CloseButton.visibility = View.VISIBLE
+            _CloseButtonRect.visibility = View.VISIBLE
+            _BackButton.visibility = View.GONE
+            _BackButtonRect.visibility = View.GONE
+        }
+        else
+        {
+            _CloseButton.visibility = View.GONE
+            _CloseButtonRect.visibility = View.GONE
+            _BackButton.visibility = View.VISIBLE
+            _BackButtonRect.visibility = View.VISIBLE
+        }
+    }
 
     override fun showLoading()
     {
@@ -263,86 +230,40 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         mMyInformationPresenter.sendMessageEvent(message)
     }
 
-    /**
-     * 화면에 사용자 정보 표시
-     */
-    override fun setUserInformation(userInformation : LoginInformationResult)
+    override fun onBackPressed()
     {
-        if (CommonUtils.getInstance(this).isTeacherMode)
+        CommonUtils.getInstance(this).hideKeyboard()
+        if (_MyInfoViewpager.currentItem == Common.PAGE_MY_INFO)
         {
-            // 선생님 화면 세팅
-            _TeacherIdText.text = userInformation.getUserInformation().getLoginID()
-            _TeacherNameText.text = userInformation.getUserInformation().getName()
+            super.onBackPressed()
         }
         else
         {
-            // 학생 화면 세팅
-            _StudentIdText.text = userInformation.getUserInformation().getLoginID()
-            _StudentNameText.text = userInformation.getUserInformation().getName()
-            _StudentClassText.text = userInformation.getSchoolInformation().getClassName()
-        }
-    }
-
-    /**
-     *  자동로그인 스위치 ON/OFF 이미지 변경
-     */
-    override fun setSwitchAutoLogin(isEnable : Boolean)
-    {
-        if (isEnable)
-        {
-            _SwitchAutoLogin.setBackgroundResource(R.drawable.icon_switch_on)
-        }
-        else
-        {
-            _SwitchAutoLogin.setBackgroundResource(R.drawable.icon_switch_off)
-        }
-    }
-
-    /**
-     *  지문인증로그인 스위치 ON/OFF 이미지 변경
-     */
-    override fun setSwitchBioLogin(isEnable : Boolean)
-    {
-        if (isEnable)
-        {
-            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_on)
-        }
-        else
-        {
-            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_off)
-        }
-    }
-
-    /**
-     *  푸시알림 스위치 ON/OFF 이미지 변경
-     */
-    override fun setSwitchPush(isEnable : Boolean)
-    {
-        if (isEnable)
-        {
-            _SwitchPush.setBackgroundResource(R.drawable.icon_switch_on)
-        }
-        else
-        {
-            _SwitchPush.setBackgroundResource(R.drawable.icon_switch_off)
+            _MyInfoViewpager.currentItem = Common.PAGE_MY_INFO
         }
     }
 
     @Optional
-    @OnClick(
-        R.id._closeButtonRect, R.id._changeInfoButtonText, R.id._changePasswordButtonText,
-        R.id._switchAutoLogin, R.id._switchBioLogin, R.id._switchPush
-    )
+    @OnClick(R.id._closeButtonRect, R.id._backButtonRect)
     fun onClickView(view: View)
     {
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._switchAutoLogin -> mMyInformationPresenter.onClickAutoLoginSwitch()
-            R.id._switchBioLogin -> mMyInformationPresenter.onClickBioLoginSwitch()
-            R.id._switchPush -> mMyInformationPresenter.onClickPushSwitch()
-            R.id._changeInfoButtonText -> mMyInformationPresenter.onClickInfoChange()
-            R.id._changePasswordButtonText -> mMyInformationPresenter.onClickPasswordChange()
+            R.id._backButtonRect -> mMyInformationPresenter.onClickBackButton()
         }
+    }
+
+    private val mOnPageChangeListener : ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener
+    {
+        override fun onPageScrolled(position : Int, positionOffset : Float, positionOffsetPixels : Int) { }
+
+        override fun onPageSelected(position : Int)
+        {
+            Log.f("position : $position")
+
+        }
+
+        override fun onPageScrollStateChanged(state : Int) { }
     }
 }

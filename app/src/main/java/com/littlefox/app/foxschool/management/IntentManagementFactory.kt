@@ -245,10 +245,6 @@ class IntentManagementFactory
 
             ActivityMode.MY_INFORMATION -> intent = Intent(mContext, MyInformationActivity::class.java)
 
-            ActivityMode.MY_INFORMATION_CHANGE -> intent = Intent(mContext, MyInfoChangeActivity::class.java)
-
-            ActivityMode.PASSWORD_CHANGE -> intent = Intent(mContext, PasswordChangeActivity::class.java)
-
             ActivityMode.APP_USE_GUIDE -> intent = Intent(mContext, AppUseGuideActivity::class.java)
 
             ActivityMode.FLASHCARD ->

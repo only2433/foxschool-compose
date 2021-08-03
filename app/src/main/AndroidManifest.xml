@@ -117,18 +117,6 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
-        <activity android:name=".main.MyInfoChangeActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/AppTheme_Default">
-        </activity>
-
-        <activity android:name=".main.PasswordChangeActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/AppTheme_Default">
-        </activity>
-
         <activity android:name=".main.FlashCardActivity"
             android:screenOrientation="sensorLandscape"
             android:configChanges="keyboardHidden|orientation|screenSize"

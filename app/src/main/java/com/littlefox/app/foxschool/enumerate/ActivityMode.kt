@@ -16,7 +16,6 @@ enum class ActivityMode
     NEWS,
     TESTIMONIAL,
     MY_INFORMATION,
-    MY_INFORMATION_CHANGE,
     PASSWORD_CHANGE,
     APP_USE_GUIDE,
     SEARCH,

@@ -238,11 +238,10 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     /**
      * 리스트 표시 애니메이션
      */
-    @SuppressLint("WrongConstant")
     override fun showSearchListView(adapter : DetailListItemAdapter)
     {
         val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayout.VERTICAL
+        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         _SearchItemListView.layoutManager = linearLayoutManager
 
         val animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)

@@ -177,6 +177,13 @@ class Common
         const val PAGE_SONG : Int       = 1
         const val PAGE_MY_BOOKS : Int   = 2
 
+        /**
+         * 나의 정보 화면 페이지 ( 나의 정보 0 / 나의 정보 수정 1 / 비밀번호 변경 2 )
+         */
+        const val PAGE_MY_INFO : Int            = 0
+        const val PAGE_MY_INFO_CHANGE : Int     = 1
+        const val PAGE_PASSWORD_CHANGE : Int    = 2
+
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 
         const val IAC_AWAKE_CODE_ALWAYS_VISIBLE : String            = "C"

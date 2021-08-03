@@ -52,6 +52,6 @@ class MyInfoUpdateCoroutine : BaseCoroutine
         mUserName = objects[0] as String
         mUserEmail = objects[1] as String
         mUserPhoneNumber = objects[2] as String
-        mUserPassword = objects[2] as String
+        mUserPassword = objects[3] as String
     }
 }
