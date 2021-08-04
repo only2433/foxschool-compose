@@ -184,7 +184,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
         Log.f("")
         mMyInfoPresenterDataObserver.setMyInfoChangeFragment(mLoginInformation!!)
         mMyInfoPresenterDataObserver.clearMyInfoChangeFragment()
-        mMyInfoPresenterDataObserver.clearPasswordChangeFragment()
         mMyInformationContractView.setCurrentViewPage(Common.PAGE_MY_INFO)
     }
 
@@ -292,6 +291,11 @@ class MyInformationPresenter : MyInformationContract.Presenter
      * =========================================================
      */
 
+    private fun checkNameAvailable(name : String) : Boolean
+    {
+        return checkNameAvailable(name, showMessage = false)
+    }
+
     /**
      * 이름 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
@@ -311,6 +315,10 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
+    private fun checkEmailAvailable(email : String) : Boolean
+    {
+        return checkEmailAvailable(email, showMessage = false)
+    }
     /**
      * 이메일 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
@@ -330,6 +338,10 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
+    private fun checkPhoneAvailable(phone : String) : Boolean
+    {
+        return checkPhoneAvailable(phone, showMessage = false)
+    }
     /**
      * 전화번호 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
@@ -358,15 +370,15 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun checkInfoInputData(name : String, email : String, phone : String) : Boolean
     {
-        if (name.isEmpty() || (checkNameAvailable(name, showMessage = false) == false))
+        if (name.isEmpty() || (checkNameAvailable(name) == false))
         {
             return false
         }
-        else if (email.isEmpty() || (checkEmailAvailable(email, showMessage = false) == false))
+        else if (email.isEmpty() || (checkEmailAvailable(email) == false))
         {
             return false
         }
-        else if (phone.isNotEmpty() && (checkPhoneAvailable(phone, showMessage = false) == false))
+        else if (phone.isNotEmpty() && (checkPhoneAvailable(phone) == false))
         {
             return false
         }
@@ -418,18 +430,22 @@ class MyInformationPresenter : MyInformationContract.Presenter
      * =========================================================
      */
 
+    private fun checkPassword(password : String) : Boolean
+    {
+        return checkPassword(password, showMessage = false)
+    }
     /**
      * 기존 비밀번호와 일치한지 체크
+     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
     private fun checkPassword(password : String, showMessage : Boolean) : Boolean
     {
         // 기존 비밀번호와 일치한지 체크
         if (mLoginData != null)
         {
-            val result = CheckUserInput.getInstance(mContext).checkPasswordData(
-                SimpleCrypto.decode(mLoginData!!.userPassword),
-                password
-            ).getResultValue()
+            val result = CheckUserInput.getInstance(mContext)
+                .checkPasswordData(SimpleCrypto.decode(mLoginData!!.userPassword), password)
+                .getResultValue()
 
             if (result != CheckUserInput.INPUT_SUCCESS)
             {
@@ -445,6 +461,10 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return false
     }
 
+    private fun checkNewPasswordAvailable(newPassword : String) : Boolean
+    {
+        return checkNewPasswordAvailable(newPassword, showMessage = false)
+    }
     /**
      * 새 비밀번호가 유효한지 체크
      * 1. 비밀번호 규칙 체크
@@ -466,6 +486,10 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
+    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String) : Boolean
+    {
+        return checkNewPasswordConfirm(newPassword, newPasswordConfirm, showMessage = false)
+    }
     /**
      * 새 비밀번호가 유효한지 체크
      * 1. 새 비밀번호 확인 입력 체크
@@ -474,10 +498,9 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean) : Boolean
     {
-        val result = CheckUserInput.getInstance(mContext).checkPasswordData(
-            newPassword,
-            newPasswordConfirm
-        ).getResultValue()
+        val result = CheckUserInput.getInstance(mContext)
+            .checkPasswordData(newPassword, newPasswordConfirm)
+            .getResultValue()
 
         if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
             result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
@@ -497,15 +520,15 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun checkPasswordInputData(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
     {
-        if (oldPassword.isEmpty() || (checkPassword(oldPassword, showMessage = false) == false))
+        if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
         {
             return false
         }
-        else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword, showMessage = false) == false))
+        else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
         {
             return false
         }
-        else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword, showMessage = false) == false))
+        else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword) == false))
         {
             return false
         }

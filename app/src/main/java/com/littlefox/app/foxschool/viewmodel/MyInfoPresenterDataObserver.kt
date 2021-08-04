@@ -18,7 +18,6 @@ class MyInfoPresenterDataObserver : ViewModel()
     var setSaveInfoButtonEnable = MutableLiveData<Boolean>()
     var setSavePasswordButtonEnable = MutableLiveData<Boolean>()
     var clearMyInfoChangeFragment = MutableLiveData<Boolean>()
-    var clearPasswordChangeFragment = MutableLiveData<Boolean>()
     var viewPagerChange = MutableLiveData<Int>()
 
     /**
@@ -70,11 +69,6 @@ class MyInfoPresenterDataObserver : ViewModel()
     fun clearMyInfoChangeFragment()
     {
         clearMyInfoChangeFragment.value = true
-    }
-
-    fun clearPasswordChangeFragment()
-    {
-        clearPasswordChangeFragment.value = true
     }
 
     fun setViewPagerChange(position : Int)

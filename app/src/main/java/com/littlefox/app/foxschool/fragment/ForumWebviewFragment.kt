@@ -25,7 +25,7 @@ import com.littlefox.app.foxschool.viewmodel.CommunicateFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.NewsCommunicatePresenterObserver
 import com.littlefox.logmonitor.Log
 
-class NewsWebviewFragment : Fragment()
+class ForumWebviewFragment : Fragment()
 {
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
@@ -151,7 +151,7 @@ class NewsWebviewFragment : Fragment()
 
     companion object
     {
-        val instance : NewsWebviewFragment
-            get() = NewsWebviewFragment()
+        val instance : ForumWebviewFragment
+            get() = ForumWebviewFragment()
     }
 }

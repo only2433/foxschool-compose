@@ -177,11 +177,7 @@ class MyInfoChangeFragment : Fragment()
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater : LayoutInflater,
-        container : ViewGroup?,
-        savedInstanceState : Bundle?
-    ) : View?
+    override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         Log.f("")
         var view : View? = null
@@ -484,10 +480,10 @@ class MyInfoChangeFragment : Fragment()
     {
         if (position == Common.PAGE_MY_INFO_CHANGE)
         {
-            val name = _InputNameEditText.text.toString().trim()
-            val email = getEmailEditTextResult()
-            val phone = _InputPhoneEditText.text.toString().trim()
-            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(name, email, phone)
+            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(
+                name = _InputNameEditText.text.toString().trim(),
+                email = getEmailEditTextResult(),
+                phone = _InputPhoneEditText.text.toString().trim())
         }
         else if (position == Common.PAGE_PASSWORD_CHANGE)
         {
@@ -804,21 +800,12 @@ class MyInfoChangeFragment : Fragment()
             if(actionId == EditorInfo.IME_ACTION_DONE)
             {
                 CommonUtils.getInstance(mContext).hideKeyboard()
-                if (v?.id == R.id._inputEmailEditText)
+                when(v?.id)
                 {
-                    _InputEmailEditText.clearFocus()
-                }
-                else if (v?.id == R.id._inputEmailEndEditText)
-                {
-                    _InputEmailEndEditText.clearFocus()
-                }
-                else if (v?.id == R.id._inputPhoneEditText)
-                {
-                    _InputPhoneEditText.clearFocus()
-                }
-                else if (v?.id == R.id._inputNewPasswordConfirmEditText)
-                {
-                    _InputNewPasswordConfirmEditText.clearFocus()
+                    R.id._inputEmailEditText -> _InputEmailEditText.clearFocus()
+                    R.id._inputEmailEndEditText -> _InputEmailEndEditText.clearFocus()
+                    R.id._inputPhoneEditText -> _InputPhoneEditText.clearFocus()
+                    R.id._inputNewPasswordConfirmEditText -> _InputNewPasswordConfirmEditText.clearFocus()
                 }
                 return true
             }
