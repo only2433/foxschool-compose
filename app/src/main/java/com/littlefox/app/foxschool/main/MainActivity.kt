@@ -642,6 +642,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
             when(view.id)
             {
+                R.id._menuFoxschoolNewsButtonRect ->
+                {
+                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                    mMainPresenter.onClickFoxschoolNews()
+                }
                 R.id._menuFAQsButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)

@@ -4,24 +4,30 @@ import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 
-
-class NewsCommunicatePresenterObserver : ViewModel()
+class ForumPresenterObserver : ViewModel()
 {
     var cancelRefreshData : SingleLiveEvent<Boolean> = SingleLiveEvent()
     var settingForumListData : SingleLiveEvent<ForumListBaseObject> = SingleLiveEvent()
     var articleIDData : SingleLiveEvent<String> = SingleLiveEvent()
+    var setForumType : SingleLiveEvent<Int> = SingleLiveEvent()
+
     fun onCancelRefreshData()
     {
-        cancelRefreshData.setValue(true)
+        cancelRefreshData.value = true
     }
 
-    fun onSettingNewsList(data : ForumListBaseObject?)
+    fun onSettingForumList(data : ForumListBaseObject?)
     {
-        settingForumListData.setValue(data)
+        settingForumListData.value = data
     }
 
     fun onSetArticleUrl(url : String?)
     {
-        articleIDData.setValue(url)
+        articleIDData.value = url
+    }
+
+    fun setForumType(type : Int)
+    {
+        setForumType.value = type
     }
 }

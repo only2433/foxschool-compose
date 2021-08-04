@@ -21,7 +21,6 @@ class MainContract
     interface Presenter : BaseContract.Presenter
     {
         fun onClickMenuLogin()
-        fun onClickMenuNews()
         fun onClickMenuMyInformation()
         fun onClickMenuAppUseGuide()
         fun onClickMenuAddUser()
@@ -31,6 +30,7 @@ class MainContract
         fun onClickMenuAttendance()
         fun onClickMenuLogout()
         fun onClickMenuLearningLog()
+        fun onClickFoxschoolNews()
         fun onClickSearch()
         fun onBackPressed()
     }

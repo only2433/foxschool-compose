@@ -21,10 +21,13 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
-import com.littlefox.app.foxschool.viewmodel.CommunicateFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.NewsCommunicatePresenterObserver
+import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
+import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
 
+/**
+ * [팍스스쿨 소식], [자주 묻는 질문] WebView Fragment
+ */
 class ForumWebviewFragment : Fragment()
 {
     @BindView(R.id._webview)
@@ -32,18 +35,14 @@ class ForumWebviewFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private lateinit var mNewsCommunicatePresenterObserver : NewsCommunicatePresenterObserver
-    private lateinit var mCommunicateFragmentObserver : CommunicateFragmentObserver
+    private lateinit var mForumPresenterObserver : ForumPresenterObserver
+    private lateinit var mForumFragmentObserver : ForumFragmentObserver
+
+    /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
     {
         super.onAttach(context)
         mContext = context
-    }
-
-    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-        initDataObserver()
     }
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
@@ -52,6 +51,12 @@ class ForumWebviewFragment : Fragment()
         val view : View = inflater.inflate(R.layout.fragment_forum_webview, container, false)
         mUnbinder = ButterKnife.bind(this, view)
         return view
+    }
+
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
+    {
+        super.onViewCreated(view, savedInstanceState)
+        initDataObserver()
     }
 
     override fun onResume()
@@ -68,6 +73,11 @@ class ForumWebviewFragment : Fragment()
         _WebView.onPause()
     }
 
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+    }
+
     override fun onDestroy()
     {
         Log.f("")
@@ -79,23 +89,21 @@ class ForumWebviewFragment : Fragment()
         }
         super.onDestroy()
     }
+    /** ========== LifeCycle ========== */
 
-    override fun onDestroyView()
-    {
-        super.onDestroyView()
-    }
-
+    /** ========== Init ========== */
     private fun initDataObserver()
     {
-        mCommunicateFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(CommunicateFragmentObserver::class.java)
-        mNewsCommunicatePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(NewsCommunicatePresenterObserver::class.java)
-        mNewsCommunicatePresenterObserver.articleIDData.observe(this, Observer<String> {articleID ->
+        mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
+        mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
+        mForumPresenterObserver.articleIDData.observe(this, Observer<String> {articleID ->
             if(viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.CREATED)
             {
                 setData(articleID)
             }
         })
     }
+    /** ========== Init ========== */
 
     private fun setData(`object` : Any)
     {
@@ -122,7 +130,7 @@ class ForumWebviewFragment : Fragment()
 
         override fun onPageFinished(view : WebView, url : String)
         {
-            mCommunicateFragmentObserver.onPageLoadComplete()
+            mForumFragmentObserver.onPageLoadComplete()
             _WebView.setAlpha(1.0f)
             super.onPageFinished(view, url)
         }
@@ -144,7 +152,7 @@ class ForumWebviewFragment : Fragment()
         {
             _WebView.postDelayed(Runnable {
                 Log.f("seriesID : $seriesID")
-                mCommunicateFragmentObserver.onSeriesShow(seriesID)
+                mForumFragmentObserver.onSeriesShow(seriesID)
             }, Common.DURATION_SHORTER)
         }
     }

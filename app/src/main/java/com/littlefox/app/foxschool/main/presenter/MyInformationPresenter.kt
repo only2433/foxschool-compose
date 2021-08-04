@@ -290,17 +290,11 @@ class MyInformationPresenter : MyInformationContract.Presenter
      *      나의 정보 수정 화면 관련 함수 (MyInfoChangeFragment)
      * =========================================================
      */
-
-    private fun checkNameAvailable(name : String) : Boolean
-    {
-        return checkNameAvailable(name, showMessage = false)
-    }
-
     /**
      * 이름 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkNameAvailable(name : String, showMessage : Boolean) : Boolean
+    private fun checkNameAvailable(name : String, showMessage : Boolean = false) : Boolean
     {
         val nameResult = CheckUserInput.getInstance(mContext).checkNameData(name).getResultValue()
         if(nameResult == CheckUserInput.WARNING_NAME_WRONG_INPUT)
@@ -315,15 +309,11 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
-    private fun checkEmailAvailable(email : String) : Boolean
-    {
-        return checkEmailAvailable(email, showMessage = false)
-    }
     /**
      * 이메일 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkEmailAvailable(email : String, showMessage : Boolean) : Boolean
+    private fun checkEmailAvailable(email : String, showMessage : Boolean = false) : Boolean
     {
         val emailResult = CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
         if(emailResult == CheckUserInput.WARNING_EMAIL_WRONG_INPUT)
@@ -338,15 +328,11 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
-    private fun checkPhoneAvailable(phone : String) : Boolean
-    {
-        return checkPhoneAvailable(phone, showMessage = false)
-    }
     /**
      * 전화번호 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkPhoneAvailable(phone : String, showMessage : Boolean) : Boolean
+    private fun checkPhoneAvailable(phone : String, showMessage : Boolean = false) : Boolean
     {
         val data = CommonUtils.getInstance(mContext).getReplaceBothEndTrim(phone)
         val convertData = CommonUtils.getInstance(mContext).getPhoneTypeNumber(data)
@@ -429,16 +415,11 @@ class MyInformationPresenter : MyInformationContract.Presenter
      *    비밀번호 변경 화면 관련 함수 (MyPasswordChangeFragment)
      * =========================================================
      */
-
-    private fun checkPassword(password : String) : Boolean
-    {
-        return checkPassword(password, showMessage = false)
-    }
     /**
      * 기존 비밀번호와 일치한지 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkPassword(password : String, showMessage : Boolean) : Boolean
+    private fun checkPassword(password : String, showMessage : Boolean = false) : Boolean
     {
         // 기존 비밀번호와 일치한지 체크
         if (mLoginData != null)
@@ -461,16 +442,12 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return false
     }
 
-    private fun checkNewPasswordAvailable(newPassword : String) : Boolean
-    {
-        return checkNewPasswordAvailable(newPassword, showMessage = false)
-    }
     /**
      * 새 비밀번호가 유효한지 체크
      * 1. 비밀번호 규칙 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean) : Boolean
+    private fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean = false) : Boolean
     {
         val result = CheckUserInput.getInstance(mContext).checkPasswordData(newPassword).getResultValue()
 
@@ -486,17 +463,13 @@ class MyInformationPresenter : MyInformationContract.Presenter
         return true
     }
 
-    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String) : Boolean
-    {
-        return checkNewPasswordConfirm(newPassword, newPasswordConfirm, showMessage = false)
-    }
     /**
      * 새 비밀번호가 유효한지 체크
      * 1. 새 비밀번호 확인 입력 체크
      * 2. 새 비밀번호 확인과 일치한지 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean) : Boolean
+    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean = false) : Boolean
     {
         val result = CheckUserInput.getInstance(mContext)
             .checkPasswordData(newPassword, newPasswordConfirm)

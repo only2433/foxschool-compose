@@ -256,9 +256,11 @@ class IntentManagementFactory
                 }
             }
 
-            ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
+            ActivityMode.FOXSCHOOL_NEWS -> intent = Intent(mContext, FoxSchoolNewsActivity::class.java)
 
-            ActivityMode.WEBVIEW_FAQS -> intent = Intent(mContext, WebviewFAQActivity::class.java)
+            ActivityMode.FAQS -> intent = Intent(mContext, FAQActivity::class.java)
+
+            ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
 
             ActivityMode.WEBVIEW_POLICY_PRIVACY -> intent = Intent(mContext, WebviewPolicyPrivacyActivity::class.java)
 

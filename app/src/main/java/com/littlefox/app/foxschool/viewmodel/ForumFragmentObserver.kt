@@ -3,31 +3,30 @@ package com.littlefox.app.foxschool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-
-class CommunicateFragmentObserver : ViewModel()
+class ForumFragmentObserver : ViewModel()
 {
     var refreshData : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var webviewIDData : MutableLiveData<String> = MutableLiveData<String>()
     var pageLoadData : MutableLiveData<Boolean> = MutableLiveData<Boolean>()
     var seriesIDData : MutableLiveData<String> = MutableLiveData<String>()
+
     fun onRequestRefresh()
     {
-        refreshData.setValue(true)
+        refreshData.value = true
     }
 
-    fun onShowWebView(articleID : String?)
+    fun onShowWebView(articleID : String)
     {
-        webviewIDData.setValue(articleID)
+        webviewIDData.value = articleID
     }
 
     fun onPageLoadComplete()
     {
-        pageLoadData.setValue(true)
+        pageLoadData.value = true
     }
 
-    fun onSeriesShow(seriesID : String?)
+    fun onSeriesShow(seriesID : String)
     {
-        seriesIDData.setValue(seriesID)
+        seriesIDData.value = seriesID
     }
-
 }

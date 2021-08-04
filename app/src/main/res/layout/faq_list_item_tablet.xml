@@ -23,47 +23,32 @@
             app:scale_width="960"
             app:scale_height="130"/>
 
-        <ImageView
-            android:id="@+id/_newItemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/main_option_new"
-            app:scale_left="910"
-            app:scale_top="20"
-            app:scale_width="25"
-            app:scale_height="25"/>
-
         <TextView
             android:id="@+id/_titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="[새로운 시리즈] Monster Academy 시즌 2 - Coming soon"
+            android:text="[어린이날 특집 선물 1탄] 로켓걸 캐릭터 창작한 분이 알려주는 로켓걸 그리기"
             android:textColor="@color/color_444444"
             android:gravity="center_vertical"
             android:maxLines="2"
             android:ellipsize="end"
             app:scale_left="38"
-            app:scale_top="10"
+            app:scale_top="15"
             app:scale_width="884"
-            app:scale_height="80"
+            app:scale_height="100"
             app:scale_textsize="30"/>
 
         <TextView
             android:id="@+id/_dateText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2017-12-12 15:24"
-            android:textColor="@color/color_666666"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:ellipsize="end"
-            app:scale_left="38"
-            app:scale_top="85"
-            app:scale_width="884"
-            app:scale_height="30"
-            app:scale_textsize="22"/>
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/_newItemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
-
 </LinearLayout>

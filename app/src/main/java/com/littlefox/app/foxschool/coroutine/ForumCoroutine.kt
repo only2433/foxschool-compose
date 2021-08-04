@@ -1,11 +1,8 @@
 package com.littlefox.app.foxschool.coroutine
 
-import android.content.ContentValues
 import android.content.Context
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
-import com.littlefox.app.foxschool.`object`.result.VersionBaseObject
-import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil

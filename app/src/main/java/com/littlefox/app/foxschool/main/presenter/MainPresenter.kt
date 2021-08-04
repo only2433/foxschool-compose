@@ -65,7 +65,7 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 101
         private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 102
         private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 103
-        private const val MESSAGE_START_NEWS : Int                      = 104
+        private const val MESSAGE_START_FOXSCHOOL_NEWS : Int            = 104
         private const val MESSAGE_START_LOGIN : Int                     = 105
         private const val MESSAGE_START_MY_INFORMATION : Int            = 106
         private const val MESSAGE_START_LEARNING_LOG : Int              = 107
@@ -314,7 +314,6 @@ class MainPresenter : MainContract.Presenter
             {
                 mMainContractView.showErrorMessage(msg.obj as String)
             }
-            MESSAGE_START_NEWS -> startNewsActivity()
             MESSAGE_START_LOGIN -> startLoginActivity()
             MESSAGE_START_MY_INFORMATION -> startMyInformationActivity()
             MESSAGE_START_LEARNING_LOG -> startLearningLogActivity()
@@ -326,7 +325,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_PUBLISH_SCHEDULE -> startWebviewPublishScheduleActivity()
             MESSAGE_START_ATTENDANCE -> startWebviewAttendanceActivity()
             MESSAGE_START_1ON1_ASK -> startWebview1On1AskActivity()
-            MESSAGE_START_FAQ -> startWebviewFAQActivity()
+            MESSAGE_START_FAQ -> startFAQActivity()
             MESSAGE_START_RESULT_SERIES -> startSelectSeriesActivity(msg.obj as String)
             MESSAGE_START_LOGOUT -> showTemplateAlertDialog(
                 mContext.resources.getString(R.string.message_try_logout),
@@ -336,6 +335,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
+            MESSAGE_START_FOXSCHOOL_NEWS -> startFoxSchoolNewsActivity()
             MESSAGE_APP_SERVER_ERROR ->
             {
                 Log.f("== Server Error  ==")
@@ -351,15 +351,6 @@ class MainPresenter : MainContract.Presenter
         Log.f("")
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
     }
-
-
-    override fun onClickMenuNews()
-    {
-        Log.f("")
-        mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_NEWS, Common.DURATION_SHORT)
-    }
-
-
 
     override fun onClickMenuMyInformation()
     {
@@ -383,6 +374,12 @@ class MainPresenter : MainContract.Presenter
     {
         Log.f("")
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_1ON1_ASK, Common.DURATION_SHORT)
+    }
+
+    override fun onClickFoxschoolNews()
+    {
+        Log.f("")
+        mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FOXSCHOOL_NEWS, Common.DURATION_SHORT)
     }
 
     override fun onClickMenuFAQ()
@@ -437,13 +434,20 @@ class MainPresenter : MainContract.Presenter
         )
     }
 
-
-
-    private fun startWebviewFAQActivity()
+    private fun startFoxSchoolNewsActivity()
     {
         Log.f("")
         IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_FAQS)
+            .readyActivityMode(ActivityMode.FOXSCHOOL_NEWS)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startFAQActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FAQS)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -576,21 +580,11 @@ class MainPresenter : MainContract.Presenter
             .startActivity()
     }
 
-    private fun startNewsActivity()
-    {
-        Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.NEWS)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-
     private fun startNewsArticleActivity(articleID : String)
     {
         Log.f("")
         IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.NEWS)
+            .readyActivityMode(ActivityMode.FOXSCHOOL_NEWS)
             .setData(articleID)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()

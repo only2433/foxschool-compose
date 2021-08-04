@@ -54,12 +54,6 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
-        <activity android:name=".main.PlayerHlsActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-        </activity>
-
         <activity android:name=".main.SeriesContentsListActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -91,13 +85,6 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
-        <activity android:name=".main.QuizActivity"
-            android:screenOrientation="sensorLandscape"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
-
         <activity android:name=".main.AppUseGuideActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -115,6 +102,31 @@
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.FoxSchoolNewsActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.FAQActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".main.PlayerHlsActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
+        </activity>
+
+        <activity android:name=".main.QuizActivity"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            tools:ignore="LockedOrientationActivity">
         </activity>
 
         <activity android:name=".main.FlashCardActivity"

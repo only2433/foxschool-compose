@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingPrefix"
+    android:background="@color/color_edeef2"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,22 +12,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:scale_base_width="1080"
-        app:scale_base_height="40"></com.ssomai.android.scalablelayout.ScalableLayout>
+        app:scale_base_height="44"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
             android:id="@+id/_forumSwipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:srl_direction="bottom">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/_forumListView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"/>
 
-            </androidx.recyclerview.widget.RecyclerView>
         </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
         <com.ssomai.android.scalablelayout.ScalableLayout
@@ -48,10 +50,8 @@
                 app:scale_left="0"
                 app:scale_top="0"
                 app:scale_width="150" />
+
         </com.ssomai.android.scalablelayout.ScalableLayout>
 
     </RelativeLayout>
-
-
-
 </LinearLayout>

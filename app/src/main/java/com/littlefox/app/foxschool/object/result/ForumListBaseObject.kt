@@ -1,53 +1,14 @@
 package com.littlefox.app.foxschool.`object`.result
 
-
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
-import com.littlefox.app.foxschool.`object`.result.forum.MetaDataResult
-import java.util.*
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
 
 class ForumListBaseObject : BaseResult()
 {
-    private val data : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
-    private val meta : MetaDataResult? = null
+    private val data : ForumBaseListResult? = null
 
-    val currentPageIndex : Int
-        get()
-        {
-            if(meta != null)
-            {
-                return meta.current_page
-            }
-            else
-                return 0
-        }
-
-    val isLastPage : Boolean
-        get()
-        {
-            if(meta != null)
-            {
-                if(meta.current_page === meta.last_page)
-                {
-                    return true
-                }
-            }
-            return false
-        }
-
-    val totalItemCount : Int
-        get()
-        {
-            if(meta != null)
-            {
-                return meta.total
-            }
-            else
-                return 0
-        }
-
-    fun getNewsList() : ArrayList<ForumBaseResult>
+    fun getData() : ForumBaseListResult
     {
-        return data;
+        return data!!
     }
 }

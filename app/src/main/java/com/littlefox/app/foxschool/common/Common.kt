@@ -23,8 +23,8 @@ class Common
         const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
         const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
         const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry/store"
-        const val API_NEWS : String                 = DEVELOP_BASE_API + "forum/boardlist/news";
-        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/boardlist/faq";
+        const val API_FOXSCHOOL_NEWS : String       = DEVELOP_BASE_API + "forum/boardlist/news"
+        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/boardlist/faq"
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
@@ -49,6 +49,8 @@ class Common
         const val URL_TERMS : String                = BASE_WEBVIEW_URL + "policy/terms"
         const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
         const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
+        const val URL_FOXSCHOOL_NEWS_DETAIL : String= DEVELOP_BASE_API + "forum/boardlist/news/detail/"
+        const val URL_FAQ_DETAIL : String           = DEVELOP_BASE_API + "forum/boardlist/faq/detail/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
@@ -85,6 +87,7 @@ class Common
         const val INTENT_QUIZ_PARAMS : String                       = "quiz_params"
         const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
+        const val INTENT_FORUM_TYPE : String                        = "forum_type"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -183,6 +186,18 @@ class Common
         const val PAGE_MY_INFO : Int            = 0
         const val PAGE_MY_INFO_CHANGE : Int     = 1
         const val PAGE_PASSWORD_CHANGE : Int    = 2
+
+        /**
+         * 포럼 페이지 (리스트 0 / 상세화면 1)
+         */
+        const val PAGE_FORUM_LIST : Int     = 0
+        const val PAGE_FORUM_WEBVIEW : Int  = 1
+
+        /**
+         * 포럼 타입 (팍스스쿨뉴스 0 , 자주묻는질문 1 )
+         */
+        const val FORUM_TYPE_FOXSCHOOL_NEWS : Int   = 0
+        const val FORUM_TYPE_FAQ : Int              = 1
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 
