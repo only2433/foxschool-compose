@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Message
+import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -139,7 +140,10 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 
     override fun showLoading() {}
     override fun hideLoading() {}
-    override fun showSuccessMessage(message : String) {}
+    override fun showSuccessMessage(message : String)
+    {
+        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+    }
     override fun showErrorMessage(message : String) {}
 
     override fun onUserLeaveHint()

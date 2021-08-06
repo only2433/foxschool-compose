@@ -8,6 +8,7 @@ class LoginContract
 {
     interface View : BaseContract.View {
         fun setSchoolList(data : ArrayList<SchoolItemDataResult>)
+        fun clearInputData()
     }
     interface Presenter : BaseContract.Presenter
     {

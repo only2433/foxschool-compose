@@ -23,15 +23,16 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
-import com.littlefox.app.foxschool.common.Common
-import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
-import com.littlefox.app.foxschool.common.LittlefoxLocale
+import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.coroutine.AuthMeCoroutine
 import com.littlefox.app.foxschool.coroutine.InitCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
+import com.littlefox.app.foxschool.coroutine.PasswordChangeCoroutine
+import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
+import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.IntroContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -65,7 +66,7 @@ class IntroPresenter : IntroContract.Presenter
     }
 
     private lateinit var mContext : Context
-    private var mMainContractView : IntroContract.View
+    private lateinit var mMainContractView : IntroContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
     private var mAuthMeCoroutine : AuthMeCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
@@ -75,6 +76,16 @@ class IntroPresenter : IntroContract.Presenter
     private var mInitCoroutine : InitCoroutine? = null
     private var isAutoLogin : Boolean           = false
     private var isDisposableLogin : Boolean     = false
+
+    private var mUserLoginData : UserLoginData? = null // 로그인 데이터
+    private var mUserInformationResult : LoginInformationResult? = null // 사용자 정보 (로그인 통신 응답)
+
+    // 비밀번호 변경 안내 관련 변수
+    private var mPasswordChangeDialog : PasswordChangeDialog? = null
+    private var mPasswordChangeCoroutine : PasswordChangeCoroutine? = null
+    private var mPassword : String  = ""
+    private var mNewPassword : String = ""
+    private var mConfirmPassword : String = ""
 
     constructor(context : Context)
     {
@@ -279,6 +290,15 @@ class IntroPresenter : IntroContract.Presenter
         dialog.show()
     }
 
+    private fun showPasswordChangeDialog()
+    {
+        Log.f("")
+        mPasswordChangeDialog = PasswordChangeDialog(mContext)
+        mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
+        mPasswordChangeDialog?.setCancelable(false)
+        mPasswordChangeDialog?.show()
+    }
+
     private fun requestInitAsync()
     {
         Log.f("")
@@ -306,6 +326,18 @@ class IntroPresenter : IntroContract.Presenter
         mMainInformationCoroutine = MainInformationCoroutine(mContext)
         mMainInformationCoroutine?.asyncListener = mIntroAsyncListener
         mMainInformationCoroutine?.execute()
+    }
+
+    /**
+     * 비밀번호 변경하기 통신 요청
+     */
+    private fun requestPasswordChange()
+    {
+        mPasswordChangeDialog!!.showLoading()
+        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext)
+        mPasswordChangeCoroutine!!.setData(mPassword, mNewPassword, mConfirmPassword)
+        mPasswordChangeCoroutine!!.asyncListener = mIntroAsyncListener
+        mPasswordChangeCoroutine!!.execute()
     }
 
 
@@ -340,6 +372,8 @@ class IntroPresenter : IntroContract.Presenter
         mAuthMeCoroutine = null
         mMainInformationCoroutine?.cancel()
         mMainInformationCoroutine = null
+        mPasswordChangeCoroutine?.cancel()
+        mPasswordChangeCoroutine = null
         mMainHandler.removeCallbacksAndMessages(null)
         (mContext as AppCompatActivity).finish()
     }
@@ -455,10 +489,21 @@ class IntroPresenter : IntroContract.Presenter
                     startAPIProcess()
                 } else if(code == Common.COROUTINE_CODE_ME)
                 {
-                    val loginInformationResult : LoginInformationResult = (result as LoginBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, loginInformationResult)
-                    mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                    enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                    mUserInformationResult = (result as LoginBaseObject).getData()
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
+
+                    if (mUserInformationResult!!.getChangeDate() >= 90)
+                    {
+                        // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
+                        mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+                        showPasswordChangeDialog()
+                    }
+                    else
+                    {
+                        // 자동로그인 완료
+                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                    }
                 }
                 else if(code == Common.COROUTINE_CODE_MAIN)
                 {
@@ -467,6 +512,18 @@ class IntroPresenter : IntroContract.Presenter
                     CommonUtils.getInstance(mContext).saveMainData(mainInformationResult)
                     mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
                     enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
+                }
+                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
+                {
+                    // 비밀번호 변경 성공
+                    // 성공 메세지 표시하고 자동로그인 해제, 다시 로그인 할 수 있도록 로그인 화면으로 이동한다.
+                    Log.f("Password Change Complete")
+                    mPasswordChangeDialog!!.hideLoading()
+                    mPasswordChangeDialog!!.dismiss()
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
+                    isAutoLogin = false
+                    mMainContractView.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
+                    onClickLogin()
                 }
             } else
             {
@@ -479,7 +536,15 @@ class IntroPresenter : IntroContract.Presenter
                 }
                 else
                 {
-                    (mContext as AppCompatActivity).finish()
+                    if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE && mPasswordChangeDialog!!.isShowing)
+                    {
+                        mPasswordChangeDialog!!.hideLoading()
+                        mPasswordChangeDialog!!.showErrorMessage(result.getMessage())
+                    }
+                    else
+                    {
+                        (mContext as AppCompatActivity).finish()
+                    }
                 }
             }
         }
@@ -522,6 +587,156 @@ class IntroPresenter : IntroContract.Presenter
                     CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
                 }
             }
+        }
+    }
+
+    /**
+     * 비밀번호 변경 다이얼로그 Listener
+     */
+    val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
+    {
+        /**
+         * 화면 유형 가져오기 (90일/180일)
+         */
+        override fun getScreenType() : PasswordGuideType
+        {
+            if (mUserInformationResult!!.getChangeDate() >= 180)
+            {
+                return PasswordGuideType.CHANGE180
+            }
+            else if (mUserInformationResult!!.getChangeDate() >= 90)
+            {
+                return PasswordGuideType.CHANGE90
+            }
+            return PasswordGuideType.CHANGE90
+        }
+
+        /**
+         * 기존 비밀번호와 일치한지 체크
+         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+         */
+        override fun checkPassword(password : String, showMessage : Boolean) : Boolean
+        {
+            // 기존 비밀번호와 일치한지 체크
+            if (mUserLoginData != null && password != "")
+            {
+                val result = CheckUserInput.getInstance(mContext)
+                    .checkPasswordData(SimpleCrypto.decode(mUserLoginData!!.userPassword), password)
+                    .getResultValue()
+
+                if (result != CheckUserInput.INPUT_SUCCESS)
+                {
+                    if (showMessage)
+                    {
+                        mPasswordChangeDialog!!.setInputError(InputDataType.PASSWORD, mContext.resources.getString(R.string.message_warning_password_confirm))
+                    }
+                    return false
+                }
+                return true
+            }
+            return false
+        }
+
+        /**
+         * 새 비밀번호가 유효한지 체크
+         * 1. 비밀번호 규칙 체크
+         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+         */
+        override fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean) : Boolean
+        {
+            val result = CheckUserInput.getInstance(mContext).checkPasswordData(newPassword).getResultValue()
+
+            if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
+            {
+                if (showMessage)
+                {
+                    mPasswordChangeDialog!!.setInputError(InputDataType.NEW_PASSWORD, CheckUserInput().getErrorMessage(result))
+                }
+                return false
+            }
+            return true
+        }
+
+        /**
+         * 새 비밀번호가 유효한지 체크
+         * 1. 새 비밀번호 확인 입력 체크
+         * 2. 새 비밀번호 확인과 일치한지 체크
+         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+         */
+        override fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean) : Boolean
+        {
+            val result = CheckUserInput.getInstance(mContext)
+                .checkPasswordData(newPassword, newPasswordConfirm)
+                .getResultValue()
+
+            if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
+                result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
+            {
+                if (showMessage)
+                {
+                    mPasswordChangeDialog!!.setInputError(CheckUserInput().getErrorTypeFromResult(result), CheckUserInput().getErrorMessage(result))
+                }
+                return false
+            }
+            return true
+        }
+
+        /**
+         * 비밀번호 변경화면 입력값 다 유효한지 체크
+         */
+        override fun checkAllAvailable(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
+        {
+            if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
+            {
+                mPasswordChangeDialog!!.setChangeButtonEnable(false)
+                return false
+            }
+            else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
+            {
+                mPasswordChangeDialog!!.setChangeButtonEnable(false)
+                return false
+            }
+            else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword) == false))
+            {
+                mPasswordChangeDialog!!.setChangeButtonEnable(false)
+                return false
+            }
+            mPasswordChangeDialog!!.setChangeButtonEnable(true)
+            return true
+        }
+
+        /**
+         * [비밀번호 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+        {
+            mPassword = oldPassword
+            mNewPassword = newPassword
+            mConfirmPassword = confirmPassword
+
+            requestPasswordChange()
+        }
+
+        /**
+         * [다음에 변경] 버튼 클릭 이벤트
+         * TODO 김태은 추후 로직 확인 필요
+         */
+        override fun onClickLaterButton()
+        {
+            mPasswordChangeDialog!!.dismiss()
+            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+        }
+
+        /**
+         * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
+         * TODO 김태은 추후 로직 확인 필요
+         */
+        override fun onClickKeepButton()
+        {
+            mPasswordChangeDialog!!.dismiss()
+            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
         }
     }
 }

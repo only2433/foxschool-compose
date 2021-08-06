@@ -13,6 +13,7 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.coroutine.ForumCoroutine
+import com.littlefox.app.foxschool.enumerate.ForumType
 import com.littlefox.app.foxschool.fragment.ForumListFragment
 import com.littlefox.app.foxschool.fragment.ForumWebviewFragment
 import com.littlefox.app.foxschool.main.contract.ForumContract
@@ -67,7 +68,7 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
 
         mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
         mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
-        mForumPresenterObserver.setForumType(Common.FORUM_TYPE_FOXSCHOOL_NEWS)
+        mForumPresenterObserver.setForumType(ForumType.FOXSCHOOL_NEWS)
         setupForumFragmentListener()
     }
 

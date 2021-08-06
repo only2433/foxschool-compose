@@ -87,7 +87,6 @@ class Common
         const val INTENT_QUIZ_PARAMS : String                       = "quiz_params"
         const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
-        const val INTENT_FORUM_TYPE : String                        = "forum_type"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -192,12 +191,6 @@ class Common
          */
         const val PAGE_FORUM_LIST : Int     = 0
         const val PAGE_FORUM_WEBVIEW : Int  = 1
-
-        /**
-         * 포럼 타입 (팍스스쿨뉴스 0 , 자주묻는질문 1 )
-         */
-        const val FORUM_TYPE_FOXSCHOOL_NEWS : Int   = 0
-        const val FORUM_TYPE_FAQ : Int              = 1
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 

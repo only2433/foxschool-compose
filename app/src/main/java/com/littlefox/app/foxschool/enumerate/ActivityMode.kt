@@ -15,7 +15,6 @@ enum class ActivityMode
     NETWORK_ERROR,
     TESTIMONIAL,
     MY_INFORMATION,
-    PASSWORD_CHANGE,
     APP_USE_GUIDE,
     SEARCH,
     VOCABULARY,

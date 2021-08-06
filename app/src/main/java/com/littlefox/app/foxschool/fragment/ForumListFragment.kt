@@ -23,8 +23,8 @@ import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
 import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.ForumListAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.enumerate.ForumType
 import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
@@ -60,7 +60,7 @@ class ForumListFragment : Fragment()
     private lateinit var mForumFragmentObserver : ForumFragmentObserver
     private lateinit var mForumPresenterObserver : ForumPresenterObserver
 
-    private var mForumType : Int = Common.FORUM_TYPE_FOXSCHOOL_NEWS
+    private var mForumType : ForumType = ForumType.FOXSCHOOL_NEWS
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)

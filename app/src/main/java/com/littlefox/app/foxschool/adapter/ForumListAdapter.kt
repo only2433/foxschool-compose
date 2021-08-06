@@ -12,9 +12,9 @@ import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.ForumType
 
 import java.util.ArrayList
 
@@ -26,9 +26,9 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
     private var mDataList : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
     private var mOnItemViewClickListener : OnItemViewClickListener? = null
     private lateinit var mContext : Context
-    private var mForumType : Int
+    private var mForumType : ForumType
 
-    constructor(context : Context, type : Int)
+    constructor(context : Context, type : ForumType)
     {
         mContext = context
         mForumType = type
@@ -37,15 +37,6 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
     fun setData(dataList : ArrayList<ForumBaseResult>)
     {
         mDataList = dataList
-
-        // TODO 김태은 테스트용 나중에 지울 것
-        if (mForumType == Common.FORUM_TYPE_FOXSCHOOL_NEWS)
-        {
-            mDataList[0] = ForumBaseResult("Y", 0, "미확인 신규 컨텐츠 테스트", "2021.08.02 11:00")
-            mDataList[1] = ForumBaseResult("Y", 1, "미확인 신규 컨텐츠 테스트", "2021.07.28 16:00")
-            mDataList[2] = ForumBaseResult("N", 2, "미확인 신규 컨텐츠 테스트", "2021.07.28 15:00")
-            mDataList[3] = ForumBaseResult("Y", 3, "미확인 신규 컨텐츠 테스트", "2021.07.28 00:00")
-        }
     }
 
     fun setOnItemViewClickListener(onItemViewClickListener : OnItemViewClickListener?)
@@ -59,7 +50,7 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         when(mForumType)
         {
             // [팍스스쿨 뉴스]
-            Common.FORUM_TYPE_FOXSCHOOL_NEWS ->
+            ForumType.FOXSCHOOL_NEWS ->
             {
                 if(CommonUtils.getInstance(mContext).checkTablet)
                 {
@@ -71,7 +62,7 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
                 }
             }
             // [자주 묻는 질문]
-            Common.FORUM_TYPE_FAQ ->
+            ForumType.FAQ ->
             {
                 if(CommonUtils.getInstance(mContext).checkTablet)
                 {

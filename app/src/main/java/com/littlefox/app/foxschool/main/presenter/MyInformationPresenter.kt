@@ -54,7 +54,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
 
     private lateinit var mContext : Context
     private lateinit var mMyInformationContractView : MyInformationContract.View
-    private lateinit var mMainHandler : WeakReferenceHandler
 
     private val mMyInfoFragmentList : ArrayList<Fragment> = ArrayList<Fragment>()
     private var mMyInformationPagerAdapter : MyInformationPagerAdapter? = null
@@ -89,7 +88,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         mMyInformationContractView = mContext as MyInformationContract.View
         mMyInformationContractView.initView()
         mMyInformationContractView.initFont()
@@ -163,7 +161,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
         mMyInfoUpdateCoroutine = null
         mPasswordChangeCoroutine?.cancel()
         mPasswordChangeCoroutine = null
-        mMainHandler.removeCallbacksAndMessages(null)
     }
 
     override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
@@ -352,7 +349,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
 
     /**
      * 입력값 유효한지 체크
-     * 이름과 이메일만 체크, 전화번호는 선택사항이기 때문에 입력된 경우에만 유효성을 체크한다.
+     * 이메일, 전화번호는 선택사항이기 때문에 입력된 경우에만 유효성을 체크한다.
      */
     private fun checkInfoInputData(name : String, email : String, phone : String) : Boolean
     {
@@ -360,7 +357,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
         {
             return false
         }
-        else if (email.isEmpty() || (checkEmailAvailable(email) == false))
+        else if (email.isNotEmpty() && (checkEmailAvailable(email) == false))
         {
             return false
         }

@@ -7,7 +7,9 @@ import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
@@ -186,6 +188,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _InputSchoolEditText.onFocusChangeListener = mEditFocusListener
         _InputIdEditText.onFocusChangeListener = mEditFocusListener
         _InputPasswordEditText.onFocusChangeListener = mEditFocusListener
+        _InputPasswordEditText.setOnEditorActionListener(mEditKeyActionListener)
     }
 
     override fun initFont()
@@ -232,20 +235,25 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
 
     @OnClick(
         R.id._closeButtonRect, R.id._autoLoginIcon, R.id._loginButtonText, R.id._forgetIDText,
-        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton, R.id._inputLayoutBackground, R.id._contentsLayout
+        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton,
+        R.id._inputLayoutBackground, R.id._contentsLayout, R.id._loginInfoLayout
     )
     fun onClickView(view : View)
     {
-        // 학교 입력필드가 선택되어있는 상태에서 다른 뷰를 탭하면 키보드를 닫고 입력필드의 내용을 초기화 한다.
-        if (view.id != R.id._inputSchoolEditText)
+        // 바탕화면 클릭 시 EditText 포커싱 해제하고 키보드 닫기
+        if (view.id == R.id._contentsLayout || view.id == R.id._inputLayoutBackground || view.id == R.id._loginInfoLayout)
         {
             if (_InputSchoolEditText.hasFocus())
             {
-                CommonUtils.getInstance(this).hideKeyboard()
+                // 학교 입력필드의 내용 초기화
                 _InputSchoolEditText.setText("")
-                _InputSchoolEditText.clearFocus()
                 clearSearchView()
             }
+
+            CommonUtils.getInstance(this).hideKeyboard()
+            _InputIdEditText.clearFocus()
+            _InputPasswordEditText.clearFocus()
+            _InputSchoolEditText.clearFocus()
         }
 
         when(view.id)
@@ -384,6 +392,16 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     }
 
     /**
+     * 입력창 초기화
+     */
+    override fun clearInputData()
+    {
+        _InputSchoolEditText.setText("")
+        _InputIdEditText.setText("")
+        _InputPasswordEditText.setText("")
+    }
+
+    /**
      * EditText TextChange Listener
      */
     private val mEditTextChangeListener = object : TextWatcher
@@ -445,6 +463,27 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * EditText Key Action Listener
+     * (키보드 완료 버튼 눌렀을 때 처리)
+     */
+    private val mEditKeyActionListener = object : TextView.OnEditorActionListener
+    {
+        override fun onEditorAction(v : TextView?, actionId : Int, event : KeyEvent?) : Boolean
+        {
+            if(actionId == EditorInfo.IME_ACTION_DONE)
+            {
+                CommonUtils.getInstance(this@LoginActivity).hideKeyboard()
+                when(v?.id)
+                {
+                    R.id._inputPasswordEditText -> _InputPasswordEditText.clearFocus()
+                }
+                return true
+            }
+            return false
         }
     }
 }

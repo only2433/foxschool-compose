@@ -81,6 +81,7 @@
     <string name="text_service_terms_use">서비스 이용약관</string>
     <string name="text_privacy_policy">개인정보 처리방침</string>
     <string name="text_my_info_change">나의 정보 수정</string>
+    <string name="text_password_change_guide">비밀번호 변경 안내</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -120,8 +121,10 @@
     <string name="text_spinner_hint">선택</string>
     <string name="text_option">(선택)</string>
     <string name="text_password">비밀번호</string>
-    <string name="text_new_password">새 비밀번호 (영문,숫자 조합 4~10자)</string>
+    <string name="text_new_password">새 비밀번호 (영문, 숫자 조합 4~10자)</string>
     <string name="text_new_password_confirm">새 비밀번호 확인</string>
+    <string name="text_change_later">다음에 변경</string>
+    <string name="text_keep_password"><u>현재의 비밀번호로 유지</u></string>
 
     <string name="text_item_count_question"><![CDATA[<b>%d</b>/%d]]></string>
     <string name="text_study_word"><![CDATA[<font color=\'#FFFF52\'><b>단어로</b></font> 학습하기]]></string>
@@ -181,6 +184,8 @@
     <string name="message_password_check_for_change_user_info">회원정보 수정을 위해 비밀번호를 입력해 주세요.</string>
     <string name="message_myinfo_change_complete">회원정보가 변경되었습니다.</string>
     <string name="message_password_change_complete">비밀번호가 변경되었습니다.</string>
+    <string name="message_select_word_to_study">학습할 단어를 선택해 주세요.</string>
+    <string name="message_password_change"><![CDATA[회원님의 소중한 정보 보호를 위해 <font color="#F12E45">%d일</font> 주기로<br>비밀번호 변경을 권장하고 있습니다.<br>불편하시더라도 주기적으로 비밀번호를<br>변경하여 주세요.]]></string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>
@@ -202,7 +207,6 @@
     <string name="message_warning_sound_off">버튼을 탭하고 소리를 켜세요.</string>
     <string name="message_warning_bookmark_init">찜한 단어가 모두 초기화 됩니다. 계속 하시겠습니까?</string>
     <string name="message_warning_bookmark_empty">찜 단어가 없어요.</string>
-    <string name="message_select_word_to_study">학습할 단어를 선택해 주세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

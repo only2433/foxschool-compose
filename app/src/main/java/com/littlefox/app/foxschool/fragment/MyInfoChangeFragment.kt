@@ -438,7 +438,10 @@ class MyInfoChangeFragment : Fragment()
     {
         val emailFront = _InputEmailEditText.text.toString().trim()
         val emailEnd = _InputEmailEndEditText.text.toString().trim()
-        return "$emailFront@$emailEnd"
+
+        // 이메일 앞, 뒤가 다 공백이면 빈값을 추출해준다.
+        if (emailFront == "" && emailEnd == "") return ""
+        else return "$emailFront@$emailEnd"
     }
 
     /**

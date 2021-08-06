@@ -23,16 +23,6 @@
             app:scale_width="1020"
             app:scale_height="204"/>
 
-        <ImageView
-            android:id="@+id/_newItemImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/main_option_new"
-            app:scale_left="980"
-            app:scale_top="30"
-            app:scale_width="40"
-            app:scale_height="40"/>
-
         <TextView
             android:id="@+id/_titleText"
             android:layout_width="wrap_content"
@@ -63,6 +53,16 @@
             app:scale_width="950"
             app:scale_height="40"
             app:scale_textsize="32"/>
+
+        <ImageView
+            android:id="@+id/_newItemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_news_new"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="80"
+            app:scale_height="80"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 </LinearLayout>

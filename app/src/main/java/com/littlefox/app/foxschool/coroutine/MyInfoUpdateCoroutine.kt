@@ -31,11 +31,17 @@ class MyInfoUpdateCoroutine : BaseCoroutine
             isRunning = true
             val list = ContentValues()
             list.put("name", mUserName)
-            list.put("email", mUserEmail)
+
+            // 이메일, 비밀번호는 선택사항
+            if(mUserEmail != "")
+            {
+                list.put("email", mUserEmail)
+            }
             if(mUserPhoneNumber != "")
             {
                 list.put("phone", mUserPhoneNumber)
             }
+
             list.put("password", mUserPassword)
             val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_MY_INFO_UPDATE, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, LoginBaseObject::class.java)

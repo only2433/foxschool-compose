@@ -6,15 +6,6 @@ import java.util.*
 
 class ForumBaseResult
 {
-    // TODO 김태은 테스트용 나중에 지울 것
-    constructor(isnew : String, index : Int, title : String, regDate : String)
-    {
-        this.isnew = isnew
-        this.idx = index
-        this.title = title
-        this.regDate = regDate
-    }
-
     private var isnew : String = ""
     private var idx : Int = 0
     private var title : String = ""

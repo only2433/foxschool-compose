@@ -261,6 +261,7 @@
         </com.ssomai.android.scalablelayout.ScalableLayout>
 
         <RelativeLayout
+            android:id="@+id/_loginInfoLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
