@@ -24,8 +24,9 @@ import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 
-class TemplateAlertDialog(private val mContext : Context)
+class TemplateAlertDialog
 {
+    private var mContext : Context
     protected var isCancelable : Boolean = true
     protected var isPasswordConfirm : Boolean = false // 비밀번호 확인 다이얼로그 플래그
     protected var mTitle = ""
@@ -42,6 +43,12 @@ class TemplateAlertDialog(private val mContext : Context)
     private val _ImageView : ImageView? = null
     private var _EditText : EditText? = null
     private var mGravityValue = -1
+
+
+    constructor(context : Context)
+    {
+        mContext = context
+    }
 
     /**
      * 리스너에서 전달해주는 Event 타입

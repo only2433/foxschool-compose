@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_000000"
+        android:alpha="0.6"/>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="144"
+        app:scale_base_width="1080" >
+
+
+        <ImageView
+            android:id="@+id/_closeButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:scale_height="144"
+            app:scale_left="942"
+            app:scale_top="0"
+            app:scale_width="138" />
+
+        <ImageView
+            android:id="@+id/_closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_close"
+            android:visibility="visible"
+            app:scale_height="48"
+            app:scale_left="990"
+            app:scale_top="48"
+            app:scale_width="48" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:scale_base_height="520"
+        app:scale_base_width="1080" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/box_black"
+            android:scaleType="fitXY"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="520"/>
+
+        <ImageView
+            android:id="@+id/_thumbnailImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/thum01"
+            android:scaleType="fitXY"
+            app:scale_left="85"
+            app:scale_top="47"
+            app:scale_width="300"
+            app:scale_height="185"/>
+
+        <TextView
+            android:id="@+id/_titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_ffffff"
+            android:text="Bat and Freinds 1 : Hunting for Bugs"
+            android:gravity="center_vertical"
+            app:scale_left="427"
+            app:scale_top="47"
+            app:scale_width="577"
+            app:scale_height="185"
+            app:scale_textsize="40"/>
+
+        <TextView
+            android:id="@+id/_playerCurrentPlayTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@color/color_white"
+            app:scale_height="71"
+            app:scale_left="57"
+            app:scale_textsize="34"
+            app:scale_top="270"
+            app:scale_width="94" />
+
+        <SeekBar
+            android:id="@+id/_seekbarPlayBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="3dp"
+            android:orientation="horizontal"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/audio_seekbar_progress"
+            android:thumb="@drawable/audio_seekbar_thumb"
+            android:thumbOffset="0dip"
+            app:scale_height="62"
+            app:scale_left="179"
+            app:scale_top="274"
+            app:scale_width="722" />
+
+        <TextView
+            android:id="@+id/_playerRemainPlayTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="00:00"
+            android:textColor="@color/color_white"
+            app:scale_height="71"
+            app:scale_left="921"
+            app:scale_textsize="34"
+            app:scale_top="270"
+            app:scale_width="94" />
+
+        <ImageView
+            android:id="@+id/_playButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_audio_play"
+            android:scaleType="fitXY"
+            app:scale_left="480"
+            app:scale_top="350"
+            app:scale_width="120"
+            app:scale_height="120"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</RelativeLayout>

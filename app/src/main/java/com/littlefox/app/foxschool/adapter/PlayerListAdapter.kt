@@ -65,9 +65,9 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
         Glide.with(mContext)
-                .load(mPlayInformationList[position].getThumbnailUrl())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(holder._ItemTitleImage)
+            .load(mPlayInformationList[position].getThumbnailUrl())
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(holder._ItemTitleImage)
         holder._ItemTitleText.setText(CommonUtils.getInstance(mContext).getContentsName(mPlayInformationList[position]))
         if(mCurrentPlayIndex == position)
         {
@@ -79,9 +79,9 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
             holder._ItemBackground.setImageResource(R.drawable.box)
         }
         holder._ItemBaseLayout.setOnClickListener {
-            mCurrentPlayIndex = position
+            mCurrentPlayIndex = holder.bindingAdapterPosition
             Log.f("mCurrentPlayIndex : $mCurrentPlayIndex")
-            mPlayerEventListener.onItemClick(position)
+            mPlayerEventListener.onItemClick(holder.bindingAdapterPosition)
             notifyDataSetChanged()
         }
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
@@ -97,6 +97,8 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
             holder._ItemTitleOption.setOnClickListener {mPlayerEventListener.onClickOption(position)}
         }
     }
+
+
 
     fun setCurrentPlayIndex(index : Int)
     {

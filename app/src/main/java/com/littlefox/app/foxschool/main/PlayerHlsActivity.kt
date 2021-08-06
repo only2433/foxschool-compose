@@ -286,6 +286,25 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         INIT, NORMAL_PLAY, PREVIEW_PLAY, PREVIEW_END, NORMAL_END
     }
 
+    companion object
+    {
+        private const val DURATION_MENU_GONE : Int              = 5000
+        private const val RIGHT_LIST_WIDTH : Int                = 654
+        private const val BOTTOM_LAYOUT_HEIGHT_PORTRAIT : Int   = 112
+        private const val BOTTOM_LAYOUT_HEIGHT : Int            = 234
+        private const val BOTTOM_LAYOUT_EXCEPT_CAPTION : Int    = 150
+
+        private const val MESSAGE_ORIENTATION_INIT : Int        = 11
+        private const val MESSAGE_LOCK_MODE_SET : Int           = 12
+        private const val MESSAGE_VIDEO_LOADING_COMPLETE : Int  = 13
+        private const val MESSAGE_INIT_LIST_SCROLL : Int        = 14
+        private const val MESSAGE_AUTO_MENU_GONE : Int          = 15
+
+        private const val PORTRAIT_DISPLAY_WIDTH : Int          = 1080
+        private const val LANDSCAPE_DISPLAY_WIDTH : Int         = 1920
+        private const val PAGE_MAX_VISIBLE_COUNT : Int          = 5
+    }
+
     private lateinit var mPlayerContractPresenter : PlayerContract.Presenter
     private lateinit var mWeakReferenceHandler : WeakReferenceHandler
     private lateinit var mFadeAnimationController : FadeAnimationController
@@ -2427,22 +2446,5 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    companion object
-    {
-        private const val DURATION_MENU_GONE = 5000
-        private const val RIGHT_LIST_WIDTH = 654
-        private const val BOTTOM_LAYOUT_HEIGHT_PORTRAIT = 112
-        private const val BOTTOM_LAYOUT_HEIGHT = 234
-        private const val BOTTOM_LAYOUT_EXCEPT_CAPTION = 150
 
-        private const val MESSAGE_ORIENTATION_INIT = 11
-        private const val MESSAGE_LOCK_MODE_SET = 12
-        private const val MESSAGE_VIDEO_LOADING_COMPLETE = 13
-        private const val MESSAGE_INIT_LIST_SCROLL = 14
-        private const val MESSAGE_AUTO_MENU_GONE = 15
-
-        private const val PORTRAIT_DISPLAY_WIDTH = 1080
-        private const val LANDSCAPE_DISPLAY_WIDTH = 1920
-        private const val PAGE_MAX_VISIBLE_COUNT = 5
-    }
 }
