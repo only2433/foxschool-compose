@@ -42,15 +42,17 @@ class Common
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
         const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
 
-        const val BASE_WEBVIEW_URL : String         = BASE_URL + "web/"
+        const val BASE_WEBVIEW_URL : String                 = BASE_URL + "web/"
+        const val DEVELOP_BASE_WEBVIEW_URL  : String        = DEVELOP_API_BASE_URL + "web/"
         const val URL_LEARNING_LOG : String         = BASE_WEBVIEW_URL + "studylog/summary"
         const val URL_FAQS : String                 = BASE_WEBVIEW_URL + "help/faq/list"
         const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
         const val URL_TERMS : String                = BASE_WEBVIEW_URL + "policy/terms"
         const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
         const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
-        const val URL_FOXSCHOOL_NEWS_DETAIL : String= DEVELOP_BASE_API + "forum/boardlist/news/detail/"
-        const val URL_FAQ_DETAIL : String           = DEVELOP_BASE_API + "forum/boardlist/faq/detail/"
+
+        const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_API_BASE_URL + "forum/board/news/"
+        const val URL_FAQ_DETAIL : String               = DEVELOP_API_BASE_URL + "forum/board/faq/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"

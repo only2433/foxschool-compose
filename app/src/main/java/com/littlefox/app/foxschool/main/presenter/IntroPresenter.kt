@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Message
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnSuccessListener
@@ -392,7 +393,11 @@ class IntroPresenter : IntroContract.Presenter
     override fun onClickLogin()
     {
         Log.f("")
-        startLoginActivity()
+        //startLoginActivity()
+        mPasswordChangeDialog = PasswordChangeDialog(mContext)
+        mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
+        mPasswordChangeDialog?.setCancelable(true)
+        mPasswordChangeDialog?.show()
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
@@ -600,14 +605,14 @@ class IntroPresenter : IntroContract.Presenter
          */
         override fun getScreenType() : PasswordGuideType
         {
-            if (mUserInformationResult!!.getChangeDate() >= 180)
+           /* if (mUserInformationResult!!.getChangeDate() >= 180)
             {
                 return PasswordGuideType.CHANGE180
             }
             else if (mUserInformationResult!!.getChangeDate() >= 90)
             {
                 return PasswordGuideType.CHANGE90
-            }
+            }*/
             return PasswordGuideType.CHANGE90
         }
 
