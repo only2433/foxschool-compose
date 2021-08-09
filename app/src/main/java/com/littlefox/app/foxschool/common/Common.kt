@@ -16,15 +16,15 @@ class Common
 
 
         const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
-        const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/schoollist"
+        const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/school"
         const val API_LOGIN : String                = DEVELOP_BASE_API + "auth/login"
         const val API_ME : String                   = DEVELOP_BASE_API + "auth/me"
         const val API_MAIN : String                 = DEVELOP_BASE_API + "app/main"
         const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
         const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
         const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry/store"
-        const val API_FOXSCHOOL_NEWS : String       = DEVELOP_BASE_API + "forum/boardlist/news"
-        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/boardlist/faq"
+        const val API_FOXSCHOOL_NEWS : String       = DEVELOP_BASE_API + "forum/board/news"
+        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/board/faq"
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
@@ -51,8 +51,8 @@ class Common
         const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
         const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
 
-        const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_API_BASE_URL + "forum/board/news/"
-        const val URL_FAQ_DETAIL : String               = DEVELOP_API_BASE_URL + "forum/board/faq/"
+        const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_BASE_WEBVIEW_URL + "forum/board/news/"
+        const val URL_FAQ_DETAIL : String               = DEVELOP_BASE_WEBVIEW_URL + "forum/board/faq/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"

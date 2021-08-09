@@ -75,7 +75,6 @@ class LoginPresenter : LoginContract.Presenter
     override fun resume()
     {
         Log.f("")
-        requestSchoolList()
     }
 
     override fun pause()

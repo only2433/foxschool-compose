@@ -110,7 +110,7 @@ class ForumWebviewFragment : Fragment()
         _WebView.setAlpha(0.0f)
         val ardicleUrl = `object` as String
         Log.f("URL : $ardicleUrl")
-        val extraHeaders : Map<String, String> = CommonUtils.getInstance(mContext).getHeaderInformation(false)
+        val extraHeaders : Map<String, String> = CommonUtils.getInstance(mContext).getHeaderInformation(true)
         _WebView.setWebViewClient(DataWebViewClient())
         _WebView.getSettings().setJavaScriptEnabled(true)
         _WebView.loadUrl(ardicleUrl, extraHeaders)
