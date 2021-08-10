@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.Nullable
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -80,16 +81,21 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
 
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
-        if (mDataList[position].isShowNewIcon())
+        // [팍스스쿨 소식]에서만 보이는 항목
+        if (mForumType == ForumType.FOXSCHOOL_NEWS)
         {
-            holder._NewItemImage.visibility = View.VISIBLE
-        }
-        else
-        {
-            holder._NewItemImage.visibility = View.GONE
+            if (mDataList[position].isShowNewIcon())
+            {
+                holder._NewItemImage.visibility = View.VISIBLE
+            }
+            else
+            {
+                holder._NewItemImage.visibility = View.GONE
+            }
+
+            holder._DateText.setText(mDataList[position].getRegisterDate())
         }
         holder._TitleText.setText(mDataList[position].getTitle())
-        holder._DateText.setText(mDataList[position].getRegisterDate())
         holder._BackgroundImage.setOnClickListener {
             mOnItemViewClickListener?.onItemClick(position)
         }
@@ -105,12 +111,14 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         @BindView(R.id._backgroundImage)
         lateinit var _BackgroundImage : ImageView
 
+        @Nullable
         @BindView(R.id._newItemImage)
         lateinit var _NewItemImage : ImageView
 
         @BindView(R.id._titleText)
         lateinit var _TitleText : TextView
 
+        @Nullable
         @BindView(R.id._dateText)
         lateinit var _DateText : TextView
 
@@ -123,7 +131,11 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         private fun initFont()
         {
             _TitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _DateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            // [팍스스쿨 소식]에서만 보이는 항목
+            if (mForumType == ForumType.FOXSCHOOL_NEWS)
+            {
+                _DateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            }
         }
     }
 }

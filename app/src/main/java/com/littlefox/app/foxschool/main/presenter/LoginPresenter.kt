@@ -170,7 +170,7 @@ class LoginPresenter : LoginContract.Presenter
     private fun showPasswordChangeDialog()
     {
         Log.f("")
-        mPasswordChangeDialog = PasswordChangeDialog(mContext)
+        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!)
         mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
         mPasswordChangeDialog?.setCancelable(false)
         mPasswordChangeDialog?.show()
@@ -328,116 +328,6 @@ class LoginPresenter : LoginContract.Presenter
      */
     val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
     {
-        /**
-         * 화면 유형 가져오기 (90일/180일)
-         */
-        override fun getScreenType() : PasswordGuideType
-        {
-            if (mUserInformationResult!!.getChangeDate() >= 179)
-            {
-                return PasswordGuideType.CHANGE180
-            }
-            else if (mUserInformationResult!!.getChangeDate() >= 90)
-            {
-                return PasswordGuideType.CHANGE90
-            }
-            return PasswordGuideType.CHANGE90
-        }
-
-        /**
-         * 기존 비밀번호와 일치한지 체크
-         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-         */
-        override fun checkPassword(password : String, showMessage : Boolean) : Boolean
-        {
-            // 기존 비밀번호와 일치한지 체크
-            if (mUserLoginData != null && password != "")
-            {
-                val result = CheckUserInput.getInstance(mContext)
-                    .checkPasswordData(SimpleCrypto.decode(mUserLoginData!!.userPassword), password)
-                    .getResultValue()
-
-                if (result != CheckUserInput.INPUT_SUCCESS)
-                {
-                    if (showMessage)
-                    {
-                        mPasswordChangeDialog!!.setInputError(InputDataType.PASSWORD, mContext.resources.getString(R.string.message_warning_password_confirm))
-                    }
-                    return false
-                }
-                return true
-            }
-            return false
-        }
-
-        /**
-         * 새 비밀번호가 유효한지 체크
-         * 1. 비밀번호 규칙 체크
-         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-         */
-        override fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean) : Boolean
-        {
-            val result = CheckUserInput.getInstance(mContext).checkPasswordData(newPassword).getResultValue()
-
-            if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
-            {
-                if (showMessage)
-                {
-                    mPasswordChangeDialog!!.setInputError(InputDataType.NEW_PASSWORD, CheckUserInput().getErrorMessage(result))
-                }
-                return false
-            }
-            return true
-        }
-
-        /**
-         * 새 비밀번호가 유효한지 체크
-         * 1. 새 비밀번호 확인 입력 체크
-         * 2. 새 비밀번호 확인과 일치한지 체크
-         * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-         */
-        override fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean) : Boolean
-        {
-            val result = CheckUserInput.getInstance(mContext)
-                .checkPasswordData(newPassword, newPasswordConfirm)
-                .getResultValue()
-
-            if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
-                result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
-            {
-                if (showMessage)
-                {
-                    mPasswordChangeDialog!!.setInputError(CheckUserInput().getErrorTypeFromResult(result), CheckUserInput().getErrorMessage(result))
-                }
-                return false
-            }
-            return true
-        }
-
-        /**
-         * 비밀번호 변경화면 입력값 다 유효한지 체크
-         */
-        override fun checkAllAvailable(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
-        {
-            if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
-            {
-                mPasswordChangeDialog!!.setChangeButtonEnable(false)
-                return false
-            }
-            else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
-            {
-                mPasswordChangeDialog!!.setChangeButtonEnable(false)
-                return false
-            }
-            else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword) == false))
-            {
-                mPasswordChangeDialog!!.setChangeButtonEnable(false)
-                return false
-            }
-            mPasswordChangeDialog!!.setChangeButtonEnable(true)
-            return true
-        }
-
         /**
          * [비밀번호 변경] 버튼 클릭 이벤트
          */

@@ -19,10 +19,14 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Optional
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.common.CheckUserInput
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
+import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
@@ -98,6 +102,10 @@ class PasswordChangeDialog : Dialog
     }
     
     private lateinit var mContext : Context
+
+    private lateinit var mUserLoginData : UserLoginData                     // 로그인 정보
+    private lateinit var mUserInformationResult : LoginInformationResult    // 사용자 정보 (로그인 통신 응답)
+
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private var mPasswordChangeListener : PasswordChangeListener? = null
     private var mScreenType : PasswordGuideType = PasswordGuideType.CHANGE90
@@ -118,7 +126,7 @@ class PasswordChangeDialog : Dialog
         }
     }
 
-    constructor(context : Context) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
+    constructor(context : Context, loginData : UserLoginData, loginResult : LoginInformationResult) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
     {
         if(CommonUtils.getInstance(context).checkTablet)
         {
@@ -130,6 +138,18 @@ class PasswordChangeDialog : Dialog
         }
         ButterKnife.bind(this)
         mContext = context
+        mUserLoginData = loginData
+        mUserInformationResult = loginResult
+
+        // 화면 타입 세팅
+        if (mUserInformationResult.getChangeDate() >= 180)
+        {
+            mScreenType = PasswordGuideType.CHANGE180
+        }
+        else
+        {
+            mScreenType = PasswordGuideType.CHANGE90
+        }
     }
 
     override fun onCreate(savedInstanceState : Bundle?)
@@ -211,7 +231,6 @@ class PasswordChangeDialog : Dialog
      */
     private fun setScreenTypeView()
     {
-        mScreenType = mPasswordChangeListener!!.getScreenType()
         when(mScreenType)
         {
             PasswordGuideType.CHANGE90 ->
@@ -248,7 +267,7 @@ class PasswordChangeDialog : Dialog
     /**
      * 입력값 오류 표시
      */
-    fun setInputError(type : InputDataType, message : String)
+    private fun setInputError(type : InputDataType, message : String)
     {
         when(type)
         {
@@ -266,10 +285,9 @@ class PasswordChangeDialog : Dialog
     /**
      * [비밀번호 변경] 버튼 활성/비활성 처리
      */
-    fun setChangeButtonEnable(isEnable : Boolean)
+    private fun setChangeButtonEnable(isEnable : Boolean)
     {
-        val screenType = mPasswordChangeListener!!.getScreenType()
-        when(screenType)
+        when(mScreenType)
         {
             PasswordGuideType.CHANGE90 ->
             {
@@ -351,7 +369,8 @@ class PasswordChangeDialog : Dialog
         override fun onFocusChange(view : View?, hasFocus : Boolean)
         {
             when(view?.id)
-            { // 기존 비밀번호
+            {
+                // 기존 비밀번호
                 R.id._inputPasswordEditText ->
                 {
                     if(hasFocus)
@@ -361,7 +380,7 @@ class PasswordChangeDialog : Dialog
                     else
                     {
                         _InputPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mPasswordChangeListener!!.checkPassword(
+                        checkPassword(
                             _InputPasswordEditText.text.toString().trim(),
                             showMessage = true
                         )
@@ -378,7 +397,7 @@ class PasswordChangeDialog : Dialog
                     else
                     {
                         _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mPasswordChangeListener!!.checkNewPasswordAvailable(
+                        checkNewPasswordAvailable(
                             _InputNewPasswordEditText.text.toString().trim(),
                             showMessage = true
                         )
@@ -395,7 +414,7 @@ class PasswordChangeDialog : Dialog
                     else
                     {
                         _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mPasswordChangeListener!!.checkNewPasswordConfirm(
+                        checkNewPasswordConfirm(
                             _InputNewPasswordEditText.text.toString().trim(),
                             _InputNewPasswordConfirmEditText.text.toString().trim(),
                             showMessage = true
@@ -407,13 +426,107 @@ class PasswordChangeDialog : Dialog
             // 포커싱 해제시에만 유효성 체크
             if(hasFocus == false)
             {
-                mPasswordChangeListener!!.checkAllAvailable(
+                checkAllAvailable(
                     oldPassword = _InputPasswordEditText.text.toString().trim(),
                     newPassword = _InputNewPasswordEditText.text.toString().trim(),
                     confirmPassword = _InputNewPasswordConfirmEditText.text.toString().trim()
                 )
             }
         }
+    }
+
+    /**
+     * 기존 비밀번호와 일치한지 체크
+     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+     */
+    private fun checkPassword(password : String, showMessage : Boolean = false) : Boolean
+    {
+        // 기존 비밀번호와 일치한지 체크
+        if (password != "")
+        {
+            val result = CheckUserInput.getInstance(mContext)
+                .checkPasswordData(SimpleCrypto.decode(mUserLoginData.userPassword), password)
+                .getResultValue()
+
+            if (result != CheckUserInput.INPUT_SUCCESS)
+            {
+                if (showMessage)
+                {
+                    setInputError(InputDataType.PASSWORD, mContext.resources.getString(R.string.message_warning_password_confirm))
+                }
+                return false
+            }
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 새 비밀번호가 유효한지 체크
+     * 1. 비밀번호 규칙 체크
+     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+     */
+    private fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean = false) : Boolean
+    {
+        val result = CheckUserInput.getInstance(mContext).checkPasswordData(newPassword).getResultValue()
+
+        if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
+        {
+            if (showMessage)
+            {
+                setInputError(InputDataType.NEW_PASSWORD, CheckUserInput().getErrorMessage(result))
+            }
+            return false
+        }
+        return true
+    }
+
+    /**
+     * 새 비밀번호가 유효한지 체크
+     * 1. 새 비밀번호 확인 입력 체크
+     * 2. 새 비밀번호 확인과 일치한지 체크
+     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+     */
+    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean = false) : Boolean
+    {
+        val result = CheckUserInput.getInstance(mContext)
+            .checkPasswordData(newPassword, newPasswordConfirm)
+            .getResultValue()
+
+        if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
+            result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
+        {
+            if (showMessage)
+            {
+                setInputError(CheckUserInput().getErrorTypeFromResult(result), CheckUserInput().getErrorMessage(result))
+            }
+            return false
+        }
+        return true
+    }
+
+    /**
+     * 비밀번호 변경화면 입력값 다 유효한지 체크
+     */
+    private fun checkAllAvailable(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
+    {
+        if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
+        {
+            setChangeButtonEnable(false)
+            return false
+        }
+        else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
+        {
+            setChangeButtonEnable(false)
+            return false
+        }
+        else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword) == false))
+        {
+            setChangeButtonEnable(false)
+            return false
+        }
+        setChangeButtonEnable(true)
+        return true
     }
 
     /**

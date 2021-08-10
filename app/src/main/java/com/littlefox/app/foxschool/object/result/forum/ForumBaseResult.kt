@@ -32,13 +32,9 @@ class ForumBaseResult
 
     fun getRegisterDate() : String
     {
-        if (regDate != null)
-        {
-            val dateFormat : DateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm")
-            val resultFormat : DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREAN)
-            val date = dateFormat.parse(regDate)
-            return resultFormat.format(date)
-        }
-        return regDate
+        val dateFormat : DateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm")
+        val resultFormat : DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREAN)
+        val date = dateFormat.parse(regDate)
+        return resultFormat.format(date)
     }
 }
