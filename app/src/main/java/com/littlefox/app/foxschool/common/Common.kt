@@ -22,7 +22,7 @@ class Common
         const val API_MAIN : String                 = DEVELOP_BASE_API + "app/main"
         const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
         const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
-        const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry/store"
+        const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry"
         const val API_FOXSCHOOL_NEWS : String       = DEVELOP_BASE_API + "forum/board/news"
         const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/board/faq"
 
@@ -203,7 +203,7 @@ class Common
         const val RESULT_CODE_SERIES_LIST : Int = 10002
 
         /** 개발자 이메일  */
-        const val DEVELOPER_EMAIL : String = "help@littlefox.com"
+        const val DEVELOPER_EMAIL : String = "foxschool@littlefox.co.kr"
 
         const val INAPP_CAMPAIGN_MODE_NEWS : String             = "N"
         const val INAPP_CAMPAIGN_MODE_TESTIMONIAL : String      = "T"

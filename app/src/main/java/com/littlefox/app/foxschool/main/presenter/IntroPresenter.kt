@@ -524,7 +524,7 @@ class IntroPresenter : IntroContract.Presenter
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
                     isAutoLogin = false
                     mMainContractView.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
-                    onClickLogin()
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
                 }
             } else
             {

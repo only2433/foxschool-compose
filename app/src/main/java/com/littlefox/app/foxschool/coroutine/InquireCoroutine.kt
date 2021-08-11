@@ -47,8 +47,8 @@ class InquireCoroutine : BaseCoroutine
         return result
     }
 
-    override fun setData(vararg `object` : Any?)
+    override fun setData(vararg objects : Any?)
     {
-        mInquireData = `object` as InquireData
+        mInquireData = objects[0] as InquireData
     }
 }

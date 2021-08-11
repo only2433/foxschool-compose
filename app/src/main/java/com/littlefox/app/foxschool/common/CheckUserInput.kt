@@ -290,6 +290,8 @@ class CheckUserInput
                 return sContext.resources.getString(R.string.message_warning_new_password_confirm)
             WARNING_NAME_WRONG_INPUT ->
                 return sContext.resources.getString(R.string.message_warning_input_name)
+            WARNING_EMAIL_NOT_INPUT ->
+                return sContext.resources.getString(R.string.message_warning_empty_email)
             WARNING_EMAIL_WRONG_INPUT ->
                 return sContext.resources.getString(R.string.message_warning_input_email)
             WARNING_PHONE_WRONG_INPUT ->

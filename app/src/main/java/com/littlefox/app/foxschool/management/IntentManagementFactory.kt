@@ -260,6 +260,8 @@ class IntentManagementFactory
 
             ActivityMode.FAQS -> intent = Intent(mContext, FAQActivity::class.java)
 
+            ActivityMode.INQUIRE -> intent = Intent(mContext, InquireActivity::class.java)
+
             ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
 
             ActivityMode.WEBVIEW_POLICY_PRIVACY -> intent = Intent(mContext, WebviewPolicyPrivacyActivity::class.java)

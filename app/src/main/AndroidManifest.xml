@@ -116,6 +116,12 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
+        <activity android:name=".main.InquireActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
         <activity android:name=".main.PlayerHlsActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -143,12 +149,6 @@
         </activity>
 
         <activity android:name=".main.webview.WebviewFAQActivity"
-            android:screenOrientation="sensor"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/AppTheme_Default">
-        </activity>
-
-        <activity android:name=".main.webview.Webview1On1AskActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default">

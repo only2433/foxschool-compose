@@ -324,7 +324,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_EBOOK -> startEbookActivity()
             MESSAGE_START_PUBLISH_SCHEDULE -> startWebviewPublishScheduleActivity()
             MESSAGE_START_ATTENDANCE -> startWebviewAttendanceActivity()
-            MESSAGE_START_1ON1_ASK -> startWebview1On1AskActivity()
+            MESSAGE_START_1ON1_ASK -> startInquireActivity()
             MESSAGE_START_FAQ -> startFAQActivity()
             MESSAGE_START_RESULT_SERIES -> startSelectSeriesActivity(msg.obj as String)
             MESSAGE_START_LOGOUT -> showTemplateAlertDialog(
@@ -452,20 +452,13 @@ class MainPresenter : MainContract.Presenter
             .startActivity()
     }
 
-    private fun startWebview1On1AskActivity()
+    private fun startInquireActivity()
     {
         Log.f("")
-        if(LittlefoxLocale.getCurrentLocale().contains(Locale.KOREA.toString()) && Feature.IS_FREE_USER == false)
-        {
-            IntentManagementFactory.getInstance()
-                .readyActivityMode(ActivityMode.WEBVIEW_1ON1_ASK)
-                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-                .startActivity()
-        }
-        else
-        {
-            CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
-        }
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.INQUIRE)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startWebviewPublishScheduleActivity()

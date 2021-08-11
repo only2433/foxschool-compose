@@ -136,6 +136,10 @@
     <string name="text_study_flashcard_bookmark">찜 단어 학습하기</string>
     <string name="text_save_my_books">나의 단어장에 저장</string>
 
+    <string name="text_1on1_spinner_hint">문의 유형 선택</string>
+    <string name="text_1on1_register">등록</string>
+    <string name="text_1on1_send_email">이메일로 의견 보내기</string>
+
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
     <string name="message_preview_free_user_end">미리보기가 종료되었습니다.\n회원가입 후 모든 콘텐츠를 이용해 보세요.</string>
@@ -186,6 +190,11 @@
     <string name="message_password_change_complete">비밀번호가 변경되었습니다.</string>
     <string name="message_select_word_to_study">학습할 단어를 선택해 주세요.</string>
     <string name="message_password_change"><![CDATA[회원님의 소중한 정보 보호를 위해 <font color="#F12E45">%d일</font> 주기로<br>비밀번호 변경을 권장하고 있습니다.<br>불편하시더라도 주기적으로 비밀번호를<br>변경하여 주세요.]]></string>
+    <string name="message_1on1_check_email">문의하신 내용은 등록된 이메일 주소로 답변이 발송됩니다. \n이메일 주소를 확인해 주세요.</string>
+    <string name="message_1on1_max_input">최대 500자까지 입력할 수 있습니다.</string>
+    <string name="message_1on1_tip">"     잠깐! 앱 실행, 동영상 재생에 오류가 있으신가요? \n아래 이메일로 의견 보내기를 통해 접수하시면 더 빠른 처리가 가능합니다."</string>
+    <string name="message_1on1_reply">접수된 문의는 평일 업무시간 내 답변을 드립니다. \n- 평일 6시 이후 문의 : 다음 날까지 답변\n- 토/일/공휴일 문의 : 휴일 이후 답변</string>
+    <string name="message_1on1_success">등록되었습니다.</string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>
@@ -207,6 +216,9 @@
     <string name="message_warning_sound_off">버튼을 탭하고 소리를 켜세요.</string>
     <string name="message_warning_bookmark_init">찜한 단어가 모두 초기화 됩니다. 계속 하시겠습니까?</string>
     <string name="message_warning_bookmark_empty">찜 단어가 없어요.</string>
+    <string name="message_warning_select_inquire_category">문의 유형을 선택하세요.</string>
+    <string name="message_warning_empty_email">이메일 주소를 입력하세요.</string>
+    <string name="message_warning_empty_inquire">내용을 입력하세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>
@@ -227,5 +239,11 @@
         <item>daum.net</item>
         <item>nate.com</item>
         <item>직접 입력</item>
+    </string-array>
+
+    <string-array name="text_list_1on1_ask">
+        <item>오류</item>
+        <item>학습</item>
+        <item>기타</item>
     </string-array>
 </resources>

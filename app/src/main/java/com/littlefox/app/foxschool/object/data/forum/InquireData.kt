@@ -8,11 +8,11 @@ class InquireData
     private var mInquireText : String
     private var mUserEmail : String
 
-    constructor()
+    constructor(inquireType : InquireType, text : String, userEmail : String)
     {
-        mInquireType = InquireType.ERROR
-        mInquireText = ""
-        mUserEmail = ""
+        mInquireType = inquireType
+        mInquireText = text
+        mUserEmail = userEmail
     }
 
     fun getInquireType() : String

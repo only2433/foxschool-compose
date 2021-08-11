@@ -11,5 +11,6 @@ enum class InputDataType
     PHONE,
     PASSWORD,
     NEW_PASSWORD,
-    NEW_PASSWORD_CONFIRM
+    NEW_PASSWORD_CONFIRM,
+    MESSAGE
 }

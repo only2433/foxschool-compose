@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaselayout"
+            layout="@layout/topbar_common_menu_tablet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/_titleBaselayout">
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_1on1ContentsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:scale_base_width="1920"
+                app:scale_base_height="1366">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/info_box_1w"
+                    app:scale_left="448"
+                    app:scale_top="20"
+                    app:scale_width="1024"
+                    app:scale_height="1080" />
+
+                <TextView
+                    android:id="@+id/_1on1EmailCheckText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/message_1on1_check_email"
+                    android:textColor="@color/color_666666"
+                    app:scale_left="535"
+                    app:scale_top="55"
+                    app:scale_width="852"
+                    app:scale_height="105"
+                    app:scale_textsize="34" />
+
+                <ImageView
+                    android:id="@+id/_selectCategoryBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_box"
+                    app:scale_left="533"
+                    app:scale_top="169"
+                    app:scale_width="852"
+                    app:scale_height="90" />
+
+                <TextView
+                    android:id="@+id/_selectCategoryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="@string/text_1on1_spinner_hint"
+                    android:textColor="@color/color_b7b7b7"
+                    app:scale_left="566"
+                    app:scale_top="169"
+                    app:scale_width="700"
+                    app:scale_height="90"
+                    app:scale_textsize="32" />
+
+                <ImageView
+                    android:id="@+id/_selectCategoryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/btn_pop_down"
+                    app:scale_left="1330"
+                    app:scale_top="205"
+                    app:scale_width="33"
+                    app:scale_height="20" />
+
+                <ImageView
+                    android:id="@+id/_inputEmailBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_box"
+                    app:scale_left="533"
+                    app:scale_top="271"
+                    app:scale_width="852"
+                    app:scale_height="90" />
+
+                <EditText
+                    android:id="@+id/_inputEmailEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="center_vertical"
+                    android:hint="@string/text_email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textColor="@color/color_444444"
+                    android:textColorHint="@color/color_b7b7b7"
+                    app:scale_left="566"
+                    app:scale_top="271"
+                    app:scale_width="822"
+                    app:scale_height="90"
+                    app:scale_textsize="32" />
+
+                <ImageView
+                    android:id="@+id/_inputMessageBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/text_box"
+                    app:scale_left="533"
+                    app:scale_top="373"
+                    app:scale_width="852"
+                    app:scale_height="300" />
+
+                <EditText
+                    android:id="@+id/_inputMessageEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="@string/message_1on1_max_input"
+                    android:inputType="textMultiLine"
+                    android:maxLength="500"
+                    android:textColor="@color/color_444444"
+                    android:textColorHint="@color/color_b7b7b7"
+                    app:scale_left="566"
+                    app:scale_top="403"
+                    app:scale_width="780"
+                    app:scale_height="240"
+                    app:scale_textsize="32" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/icon_info"
+                    app:scale_left="550"
+                    app:scale_top="693"
+                    app:scale_width="30"
+                    app:scale_height="33" />
+
+                <TextView
+                    android:id="@+id/_1on1TipText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:text="@string/message_1on1_tip"
+                    android:textColor="@color/color_fa4959"
+                    app:scale_left="550"
+                    app:scale_top="690"
+                    app:scale_width="820"
+                    app:scale_height="150"
+                    app:scale_textsize="32" />
+
+                <TextView
+                    android:id="@+id/_registerButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_box_light_blue_84"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:text="@string/text_1on1_register"
+                    android:textColor="@color/color_ffffff"
+                    app:scale_left="534"
+                    app:scale_top="856"
+                    app:scale_width="852"
+                    app:scale_height="84"
+                    app:scale_textsize="32" />
+
+                <TextView
+                    android:id="@+id/_sendEmailButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_box_blue_84"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:text="@string/text_1on1_send_email"
+                    android:textColor="@color/color_ffffff"
+                    app:scale_left="534"
+                    app:scale_top="964"
+                    app:scale_width="852"
+                    app:scale_height="84"
+                    app:scale_textsize="32" />
+
+                <TextView
+                    android:id="@+id/_1on1ReplyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/_1on1ContentsLayout"
+                    android:gravity="center_vertical"
+                    android:text="@string/message_1on1_reply"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="600"
+                    app:scale_top="1130"
+                    app:scale_width="700"
+                    app:scale_height="180"
+                    app:scale_textsize="34" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        </ScrollView>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

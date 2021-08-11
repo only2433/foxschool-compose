@@ -1387,7 +1387,7 @@ class CommonUtils
     /**
      * 1:1문의 메일 보내기
      */
-    fun inquireForDeveloper(sendUrl : String?)
+    fun inquireForDeveloper(sendUrl : String?, message : String?)
     {
         var userID = ""
         val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
@@ -1404,7 +1404,8 @@ class CommonUtils
 
         val i : Intent
         val strTitle = sContext.resources.getString(R.string.app_name)
-        val text = "[${Build.BRAND}] Model: ${Build.MODEL}, OS: ${Build.VERSION.RELEASE}, Ver: ${getPackageVersionName(Common.PACKAGE_NAME)}, ID : $userID"
+        var text = "[${Build.BRAND}] Model: ${Build.MODEL}, OS: ${Build.VERSION.RELEASE}, Ver: ${getPackageVersionName(Common.PACKAGE_NAME)}, ID : $userID"
+        if (message != null) text += "\n\n $message" // 사용자가 입력한 메세지가 있는 경우 기존 포맷 다음에 메세지 추가
 
         if(Build.VERSION.SDK_INT >= 24)
         {

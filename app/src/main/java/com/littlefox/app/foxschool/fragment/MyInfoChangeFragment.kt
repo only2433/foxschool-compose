@@ -517,10 +517,7 @@ class MyInfoChangeFragment : Fragment()
             InputDataType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
         }
 
-        val msg = Message.obtain()
-        msg.what = MESSAGE_DATA_CHECK_ERROR
-        msg.obj = ""
-        mErrorViewHandler.sendMessageDelayed(msg, Common.DURATION_NORMAL)
+        mErrorViewHandler.sendEmptyMessageDelayed(MESSAGE_DATA_CHECK_ERROR, Common.DURATION_NORMAL)
     }
 
     /**
