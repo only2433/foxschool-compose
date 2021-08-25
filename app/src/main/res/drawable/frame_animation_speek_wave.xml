@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+
+    <item android:drawable="@drawable/recorder_wave01" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave02" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave03" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave04" android:duration="200"/>
+    <item android:drawable="@drawable/recorder_wave05" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave06" android:duration="200"/>
+    <item android:drawable="@drawable/recorder_wave07" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave08" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave09" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave10" android:duration="150"/>
+    <item android:drawable="@drawable/recorder_wave11" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave12" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave13" android:duration="150"/>
+    <item android:drawable="@drawable/recorder_wave14" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave15" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave16" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave17" android:duration="150"/>
+    <item android:drawable="@drawable/recorder_wave18" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave19" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave20" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave21" android:duration="150"/>
+    <item android:drawable="@drawable/recorder_wave22" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave23" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave24" android:duration="150"/>
+    <item android:drawable="@drawable/recorder_wave25" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave26" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave27" android:duration="100"/>
+    <item android:drawable="@drawable/recorder_wave28" android:duration="100"/>
+
+</animation-list>

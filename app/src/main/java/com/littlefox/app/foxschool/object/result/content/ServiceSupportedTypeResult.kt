@@ -14,6 +14,7 @@ class ServiceSupportedTypeResult : Serializable
     private var crossword : String          = Common.SERVICE_NOT_SUPPORTED
     private var starwords : String          = Common.SERVICE_NOT_SUPPORTED
     private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED
+    private var recorder : String           = Common.SERVICE_SUPPORTED_FREE // TODO 김태은 테스트용
 
     fun getStorySupportType() : String
     {
@@ -58,5 +59,10 @@ class ServiceSupportedTypeResult : Serializable
     fun getFlashcardSupportType() : String
     {
         return flash_card
+    }
+
+    fun getRecorderSupportType() : String
+    {
+        return recorder
     }
 }

@@ -118,7 +118,7 @@ class WebviewPolicyPrivacyActivity : BaseActivity()
     private fun initWebView()
     {
         showLoading()
-        val extraHeaders : Map<String, String> = CommonUtils.getInstance(this).getHeaderInformation(false)
+        val extraHeaders : Map<String, String> = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
         _WebView.loadUrl(Common.URL_PRIVACY, extraHeaders)

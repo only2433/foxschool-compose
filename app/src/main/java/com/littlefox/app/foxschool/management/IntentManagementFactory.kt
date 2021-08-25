@@ -17,6 +17,7 @@ import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.*
@@ -169,6 +170,7 @@ class IntentManagementFactory
 
     private fun startActivity(mode : ActivityMode, animationMode : AnimationMode, requestCode : Int, `object` : Any?, addFlag : Int)
     {
+        Feature.IS_FREE_USER = true // TODO 김태은 컨텐츠 리스트 API 적용 전까지 임시로 사용
         Log.f("executeMode : $mode, requestCode : $requestCode, addFlag : $addFlag")
         mCurrentExecuteAnimationMode = animationMode
         var intent : Intent? = null
@@ -189,6 +191,7 @@ class IntentManagementFactory
 
             ActivityMode.SERIES_DETAIL_LIST ->
             {
+                Feature.IS_FREE_USER = true // TODO 김태은 컨텐츠 리스트 API 적용 전까지 임시로 사용
                 intent = Intent(mContext, SeriesContentsListActivity::class.java)
                 if(`object` != null)
                 {
@@ -261,6 +264,15 @@ class IntentManagementFactory
             ActivityMode.FAQS -> intent = Intent(mContext, FAQActivity::class.java)
 
             ActivityMode.INQUIRE -> intent = Intent(mContext, InquireActivity::class.java)
+
+            ActivityMode.RECORD_PLAYER ->
+            {
+                intent = Intent(mContext, RecordPlayerActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_RECORD_PLAYER_DATA, `object` as ContentsBaseResult?)
+                }
+            }
 
             ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
 

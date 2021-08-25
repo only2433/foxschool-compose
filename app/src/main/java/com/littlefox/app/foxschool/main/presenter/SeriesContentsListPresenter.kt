@@ -62,6 +62,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 110
         private const val MESSAGE_START_FLASHCARD : Int                 = 111
+        private const val MESSAGE_START_RECORD_PLAYER : Int             = 112
     }
 
     private lateinit var mContext : Context
@@ -212,6 +213,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
+            MESSAGE_START_RECORD_PLAYER -> startRecordPlayerActivity()
         }
     }
 
@@ -456,6 +458,19 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.FLASHCARD)
             .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    /**
+     * 녹음기 화면으로 이동
+     */
+    private fun startRecordPlayerActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.RECORD_PLAYER)
+            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -712,6 +727,19 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         {
             Log.f("")
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
+        }
+
+        override fun onClickRecordPlayer()
+        {
+            Log.f("")
+            if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+            {
+                mStoryDetailListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+            }
+            else
+            {
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+            }
         }
 
         override fun onErrorMessage(message : String)

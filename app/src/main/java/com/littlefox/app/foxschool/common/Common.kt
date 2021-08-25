@@ -47,12 +47,12 @@ class Common
         const val URL_LEARNING_LOG : String         = BASE_WEBVIEW_URL + "studylog/summary"
         const val URL_FAQS : String                 = BASE_WEBVIEW_URL + "help/faq/list"
         const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
-        const val URL_TERMS : String                = BASE_WEBVIEW_URL + "policy/terms"
-        const val URL_PRIVACY : String              = BASE_WEBVIEW_URL + "policy/privacy"
         const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
 
         const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_BASE_WEBVIEW_URL + "forum/board/news/"
         const val URL_FAQ_DETAIL : String               = DEVELOP_BASE_WEBVIEW_URL + "forum/board/faq/"
+        const val URL_TERMS : String                    = DEVELOP_BASE_WEBVIEW_URL + "forum/usernote"
+        const val URL_PRIVACY : String                  = DEVELOP_BASE_WEBVIEW_URL + "forum/privacy"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
@@ -89,6 +89,7 @@ class Common
         const val INTENT_QUIZ_PARAMS : String                       = "quiz_params"
         const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
+        const val INTENT_RECORD_PLAYER_DATA : String                = "record_player_data"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -144,6 +145,7 @@ class Common
         const val USER_TYPE_STUDENT : String = "S"
         const val USER_TYPE_TEACHER : String = "T"
 
+        const val MILLI_SECOND : Int = 100
         const val SECOND : Int = 1000
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float  = 1.4f
         const val PHONE_DISPLAY_RADIO_20_9 : Float      = 1.9f

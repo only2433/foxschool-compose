@@ -5,8 +5,15 @@ import android.media.MediaRecorder
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.record.listener.VoiceRecordEventListener
 import com.littlefox.logmonitor.Log
-
+import org.mp4parser.Container
+import org.mp4parser.muxer.Movie
+import org.mp4parser.muxer.Track
+import org.mp4parser.muxer.builder.DefaultMp4Builder
+import org.mp4parser.muxer.container.mp4.MovieCreator
+import org.mp4parser.muxer.tracks.AppendTrack
 import java.io.IOException
+import java.io.RandomAccessFile
+import java.nio.channels.FileChannel
 import java.util.*
 
 class VoiceRecorderHelper(private val mContext : Context)
@@ -128,6 +135,50 @@ class VoiceRecorderHelper(private val mContext : Context)
                 mProgressTimer!!.cancel()
                 mProgressTimer = null
             }
+        }
+    }
+
+    /**
+     * 녹음 파일 결합 메소드
+     */
+    fun mergeMediaFiles(sourceFiles : ArrayList<String>, targetFile : String?)
+    {
+        try
+        {
+            val mediaKey = "soun"
+            val listMovies : MutableList<Movie> = ArrayList()
+            for(filename in sourceFiles)
+            {
+                listMovies.add(MovieCreator.build(filename))
+            }
+            val listTracks : ArrayList<Track> = ArrayList()
+            for(movie in listMovies)
+            {
+                for(track in movie.getTracks())
+                {
+                    if(track.getHandler().equals(mediaKey))
+                    {
+                        listTracks.add(track)
+                    }
+                }
+            }
+            val outputMovie = Movie()
+            if(listTracks.size > 0)
+            {
+                val track : Array<Track?> = arrayOfNulls(listTracks.size)
+                outputMovie.addTrack(AppendTrack(*listTracks.toArray(track)))
+            }
+            val container : Container = DefaultMp4Builder().build(outputMovie)
+            val fileChannel : FileChannel = RandomAccessFile(String.format(targetFile!!), "rw").getChannel()
+            container.writeContainer(fileChannel)
+            fileChannel.close()
+            if (mVoiceRecordEventListener != null)
+            {
+                mVoiceRecordEventListener.onCompleteFileMerged()
+            }
+        } catch(e : IOException)
+        {
+            Log.f("Error merging media files. exception: ${e.message} || $e")
         }
     }
 

@@ -1850,6 +1850,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
         }
 
+        override fun onClickRecordPlayer() { }
+
         override fun onErrorMessage(message : String)
         {
             Log.f("message : $message")

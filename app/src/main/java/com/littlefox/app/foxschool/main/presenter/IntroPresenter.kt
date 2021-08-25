@@ -129,6 +129,7 @@ class IntroPresenter : IntroContract.Presenter
         mPermissionList = ArrayList()
         mPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         mPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+        mPermissionList.add(Manifest.permission.RECORD_AUDIO)
         checkUserStatus()
         val autoLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
         Log.f("autoLoginStatus : $autoLoginStatus")

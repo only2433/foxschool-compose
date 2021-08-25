@@ -52,6 +52,7 @@ class SearchListPresenter : SearchListContract.Presenter
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 108
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 109
         private const val MESSAGE_START_FLASHCARD : Int                 = 110
+        private const val MESSAGE_START_RECORD_PLAYER : Int             = 111
     }
 
     private lateinit var mContext : Context
@@ -209,6 +210,7 @@ class SearchListPresenter : SearchListContract.Presenter
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
+            MESSAGE_START_RECORD_PLAYER -> startRecordPlayerActivity()
         }
     }
 
@@ -456,6 +458,19 @@ class SearchListPresenter : SearchListContract.Presenter
     }
 
     /**
+     * 녹음기 화면으로 이동
+     */
+    private fun startRecordPlayerActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(mSearchItemList[mCurrentOptionIndex])
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    /**
      * 책장 업데이트
      */
     private fun updateBookshelfData(result : MyBookshelfResult)
@@ -565,6 +580,19 @@ class SearchListPresenter : SearchListContract.Presenter
         {
             Log.f("")
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
+        }
+
+        override fun onClickRecordPlayer()
+        {
+            Log.f("")
+            if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+            {
+                mSearchListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+            }
+            else
+            {
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+            }
         }
 
         override fun onErrorMessage(message : String)

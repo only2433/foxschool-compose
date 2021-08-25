@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.common
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -1007,7 +1008,7 @@ class CommonUtils
             0.5f
         )
         anim.setDuration(duration)
-        anim.setFillAfter(false)
+        anim.setFillAfter(true) // FillAfter: true 상태여야 애니메이션을 멈췄을 때 진행하던 위치에서 멈춤 (일시정지를 위함)
         anim.setInterpolator(LinearInterpolator())
         return anim
     }
@@ -1609,6 +1610,25 @@ class CommonUtils
             }
         }
         return unAuthorizeList
+    }
+
+    /**
+     * 오디오 녹을을 위한 퍼미션 체크
+     */
+    fun checkRecordPermission() : Boolean
+    {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if (sContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            {
+                return false
+            }
+            return true
+        }
+        else
+        {
+            return true
+        }
     }
 
     /**

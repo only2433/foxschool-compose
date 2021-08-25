@@ -31,6 +31,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         private const val SERVICE_INFO_EBOOK : Int          = 4
         private const val SERVICE_INFO_STARWORDS : Int      = 5
         private const val SERVICE_INFO_FLASHCARD : Int      = 6
+        private const val SERVICE_INFO_RECORD_PLAYER : Int  = 7
     }
 
     @BindView(R.id._thumbnailInformationLayout)
@@ -227,6 +228,11 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             mAddItemTypeList.add(ContentItemType.TRANSLATE)
         }
 
+        if(mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        {
+            mAddItemTypeList.add(ContentItemType.RECORDER)
+        }
+
         if(isDisableBookshelf == false)
         {
             mAddItemTypeList.add(ContentItemType.BOOKSHELF)
@@ -344,6 +350,18 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     }
                 })
             }
+            ContentItemType.RECORDER ->
+            {
+                icon.setImageResource(R.drawable.learning_09)
+                title.setText(mContext.resources.getString(R.string.text_recorder))
+                iconLayout.setOnClickListener(View.OnClickListener {
+                    dismiss()
+                    if (isServiceAvailable(SERVICE_INFO_RECORD_PLAYER))
+                    {
+                        mItemOptionListener?.onClickRecordPlayer()
+                    }
+                })
+            }
             ContentItemType.TRANSLATE ->
             {
                 icon.setImageResource(R.drawable.learning_02)
@@ -402,6 +420,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             SERVICE_INFO_EBOOK -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getEbookSupportType()
             SERVICE_INFO_STARWORDS -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getStarwordsSupportType()
             SERVICE_INFO_FLASHCARD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getFlashcardSupportType()
+            SERVICE_INFO_RECORD_PLAYER -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType()
         }
         return if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
         {

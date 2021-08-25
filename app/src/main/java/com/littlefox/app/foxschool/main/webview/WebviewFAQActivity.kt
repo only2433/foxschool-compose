@@ -128,7 +128,7 @@ class WebviewFAQActivity : BaseActivity()
     private fun initWebView()
     {
         showLoading()
-        val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(false)
+        val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
         _WebView.loadUrl(Common.URL_FAQS, extraHeaders)

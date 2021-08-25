@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaselayout"
+            layout="@layout/topbar_common_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_recordContentsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/_titleBaselayout"
+            app:scale_base_width="1080"
+            app:scale_base_height="1510">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_edeef2"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1080"
+                app:scale_height="120" />
+
+            <TextView
+                android:id="@+id/_recordInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/message_record_info"
+                android:textColor="@color/color_444444"
+                app:scale_left="40"
+                app:scale_top="0"
+                app:scale_width="900"
+                app:scale_height="120"
+                app:scale_textsize="37"/>
+
+            <ImageView
+                android:id="@+id/_recordInfoButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_info"
+                app:scale_left="954"
+                app:scale_top="16"
+                app:scale_width="86"
+                app:scale_height="86" />
+
+            <TextView
+                android:id="@+id/_recordTitleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="The Lemonade Detectives, Trouble on the Trail 7: Narrowing Down the Suspects"
+                android:textColor="@color/color_444444"
+                app:scale_left="30"
+                app:scale_top="190"
+                app:scale_width="1020"
+                app:scale_height="150"
+                app:scale_textsize="48"/>
+
+            <TextView
+                android:id="@+id/_recordTimerText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="00:00"
+                android:textColor="@color/color_cacaca"
+                app:scale_left="365"
+                app:scale_top="445"
+                app:scale_width="350"
+                app:scale_height="150"
+                app:scale_textsize="114"/>
+
+            <ImageView
+                android:id="@+id/_recordingFrameImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/frame_animation_speek_wave"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                app:scale_left="200"
+                app:scale_top="570"
+                app:scale_width="680"
+                app:scale_height="680"/>
+
+            <ImageView
+                android:id="@+id/_recordingMicBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/record_background"
+                android:scaleType="fitXY"
+                app:scale_left="274"
+                app:scale_top="643"
+                app:scale_width="532"
+                app:scale_height="532"/>
+
+            <com.littlefox.library.view.progress.CircularProgressBar
+                android:id="@+id/_recordingProgressView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_left="274"
+                app:scale_top="643"
+                app:scale_width="532"
+                app:scale_height="532"/>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_recordProgressCircleImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_base_width="542"
+                app:scale_base_height="542"
+                app:scale_left="266"
+                app:scale_top="635"
+                app:scale_width="548"
+                app:scale_height="548">
+
+                <ImageView
+                    android:id="@+id/_recordProgressImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/progress_circle_on"
+                    app:scale_left="259"
+                    app:scale_top="0"
+                    app:scale_width="30"
+                    app:scale_height="30"/>
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <ImageView
+                android:id="@+id/_recordMicImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_enable_mic"
+                android:scaleType="fitXY"
+                app:scale_left="464"
+                app:scale_top="795"
+                app:scale_width="152"
+                app:scale_height="234"/>
+
+            <ImageView
+                android:id="@+id/_recordSpeakerImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_enable_speaker"
+                android:visibility="gone"
+                android:scaleType="fitXY"
+                app:scale_left="447"
+                app:scale_top="828"
+                app:scale_width="187"
+                app:scale_height="163"/>
+
+            <TextView
+                android:id="@+id/_recordStartText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/message_record_start"
+                android:textColor="@color/color_444444"
+                app:scale_left="265"
+                app:scale_top="1370"
+                app:scale_width="550"
+                app:scale_height="70"
+                app:scale_textsize="37"/>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_audioSeekerBarView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:scale_base_width="1080"
+                app:scale_base_height="70"
+                app:scale_left="0"
+                app:scale_top="1370"
+                app:scale_width="1080"
+                app:scale_height="70">
+
+                <TextView
+                    android:id="@+id/_audioCurrentPlayTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="00:00"
+                    android:textColor="@color/color_666666"
+                    app:scale_left="57"
+                    app:scale_top="0"
+                    app:scale_width="130"
+                    app:scale_height="70"
+                    app:scale_textsize="41"/>
+
+                <SeekBar
+                    android:id="@+id/_audioSeekbarPlayBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="3dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/audio_seekbar_progress"
+                    android:thumb="@drawable/audio_seekbar_thumb"
+                    android:thumbOffset="0dip"
+                    app:scale_height="70"
+                    app:scale_left="180"
+                    app:scale_top="0"
+                    app:scale_width="722" />
+
+                <TextView
+                    android:id="@+id/_audioPlayFullTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|start"
+                    android:text="00:00"
+                    android:textColor="@color/color_666666"
+                    app:scale_left="920"
+                    app:scale_top="0"
+                    app:scale_width="130"
+                    app:scale_height="70"
+                    app:scale_textsize="41"/>
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_recordControllerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_29c8e6"
+            app:scale_base_width="1080"
+            app:scale_base_height="264">
+
+            <ImageView
+                android:id="@+id/_recordResetButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_replay"
+                android:visibility="gone"
+                app:scale_left="174"
+                app:scale_top="84"
+                app:scale_width="86"
+                app:scale_height="96" />
+
+            <ImageView
+                android:id="@+id/_recordResetButtonRect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:scale_left="125"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+            <ImageView
+                android:id="@+id/_recordStartButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_record"
+                app:scale_left="450"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+            <ImageView
+                android:id="@+id/_recordPauseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_record_pause"
+                android:visibility="gone"
+                app:scale_left="450"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+            <ImageView
+                android:id="@+id/_recordPlayButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_audio_play"
+                android:visibility="gone"
+                app:scale_left="450"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+            <ImageView
+                android:id="@+id/_recordStopButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_stop"
+                android:visibility="gone"
+                app:scale_left="816"
+                app:scale_top="90"
+                app:scale_width="84"
+                app:scale_height="84" />
+
+            <ImageView
+                android:id="@+id/_recordStopButtonRect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:scale_left="765"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+            <ImageView
+                android:id="@+id/_recordUploadButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_upload"
+                android:visibility="gone"
+                app:scale_left="816"
+                app:scale_top="90"
+                app:scale_width="84"
+                app:scale_height="84" />
+
+            <ImageView
+                android:id="@+id/_recordUploadButtonRect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:scale_left="765"
+                app:scale_top="42"
+                app:scale_width="180"
+                app:scale_height="180" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <ImageView
+            android:id="@+id/_coachmarkImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/_titleBaselayout"
+            android:visibility="gone"
+            android:scaleType="fitXY"
+            android:src="@drawable/coachmark_record_phone" />
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

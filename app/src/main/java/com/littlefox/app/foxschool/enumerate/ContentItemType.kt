@@ -8,6 +8,7 @@ enum class ContentItemType
     FLASHCARD,
     STARWORDS,
     CROSSWORD,
+    RECORDER,
     TRANSLATE,
     BOOKSHELF
 }
