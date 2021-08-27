@@ -163,7 +163,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
         mPasswordChangeCoroutine = null
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     override fun sendMessageEvent(msg : Message)
     {

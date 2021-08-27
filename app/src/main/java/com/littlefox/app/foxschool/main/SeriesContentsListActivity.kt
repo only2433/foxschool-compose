@@ -261,7 +261,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
-        mSeriesContentsListPresenter.acvitityResult(requestCode, resultCode, data)
+        mSeriesContentsListPresenter.activityResult(requestCode, resultCode, data)
     }
 
 

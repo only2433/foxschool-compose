@@ -170,7 +170,7 @@ class IntroPresenter : IntroContract.Presenter
         release()
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         Log.f("requestCode : $requestCode, resultCode : $resultCode")
         when(requestCode)
@@ -409,7 +409,7 @@ class IntroPresenter : IntroContract.Presenter
                 while(i < permissions.size)
                 {
                     Log.f("permission : " + permissions[i] + ", grantResults : " + grantResults[i])
-                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED)
+                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED && permissions[i] != Manifest.permission.RECORD_AUDIO)
                     {
                         isAllCheckSuccess = false
                     }

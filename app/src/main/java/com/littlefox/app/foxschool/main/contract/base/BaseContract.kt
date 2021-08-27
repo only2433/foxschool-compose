@@ -24,7 +24,7 @@ class BaseContract
         fun resume()
         fun pause()
         fun destroy()
-        fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
+        fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
         fun sendMessageEvent(msg : Message)
     }
 }

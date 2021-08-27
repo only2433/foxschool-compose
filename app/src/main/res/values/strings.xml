@@ -84,6 +84,7 @@
     <string name="text_password_change_guide">비밀번호 변경 안내</string>
     <string name="text_recorder">녹음기</string>
     <string name="text_leave">나가기</string>
+    <string name="text_change_permission">권한 변경하기</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -201,6 +202,7 @@
     <string name="message_record_start">버튼을 눌러 녹음을 시작하세요.</string>
     <string name="message_record_reset">다시 녹음 할까요?</string>
     <string name="message_record_upload_complete">녹음파일이 저장되었습니다. \n녹음 기록을 보시겠습니까?</string>
+    <string name="message_record_permission">녹음 학습을 위해 마이크 권한을 허용해 주세요.</string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>

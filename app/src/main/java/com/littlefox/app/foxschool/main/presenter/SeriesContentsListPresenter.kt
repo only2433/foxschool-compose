@@ -3,9 +3,12 @@ package com.littlefox.app.foxschool.main.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Message
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
@@ -30,12 +33,14 @@ import com.littlefox.app.foxschool.coroutine.IntroduceSeriesCoroutine
 import com.littlefox.app.foxschool.coroutine.SeriesContentsListInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
-
 import com.littlefox.app.foxschool.dialog.IntroduceSeriesTabletDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.SeriesContentsListContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -45,6 +50,7 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import java.util.*
+
 
 class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 {
@@ -73,6 +79,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private lateinit var mStoryDetailItemAdapter : DetailListItemAdapter
     private lateinit var mBottomContentItemOptionDialog : BottomContentItemOptionDialog
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private var mCurrentSeriesBaseResult : SeriesBaseResult
     private var mSeriesContentsListInformationCoroutine : SeriesContentsListInformationCoroutine? = null
     private var mIntroduceSeriesCoroutine : IntroduceSeriesCoroutine? = null
@@ -141,7 +148,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         releaseDialog()
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         Log.f("requestCode : $requestCode, resultCode : $resultCode")
     }
@@ -515,6 +522,20 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         mBottomBookAddDialog.show()
     }
 
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
+        mTemplateAlertDialog.show()
+    }
+
     private fun releaseDialog()
     {
         mIntroduceSeriesTabletDialog?.dismiss()
@@ -734,7 +755,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             Log.f("")
             if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
             {
-                mStoryDetailListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                showChangeRecordPermissionDialog()
             }
             else
             {
@@ -756,6 +777,33 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             Log.f("index : $index")
             mCurrentBookshelfAddResult = mMainInformationResult.getBookShelvesList().get(index)
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_CONTENTS_ADD, Common.DURATION_SHORT)
+        }
+    }
+
+    private val mPermissionDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(messageType : Int)
+        {
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
+        {
+            Log.f("messageType : $messageType, buttonType : $buttonType")
+            if(buttonType == DialogButtonType.BUTTON_1)
+            {
+                // [취소] 컨텐츠 사용 불가 메세지 표시
+                mStoryDetailListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+            }
+            else if(buttonType == DialogButtonType.BUTTON_2)
+            {
+                // [권한 변경하기] 앱 정보 화면으로 이동
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", mContext.packageName, null)
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                mContext.startActivity(intent)
+            }
         }
     }
 }

@@ -90,7 +90,7 @@ class FAQPresenter : ForumContract.Presenter
         mMainHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     override fun onPageSelected(position : Int)
     {

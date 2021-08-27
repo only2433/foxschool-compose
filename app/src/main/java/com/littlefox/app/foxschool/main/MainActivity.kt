@@ -260,7 +260,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
-        mMainPresenter.acvitityResult(requestCode, resultCode, data)
+        mMainPresenter.activityResult(requestCode, resultCode, data)
     }
 
     override fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)

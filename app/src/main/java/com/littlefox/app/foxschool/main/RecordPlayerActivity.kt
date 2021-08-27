@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.main
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -494,6 +495,18 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
      */
     private fun setSeekBar()
     {
+        // 하위 버전에서 seekbar 높이 지정이 잘 안되는 부분 때문에 예외처리 진행.
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        {
+            if (CommonUtils.getInstance(this).checkTablet)
+            {
+                _AudioSeekerBarView.moveChildView(_AudioSeekbarPlayBar, 100f, 10f, 450f, 25f)
+            }
+            else
+            {
+                _AudioSeekerBarView.moveChildView(_AudioSeekbarPlayBar, 180f, 10f, 722f, 45f)
+            }
+        }
         _AudioSeekbarPlayBar.thumbOffset = CommonUtils.getInstance(this).getPixel(0)
         _AudioSeekbarPlayBar.progress = 0
         _AudioSeekbarPlayBar.secondaryProgress = 0

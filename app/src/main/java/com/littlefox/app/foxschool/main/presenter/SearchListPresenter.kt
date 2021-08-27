@@ -3,7 +3,9 @@ package com.littlefox.app.foxschool.main.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Message
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -23,10 +25,13 @@ import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
 import com.littlefox.app.foxschool.coroutine.SearchListCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.SearchListContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -73,6 +78,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private lateinit var mBottomContentItemOptionDialog : BottomContentItemOptionDialog
     private lateinit var mDetailItemInformationResult : DetailItemInformationResult
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mMainHandler : WeakReferenceHandler
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
@@ -134,7 +140,7 @@ class SearchListPresenter : SearchListContract.Presenter
         mMainHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     /** ====================== LifeCycle end ====================== */
 
@@ -333,6 +339,20 @@ class SearchListPresenter : SearchListContract.Presenter
         mBottomBookAddDialog.setBookshelfData(mMainInformationResult.getBookShelvesList())
         mBottomBookAddDialog.setBookSelectListener(mBookAddListener)
         mBottomBookAddDialog.show()
+    }
+
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /** ====================== StartActivity ====================== */
@@ -587,7 +607,7 @@ class SearchListPresenter : SearchListContract.Presenter
             Log.f("")
             if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
             {
-                mSearchListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                showChangeRecordPermissionDialog()
             }
             else
             {
@@ -599,6 +619,36 @@ class SearchListPresenter : SearchListContract.Presenter
         {
             Log.f("message : $message")
             mSearchListContractView.showErrorMessage(message)
+        }
+    }
+
+    /**
+     * 녹음기 권한요청 다이얼로그 이벤트 리스너
+     */
+    private val mPermissionDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(messageType : Int)
+        {
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
+        {
+            Log.f("messageType : $messageType, buttonType : $buttonType")
+            if(buttonType == DialogButtonType.BUTTON_1)
+            {
+                // [취소] 컨텐츠 사용 불가 메세지 표시
+                mSearchListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+            }
+            else if(buttonType == DialogButtonType.BUTTON_2)
+            {
+                // [권한 변경하기] 앱 정보 화면으로 이동
+                val intent = Intent(
+                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", mContext.packageName, null)
+                )
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                mContext.startActivity(intent)
+            }
         }
     }
 
@@ -673,5 +723,4 @@ class SearchListPresenter : SearchListContract.Presenter
 
         override fun onErrorListener(code : String?, message : String?) { }
     }
-
 }

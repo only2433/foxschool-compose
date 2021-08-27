@@ -44,7 +44,7 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
 
     override fun destroy() { }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     override fun sendMessageEvent(msg : Message) { }
 

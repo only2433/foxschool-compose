@@ -216,7 +216,7 @@ class QuizPresenter : QuizContract.Presenter
         releaseEffectPlay()
     }
 
-    override fun acvitityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     /**
      * 퀴즈 옵저버 설정

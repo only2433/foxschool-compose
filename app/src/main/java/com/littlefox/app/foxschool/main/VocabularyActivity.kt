@@ -536,7 +536,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
-        mVocabularyPresenter.acvitityResult(requestCode, resultCode, data)
+        mVocabularyPresenter.activityResult(requestCode, resultCode, data)
     }
 
     override fun handlerMessage(message : Message)

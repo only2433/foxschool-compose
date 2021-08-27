@@ -155,7 +155,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
-        mIntroPresenter.acvitityResult(requestCode, resultCode, data)
+        mIntroPresenter.activityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
