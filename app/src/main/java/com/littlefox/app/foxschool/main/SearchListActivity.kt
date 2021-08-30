@@ -23,7 +23,6 @@ import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.contract.SearchListContract
 import com.littlefox.app.foxschool.main.presenter.SearchListPresenter
@@ -97,6 +96,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
 
     private lateinit var mSearchListPresenter : SearchListPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
+    private var isSearching : Boolean = false // 검색중인 상태인지 (통신진행중)
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -198,6 +198,8 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         {
             _ProgressWheelLayout.visibility = View.VISIBLE
             _SearchItemListView.visibility = View.INVISIBLE
+            isSearching = true
+            setSearchButtonEnable(false)
         }
     }
 
@@ -207,6 +209,8 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         {
             _ProgressWheelLayout.visibility = View.GONE
             _SearchItemListView.visibility = View.VISIBLE
+            isSearching = false
+            setSearchButtonEnable(true)
         }
     }
 
@@ -316,6 +320,9 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     )
     fun onClickView(view: View)
     {
+        // 검색 통신이 진행중인 경우 클릭이벤트 막기
+        if (isSearching) return
+
         when(view.id)
         {
             R.id._closeButtonRect ->
@@ -373,6 +380,25 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
                 _SearchStoryIcon.setImageResource(R.drawable.check_off)
                 _SearchSongIcon.setImageResource(R.drawable.check_on)
             }
+        }
+    }
+
+    /**
+     * 검색영역 활성/비활성 처리
+     * - 검색 통신 진행중에는 버튼 선택되지 않도록 처리함
+     */
+    private fun setSearchButtonEnable(isEnable : Boolean)
+    {
+        val alpha = if(isEnable) 1.0f else 0.5f
+        if(CommonUtils.getInstance(this).checkTablet)
+        {
+            _SearchConfirmTabletIcon.isEnabled = isEnable
+            _SearchConfirmTabletIcon.alpha = alpha
+        }
+        else
+        {
+            _SearchConfirmIcon.isEnabled = isEnable
+            _SearchConfirmIcon.alpha = alpha
         }
     }
 

@@ -10,7 +10,7 @@ open class SeriesBaseResult : Parcelable
 {
     private var id : String = ""
     private var content_name : String = ""
-    private var app_thumbnail_url : String = ""
+    private var thumbnail_url : String = ""
     private var colors : ColorData? = null
     private var series : SeriesData? = null
     private var free_single_sort_number : Int = 0
@@ -24,7 +24,7 @@ open class SeriesBaseResult : Parcelable
         id = `in`.readString()!!
         content_name = `in`.readString()!!
         seriesType = `in`.readString()
-        app_thumbnail_url = `in`.readString()!!
+        thumbnail_url = `in`.readString()!!
         transitionType = `in`.readSerializable() as TransitionType
         colors = `in`.readSerializable() as ColorData?
         free_single_sort_number = `in`.readInt()
@@ -38,7 +38,7 @@ open class SeriesBaseResult : Parcelable
         dest.writeString(id)
         dest.writeString(content_name)
         dest.writeString(seriesType)
-        dest.writeString(app_thumbnail_url)
+        dest.writeString(thumbnail_url)
         dest.writeSerializable(transitionType)
         dest.writeSerializable(colors)
         dest.writeInt(free_single_sort_number)
@@ -73,7 +73,7 @@ open class SeriesBaseResult : Parcelable
 
     fun getThumbnailUrl() : String
     {
-        return app_thumbnail_url;
+        return thumbnail_url;
     }
 
     fun getTransitionType() : TransitionType
