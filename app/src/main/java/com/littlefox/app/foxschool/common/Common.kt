@@ -15,16 +15,17 @@ class Common
         const val BASE_PUBLIC_API_V2 : String       = BASE_URL + "api/v2/"
 
 
-        const val API_INIT : String                 = DEVELOP_BASE_API + "app/version"
-        const val API_SCHOOL_LIST : String          = DEVELOP_BASE_API + "users/school"
-        const val API_LOGIN : String                = DEVELOP_BASE_API + "auth/login"
-        const val API_ME : String                   = DEVELOP_BASE_API + "auth/me"
-        const val API_MAIN : String                 = DEVELOP_BASE_API + "app/main"
-        const val API_MY_INFO_UPDATE : String       = DEVELOP_BASE_API + "users/myinfo/update"
-        const val API_PASSWORD_CHANGE : String      = DEVELOP_BASE_API + "users/password/update"
-        const val API_INQUIRE : String              = DEVELOP_BASE_API + "forum/inquiry"
-        const val API_FOXSCHOOL_NEWS : String       = DEVELOP_BASE_API + "forum/board/news"
-        const val API_FAQ : String                  = DEVELOP_BASE_API + "forum/board/faq"
+        const val API_INIT : String                     = DEVELOP_BASE_API + "app/version"
+        const val API_SCHOOL_LIST : String              = DEVELOP_BASE_API + "users/school"
+        const val API_LOGIN : String                    = DEVELOP_BASE_API + "auth/login"
+        const val API_ME : String                       = DEVELOP_BASE_API + "auth/me"
+        const val API_MAIN : String                     = DEVELOP_BASE_API + "app/main"
+        const val API_MY_INFO_UPDATE : String           = DEVELOP_BASE_API + "users/myinfo/update"
+        const val API_PASSWORD_CHANGE : String          = DEVELOP_BASE_API + "users/password/update"
+        const val API_INQUIRE : String                  = DEVELOP_BASE_API + "forum/inquiry"
+        const val API_FOXSCHOOL_NEWS : String           = DEVELOP_BASE_API + "forum/board/news"
+        const val API_FAQ : String                      = DEVELOP_BASE_API + "forum/board/faq"
+        const val API_HOMEWORK_MANAGE_STUDENT : String  = DEVELOP_BASE_API + "api/homeworks/student/"
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
@@ -118,6 +119,7 @@ class Common
         const val COROUTINE_CODE_PASSWORD_CHANGE : String               = "password_change"
         const val COROUTINE_CODE_INQUIRE : String                       = "inquire"
         const val COROUTINE_CODE_FORUM : String                         = "forum"
+        const val COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT                = "homework_manage_student"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"
