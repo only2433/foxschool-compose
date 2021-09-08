@@ -364,7 +364,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         R.id._menuLogoutLayout,
         R.id._leaningLogMenuButton,
         R.id._topMenuSetting,
-        R.id._topMenuSearch
+        R.id._topMenuSearch,
+        R.id._homeworkManageMenuButton
     )
     fun onClickView(view : View)
     {
@@ -394,6 +395,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 Log.f("")
                 mMainPresenter.onClickSearch()
+            }
+            R.id._homeworkManageMenuButton ->
+            {
+                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                mMainPresenter.onClickMenuHomeworkManage()
             }
         }
     }

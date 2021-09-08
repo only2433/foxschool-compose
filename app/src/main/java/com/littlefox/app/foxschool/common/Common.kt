@@ -25,7 +25,7 @@ class Common
         const val API_INQUIRE : String                  = DEVELOP_BASE_API + "forum/inquiry"
         const val API_FOXSCHOOL_NEWS : String           = DEVELOP_BASE_API + "forum/board/news"
         const val API_FAQ : String                      = DEVELOP_BASE_API + "forum/board/faq"
-        const val API_HOMEWORK_MANAGE_STUDENT : String  = DEVELOP_BASE_API + "api/homeworks/student/"
+        const val API_HOMEWORK_MANAGE_STUDENT : String  = DEVELOP_BASE_API + "homeworks/student"
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 

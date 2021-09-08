@@ -34,6 +34,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
+import com.littlefox.app.foxschool.coroutine.HomeworkManageStudentCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
@@ -412,6 +413,12 @@ class MainPresenter : MainContract.Presenter
     {
         Log.f("")
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LEARNING_LOG, Common.DURATION_SHORT)
+    }
+
+
+    override fun onClickMenuHomeworkManage()
+    {
+        Log.f("")
     }
 
 

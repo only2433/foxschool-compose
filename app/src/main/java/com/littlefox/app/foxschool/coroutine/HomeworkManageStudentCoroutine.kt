@@ -36,16 +36,16 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
             if(mSearchYear != "" && mSearchMonth != "")
             {
                 response = NetworkUtil.requestServerPair(mContext,
-                    "${Common.API_HOMEWORK_MANAGE_STUDENT}${mSearchYear}${File.pathSeparator}${mSearchMonth}",
+                    "${Common.API_HOMEWORK_MANAGE_STUDENT}${File.pathSeparator}${mSearchYear}${File.pathSeparator}${mSearchMonth}",
                     null,
-                    NetworkUtil.POST_METHOD)!!
+                    NetworkUtil.GET_METHOD)!!
             }
             else
             {
                 response = NetworkUtil.requestServerPair(mContext,
                     Common.API_HOMEWORK_MANAGE_STUDENT,
                     null,
-                    NetworkUtil.POST_METHOD)!!
+                    NetworkUtil.GET_METHOD)!!
             }
 
             result = Gson().fromJson(response, HomeworkManageBaseObject::class.java)

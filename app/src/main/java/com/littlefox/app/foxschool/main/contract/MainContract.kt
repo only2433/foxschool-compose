@@ -30,6 +30,7 @@ class MainContract
         fun onClickMenuAttendance()
         fun onClickMenuLogout()
         fun onClickMenuLearningLog()
+        fun onClickMenuHomeworkManage()
         fun onClickFoxschoolNews()
         fun onClickSearch()
         fun onBackPressed()
