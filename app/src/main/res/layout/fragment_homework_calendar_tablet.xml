@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <ScrollView
+        android:id="@+id/_scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_mainBackgroundView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1920"
+            app:scale_base_height="1066">
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_calendarPickLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:scale_left="0"
+                app:scale_top="0"
+                app:scale_width="1920"
+                app:scale_height="140"
+                app:scale_base_width="1920"
+                app:scale_base_height="140">
+
+                <ImageView
+                    android:id="@+id/_classPickerButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/box_list"
+                    android:visibility="gone"
+                    app:scale_left="46"
+                    app:scale_top="30"
+                    app:scale_width="500"
+                    app:scale_height="80"/>
+
+                <ImageView
+                    android:id="@+id/_classPickerDownImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/btn_pop_down"
+                    android:visibility="gone"
+                    app:scale_left="498"
+                    app:scale_top="62"
+                    app:scale_width="23"
+                    app:scale_height="13" />
+
+                <TextView
+                    android:id="@+id/_classPickerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:text="1학년 1반"
+                    android:textColor="@color/color_444444"
+                    android:visibility="gone"
+                    app:scale_left="66"
+                    app:scale_top="30"
+                    app:scale_width="480"
+                    app:scale_height="80"
+                    app:scale_textsize="32" />
+
+                <ImageView
+                    android:id="@+id/_beforeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_calendar_left"
+                    app:scale_left="680"
+                    app:scale_top="50"
+                    app:scale_width="24"
+                    app:scale_height="40"/>
+
+                <ImageView
+                    android:id="@+id/_beforeButtonRect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:scale_left="660"
+                    app:scale_top="30"
+                    app:scale_width="60"
+                    app:scale_height="80"/>
+
+                <TextView
+                    android:id="@+id/_monthTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/color_000000"
+                    app:scale_left="810"
+                    app:scale_top="0"
+                    app:scale_width="300"
+                    app:scale_height="140"
+                    app:scale_textsize="32" />
+
+                <ImageView
+                    android:id="@+id/_afterButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_calendar_right"
+                    app:scale_left="1216"
+                    app:scale_top="50"
+                    app:scale_width="24"
+                    app:scale_height="40"/>
+
+                <ImageView
+                    android:id="@+id/_afterButtonRect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:scale_left="1200"
+                    app:scale_top="30"
+                    app:scale_width="60"
+                    app:scale_height="80"/>
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+
+            <LinearLayout
+                android:id="@+id/_calendarListLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:scale_left="0"
+                app:scale_top="200"
+                app:scale_width="1918"
+                app:scale_height="852">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/_calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:overScrollMode="never" />
+
+            </LinearLayout>
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:id="@+id/_calendarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:scale_left="0"
+                app:scale_top="140"
+                app:scale_width="1920"
+                app:scale_height="1456"
+                app:scale_base_width="1920"
+                app:scale_base_height="925">
+
+                <TextView
+                    android:id="@+id/_textSunday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_sunday"
+                    android:textColor="@color/color_ff974b"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textMonday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_monday"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="274"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textTuesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_tuesday"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="548"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textWednesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_wednesday"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="822"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textThursday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_thursday"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="1096"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textFriday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_friday"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="1370"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <TextView
+                    android:id="@+id/_textSaturday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/text_calendar_saturday"
+                    android:textColor="@color/color_29c8e6"
+                    app:scale_left="1644"
+                    app:scale_top="0"
+                    app:scale_width="274"
+                    app:scale_height="60"
+                    app:scale_textsize="30" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="60"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <!--            -->
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="202"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="344"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="486"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="628"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="770"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="0"
+                    app:scale_top="912"
+                    app:scale_width="1920"
+                    app:scale_height="1" />
+
+                <!--            -->
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="274"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="548"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="822"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="1096"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="1370"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="1644"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="912" />
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </ScrollView>
+</RelativeLayout>

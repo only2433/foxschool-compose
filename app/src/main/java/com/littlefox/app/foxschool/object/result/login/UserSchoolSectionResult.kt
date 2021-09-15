@@ -4,7 +4,7 @@ class UserSchoolSectionResult
 {
     private var school_id : String = ""
     private var grade : Int = 0
-    private var hasClass : String = ""
+    private var hasclass : String = ""
     private var class_name : String = ""
     private var name : String = ""
     private var type_name = ""
@@ -27,12 +27,12 @@ class UserSchoolSectionResult
 
     fun isHaveClass() : Boolean
     {
-        if(hasClass == "")
+        if(hasclass == "")
         {
             return false
         }
 
-        return if(hasClass == "Y") true else false
+        return if(hasclass == "Y") true else false
     }
 
     fun getOrganizationName() : String

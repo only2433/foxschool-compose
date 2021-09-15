@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_baseView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="154"
+        app:scale_base_height="230">
+
+        <ImageView
+            android:id="@+id/_todayImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_calendar_today_green"
+            android:visibility="gone"
+            app:scale_left="47"
+            app:scale_top="3"
+            app:scale_width="60"
+            app:scale_height="60"/>
+
+        <TextView
+            android:id="@+id/_dateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="154"
+            app:scale_height="65"
+            app:scale_textsize="30"/>
+
+        <ImageView
+            android:id="@+id/_colorBarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_calendar_gray_center"
+            android:visibility="gone"
+            app:scale_left="0"
+            app:scale_top="120"
+            app:scale_width="154"
+            app:scale_height="100"/>
+
+        <ImageView
+            android:id="@+id/_stampImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_stamp_e0"
+            android:visibility="gone"
+            app:scale_left="25"
+            app:scale_top="70"
+            app:scale_width="107"
+            app:scale_height="107"/>
+
+        <TextView
+            android:id="@+id/_homeworkStateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            android:visibility="gone"
+            app:scale_left="0"
+            app:scale_top="120"
+            app:scale_width="154"
+            app:scale_height="100"
+            app:scale_textsize="30"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</LinearLayout>

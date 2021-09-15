@@ -109,6 +109,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._recordLogText)
     lateinit var _RecordLogText : TextView
 
+    @BindView(R.id._homeworkManageMenuButton)
+    lateinit var _HomeworkManageMenuButton : ImageView
+
     @BindView(R.id._homeworkManageText)
     lateinit var _HomeworkManageText : TextView
 
@@ -360,12 +363,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     @Optional
     @OnClick(
-        R.id._userInfoButtonText,
-        R.id._menuLogoutLayout,
-        R.id._leaningLogMenuButton,
-        R.id._topMenuSetting,
-        R.id._topMenuSearch,
-        R.id._homeworkManageMenuButton
+        R.id._userInfoButtonText, R.id._leaningLogMenuButton, R.id._menuLogoutLayout, R.id._homeworkManageMenuButton,
+        R.id._topMenuSetting, R.id._topMenuSearch
     )
     fun onClickView(view : View)
     {
@@ -386,6 +385,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuLogout()
             }
+            R.id._homeworkManageMenuButton ->
+            {
+                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                mMainPresenter.onClickMenuHomeworkManage()
+            }
             R.id._topMenuSetting ->
             {
                 Log.f("")
@@ -395,11 +399,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             {
                 Log.f("")
                 mMainPresenter.onClickSearch()
-            }
-            R.id._homeworkManageMenuButton ->
-            {
-                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuHomeworkManage()
             }
         }
     }

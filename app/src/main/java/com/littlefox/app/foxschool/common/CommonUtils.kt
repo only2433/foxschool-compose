@@ -18,6 +18,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import android.os.StatFs
 import android.provider.Settings
@@ -51,10 +52,7 @@ import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
-import com.littlefox.app.foxschool.enumerate.BioCheckResultType
-import com.littlefox.app.foxschool.enumerate.BookColor
-import com.littlefox.app.foxschool.enumerate.DataType
-import com.littlefox.app.foxschool.enumerate.Grade
+import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.library.view.`object`.DisPlayMetricsObject
 import com.littlefox.logmonitor.Log
 import java.io.File
@@ -1302,6 +1300,20 @@ class CommonUtils
         return date!!.time
     }
 
+    // 두 날짜 사이의 기간
+    fun getTerm(startDate : String, endDate : String) : Int
+    {
+        val startDateMilli = getMillisecondFromDate(startDate)
+        val endDateMilli = getMillisecondFromDate(endDate)
+        if (startDateMilli < endDateMilli)
+        {
+            val termMilli = (endDateMilli - startDateMilli)
+            val termDate = (termMilli / (24 * 60 * 60 * Common.SECOND)).toInt()
+            return termDate
+        }
+        return 0
+    }
+
     fun startLinkMove(link : String?)
     {
         val intent = Intent(Intent.ACTION_VIEW)
@@ -2393,6 +2405,50 @@ class CommonUtils
             {
                 textview.text = Html.fromHtml(text)
             }
+        }
+    }
+
+    /**
+     * 달력 색 Bar 이미지 가져오기
+     */
+    fun getCalendarBarImage(color : String, calType : CalendarImageType) : Drawable
+    {
+        var imageType = "one"
+        when(calType)
+        {
+            CalendarImageType.ONE -> imageType = "one"
+            CalendarImageType.START -> imageType = "start"
+            CalendarImageType.CENTER -> imageType = "center"
+            CalendarImageType.END -> imageType = "end"
+        }
+
+        // 색 바 이미지 파일명 가져오기
+        var filename = "icon_calendar_${color}_${imageType}"
+        if (checkTablet) filename += "_tablet"
+
+        val id = sContext.resources.getIdentifier(filename, "drawable", sContext.packageName) // 아이디 가져오기
+
+        var drawable : Drawable? = null
+        try {
+            drawable = sContext.resources.getDrawable(id)
+        } catch(e : Exception) {
+            // 파일이 없는경우 디폴트 : 회색 1칸짜리 이미지
+            if (drawable == null) sContext.resources.getDrawable(R.drawable.icon_calendar_gray_one)
+        }
+        return drawable!!
+    }
+
+    /**
+     * 달력 선생님 평가 이미지 가져오기 (학생용 달력에서 사용)
+     */
+    fun getCalendarEvalImage(eval : String) : Drawable?
+    {
+        when(eval)
+        {
+            "E0" -> return sContext.resources.getDrawable(R.drawable.icon_stamp_e0)
+            "E1" -> return sContext.resources.getDrawable(R.drawable.icon_stamp_e1)
+            "E2" -> return sContext.resources.getDrawable(R.drawable.icon_stamp_e2)
+            else -> return null
         }
     }
 }

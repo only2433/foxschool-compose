@@ -1,9 +1,13 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
-import java.util.ArrayList
+import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 
-class HomeworkBaseResult
+/**
+ * 숙제관리 학생용 통신 응답 데이터
+ */
+class HomeworkBaseResult : BaseResult()
 {
+    private var today : String          = ""
     private val year : String           = ""
     private val month : String          = ""
     private val prev_year : String      = ""
@@ -13,6 +17,11 @@ class HomeworkBaseResult
     private val month_start : String    = ""
     private val month_end : String      = ""
     private val homework : ArrayList<HomeworkItemData> = ArrayList()
+
+    fun getToday() : String
+    {
+        return today
+    }
 
     fun getCurrentYear() : String
     {
@@ -76,5 +85,4 @@ class HomeworkBaseResult
     {
         return homework
     }
-
 }

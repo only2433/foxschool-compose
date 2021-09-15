@@ -143,6 +143,21 @@
     <string name="text_1on1_register">등록</string>
     <string name="text_1on1_send_email">이메일로 의견 보내기</string>
 
+    <string name="text_calendar_sunday">일</string>
+    <string name="text_calendar_monday">월</string>
+    <string name="text_calendar_tuesday">화</string>
+    <string name="text_calendar_wednesday">수</string>
+    <string name="text_calendar_thursday">목</string>
+    <string name="text_calendar_friday">금</string>
+    <string name="text_calendar_saturday">토</string>
+
+    <string name="text_homework_status">숙제 현황</string>
+    <string name="text_homework_status_detail">숙제 현황 상세 보기</string>
+    <string name="text_homework_student_say">학습자 한마디</string>
+    <string name="text_homework_teacher_say">선생님 한마디</string>
+    <string name="text_homework_check">숙제 검사</string>
+    <string name="text_homework_contents">숙제 내용</string>
+
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
     <string name="message_preview_free_user_end">미리보기가 종료되었습니다.\n회원가입 후 모든 콘텐츠를 이용해 보세요.</string>
@@ -230,6 +245,7 @@
     <string name="message_warning_record_permission">마이크 권한을 허용하지 않으면 녹음기를 사용 할 수 없어요!</string>
     <string name="message_warning_record_reset">녹음된 내용이 저장되지 않습니다. \n다시 녹음할까요?</string>
     <string name="message_warning_record_exit">화면에서 나가시겠습니까? \n나가시면 녹음된 내용이 저장되지 않습니다.</string>
+    <string name="message_warning_not_have_class">학급 정보가 없습니다. 담당 선생님께 문의해 주세요.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

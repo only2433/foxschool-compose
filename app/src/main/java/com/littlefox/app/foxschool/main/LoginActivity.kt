@@ -175,6 +175,13 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         mSelectedSchoolData = null
         mLoginPresenter.destroy()
     }
+
+    override fun finish()
+    {
+        super.finish()
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
+    }
+
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */

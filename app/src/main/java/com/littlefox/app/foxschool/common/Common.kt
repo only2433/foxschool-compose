@@ -198,6 +198,22 @@ class Common
         const val PAGE_FORUM_LIST : Int     = 0
         const val PAGE_FORUM_WEBVIEW : Int  = 1
 
+        /**
+         * 숙제관리 화면 페이지
+         *  - 공통 : 달력 0, 컨텐츠 리스트 1 (학생 숙제현황, 선생님 숙제내용)
+         *  - 학생 : 학습자 한마디 2, 선생님 한마디 3
+         *  - 선생님 : 숙제리스트 2, 숙제검사 3, 숙제현황상세보기 4
+         */
+        const val PAGE_HOMEWORK_CALENDAR : Int      = 0
+        const val PAGE_HOMEWORK_CONTENTS : Int      = 1
+
+        const val PAGE_HOMEWORK_STUDENT_SAY : Int   = 2
+        const val PAGE_HOMEWORK_TEACHER_SAY : Int   = 3
+
+        const val PAGE_HOMEWORK_LIST : Int          = 2
+        const val PAGE_HOMEWORK_CHECK : Int         = 3
+        const val PAGE_HOMEWORK_STATUS_DETAIL : Int = 4
+
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 
         const val IAC_AWAKE_CODE_ALWAYS_VISIBLE : String            = "C"

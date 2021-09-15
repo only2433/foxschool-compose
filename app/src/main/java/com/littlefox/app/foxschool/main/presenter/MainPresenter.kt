@@ -84,7 +84,8 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 119
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 120
         private const val MESSAGE_START_FLASHCARD : Int                 = 121
-        private const val MESSAGE_APP_SERVER_ERROR : Int                = 122
+        private const val MESSAGE_START_HOMEWORK : Int                  = 122
+        private const val MESSAGE_APP_SERVER_ERROR : Int                = 123
 
         private const val REQUEST_CODE_GO_LOGIN : Int                   = 1001
         private const val REQUEST_CODE_STUDY_GUIDE : Int                = 1002
@@ -92,6 +93,7 @@ class MainPresenter : MainContract.Presenter
         private const val DIALOG_EVENT_IAC : Int                        = 10001
         private const val DIALOG_EVENT_LOGOUT : Int                     = 10002
         private const val DIALOG_EVENT_APP_END : Int                    = 10003
+        private const val DIALOG_EVENT_NOT_HAVE_CLASS : Int             = 10004
     }
 
     private lateinit var mMainContractView : MainContract.View
@@ -336,6 +338,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
+            MESSAGE_START_HOMEWORK -> startHomeworkManageActivity()
             MESSAGE_START_FOXSCHOOL_NEWS -> startFoxSchoolNewsActivity()
             MESSAGE_APP_SERVER_ERROR ->
             {
@@ -415,12 +418,31 @@ class MainPresenter : MainContract.Presenter
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LEARNING_LOG, Common.DURATION_SHORT)
     }
 
-
     override fun onClickMenuHomeworkManage()
     {
         Log.f("")
+        if (CommonUtils.getInstance(mContext).isTeacherMode == false)
+        {
+            if(mLoginInformationResult!!.getSchoolInformation().isHaveClass())
+            {
+                // 학생
+                // 학급정보 있는 경우 화면 이동
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_HOMEWORK, Common.DURATION_SHORT)
+            }
+            else
+            {
+                showTemplateAlertDialog(
+                    mContext.resources.getString(R.string.message_warning_not_have_class),
+                    DIALOG_EVENT_NOT_HAVE_CLASS,
+                    DialogButtonType.BUTTON_1
+                )
+            }
+        }
+        else
+        {
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_HOMEWORK, Common.DURATION_SHORT)
+        }
     }
-
 
     override fun onClickSearch()
     {
@@ -517,6 +539,15 @@ class MainPresenter : MainContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.FLASHCARD)
             .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startHomeworkManageActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
