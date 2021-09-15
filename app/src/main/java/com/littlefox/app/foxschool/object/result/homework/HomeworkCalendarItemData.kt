@@ -2,7 +2,7 @@ package com.littlefox.app.foxschool.`object`.result.homework
 
 import com.littlefox.app.foxschool.enumerate.CalendarImageType
 
-class HomeworkItemData
+class HomeworkCalendarItemData
 {
     private var hw_no : Int         = 0
     private var start_date : String = ""
@@ -18,17 +18,17 @@ class HomeworkItemData
     constructor() {}
 
     // 아이템 복사용
-    constructor(itemData : HomeworkItemData)
+    constructor(calendarItemData : HomeworkCalendarItemData)
     {
-        this.hw_no = itemData.getHomeworkNumber()
-        this.start_date = itemData.getStartDate()
-        this.end_date = itemData.getEndDate()
-        this.hw_cnt = itemData.getHomeworkTotalItemCount()
-        this.hw_end_cnt = itemData.getHomeworkCompleteItemCount()
-        this.is_eval = if (itemData.isEvaluationComplete()) "Y" else "N"
-        this.color = itemData.getColor()
-        this.comment = itemData.getTeacherComment()
-        this.eval = itemData.getEvaluationState()
+        this.hw_no = calendarItemData.getHomeworkNumber()
+        this.start_date = calendarItemData.getStartDate()
+        this.end_date = calendarItemData.getEndDate()
+        this.hw_cnt = calendarItemData.getHomeworkTotalItemCount()
+        this.hw_end_cnt = calendarItemData.getHomeworkCompleteItemCount()
+        this.is_eval = if (calendarItemData.isEvaluationComplete()) "Y" else "N"
+        this.color = calendarItemData.getColor()
+        this.comment = calendarItemData.getTeacherComment()
+        this.eval = calendarItemData.getEvaluationState()
     }
 
     fun getHomeworkNumber() : Int

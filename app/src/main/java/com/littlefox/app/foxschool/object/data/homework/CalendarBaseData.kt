@@ -1,7 +1,7 @@
 package com.littlefox.app.foxschool.`object`.data.homework
 
 import android.content.Context
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.CalendarDateType
 import java.util.*
@@ -13,17 +13,17 @@ import kotlin.collections.ArrayList
 class CalendarBaseData
 {
     private lateinit var mContext : Context
-    private lateinit var homeworkData : HomeworkBaseResult
+    private lateinit var homeworkCalendarData : HomeworkCalendarBaseResult
 
     private lateinit var mCurrentCalendar : Calendar // 선택된 달에 대한 Calendar
     private lateinit var mTodayCalendar : Calendar // 오늘 날짜에 대한 Calendar
 
     private var dateList = ArrayList<CalendarData>() // 날짜 아이템 리스트
 
-    constructor(context : Context, data : HomeworkBaseResult)
+    constructor(context : Context, data : HomeworkCalendarBaseResult)
     {
         this.mContext = context
-        homeworkData = data
+        homeworkCalendarData = data
         makeMonthData()
     }
 
@@ -37,11 +37,11 @@ class CalendarBaseData
 
         // 현재 선택된 달
         mCurrentCalendar = Calendar.getInstance()
-        mCurrentCalendar.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate("${homeworkData.getCurrentYear()}-${homeworkData.getCurrentMonth()}-01")
+        mCurrentCalendar.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate("${homeworkCalendarData.getCurrentYear()}-${homeworkCalendarData.getCurrentMonth()}-01")
 
         // 통신으로 받은 오늘 날짜
         mTodayCalendar = Calendar.getInstance()
-        mTodayCalendar.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkData.getToday())
+        mTodayCalendar.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkCalendarData.getToday())
 
         makePrevDateDataInCurrentMonth()
         makeCurrentMonthData()
@@ -56,7 +56,7 @@ class CalendarBaseData
     {
         // 통신으로 받은 달력 시작일
         val prevCal = Calendar.getInstance()
-        prevCal.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkData.getMonthStartDate())
+        prevCal.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkCalendarData.getMonthStartDate())
 
         if (prevCal.before(mCurrentCalendar)) // 달력 시작일이 선택된 달보다 과거인 경우만 (방어코드 유지?)
         {
@@ -114,7 +114,7 @@ class CalendarBaseData
     private fun makeNextDateDataInCurrentMonth()
     {
         val endCal = Calendar.getInstance()
-        endCal.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkData.getMonthEndDate())
+        endCal.timeInMillis = CommonUtils.getInstance(mContext).getMillisecondFromDate(homeworkCalendarData.getMonthEndDate())
 
         if (endCal.after(mCurrentCalendar)) // 달력 종료일이 선택된 달보다 미래인 경우만 (방어코드 유지?)
         {

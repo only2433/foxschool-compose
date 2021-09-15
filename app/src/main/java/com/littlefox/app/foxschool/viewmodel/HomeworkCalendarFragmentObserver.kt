@@ -2,13 +2,13 @@ package com.littlefox.app.foxschool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkItemData
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
 
 class HomeworkCalendarFragmentObserver : ViewModel()
 {
     var onClickCalendarBefore = MutableLiveData<Boolean>()
     var onClickCalendarAfter = MutableLiveData<Boolean>()
-    var onClickCalendarItem = MutableLiveData<HomeworkItemData>()
+    var onClickCalendarItem = MutableLiveData<HomeworkCalendarItemData>()
     var onCompletedListSet = MutableLiveData<Boolean>()
 
     fun onClickCalendarBefore()
@@ -21,9 +21,9 @@ class HomeworkCalendarFragmentObserver : ViewModel()
         onClickCalendarAfter.value = true
     }
 
-    fun onClickCalendarItem(item : HomeworkItemData)
+    fun onClickCalendarItem(calendarItem : HomeworkCalendarItemData)
     {
-        onClickCalendarItem.value = item
+        onClickCalendarItem.value = calendarItem
     }
 
     fun onCompletedListSet(isCompleted : Boolean)

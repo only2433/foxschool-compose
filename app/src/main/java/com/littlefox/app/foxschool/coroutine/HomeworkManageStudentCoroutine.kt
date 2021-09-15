@@ -2,8 +2,7 @@ package com.littlefox.app.foxschool.coroutine
 
 import android.content.Context
 import com.google.gson.Gson
-import com.littlefox.app.foxschool.`object`.result.HomeworkManageBaseObject
-import com.littlefox.app.foxschool.`object`.result.base.QuizBaseObject
+import com.littlefox.app.foxschool.`object`.result.HomeworkManageCalenderBaseObject
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil
@@ -29,7 +28,7 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
             return null
         }
 
-        lateinit var result : HomeworkManageBaseObject
+        lateinit var result : HomeworkManageCalenderBaseObject
         var response : String = ""
         synchronized(mSync)
         {
@@ -48,7 +47,7 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
                     NetworkUtil.GET_METHOD)!!
             }
 
-            result = Gson().fromJson(response, HomeworkManageBaseObject::class.java)
+            result = Gson().fromJson(response, HomeworkManageCalenderBaseObject::class.java)
             Log.i("status : ${result.getStatus()}")
 
             if(result.getAccessToken() != "")

@@ -26,6 +26,7 @@ class Common
         const val API_FOXSCHOOL_NEWS : String           = DEVELOP_BASE_API + "forum/board/news"
         const val API_FAQ : String                      = DEVELOP_BASE_API + "forum/board/faq"
         const val API_HOMEWORK_MANAGE_STUDENT : String  = DEVELOP_BASE_API + "homeworks/student"
+        const val API_HOMEWORK_STATUS_LIST : String     = DEVELOP_BASE_API + "homeworks/student/list"
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
@@ -120,6 +121,7 @@ class Common
         const val COROUTINE_CODE_INQUIRE : String                       = "inquire"
         const val COROUTINE_CODE_FORUM : String                         = "forum"
         const val COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT                = "homework_manage_student"
+        const val COROUTINE_CODE_HOMEWORK_STATUS_LIST                   = "homework_status_list"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"

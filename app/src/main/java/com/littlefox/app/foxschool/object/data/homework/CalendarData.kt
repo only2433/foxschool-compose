@@ -1,7 +1,6 @@
 package com.littlefox.app.foxschool.`object`.data.homework
 
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkItemData
-import com.littlefox.app.foxschool.enumerate.CalendarImageType
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
 import com.littlefox.app.foxschool.enumerate.CalendarDateType
 
 /**
@@ -14,7 +13,7 @@ class CalendarData
     private var isCurrentMonth : Boolean = false                    // 선택된 달 인지 (색 차이를 위해)
     private var isToday : Boolean = false                           // 오늘 날짜인지 (오늘날짜 표시를 위해)
     private var hasHomework : Boolean = false                       // 숙제 아이템이 있는지
-    private var homework : HomeworkItemData = HomeworkItemData()    // 숙제 아이템
+    private var homeworkCalendar : HomeworkCalendarItemData = HomeworkCalendarItemData()    // 숙제 아이템
 
     constructor(date : String, dateType : CalendarDateType, isCurrentMonth : Boolean)
     {
@@ -59,13 +58,13 @@ class CalendarData
         this.isToday = isToday
     }
 
-    fun getHomework() : HomeworkItemData
+    fun getHomework() : HomeworkCalendarItemData
     {
-        return homework
+        return homeworkCalendar
     }
 
-    fun setHomework(item : HomeworkItemData)
+    fun setHomework(calendarItem : HomeworkCalendarItemData)
     {
-        homework = item
+        homeworkCalendar = calendarItem
     }
 }

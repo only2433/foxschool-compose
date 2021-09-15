@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarBaseData
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
-import com.littlefox.app.foxschool.`object`.result.HomeworkManageBaseObject
+import com.littlefox.app.foxschool.`object`.result.HomeworkManageCalenderBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkBaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkItemData
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
 import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -45,7 +45,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private var mHomeworkPagerAdapter : HomeworkPagerAdapter? = null
 
     private var mHomeworkManageStudentCoroutine : HomeworkManageStudentCoroutine? = null
-    private var mHomeworkBaseResult : HomeworkBaseResult? = null
+    private var mHomeworkCalendarBaseResult : HomeworkCalendarBaseResult? = null
 
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
     private lateinit var mHomeworkCalendarFragmentObserver : HomeworkCalendarFragmentObserver
@@ -124,7 +124,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
      */
     private fun getCalendarItemList()
     {
-        val baseCalendar = CalendarBaseData(mContext, mHomeworkBaseResult!!)
+        val baseCalendar = CalendarBaseData(mContext, mHomeworkCalendarBaseResult!!)
         val list = baseCalendar.getDataList()
         setHomeworkInCalendarItem(list)
         mHomeworkManagePresenterObserver.setCalendarData(list)
@@ -136,16 +136,16 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun setHomeworkInCalendarItem(dateList : ArrayList<CalendarData>)
     {
         // 숙제 데이터 수 만큼 반복
-        mHomeworkBaseResult!!.getHomeworkDataList().forEach { homework ->
+        mHomeworkCalendarBaseResult!!.getHomeworkDataList().forEach {homework ->
             val homeworkTerm = CommonUtils.getInstance(mContext).getTerm(homework.getStartDate(), homework.getEndDate())                        // 숙제 기간 : 숙제 종료일 - 숙제 시작일
-            val startPosition = CommonUtils.getInstance(mContext).getTerm(mHomeworkBaseResult!!.getMonthStartDate(), homework.getStartDate())   // 숙제 시작 포지션 : 숙제 시작일 - 달력 시작일
+            val startPosition = CommonUtils.getInstance(mContext).getTerm(mHomeworkCalendarBaseResult!!.getMonthStartDate(), homework.getStartDate())   // 숙제 시작 포지션 : 숙제 시작일 - 달력 시작일
             val lastPosition = startPosition + homeworkTerm                                                                                     // 숙제 종료 포지션 : 숙제 시작 포지션 + 숙제 기간
 
             if (startPosition == lastPosition)
             {
                 // 숙제 시작 포지션 == 숙제 종료 포지션 : 숙제가 1일 짜리
                 // 한 아이템으로 변경할 경우 주소값이 동일해서 이전에 담은 아이템도 영향이 가기 때문에 아이템을 복사해서 넣어줘야 한다.
-                val copyItem = HomeworkItemData(homework)
+                val copyItem = HomeworkCalendarItemData(homework)
                 copyItem.setImageType(CalendarImageType.ONE) // 색 바 이미지 타입 지정 (하루)
                 dateList[startPosition].setHasHomework(true)
                 dateList[startPosition].setHomework(copyItem) // 달력 아이템에 숙제 세팅
@@ -157,7 +157,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 for (i in 0..homeworkTerm)
                 {
                     // 한 아이템으로 변경할 경우 주소값이 동일해서 이전에 담은 아이템도 영향이 가기 때문에 아이템을 복사해서 넣어줘야 한다.
-                    val copyItem = HomeworkItemData(homework)
+                    val copyItem = HomeworkCalendarItemData(homework)
 
                     val index = startPosition + i // 날짜 인덱스
                     if (index > dateList.size - 1)
@@ -200,14 +200,14 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
      */
     private fun setCalendarTitle()
     {
-        if (mHomeworkBaseResult != null)
+        if (mHomeworkCalendarBaseResult != null)
         {
-            var month = mHomeworkBaseResult!!.getCurrentMonth()
+            var month = mHomeworkCalendarBaseResult!!.getCurrentMonth()
             if (month[0] == '0') // 0으로 시작하면
             {
                 month = month.drop(1) // 앞에부터 1자리 제거
             }
-            val title = "${mHomeworkBaseResult!!.getCurrentYear()}년 ${month}월"
+            val title = "${mHomeworkCalendarBaseResult!!.getCurrentYear()}년 ${month}월"
             mHomeworkManagePresenterObserver.setCalendarMonthTitle(title)
         }
     }
@@ -217,7 +217,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
      */
     private fun setCalendarButton()
     {
-        if (mHomeworkBaseResult!!.isPossiblePrevMonth())
+        if (mHomeworkCalendarBaseResult!!.isPossiblePrevMonth())
         {
             mHomeworkManagePresenterObserver.setCalendarPrevButton(true)
         }
@@ -226,7 +226,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             mHomeworkManagePresenterObserver.setCalendarPrevButton(false)
         }
 
-        if (mHomeworkBaseResult!!.isPossibleNextMonth())
+        if (mHomeworkCalendarBaseResult!!.isPossibleNextMonth())
         {
             mHomeworkManagePresenterObserver.setCalendarNextButton(true)
         }
@@ -258,20 +258,20 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         // 이전 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
-            if (mHomeworkBaseResult != null) // 데이터 있을 때 (방어코드)
+            if (mHomeworkCalendarBaseResult != null) // 데이터 있을 때 (방어코드)
             {
-                mYear = mHomeworkBaseResult!!.getPrevYear()
-                mMonth = mHomeworkBaseResult!!.getPrevMonth()
+                mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
                 requestStudentHomework()
             }
         })
 
         // 다음 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
-            if (mHomeworkBaseResult != null) // 데이터 있을 때 (방어코드)
+            if (mHomeworkCalendarBaseResult != null) // 데이터 있을 때 (방어코드)
             {
-                mYear = mHomeworkBaseResult!!.getNextYear()
-                mMonth = mHomeworkBaseResult!!.getNextMonth()
+                mYear = mHomeworkCalendarBaseResult!!.getNextYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
                 requestStudentHomework()
             }
         })
@@ -307,7 +307,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 // 통신 성공
                 if (code == Common.COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT)
                 {
-                    mHomeworkBaseResult = (result as HomeworkManageBaseObject).getData()
+                    mHomeworkCalendarBaseResult = (result as HomeworkManageCalenderBaseObject).getData()
                     getCalendarItemList()
                     setCalendarView()
                 }

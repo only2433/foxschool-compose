@@ -5,9 +5,9 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 /**
  * 숙제관리 학생용 통신 응답 데이터
  */
-class HomeworkBaseResult : BaseResult()
+class HomeworkCalendarBaseResult : BaseResult()
 {
-    private var today : String          = ""
+    private val today : String          = ""
     private val year : String           = ""
     private val month : String          = ""
     private val prev_year : String      = ""
@@ -16,7 +16,7 @@ class HomeworkBaseResult : BaseResult()
     private val next_month : String     = ""
     private val month_start : String    = ""
     private val month_end : String      = ""
-    private val homework : ArrayList<HomeworkItemData> = ArrayList()
+    private val homeworkCalendars : ArrayList<HomeworkCalendarItemData> = ArrayList()
 
     fun getToday() : String
     {
@@ -81,8 +81,8 @@ class HomeworkBaseResult : BaseResult()
         return false
     }
 
-    fun getHomeworkDataList() : ArrayList<HomeworkItemData>
+    fun getHomeworkDataList() : ArrayList<HomeworkCalendarItemData>
     {
-        return homework
+        return homeworkCalendars
     }
 }
