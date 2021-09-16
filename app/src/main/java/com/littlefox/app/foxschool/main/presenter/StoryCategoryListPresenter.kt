@@ -11,12 +11,10 @@ import com.littlefox.app.foxschool.`object`.result.StoryCategoryListBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
-import com.littlefox.app.foxschool.`object`.result.story.StoryCategoryListResult
 import com.littlefox.app.foxschool.adapter.SeriesCardViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.SeriesCardItemListener
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.coroutine.StoryCategoryListInformationCoroutine
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
@@ -27,6 +25,7 @@ import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
+import java.util.ArrayList
 
 
 class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
@@ -41,7 +40,7 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mStoryCategoryListContractView : StoryCategoryListContract.View
     private lateinit var mCurrentCategoryBaseData : SeriesBaseResult
-    private lateinit var mStoryCategoryListResult : StoryCategoryListResult
+    private lateinit var mStoryCategoryListResult : ArrayList<SeriesInformationResult>
     private var mSeriesCardViewAdapter : SeriesCardViewAdapter? = null
     private var mStoryCategoryListInformationCoroutine : StoryCategoryListInformationCoroutine? = null
 
@@ -107,9 +106,9 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
         get()
         {
             var result = 0
-            for(i in 0 until mStoryCategoryListResult.getInformationList().size)
+            for(i in 0 until mStoryCategoryListResult.size)
             {
-                result += mStoryCategoryListResult.getInformationList().get(i).getContentsCount()
+                result += mStoryCategoryListResult[i].getContentsCount()
             }
             return result
         }
@@ -125,7 +124,7 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
 
     private fun initSeriesItemList()
     {
-        mSeriesCardViewAdapter = SeriesCardViewAdapter(mContext, mStoryCategoryListResult.getInformationList())
+        mSeriesCardViewAdapter = SeriesCardViewAdapter(mContext, mStoryCategoryListResult)
         mSeriesCardViewAdapter!!.setSeriesCardItemListener(mSeriesCardItemListener)
         mStoryCategoryListContractView.showCategoryCardListView(mSeriesCardViewAdapter!!)
     }
@@ -172,11 +171,14 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
         override fun onClickItem(seriesInformationResult : SeriesInformationResult, selectView : View)
         {
             val pair = Pair<View, String>(selectView, Common.STORY_DETAIL_LIST_HEADER_IMAGE)
+            seriesInformationResult.setDisplayId(seriesInformationResult.getSeriesId())
+            seriesInformationResult.setContentsName(seriesInformationResult.getName())
             seriesInformationResult.setTransitionType(TransitionType.PAIR_IMAGE)
             seriesInformationResult.setSeriesType(Common.CONTENT_TYPE_STORY)
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.SERIES_DETAIL_LIST)
-                .setData(seriesInformationResult as SeriesBaseResult).setViewPair(pair)
+                .setData(seriesInformationResult as SeriesBaseResult)
+                .setViewPair(pair)
                 .setAnimationMode(AnimationMode.METERIAL_ANIMATION)
                 .startActivity()
         }

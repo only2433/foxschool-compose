@@ -30,9 +30,9 @@ class Common
 
         const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
 
-        const val API_STORY_DETAIL_LIST : String    = BASE_PUBLIC_API + "contents/story/"
-        const val API_SONG_DETAIL_LIST : String     = BASE_PUBLIC_API + "contents/song/"
-        const val API_INTRODUCE_SERIES : String     = BASE_PUBLIC_API + "contents/story/series/"
+        const val API_STORY_DETAIL_LIST : String    = DEVELOP_BASE_API + "contents/story/series/"
+        const val API_SONG_DETAIL_LIST : String     = DEVELOP_BASE_API + "contents/song/series/"
+        const val API_INTRODUCE_SERIES : String     = DEVELOP_BASE_API + "contents/story/series/info/"
 
         const val API_QUIZ : String                 = API_CONTENTS
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS

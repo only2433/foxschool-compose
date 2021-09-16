@@ -441,6 +441,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         enableTimer(false)
         mMainHandler.removeMessages(MESSAGE_RECORD_TIME_CHECK)
         mRecordingPathList.clear()
+        FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_STOP)
         mTime = 0

@@ -7,7 +7,7 @@ import com.littlefox.app.foxschool.common.Common
 class ContentsBaseResult  : Parcelable
 {
     private var id : String = ""
-    private var index = 0
+    private var seq = 0
     private var type : String = Common.CONTENT_TYPE_STORY
     private var name : String = ""
     private var sub_name : String? = ""
@@ -21,7 +21,7 @@ class ContentsBaseResult  : Parcelable
     protected constructor(`in` : Parcel)
     {
         id = `in`.readString()!!
-        index = `in`.readInt()
+        seq = `in`.readInt()
         type = `in`.readString()!!
         name = `in`.readString()!!
         sub_name = `in`.readString()
@@ -35,7 +35,7 @@ class ContentsBaseResult  : Parcelable
     override fun writeToParcel(dest : Parcel, flags : Int)
     {
         dest.writeString(id)
-        dest.writeInt(index)
+        dest.writeInt(seq)
         dest.writeString(type)
         dest.writeString(name)
         dest.writeString(sub_name)
@@ -59,7 +59,7 @@ class ContentsBaseResult  : Parcelable
 
     fun getIndex() : Int
     {
-        return index
+        return seq
     }
 
     fun getType() : String
@@ -98,7 +98,7 @@ class ContentsBaseResult  : Parcelable
 
     fun setIndex(index : Int)
     {
-        this.index = index
+        this.seq = index
     }
 
     fun isSelected() : Boolean

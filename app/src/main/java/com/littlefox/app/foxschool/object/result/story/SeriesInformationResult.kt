@@ -5,6 +5,8 @@ import android.os.Parcel
 
 class SeriesInformationResult : SeriesBaseResult
 {
+    private val dp_id : String = ""
+    private val name : String = ""
     private val contents_count = -1
 
     /**
@@ -42,5 +44,15 @@ class SeriesInformationResult : SeriesBaseResult
     fun getContentsCount() : Int
     {
         return contents_count;
+    }
+
+    fun getSeriesId() : String
+    {
+        return dp_id
+    }
+
+    fun getName() : String
+    {
+        return name
     }
 }

@@ -5,33 +5,33 @@ import java.util.*
 
 class DetailItemInformationResult
 {
-    private var latest_study_content_id : String = ""
-    private var contents : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
+    private var latest_study : String = ""
+    private var list : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var children : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
-    private var series : SeriesInformation? = null
+    private var info : ArrayList<SeriesInformation> = ArrayList<SeriesInformation>()
 
     val seriesID : String
-        get() = series?.getID() ?: ""
+        get() = info[0].getID() ?: ""
 
     val isSingleSeries : Boolean
-        get() = series?.isSingle ?: true
+        get() = info[0].isSingle ?: true
 
     val seriesLevel : Int
-        get() = series?.getLevel() ?: 0
+        get() = info[0].getLevel() ?: 0
 
     val seriesARLevel : String
         get()
         {
-            if(series == null || series?.getARLevel() == 0.0f)
+            if(info[0].getARLevel() == 0.0f)
             {
                 return "0.0"
             }
             else
-                return series!!.getARLevel().toString()
+                return info[0].getARLevel().toString()
         }
 
     val lastStudyContentID : String
-        get() = latest_study_content_id ?: ""
+        get() = latest_study ?: ""
 
     /**
      * 시리즈가 연재중인지 여부를 확인
@@ -39,16 +39,12 @@ class DetailItemInformationResult
     val isStillOnSeries : Boolean
         get()
         {
-            if(series == null)
-            {
-                return false
-            }
-            return if(contents.size < series!!.getTotalCount()) true else false
+            return if(list.size < info[0].getTotalCount()) true else false
         }
 
     fun getContentsList() : ArrayList<ContentsBaseResult>
     {
-        return contents
+        return list
     }
 
     fun getCategoryList() : ArrayList<SeriesInformationResult>

@@ -96,6 +96,16 @@ open class SeriesBaseResult : Parcelable
         return basic_sort_number;
     }
 
+    fun setContentsName(name : String)
+    {
+        this.content_name = name
+    }
+
+    fun setDisplayId(id : String)
+    {
+        this.id = id
+    }
+
     fun setTransitionType(type : TransitionType)
     {
         transitionType = type;

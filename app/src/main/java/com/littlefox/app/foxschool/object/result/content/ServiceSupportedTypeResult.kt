@@ -5,16 +5,16 @@ import java.io.Serializable
 
 class ServiceSupportedTypeResult : Serializable
 {
-    private var story : String              = Common.SERVICE_NOT_SUPPORTED
+    private var story : String              = Common.SERVICE_NOT_SUPPORTED  // 동화 서비스
     private var service : String            = Common.SERVICE_NOT_SUPPORTED
-    private var original_text : String      = Common.SERVICE_NOT_SUPPORTED
-    private var vocabulary : String         = Common.SERVICE_NOT_SUPPORTED
-    private var quiz : String               = Common.SERVICE_NOT_SUPPORTED
-    private var ebook : String              = Common.SERVICE_NOT_SUPPORTED
-    private var crossword : String          = Common.SERVICE_NOT_SUPPORTED
-    private var starwords : String          = Common.SERVICE_NOT_SUPPORTED
-    private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED
-    private var recorder : String           = Common.SERVICE_SUPPORTED_FREE // TODO 김태은 테스트용
+    private var original_text : String      = Common.SERVICE_NOT_SUPPORTED  // 원문 서비스
+    private var vocabulary : String         = Common.SERVICE_NOT_SUPPORTED  // 단어장 서비스
+    private var quiz : String               = Common.SERVICE_NOT_SUPPORTED  // 퀴즈 서비스
+    private var ebook : String              = Common.SERVICE_NOT_SUPPORTED  // ebook 서비스
+    private var crossword : String          = Common.SERVICE_NOT_SUPPORTED  // 크로스워드 서비스
+    private var starwords : String          = Common.SERVICE_NOT_SUPPORTED  // 스타워즈 서비스
+    private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED  // 플래시카드 서비스
+    private var record : String             = Common.SERVICE_NOT_SUPPORTED  // 녹음기 서비스
 
     fun getStorySupportType() : String
     {
@@ -63,6 +63,6 @@ class ServiceSupportedTypeResult : Serializable
 
     fun getRecorderSupportType() : String
     {
-        return recorder
+        return record
     }
 }

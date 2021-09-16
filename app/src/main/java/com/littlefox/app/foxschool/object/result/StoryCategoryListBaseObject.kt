@@ -1,14 +1,15 @@
 package com.littlefox.app.foxschool.`object`.result
 
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.story.StoryCategoryListResult
+import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
+import java.util.ArrayList
 
 class StoryCategoryListBaseObject : BaseResult()
 {
-    private var data : StoryCategoryListResult? = null
+    private var data : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
 
-    fun getData() : StoryCategoryListResult
+    fun getData() : ArrayList<SeriesInformationResult>
     {
-        return data!!
+        return data
     }
 }

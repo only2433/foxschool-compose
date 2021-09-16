@@ -193,42 +193,42 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         {
             if(CommonUtils.getInstance(mContext).checkTablet)
             {
-                if(mContentsInformationResult.getServiceInformation()!!.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+                if(mContentsInformationResult.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
                 {
                     mAddItemTypeList.add(ContentItemType.EBOOK)
                 }
             }
         }
 
-        if(mContentsInformationResult.getServiceInformation()!!.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        if(mContentsInformationResult.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.QUIZ)
         }
 
-        if(mContentsInformationResult.getServiceInformation()!!.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        if(mContentsInformationResult.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.VOCABULARY)
         }
 
-        if(mContentsInformationResult.getServiceInformation()!!.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        if(mContentsInformationResult.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.FLASHCARD)
         }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(mContentsInformationResult.getServiceInformation()!!.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false && isDisableGame == false)
+            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_SUPPORTED_PAID) && isDisableGame == false)
             {
                 mAddItemTypeList.add(ContentItemType.STARWORDS)
             }
         }
 
-        if(mContentsInformationResult.getServiceInformation()!!.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        if(mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.TRANSLATE)
         }
 
-        if(mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType().equals(Common.SERVICE_NOT_SUPPORTED) === false)
+        if(mContentsInformationResult.getServiceInformation()?.getRecorderSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.RECORDER)
         }
