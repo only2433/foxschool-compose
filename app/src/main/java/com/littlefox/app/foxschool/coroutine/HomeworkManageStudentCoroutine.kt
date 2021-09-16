@@ -32,6 +32,7 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
         var response : String = ""
         synchronized(mSync)
         {
+            isRunning = true
             if(mSearchYear != "" && mSearchMonth != "")
             {
                 response = NetworkUtil.requestServerPair(mContext,
@@ -48,8 +49,6 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
             }
 
             result = Gson().fromJson(response, HomeworkManageCalenderBaseObject::class.java)
-            Log.i("status : ${result.getStatus()}")
-
             if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())

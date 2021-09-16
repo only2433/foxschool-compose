@@ -122,6 +122,9 @@ class Common
         const val COROUTINE_CODE_FORUM : String                         = "forum"
         const val COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT                = "homework_manage_student"
         const val COROUTINE_CODE_HOMEWORK_STATUS_LIST                   = "homework_status_list"
+        const val COROUTINE_CODE_STUDENT_COMMENT_REGISTER               = "student_comment_register"
+        const val COROUTINE_CODE_STUDENT_COMMENT_UPDATE                 = "student_comment_update"
+        const val COROUTINE_CODE_STUDENT_COMMENT_DELETE                 = "student_comment_delete"
 
 
         const val LOG_FILE : String = "littlefox_foxschool.txt"
