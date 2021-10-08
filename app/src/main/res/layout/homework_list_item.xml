@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="360">
+
+        <ImageView
+            android:id="@+id/_backgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="350"/>
+
+        <ImageView
+            android:id="@+id/_homeworkThumbnailImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="84"
+            app:scale_top="30"
+            app:scale_width="300"
+            app:scale_height="169"/>
+
+        <TextView
+            android:id="@+id/_homeworkContentNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            app:scale_left="426"
+            app:scale_top="0"
+            app:scale_width="577"
+            app:scale_height="228"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:id="@+id/_homeworkContentTypeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_story"
+            app:scale_left="127"
+            app:scale_top="268"
+            app:scale_width="40"
+            app:scale_height="37"/>
+
+        <ImageView
+            android:id="@+id/_homeworkTypeImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_homework_quiz_on"
+            app:scale_left="281"
+            app:scale_top="255"
+            app:scale_width="279"
+            app:scale_height="67"/>
+
+        <ImageView
+            android:id="@+id/_homeworkCheckImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_homework_check"
+            android:visibility="gone"
+            app:scale_left="523"
+            app:scale_top="233"
+            app:scale_width="52"
+            app:scale_height="41"/>
+
+        <TextView
+            android:id="@+id/_homeworkCompleteDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:visibility="gone"
+            android:gravity="center"
+            app:scale_left="620"
+            app:scale_top="228"
+            app:scale_width="380"
+            app:scale_height="123"
+            app:scale_textsize="36"/>
+
+        <TextView
+            android:id="@+id/_homeworkUnCompleteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_cccccc"
+            android:text="@string/message_homework_start"
+            android:visibility="gone"
+            android:gravity="center"
+            app:scale_left="581"
+            app:scale_top="228"
+            app:scale_width="465"
+            app:scale_height="123"
+            app:scale_textsize="36"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_d2d1d1"
+            app:scale_left="30"
+            app:scale_top="228"
+            app:scale_width="1017"
+            app:scale_height="1"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_d2d1d1"
+            app:scale_left="261"
+            app:scale_top="228"
+            app:scale_width="1"
+            app:scale_height="122"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_d2d1d1"
+            app:scale_left="581"
+            app:scale_top="228"
+            app:scale_width="1"
+            app:scale_height="122"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</LinearLayout>

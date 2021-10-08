@@ -28,7 +28,7 @@ class Common
         const val API_HOMEWORK_MANAGE_STUDENT : String  = DEVELOP_BASE_API + "homeworks/student"
         const val API_HOMEWORK_STATUS_LIST : String     = DEVELOP_BASE_API + "homeworks/student/list"
 
-        const val API_CONTENTS : String             = BASE_PUBLIC_API + "contents/"
+        const val API_CONTENTS : String             = DEVELOP_BASE_API + "contents/"
 
         const val API_STORY_DETAIL_LIST : String    = DEVELOP_BASE_API + "contents/story/series/"
         const val API_SONG_DETAIL_LIST : String     = DEVELOP_BASE_API + "contents/song/series/"
@@ -42,7 +42,8 @@ class Common
         const val API_SEARCH_LIST : String          = BASE_PUBLIC_API + "contents"
         const val API_BOOKSHELF : String            = BASE_PUBLIC_API + "bookshelves"
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
-        const val API_CLASS_RECORD_UPLOAD : String = "https://www.littlefox.co.kr/ko/class_service/appUpload"
+        const val API_RECORD_UPLOAD : String        = API_CONTENTS + "record"
+        const val API_RECORD_HISTORY : String       = API_CONTENTS + "record/history"
 
         const val BASE_WEBVIEW_URL : String                 = BASE_URL + "web/"
         const val DEVELOP_BASE_WEBVIEW_URL  : String        = DEVELOP_API_BASE_URL + "web/"
@@ -55,6 +56,7 @@ class Common
         const val URL_FAQ_DETAIL : String               = DEVELOP_BASE_WEBVIEW_URL + "forum/board/faq/"
         const val URL_TERMS : String                    = DEVELOP_BASE_WEBVIEW_URL + "forum/usernote"
         const val URL_PRIVACY : String                  = DEVELOP_BASE_WEBVIEW_URL + "forum/privacy"
+        const val URL_ORIGIN_TRANSLATE : String         = DEVELOP_BASE_WEBVIEW_URL + "contents/originaltranslate/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
@@ -92,6 +94,7 @@ class Common
         const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
         const val INTENT_RECORD_PLAYER_DATA : String                = "record_player_data"
+        const val INTENT_ORIGIN_TRANSLATE_ID : String               = "origin_translate"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -100,6 +103,7 @@ class Common
         const val COROUTINE_CODE_LOGIN : String                         = "login"
         const val COROUTINE_CODE_FILE_DOWNLOAD : String                 = "file_download"
         const val COROUTINE_CODE_CLASS_RECORD_FILE : String             = "record_file"
+        const val COROUTINE_CODE_CLASS_RECORD_HISTORY : String          = "record_history"
         const val COROUTINE_CODE_AUTH_CONTENT_PLAY : String             = "auth_content_play"
         const val COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD : String        = "bookshelf_contents_add"
         const val COROUTINE_CODE_STUDY_LOG_SAVE : String                = "study_log_save"
@@ -209,15 +213,15 @@ class Common
          *  - 학생 : 학습자 한마디 2, 선생님 한마디 3
          *  - 선생님 : 숙제리스트 2, 숙제검사 3, 숙제현황상세보기 4
          */
-        const val PAGE_HOMEWORK_CALENDAR : Int      = 0
-        const val PAGE_HOMEWORK_CONTENTS : Int      = 1
+        const val PAGE_HOMEWORK_CALENDAR : Int          = 0
+        const val PAGE_HOMEWORK_LIST : Int              = 1
 
-        const val PAGE_HOMEWORK_STUDENT_SAY : Int   = 2
-        const val PAGE_HOMEWORK_TEACHER_SAY : Int   = 3
+        const val PAGE_HOMEWORK_STUDENT_COMMENT : Int   = 2
+        const val PAGE_HOMEWORK_TEACHER_COMMENT : Int   = 3
 
-        const val PAGE_HOMEWORK_LIST : Int          = 2
-        const val PAGE_HOMEWORK_CHECK : Int         = 3
-        const val PAGE_HOMEWORK_STATUS_DETAIL : Int = 4
+        const val PAGE_HOMEWORK_LIST_DETAIL : Int       = 2
+        const val PAGE_HOMEWORK_CHECK : Int             = 3
+        const val PAGE_HOMEWORK_STATUS_DETAIL : Int     = 4
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 

@@ -47,9 +47,9 @@ class StudentCommentDeleteCoroutine : BaseCoroutine
         return result
     }
 
-    override fun setData(vararg `object` : Any?)
+    override fun setData(vararg objects : Any?)
     {
-        mHomeworkID = `object` as Int
+        mHomeworkID = objects[0] as Int
     }
 
 }

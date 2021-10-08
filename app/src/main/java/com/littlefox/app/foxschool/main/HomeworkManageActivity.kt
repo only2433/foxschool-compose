@@ -33,6 +33,7 @@ import java.lang.reflect.Field
 
 /**
  * 숙제관리 화면
+ * @author 김태은
  */
 class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkContract.View
 {
@@ -161,19 +162,12 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
      */
     override fun setCurrentViewPage(position : Int)
     {
-        if (position == Common.PAGE_MY_INFO)
-        {
-            _HomeworkViewPager.currentItem = Common.PAGE_MY_INFO
-        }
-        else
-        {
-            _HomeworkViewPager.currentItem = 1
-        }
+        _HomeworkViewPager.currentItem = position
         setTitleView(position)
     }
 
     /**
-     * 타이틀 영역 세팅
+     * 타이틀 영역 세팅 (화면명, 버튼)
      * 숙제관리 : X버튼 표시
      * 그 외 : <-버튼 표시
      */
@@ -185,7 +179,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
             when(position)
             {
                 Common.PAGE_HOMEWORK_CALENDAR, Common.PAGE_HOMEWORK_LIST -> _TitleText.text = resources.getString(R.string.text_homework_manage)
-                Common.PAGE_HOMEWORK_CONTENTS -> _TitleText.text = resources.getString(R.string.text_homework_contents)
+                Common.PAGE_HOMEWORK_LIST_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_contents)
                 Common.PAGE_HOMEWORK_CHECK -> _TitleText.text = resources.getString(R.string.text_homework_check)
                 Common.PAGE_HOMEWORK_STATUS_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_status_detail)
             }
@@ -196,9 +190,9 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
             when(position)
             {
                 Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
-                Common.PAGE_HOMEWORK_CONTENTS -> _TitleText.text = resources.getString(R.string.text_homework_status)
-                Common.PAGE_HOMEWORK_STUDENT_SAY -> _TitleText.text = resources.getString(R.string.text_homework_student_say)
-                Common.PAGE_HOMEWORK_TEACHER_SAY -> _TitleText.text = resources.getString(R.string.text_homework_teacher_say)
+                Common.PAGE_HOMEWORK_LIST -> _TitleText.text = resources.getString(R.string.text_homework_status)
+                Common.PAGE_HOMEWORK_STUDENT_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_student_comment)
+                Common.PAGE_HOMEWORK_TEACHER_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
             }
         }
 
@@ -257,7 +251,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         }
         else
         {
-            _HomeworkViewPager.currentItem = Common.PAGE_HOMEWORK_CALENDAR
+            mHomeworkManagePresenter.onClickBackButton()
         }
     }
 
@@ -279,6 +273,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         override fun onPageSelected(position : Int)
         {
             Log.f("position : $position")
+            mHomeworkManagePresenter.onPageChanged(position)
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

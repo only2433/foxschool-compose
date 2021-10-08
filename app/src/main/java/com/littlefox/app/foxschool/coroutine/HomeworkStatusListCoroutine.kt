@@ -27,7 +27,7 @@ class HomeworkStatusListCoroutine : BaseCoroutine
             isRunning = true
             var response = NetworkUtil.requestServerPair(
                 mContext,
-                "${Common.API_HOMEWORK_STATUS_LIST}${File.pathSeparator}${mHomeworkID}",
+                "${Common.API_HOMEWORK_STATUS_LIST}${File.separator}${mHomeworkID}",
                 null,
                 NetworkUtil.GET_METHOD
             )
@@ -42,9 +42,9 @@ class HomeworkStatusListCoroutine : BaseCoroutine
         return result
     }
 
-    override fun setData(vararg `object` : Any?)
+    override fun setData(vararg objects : Any?)
     {
-        mHomeworkID = `object` as String
+        mHomeworkID = objects[0] as String
     }
 
 }

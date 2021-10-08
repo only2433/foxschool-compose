@@ -14,5 +14,6 @@ class HomeworkContract
     interface Presenter : BaseContract.Presenter
     {
         fun onClickBackButton()
+        fun onPageChanged(position : Int)
     }
 }

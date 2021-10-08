@@ -1,10 +1,14 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
+import com.littlefox.app.foxschool.enumerate.ContentType
+import com.littlefox.app.foxschool.enumerate.HomeworkType
+
 class HomeworkListItemData
 {
-    private var is_complete : String        = ""
-    private var complete_date : String      = ""
+    private var is_compleate : String        = ""
+    private var compleate_date : String      = ""
     private var content_id : String         = ""
+    private var content_type : String       = ""
     private var thumbnail_url : String      = ""
     private var hw_type : String            = ""
     private var title : String              = ""
@@ -12,7 +16,7 @@ class HomeworkListItemData
     val isComplete : Boolean
     get()
     {
-        if(is_complete.equals("Y"))
+        if(is_compleate.equals("Y"))
             return true
 
         return false
@@ -20,7 +24,7 @@ class HomeworkListItemData
 
     fun getCompleteDate() : String
     {
-        return complete_date
+        return compleate_date
     }
 
     fun getContentID() : String
@@ -28,14 +32,34 @@ class HomeworkListItemData
         return content_id
     }
 
+    fun getContentType() : ContentType
+    {
+        when (content_type)
+        {
+            "S" -> return ContentType.STORY
+            "M" -> return ContentType.SONG
+            "G" -> return ContentType.GAME
+            else -> return ContentType.STORY
+        }
+    }
+
     fun getThumbnailUrl() : String
     {
         return thumbnail_url
     }
 
-    fun getHomeworkType() : String
+    fun getHomeworkType() : HomeworkType
     {
-        return hw_type
+        when (hw_type)
+        {
+            "A" -> return HomeworkType.ANIMATION
+            "E" -> return HomeworkType.EBOOK
+            "Q" -> return HomeworkType.QUIZ
+            "C" -> return HomeworkType.CROSSWORD
+            "S" -> return HomeworkType.STARWORDS
+            "R" -> return HomeworkType.RECORDER
+            else -> return HomeworkType.ANIMATION
+        }
     }
 
     fun getTitle() : String

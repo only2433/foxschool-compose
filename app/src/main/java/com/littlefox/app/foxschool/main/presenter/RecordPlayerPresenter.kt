@@ -7,8 +7,11 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Message
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.record.RecordInfoData
+import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.Common
@@ -19,12 +22,13 @@ import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
-import com.littlefox.app.foxschool.enumerate.DialogButtonType
-import com.littlefox.app.foxschool.enumerate.PlayerStatus
-import com.littlefox.app.foxschool.enumerate.RecorderStatus
+import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.RecordPlayerContract
+import com.littlefox.app.foxschool.management.IntentManagementFactory
+import com.littlefox.app.foxschool.record.RecordFileUploadHelper
 import com.littlefox.app.foxschool.record.VoiceRecorderHelper
 import com.littlefox.app.foxschool.record.listener.VoiceRecordEventListener
+import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.common.FileUtils
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -88,7 +92,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private var isExitToPushHome = false
 
-    // TODO 통신 변수 추가
+    // 녹음 파일 업로드
+    private var mRecordFileUploadHelper : RecordFileUploadHelper? = null
 
     internal inner class UITimerTask : TimerTask()
     {
@@ -205,6 +210,16 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             MESSAGE_PLAY_TIME_CHECK ->
             {
                 setAudioTimerText()
+            }
+            MESSAGE_RECORD_UPLOAD_SUCCESS ->
+            {
+                showFileUploadCompleteDialog()
+                mRecordPlayerContractView.setUploadButtonEnable(false)
+            }
+            MESSAGE_RECORD_UPLOAD_FAIL ->
+            {
+                mRecordPlayerContractView.showErrorMessage(mContext.resources.getString(R.string.message_record_upload_fail));
+                mRecordPlayerContractView.setUploadButtonEnable(true)
             }
         }
     }
@@ -441,7 +456,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         enableTimer(false)
         mMainHandler.removeMessages(MESSAGE_RECORD_TIME_CHECK)
         mRecordingPathList.clear()
-        FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_STOP)
         mTime = 0
@@ -680,12 +694,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     override fun onClickRecordUpload()
     {
         Log.f("Recording Selected : UPLOAD || RecorderStatus : $mRecorderStatus")
-        // TODO 녹음 업로드
-        // 화면에 로딩다이얼로그 표시하고 통신 요청
-        // 통신 리스너 성공 시 view 업로드 완료 함수 호출
-        // 업로드 완료 알림 다이얼로그 표시
-        showFileUploadCompleteDialog()
-        mRecordPlayerContractView.setUploadButtonEnable(false)
+        mRecordPlayerContractView.showLoading()
+        requestRecordFileUpload()
     }
 
     /**
@@ -700,12 +710,32 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
+    private fun startRecordHistoryActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.RECORD_HISTORY)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
     /**
      * 녹음파일 업로드
      */
     private fun requestRecordFileUpload()
     {
-        // TODO 김태은 녹음파일 업로드 통신 요청 기능 추가
+        val data = RecordInfoData(
+            filePath = PATH_MP3_ROOT,
+            fileName = "$mFileName.mp3",
+            contentsID = mRecordInformation.getID(),
+            recordTime = mTime.toInt())
+
+        if (mRecordFileUploadHelper == null)
+        {
+            mRecordFileUploadHelper = RecordFileUploadHelper(mContext)
+            mRecordFileUploadHelper!!.setAsyncListener(mAsyncListener)
+        }
+        mRecordFileUploadHelper!!.setData(data).build()
     }
 
     /**
@@ -817,10 +847,64 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 녹음 기록 화면으로 이동하기
-                        // TODO 녹음 기록 화면 이동
+                        startRecordHistoryActivity()
                     }
                 }
             }
         }
+    }
+
+    private val mAsyncListener : AsyncListener = object : AsyncListener
+    {
+        override fun onRunningStart(code : String?) { }
+
+        override fun onRunningEnd(code : String?, mObject : Any?)
+        {
+            mRecordPlayerContractView.hideLoading()
+
+            val result : BaseResult = mObject as BaseResult
+            if (result.getStatus() == BaseResult.SUCCESS_CODE_OK)
+            {
+                if (code.equals(Common.COROUTINE_CODE_CLASS_RECORD_FILE))
+                {
+                    Log.f("Record File Upload Complete")
+                    FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_RECORD_UPLOAD_SUCCESS, Common.DURATION_SHORT)
+                }
+            }
+            else
+            {
+                if (result.isDuplicateLogin)
+                {
+                    // 중복 로그인 시 재시작
+                    (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                    IntentManagementFactory.getInstance().initAutoIntroSequence()
+                }
+                else if (result.isAuthenticationBroken)
+                {
+                    Log.f("== isAuthenticationBroken ==")
+                    (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                    IntentManagementFactory.getInstance().initScene()
+                }
+                else
+                {
+                    if (code.equals(Common.COROUTINE_CODE_CLASS_RECORD_FILE))
+                    {
+                        Log.f("Record File Upload Fail")
+                        mMainHandler.sendEmptyMessage(MESSAGE_RECORD_UPLOAD_FAIL)
+                    }
+                }
+            }
+        }
+
+        override fun onRunningCanceled(code : String?) { }
+
+        override fun onRunningProgress(code : String?, progress : Int?) { }
+
+        override fun onRunningAdvanceInformation(code : String?, `object` : Any?) { }
+
+        override fun onErrorListener(code : String?, message : String?) { }
     }
 }

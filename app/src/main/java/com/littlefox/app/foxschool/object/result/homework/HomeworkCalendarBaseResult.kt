@@ -16,7 +16,7 @@ class HomeworkCalendarBaseResult : BaseResult()
     private val next_month : String     = ""
     private val month_start : String    = ""
     private val month_end : String      = ""
-    private val homeworkCalendars : ArrayList<HomeworkCalendarItemData> = ArrayList()
+    private val homework : ArrayList<HomeworkCalendarItemData> = ArrayList()
 
     fun getToday() : String
     {
@@ -83,6 +83,6 @@ class HomeworkCalendarBaseResult : BaseResult()
 
     fun getHomeworkDataList() : ArrayList<HomeworkCalendarItemData>
     {
-        return homeworkCalendars
+        return homework
     }
 }

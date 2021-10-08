@@ -17,6 +17,7 @@ class ContentsBaseResult  : Parcelable
     private var isSelected = false
     private var isOptionDisable = false
 
+    constructor() {}
 
     protected constructor(`in` : Parcel)
     {
@@ -94,6 +95,17 @@ class ContentsBaseResult  : Parcelable
     fun getUserServiceSupportedInformation() : ServiceSupportedTypeResult?
     {
         return user_service_info
+    }
+
+    fun setID(id : String)
+    {
+        this.id = id
+    }
+
+    fun setTitle(pair : Pair<String, String>)
+    {
+        this.name = pair.first
+        this.sub_name = pair.second
     }
 
     fun setIndex(index : Int)

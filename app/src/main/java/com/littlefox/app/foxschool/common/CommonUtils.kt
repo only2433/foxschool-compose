@@ -163,6 +163,19 @@ class CommonUtils
         return SimpleDateFormat("yyyy.MM.dd").format(calendar.time)
     }
 
+    /**
+     * 숙제 날짜 변환
+     * - 형식 : MM.dd
+     * - MM과 dd가 0으로 시작하는 경우 앞의 0 제거
+     * (Ex) 09.05 -> 9.5
+     */
+    fun getHomeworkDateText(date : String) : String
+    {
+        val fullDate = SimpleDateFormat("yyyy-MM-dd").parse(date)
+        val month = SimpleDateFormat("MM").format(fullDate).toInt()
+        val day = SimpleDateFormat("dd").format(fullDate).toInt()
+        return "${month}.${day}"
+    }
 
     fun showDeviceInfo()
     {
@@ -2137,6 +2150,22 @@ class CommonUtils
         return result
     }
 
+    /**
+     * 한 문장으로 만들어진 타이틀을 분리한다.
+     */
+    fun getSubStringTitleName(fullName : String) : Pair<String, String>
+    {
+        if (fullName.indexOf(":") > 0)
+        {
+            val name = fullName.substring(0, fullName.indexOf(":"))
+            val subName = fullName.substring(fullName.indexOf(":") + 2, fullName.length)
+            return Pair<String, String>(name, subName)
+        }
+        else
+        {
+            return Pair(fullName, "")
+        }
+    }
 
     /**
      * 총 플레이타임의 80퍼센트를 봐야 학습 기록을 저장하기위해 총시간에서 80퍼센트를 계산
@@ -2449,6 +2478,63 @@ class CommonUtils
             "E1" -> return sContext.resources.getDrawable(R.drawable.icon_stamp_e1)
             "E2" -> return sContext.resources.getDrawable(R.drawable.icon_stamp_e2)
             else -> return null
+        }
+    }
+
+    /**
+     * 숙제 선생님 평가 문구 가져오기
+     */
+    fun getHomeworkEvalText(eval : String) : String
+    {
+        when(eval)
+        {
+            "E0" -> return sContext.resources.getString(R.string.text_homework_excellent)
+            "E1" -> return sContext.resources.getString(R.string.text_homework_good)
+            "E2" -> return sContext.resources.getString(R.string.text_homework_try_again)
+            else -> return ""
+        }
+    }
+
+    /**
+     * 숙제 종류에 따른 bar 이미지
+     * TODO 이후에 선생님도 사용할 수 있음.
+     */
+    fun getHomeworkTypeImage(type : HomeworkType) : Drawable
+    {
+        var filename = ""
+        when(type)
+        {
+            HomeworkType.ANIMATION -> filename = "icon_homework_animation"
+            HomeworkType.EBOOK -> filename = "icon_homework_ebook"
+            HomeworkType.QUIZ -> filename = "icon_homework_quiz"
+            HomeworkType.CROSSWORD -> filename = "icon_homework_crossword"
+            HomeworkType.STARWORDS -> filename = "icon_homework_starwords"
+            HomeworkType.RECORDER -> filename = "icon_homework_recorder"
+        }
+
+        filename += "_on"
+
+        val id = sContext.resources.getIdentifier(filename, "drawable", sContext.packageName) // 아이디 가져오기
+        var drawable : Drawable? = null
+        try {
+            drawable = sContext.resources.getDrawable(id)
+        } catch(e : Exception) {
+            // 파일이 없는경우 디폴트 : 애니메이션 ON
+            if (drawable == null) sContext.resources.getDrawable(R.drawable.icon_homework_animation_on)
+        }
+        return drawable!!
+    }
+
+    /**
+     * 컨텐츠 종류에 따른 이미지
+     */
+    fun getContentTypeImage(type : ContentType) : Drawable
+    {
+        when (type)
+        {
+            ContentType.STORY -> return sContext.resources.getDrawable(R.drawable.icon_story)
+            ContentType.SONG -> return sContext.resources.getDrawable(R.drawable.icon_song)
+            else -> return sContext.resources.getDrawable(R.drawable.icon_story)
         }
     }
 }

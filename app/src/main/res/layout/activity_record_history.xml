@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaseLayout"
+            layout="@layout/topbar_common_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_recordContentsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1080"
+            app:scale_base_height="168">
+
+            <TextView
+                android:id="@+id/_recordHistoryInfoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/message_record_history"
+                android:textColor="@color/color_666666"
+                app:scale_left="80"
+                app:scale_top="0"
+                app:scale_width="920"
+                app:scale_height="168"
+                app:scale_textsize="38"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/_recordHistoryListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:id="@+id/_recordHistoryEmptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.ssomai.android.scalablelayout.ScalableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                app:scale_base_width="1080"
+                app:scale_base_height="168">
+
+                <TextView
+                    android:id="@+id/_recordHistoryEmptyText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/message_warning_record_empty"
+                    android:textColor="@color/color_444444"
+                    app:scale_left="0"
+                    app:scale_top="0"
+                    app:scale_width="1080"
+                    app:scale_height="168"
+                    app:scale_textsize="40"/>
+
+            </com.ssomai.android.scalablelayout.ScalableLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

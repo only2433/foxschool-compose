@@ -1,22 +1,18 @@
 package com.littlefox.app.foxschool.`object`.data.record
 
-class RecordInfoData(filePath : String, fileName : String, classID : Int, contentsID : String, itemConnt : Int, indexOfDay : Int)
+class RecordInfoData(filePath : String, fileName : String, contentsID : String, recordTime : Int)
 {
     private val mFilePath : String
     private val mFileName : String
-    private val mClassID : Int;
     private val mContentsID : String
-    private val mItemCount : Int
-    private val mIndexOfDay : Int
+    private val mRecordTime : Int
 
     init
     {
         mFilePath = filePath
         mFileName = fileName
-        mClassID = classID
         mContentsID = contentsID
-        mItemCount = itemConnt
-        mIndexOfDay = indexOfDay
+        mRecordTime = recordTime
     }
 
     fun getFilePath() : String
@@ -29,23 +25,13 @@ class RecordInfoData(filePath : String, fileName : String, classID : Int, conten
         return mFileName;
     }
 
-    fun getClassID() : Int
-    {
-        return mClassID;
-    }
-
     fun getContentsID() : String
     {
         return mContentsID;
     }
 
-    fun getItemCount() : Int
+    fun getRecordTime() : Int
     {
-        return mItemCount;
-    }
-
-    fun getIndexOfDay() : Int
-    {
-        return mIndexOfDay;
+        return mRecordTime
     }
 }

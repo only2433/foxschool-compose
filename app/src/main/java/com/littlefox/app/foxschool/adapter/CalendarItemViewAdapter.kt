@@ -12,6 +12,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
 import com.littlefox.app.foxschool.adapter.listener.CalendarItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -22,28 +23,40 @@ import java.util.ArrayList
 
 /**
  * 숙제관리 달력 아이템 Adapter (학생용)
+ * @author 김태은
  */
 class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.ViewHolder?>
 {
     private val mContext : Context
-    private lateinit var mItemList : ArrayList<CalendarData>
+    private lateinit var mItemList : ArrayList<CalendarData>                    // 달력 아이템 리스트
+    private lateinit var mHomeworkList : ArrayList<HomeworkCalendarItemData>    // 숙제 데이터 리스트
     private var mCalendarItemListener : CalendarItemListener? = null
 
     private lateinit var mLayout : LinearLayout
-    private var itemWidth = 0
-    private var itemHeight = 0
+    private var itemWidth : Int     = 0
+    private var itemHeight : Int    = 0
 
-    constructor(context: Context, list : ArrayList<CalendarData>, layout : LinearLayout)
+    constructor(context: Context)
     {
         mContext = context
-        mItemList = list
-
-        mLayout = layout // 레이아웃 셀 높이 동일하게 고정시키기 위해 사용
     }
 
-    fun setItemList(list : ArrayList<CalendarData>)
+    // 레이아웃 셀 크기 동일하게 고정시키기 위해 사용
+    fun setParentLayout(layout : LinearLayout)
+    {
+        mLayout = layout
+    }
+
+    fun setItemList(list : ArrayList<CalendarData>) : CalendarItemViewAdapter
     {
         mItemList = list
+        return this
+    }
+
+    fun setHomeworkList(list : ArrayList<HomeworkCalendarItemData>) : CalendarItemViewAdapter
+    {
+        mHomeworkList = list
+        return this
     }
 
     override fun getItemCount() : Int
@@ -51,9 +64,10 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         return mItemList.size
     }
 
-    fun setCalendarItemListener(calendarItemListener : CalendarItemListener)
+    fun setCalendarItemListener(calendarItemListener : CalendarItemListener) : CalendarItemViewAdapter
     {
         mCalendarItemListener = calendarItemListener
+        return this
     }
 
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder
@@ -119,14 +133,14 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
 
         if (item.hasHomework()) // 숙제 있을 때
         {
-            val homework = item.getHomework()
+            val homework = mHomeworkList[item.getHomeworkPosition()]
 
             // 숙제 있을 경우 색 바 이미지 세팅
             holder._ColorBarImage.visibility = View.VISIBLE
-            holder._ColorBarImage.background = CommonUtils.getInstance(mContext).getCalendarBarImage(homework.getColor(), homework.getImageType())
+            holder._ColorBarImage.background = CommonUtils.getInstance(mContext).getCalendarBarImage(homework.getColor(), item.getImageType())
 
             // 검사결과 도장, 숙제 진행상황 텍스트 : 숙제가 하루짜리 이거나 첫번째 날 일 때에만 표시
-            when(homework.getImageType())
+            when(item.getImageType())
             {
                 CalendarImageType.ONE, CalendarImageType.START ->
                 {

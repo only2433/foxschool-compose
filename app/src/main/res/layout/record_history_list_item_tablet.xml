@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1920"
+        app:scale_base_height="173">
+
+        <ImageView
+            android:id="@+id/_backgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list"
+            app:scale_left="46"
+            app:scale_top="0"
+            app:scale_width="1828"
+            app:scale_height="163"/>
+
+        <ImageView
+            android:id="@+id/_recordThumbnailImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="87"
+            app:scale_top="20"
+            app:scale_width="218"
+            app:scale_height="122"/>
+
+        <TextView
+            android:id="@+id/_recordContentNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            app:scale_left="335"
+            app:scale_top="0"
+            app:scale_width="660"
+            app:scale_height="163"
+            app:scale_textsize="30"/>
+
+        <ImageView
+            android:id="@+id/_recordPlayButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_recorder_play_on"
+            app:scale_left="1110"
+            app:scale_top="34"
+            app:scale_width="230"
+            app:scale_height="55"/>
+
+        <TextView
+            android:id="@+id/_recordRemainDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            app:scale_left="1110"
+            app:scale_top="89"
+            app:scale_width="230"
+            app:scale_height="55"
+            app:scale_textsize="25"/>
+
+        <TextView
+            android:id="@+id/_recordDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_444444"
+            android:gravity="center"
+            app:scale_left="1438"
+            app:scale_top="0"
+            app:scale_width="435"
+            app:scale_height="163"
+            app:scale_textsize="25"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_d2d1d1"
+            app:scale_left="1020"
+            app:scale_top="0"
+            app:scale_width="1"
+            app:scale_height="163"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_d2d1d1"
+            app:scale_left="1437"
+            app:scale_top="0"
+            app:scale_width="1"
+            app:scale_height="163"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+</LinearLayout>

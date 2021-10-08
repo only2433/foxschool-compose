@@ -86,7 +86,12 @@ class AudioPlayDialog : Dialog
     private var mMediaPlayer : MediaPlayer? = null
     private var mAudioAttributes : AudioAttributes? = null
     private var mUIUpdateTimer : Timer? = null
-    constructor(context : Context) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
+
+    private var mTitle = ""
+    private var mThumbnailUrl = ""
+    private var mAudioPath = ""
+
+    constructor(context : Context, title : String, thumbnailUrl : String, audioPath : String) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
     {
         if(CommonUtils.getInstance(context).checkTablet)
         {
@@ -98,6 +103,10 @@ class AudioPlayDialog : Dialog
         }
         ButterKnife.bind(this)
         mContext = context
+
+        mTitle = title
+        mThumbnailUrl = thumbnailUrl
+        mAudioPath = audioPath
     }
 
     protected override fun onCreate(savedInstanceState : Bundle?)
@@ -119,9 +128,10 @@ class AudioPlayDialog : Dialog
     private fun initView()
     {
         Glide.with(mContext)
-            .load(TEST_THUMB_URL)
+            .load(mThumbnailUrl)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(_ThumbnailImage)
+        _TitleText.setText(mTitle)
     }
 
     private fun initFont()
@@ -162,7 +172,7 @@ class AudioPlayDialog : Dialog
             {
                 mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             }
-            mMediaPlayer?.setDataSource(TEST_AUDIO_URL)
+            mMediaPlayer?.setDataSource(mAudioPath)
             mMediaPlayer?.prepareAsync()
             mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
             {

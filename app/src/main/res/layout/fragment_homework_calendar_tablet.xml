@@ -18,6 +18,7 @@
             android:id="@+id/_mainBackgroundView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
             app:scale_base_width="1920"
             app:scale_base_height="1066">
 

@@ -36,7 +36,7 @@ class HomeworkManageStudentCoroutine : BaseCoroutine
             if(mSearchYear != "" && mSearchMonth != "")
             {
                 response = NetworkUtil.requestServerPair(mContext,
-                    "${Common.API_HOMEWORK_MANAGE_STUDENT}${File.pathSeparator}${mSearchYear}${File.pathSeparator}${mSearchMonth}",
+                    "${Common.API_HOMEWORK_MANAGE_STUDENT}${File.separator}${mSearchYear}${File.separator}${mSearchMonth}",
                     null,
                     NetworkUtil.GET_METHOD)!!
             }

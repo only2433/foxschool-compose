@@ -273,6 +273,8 @@ class IntentManagementFactory
 
             ActivityMode.HOMEWORK_MANAGE -> intent = Intent(mContext, HomeworkManageActivity::class.java)
 
+            ActivityMode.RECORD_HISTORY -> intent = Intent(mContext, RecordHistoryActivity::class.java)
+
             ActivityMode.WEBVIEW_LEARNING_LOG -> intent = Intent(mContext, WebviewLearningLogActivity::class.java)
 
             ActivityMode.WEBVIEW_POLICY_PRIVACY -> intent = Intent(mContext, WebviewPolicyPrivacyActivity::class.java)
@@ -285,6 +287,15 @@ class IntentManagementFactory
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_GAME_STARWORDS_ID, `object` as String?)
+                }
+            }
+
+            ActivityMode.WEBVIEW_ORIGIN_TRANSLATE ->
+            {
+                intent = Intent(mContext, WebviewOriginTranslateActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_ORIGIN_TRANSLATE_ID, `object` as String?)
                 }
             }
 

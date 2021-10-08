@@ -17,9 +17,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
-import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
-import com.littlefox.app.foxschool.adapter.listener.CalendarItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
@@ -30,6 +27,7 @@ import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
  * 숙제관리 달력 화면 (학생용)
+ * @author 김태은
  */
 class HomeworkCalendarFragment : Fragment()
 {
@@ -86,9 +84,6 @@ class HomeworkCalendarFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-
-    private var mCalendarItemList : ArrayList<CalendarData>? = ArrayList<CalendarData>()
-    private lateinit var mCalendarItemViewAdapter : CalendarItemViewAdapter
 
     private lateinit var mHomeworkCalendarFragmentObserver : HomeworkCalendarFragmentObserver
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
@@ -176,7 +171,6 @@ class HomeworkCalendarFragment : Fragment()
                 _MainBackgroundView.moveChildView(_CalendarListLayout, 0f, 200f, 1920f, 852f)
             }
         }
-        initRecyclerView()
     }
 
     private fun initFont()
@@ -190,17 +184,6 @@ class HomeworkCalendarFragment : Fragment()
         _TextFriday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _TextSaturday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
     }
-
-    private fun initRecyclerView()
-    {
-        val gridLayoutManager = GridLayoutManager(mContext, 7)
-        _CalendarView.layoutManager = gridLayoutManager
-        mCalendarItemViewAdapter = CalendarItemViewAdapter(mContext, mCalendarItemList!!, _CalendarListLayout)
-        mCalendarItemViewAdapter.setCalendarItemListener(mCalendarItemListener)
-        _CalendarView.adapter = mCalendarItemViewAdapter
-        _ScrollView.scrollTo(0, 0)
-//        _ScrollView.fullScroll(ScrollView.FOCUS_UP)
-    }
     /** ========== Init ========== */
 
     private fun setupObserverViewModel()
@@ -209,11 +192,12 @@ class HomeworkCalendarFragment : Fragment()
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
         // 달력 아이템
-        mHomeworkManagePresenterObserver.setCalendarData.observe((mContext as AppCompatActivity), Observer {calendarItems ->
-            mCalendarItemList = calendarItems
-            mCalendarItemViewAdapter.setItemList(mCalendarItemList!!)
-            mCalendarItemViewAdapter.notifyDataSetChanged()
-            _ScrollView.fullScroll(ScrollView.FOCUS_UP)
+        mHomeworkManagePresenterObserver.setCalendarListView.observe((mContext as AppCompatActivity), Observer {adapter ->
+            _ScrollView.scrollTo(0, 0)
+            val gridLayoutManager = GridLayoutManager(mContext, 7)
+            _CalendarView.layoutManager = gridLayoutManager
+            adapter.setParentLayout(_CalendarListLayout)
+            _CalendarView.adapter = adapter
             mHomeworkCalendarFragmentObserver.onCompletedListSet(true)
         })
 
@@ -232,6 +216,11 @@ class HomeworkCalendarFragment : Fragment()
         mHomeworkManagePresenterObserver.setCalendarNextButton.observe((mContext as AppCompatActivity), Observer {isEnable ->
             if (isEnable) showNextButton()
             else hideNexButton()
+        })
+
+        // 달력 최상단으로 이동
+        mHomeworkManagePresenterObserver.setScrollTop.observe((mContext as AppCompatActivity), {
+            _ScrollView.scrollTo(0, 0)
         })
     }
 
@@ -279,19 +268,6 @@ class HomeworkCalendarFragment : Fragment()
         {
             R.id._beforeButtonRect -> mHomeworkCalendarFragmentObserver.onClickCalendarBefore()
             R.id._afterButtonRect -> mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
-        }
-    }
-
-    private val mCalendarItemListener : CalendarItemListener = object : CalendarItemListener
-    {
-        override fun onClickItem(position : Int)
-        {
-            mCalendarItemList?.let { list ->
-                if (list[position].hasHomework())
-                {
-                    mHomeworkCalendarFragmentObserver.onClickCalendarItem(list[position].getHomework())
-                }
-            }
         }
     }
 }

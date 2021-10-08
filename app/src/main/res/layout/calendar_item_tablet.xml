@@ -44,9 +44,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/icon_calendar_gray_center"
             android:visibility="gone"
-            app:scale_left="0"
+            app:scale_left="-1"
             app:scale_top="92"
-            app:scale_width="274"
+            app:scale_width="276"
             app:scale_height="40"/>
 
         <ImageView

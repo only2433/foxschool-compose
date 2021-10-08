@@ -111,11 +111,9 @@ class RecordFileUploadHelper(private val mContext : Context)
         {
             Log.f("파일 있음")
             requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("application/zip"), audioFile))
-                .addFormDataPart("file_count", java.lang.String.valueOf(mRecordInfoData.getItemCount()))
-                .addFormDataPart("class_id", java.lang.String.valueOf(mRecordInfoData.getClassID()))
-                .addFormDataPart("fc_id", mRecordInfoData.getContentsID()).addFormDataPart("fu_id", loginInformationResult.getUserInformation().getFoxUserID())
-                .addFormDataPart("index_of_day", java.lang.String.valueOf(mRecordInfoData.getIndexOfDay()))
+                .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("audio/mpeg"), audioFile))
+                .addFormDataPart("content_id", java.lang.String.valueOf(mRecordInfoData.getContentsID()))
+                .addFormDataPart("record_time", mRecordInfoData.getRecordTime().toString())
                 .build()
             val requestBodyData : RequestBody = ProgressHelper.withProgress(requestBody, object : ProgressListener()
             {
@@ -127,22 +125,11 @@ class RecordFileUploadHelper(private val mContext : Context)
                 }
             })
 
-            if(Feature.IS_FREE_USER === false)
-            {
-                request = Request.Builder()
-                    .addHeader("api-user-agent", userAgent)
-                    .addHeader("Authorization", token)
-                    .url(Common.API_CLASS_RECORD_UPLOAD)
-                    .post(requestBodyData).build()
-            }
-            else
-            {
-                request = Request.Builder()
-                    .addHeader("api-user-agent", userAgent)
-                    .url(Common.API_CLASS_RECORD_UPLOAD)
-                    .post(requestBody)
-                    .build()
-            }
+            request = Request.Builder()
+                .addHeader("api-user-agent", userAgent)
+                .addHeader("Authorization", token)
+                .url(Common.API_RECORD_UPLOAD)
+                .post(requestBodyData).build()
             return request
         }
         else

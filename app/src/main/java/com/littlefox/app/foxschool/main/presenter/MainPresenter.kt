@@ -85,7 +85,8 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 120
         private const val MESSAGE_START_FLASHCARD : Int                 = 121
         private const val MESSAGE_START_HOMEWORK : Int                  = 122
-        private const val MESSAGE_APP_SERVER_ERROR : Int                = 123
+        private const val MESSAGE_START_RECORD_HISTORY : Int            = 123
+        private const val MESSAGE_APP_SERVER_ERROR : Int                = 124
 
         private const val REQUEST_CODE_GO_LOGIN : Int                   = 1001
         private const val REQUEST_CODE_STUDY_GUIDE : Int                = 1002
@@ -340,6 +341,7 @@ class MainPresenter : MainContract.Presenter
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
             MESSAGE_START_HOMEWORK -> startHomeworkManageActivity()
             MESSAGE_START_FOXSCHOOL_NEWS -> startFoxSchoolNewsActivity()
+            MESSAGE_START_RECORD_HISTORY -> startRecordHistoryActivity()
             MESSAGE_APP_SERVER_ERROR ->
             {
                 Log.f("== Server Error  ==")
@@ -416,6 +418,12 @@ class MainPresenter : MainContract.Presenter
     {
         Log.f("")
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LEARNING_LOG, Common.DURATION_SHORT)
+    }
+
+    override fun onClickRecordHistory()
+    {
+        Log.f("")
+        mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_HISTORY, Common.DURATION_SHORT)
     }
 
     override fun onClickMenuHomeworkManage()
@@ -548,6 +556,15 @@ class MainPresenter : MainContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startRecordHistoryActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.RECORD_HISTORY)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

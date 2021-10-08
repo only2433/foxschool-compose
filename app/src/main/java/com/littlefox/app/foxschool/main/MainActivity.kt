@@ -363,7 +363,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     @Optional
     @OnClick(
-        R.id._userInfoButtonText, R.id._leaningLogMenuButton, R.id._menuLogoutLayout, R.id._homeworkManageMenuButton,
+        R.id._userInfoButtonText, R.id._leaningLogMenuButton, R.id._menuLogoutLayout, R.id._homeworkManageMenuButton, R.id._recordLogMenuButton,
         R.id._topMenuSetting, R.id._topMenuSearch
     )
     fun onClickView(view : View)
@@ -380,15 +380,20 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuLearningLog()
             }
-            R.id._menuLogoutLayout ->
+            R.id._recordLogMenuButton ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuLogout()
+                mMainPresenter.onClickRecordHistory()
             }
             R.id._homeworkManageMenuButton ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                 mMainPresenter.onClickMenuHomeworkManage()
+            }
+            R.id._menuLogoutLayout ->
+            {
+                _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                mMainPresenter.onClickMenuLogout()
             }
             R.id._topMenuSetting ->
             {

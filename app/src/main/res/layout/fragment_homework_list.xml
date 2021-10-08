@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <!-- 날짜 선택 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_datePickLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="167">
+
+        <ImageView
+            android:id="@+id/_beforeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_calendar_left"
+            android:visibility="gone"
+            app:scale_left="120"
+            app:scale_top="60"
+            app:scale_width="33"
+            app:scale_height="57"/>
+
+        <ImageView
+            android:id="@+id/_beforeButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:scale_left="110"
+            app:scale_top="50"
+            app:scale_width="60"
+            app:scale_height="80"/>
+
+        <TextView
+            android:id="@+id/_homeworkDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/color_000000"
+            app:scale_left="390"
+            app:scale_top="0"
+            app:scale_width="300"
+            app:scale_height="167"
+            app:scale_textsize="40" />
+
+        <ImageView
+            android:id="@+id/_afterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_calendar_right"
+            android:visibility="gone"
+            app:scale_left="927"
+            app:scale_top="60"
+            app:scale_width="33"
+            app:scale_height="57"/>
+
+        <ImageView
+            android:id="@+id/_afterButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:scale_left="910"
+            app:scale_top="50"
+            app:scale_width="60"
+            app:scale_height="80"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- 최종 결과 코멘트 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_resultCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_base_width="1080"
+        app:scale_base_height="214">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list_violet"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="200"/>
+
+        <ImageView
+            android:id="@+id/_homeworkResultImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_stamp_e0"
+            app:scale_left="67"
+            app:scale_top="42"
+            app:scale_width="107"
+            app:scale_height="107"/>
+
+        <com.littlefox.library.view.text.SeparateTextView
+            android:id="@+id/_homeworkResultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_excellent"
+            android:textColor="@color/color_fa4959"
+            android:gravity="center_vertical"
+            app:scale_left="205"
+            app:scale_top="0"
+            app:scale_width="800"
+            app:scale_height="200"
+            app:scale_textsize="45"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- 코멘트 1개 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_oneCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="134">
+
+        <ImageView
+            android:id="@+id/_homeworkStudentCommentBg1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list_green"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="120"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_smile_chat"
+            app:scale_left="74"
+            app:scale_top="30"
+            app:scale_width="60"
+            app:scale_height="60"/>
+
+        <TextView
+            android:id="@+id/_homeworkStudentComment1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_student_comment"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            app:scale_left="152"
+            app:scale_top="0"
+            app:scale_width="350"
+            app:scale_height="120"
+            app:scale_textsize="40"/>
+
+        <TextView
+            android:id="@+id/_homeworkStudentCommentButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_comment_write"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/round_box_green_60"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center"
+            android:visibility="gone"
+            app:scale_left="666"
+            app:scale_top="11"
+            app:scale_width="344"
+            app:scale_height="97"
+            app:scale_textsize="40"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- 코멘트 2개 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_twoCommentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:scale_base_width="1080"
+        app:scale_base_height="274">
+
+        <ImageView
+            android:id="@+id/_homeworkStudentCommentBg2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list_green"
+            app:scale_left="30"
+            app:scale_top="0"
+            app:scale_width="1020"
+            app:scale_height="120"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_smile_chat"
+            app:scale_left="74"
+            app:scale_top="30"
+            app:scale_width="60"
+            app:scale_height="60"/>
+
+        <TextView
+            android:id="@+id/_homeworkStudentComment2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_student_comment"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            app:scale_left="152"
+            app:scale_top="0"
+            app:scale_width="350"
+            app:scale_height="120"
+            app:scale_textsize="40"/>
+
+        <TextView
+            android:id="@+id/_homeworkStudentCommentButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_comment_write"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/round_box_green_60"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center"
+            android:visibility="gone"
+            app:scale_left="666"
+            app:scale_top="11"
+            app:scale_width="344"
+            app:scale_height="97"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list_yellow"
+            app:scale_left="30"
+            app:scale_top="134"
+            app:scale_width="1020"
+            app:scale_height="120"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_homework_speaker"
+            app:scale_left="73"
+            app:scale_top="170"
+            app:scale_width="65"
+            app:scale_height="45"/>
+
+        <TextView
+            android:id="@+id/_homeworkTeacherComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_teacher_comment"
+            android:textColor="@color/color_444444"
+            android:gravity="center_vertical"
+            app:scale_left="152"
+            app:scale_top="134"
+            app:scale_width="350"
+            app:scale_height="120"
+            app:scale_textsize="40"/>
+
+        <TextView
+            android:id="@+id/_homeworkTeacherCommentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_comment_watch"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/round_box_empty_green_60"
+            android:textColor="@color/color_23cc8a"
+            android:gravity="center"
+            app:scale_left="666"
+            app:scale_top="145"
+            app:scale_width="344"
+            app:scale_height="97"
+            app:scale_textsize="40"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- View 사이 여백 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="6"/>
+
+    <!-- 숙제 리스트 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_homeworkListLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_width="1080"
+        app:scale_base_height="132">
+
+        <TextView
+            android:id="@+id/_homeworkListText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_homework_list"
+            android:textColor="@color/color_000000"
+            android:gravity="center_vertical"
+            app:scale_left="50"
+            app:scale_top="0"
+            app:scale_width="180"
+            app:scale_height="120"
+            app:scale_textsize="40"/>
+
+        <ImageView
+            android:id="@+id/_homeworkInfoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/info_icon"
+            app:scale_left="226"
+            app:scale_top="25"
+            app:scale_width="71"
+            app:scale_height="71"/>
+
+        <ImageView
+            android:id="@+id/_homeworkFilterButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/box_list"
+            app:scale_left="671"
+            app:scale_top="0"
+            app:scale_width="380"
+            app:scale_height="120"/>
+
+        <ImageView
+            android:id="@+id/_homeworkFilterDownImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_pop_down"
+            app:scale_left="987"
+            app:scale_top="48"
+            app:scale_width="34"
+            app:scale_height="20" />
+
+        <TextView
+            android:id="@+id/_homeworkFilterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="전체"
+            android:textColor="@color/color_b7b7b7"
+            app:scale_left="701"
+            app:scale_top="0"
+            app:scale_width="270"
+            app:scale_height="120"
+            app:scale_textsize="38" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <RelativeLayout
+        android:id="@+id/_loadingProgressLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:scale_base_width="1080"
+            app:scale_base_height="150">
+
+            <com.littlefox.library.view.dialog.ProgressWheel
+                android:id="@+id/_progressWheelView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:matProg_barColor="@color/color_20b1f9"
+                app:matProg_progressIndeterminate="true"
+                app:scale_height="150"
+                app:scale_left="465"
+                app:scale_top="0"
+                app:scale_width="150" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/_homeworkListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

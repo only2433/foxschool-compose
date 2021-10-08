@@ -1,7 +1,5 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
-import com.littlefox.app.foxschool.enumerate.CalendarImageType
-
 class HomeworkCalendarItemData
 {
     private var hw_no : Int         = 0
@@ -11,25 +9,8 @@ class HomeworkCalendarItemData
     private var hw_end_cnt : Int    = 0
     private var is_eval : String    = ""
     private var color : String      = ""
-    private var comment : String    = ""
+    private var eval_comment : String    = ""
     private var eval : String       = ""
-    private var imageType : CalendarImageType = CalendarImageType.ONE
-
-    constructor() {}
-
-    // 아이템 복사용
-    constructor(calendarItemData : HomeworkCalendarItemData)
-    {
-        this.hw_no = calendarItemData.getHomeworkNumber()
-        this.start_date = calendarItemData.getStartDate()
-        this.end_date = calendarItemData.getEndDate()
-        this.hw_cnt = calendarItemData.getHomeworkTotalItemCount()
-        this.hw_end_cnt = calendarItemData.getHomeworkCompleteItemCount()
-        this.is_eval = if (calendarItemData.isEvaluationComplete()) "Y" else "N"
-        this.color = calendarItemData.getColor()
-        this.comment = calendarItemData.getTeacherComment()
-        this.eval = calendarItemData.getEvaluationState()
-    }
 
     fun getHomeworkNumber() : Int
     {
@@ -70,9 +51,9 @@ class HomeworkCalendarItemData
         return "gray"
     }
 
-    fun getTeacherComment() : String
+    fun getEvaluationComment() : String
     {
-        return comment
+        return eval_comment
     }
 
     fun getEvaluationState() : String
@@ -82,15 +63,5 @@ class HomeworkCalendarItemData
             return eval
         }
         return "E0"
-    }
-
-    fun getImageType() : CalendarImageType
-    {
-        return imageType
-    }
-
-    fun setImageType(type : CalendarImageType)
-    {
-        imageType = type
     }
 }

@@ -53,8 +53,8 @@
     <string name="text_login">로그인</string>
     <string name="text_payment_membership">유료회원가입</string>
     <string name="text_learning_log">학습기록</string>
-    <string name="text_record_log">녹음기록</string>
-    <string name="text_homework_manage">숙제관리</string>
+    <string name="text_record_history">녹음기록</string>
+    <string name="text_homework_manage">숙제 관리</string>
     <string name="text_school_news">학교 소식</string>
     <string name="text_foxschool_news">팍스스쿨 소식</string>
     <string name="text_teacher_manual">교사 메뉴얼</string>
@@ -85,6 +85,8 @@
     <string name="text_recorder">녹음기</string>
     <string name="text_leave">나가기</string>
     <string name="text_change_permission">권한 변경하기</string>
+    <string name="text_register">등록</string>
+    <string name="text_change">수정</string>
 
     <string name="text_remaining_day">남은 기간 : <font color="#FFE400">%d일</font></string>
     <string name="text_remaining_day_name">Valid until</string>
@@ -140,7 +142,6 @@
     <string name="text_save_my_books">나의 단어장에 저장</string>
 
     <string name="text_1on1_spinner_hint">문의 유형 선택</string>
-    <string name="text_1on1_register">등록</string>
     <string name="text_1on1_send_email">이메일로 의견 보내기</string>
 
     <string name="text_calendar_sunday">일</string>
@@ -151,12 +152,24 @@
     <string name="text_calendar_friday">금</string>
     <string name="text_calendar_saturday">토</string>
 
+    <string name="text_study_date">학습일시 : </string>
     <string name="text_homework_status">숙제 현황</string>
     <string name="text_homework_status_detail">숙제 현황 상세 보기</string>
-    <string name="text_homework_student_say">학습자 한마디</string>
-    <string name="text_homework_teacher_say">선생님 한마디</string>
+    <string name="text_homework_student_comment">학습자 한마디</string>
+    <string name="text_homework_teacher_comment">선생님 한마디</string>
+    <string name="text_homework_list">숙제 목록</string>
     <string name="text_homework_check">숙제 검사</string>
     <string name="text_homework_contents">숙제 내용</string>
+    <string name="text_homework_comment_write">작성</string>
+    <string name="text_homework_comment_watch">보기</string>
+    <string name="text_homework_excellent">참 잘했어요. </string>
+    <string name="text_homework_good">잘했어요. </string>
+    <string name="text_homework_try_again">좀 더 노력하세요. </string>
+
+    <string name="text_comment_to_teacher">선생님께 하고 싶은 이야기가 있을 때 작성해 주세요. (200자 이내)</string>
+
+    <string name="text_record_remain_date">일 남음</string>
+    <string name="text_record_expired">기간 만료</string>
 
     <string name="message_menu_login_message">Hello,\n로그인해주세요.</string>
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
@@ -217,7 +230,16 @@
     <string name="message_record_start">버튼을 눌러 녹음을 시작하세요.</string>
     <string name="message_record_reset">다시 녹음 할까요?</string>
     <string name="message_record_upload_complete">녹음파일이 저장되었습니다. \n녹음 기록을 보시겠습니까?</string>
+    <string name="message_record_upload_fail">녹음 파일 저장을 실패 하였습니다.</string>
     <string name="message_record_permission">녹음 학습을 위해 마이크 권한을 허용해 주세요.</string>
+    <string name="message_record_history">녹음기록은 30일간 보관 후 삭제되며 최근 7일 이내 녹음한 파일은 다시 듣기와 다운로드(PC에서만 가능)가 가능합니다</string>
+    <string name="message_record_history_tablet">· 녹음기록은 30일간 보관 후 삭제되며 최근 7일 이내 녹음한 파일은 다시 듣기와 다운로드(PC에서만 가능)가 가능합니다</string>
+    <string name="message_homework_start">학습을 시작해 주세요.</string>
+    <string name="message_comment_max">/400 byte</string>
+    <string name="message_comment_register">학습자 한마디가 등록되었습니다.</string>
+    <string name="message_comment_update">학습자 한마디가 수정되었습니다.</string>
+    <string name="message_comment_delete_check">학습자 한마디를 삭제하시겠습니까?</string>
+    <string name="message_comment_delete">학습자 한마디가 삭제되었습니다.</string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>
@@ -246,6 +268,9 @@
     <string name="message_warning_record_reset">녹음된 내용이 저장되지 않습니다. \n다시 녹음할까요?</string>
     <string name="message_warning_record_exit">화면에서 나가시겠습니까? \n나가시면 녹음된 내용이 저장되지 않습니다.</string>
     <string name="message_warning_not_have_class">학급 정보가 없습니다. 담당 선생님께 문의해 주세요.</string>
+    <string name="message_warning_homework_info">- 숙제기록은 숙제관리 내에서 학습한 내용만 인정됩니다.</string>
+    <string name="message_warning_homework_ebook">eBook은 PC 또는 태블릿을 이용해 주세요.</string>
+    <string name="message_warning_record_empty">저장된 녹음기록이 없습니다.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>
@@ -272,5 +297,11 @@
         <item>오류</item>
         <item>학습</item>
         <item>기타</item>
+    </string-array>
+
+    <string-array name="text_list_homework_filter">
+        <item>전체</item>
+        <item>완료한 숙제</item>
+        <item>남은 숙제</item>
     </string-array>
 </resources>
