@@ -1539,7 +1539,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mCurrentRepeatPageIndex = index - 1
         mCurrentPageIndex = mCurrentRepeatPageIndex
         mPlayerContractView.setCaptionText("")
-        Log.f("repeatIndex : " + mCurrentRepeatPageIndex + ", startTime : " + mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime() as Int)
+        Log.f("repeatIndex : " + mCurrentRepeatPageIndex + ", startTime : " + mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toInt())
         mPlayer!!.seekTo(mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toLong())
         mPlayer!!.setPlayWhenReady(true)
         mCurrentCaptionIndex = currentCaptionIndex
