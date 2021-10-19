@@ -15,46 +15,25 @@ class CompanyInformationResult
     private val phone = ""
     private val fax = ""
 
-    fun getCEO() : String
-    {
-        return ceo
-    }
+    fun getCEO() : String = ceo
 
-    fun getAddress() : String
-    {
-        return address
-    }
+    fun getAddress() : String = address
 
     /**
      * 사업자 등록 번호
      * @return 해당 텍스트
      */
-    fun getCompanyRegistrationNumber() : String
-    {
-        return brn
-    }
+    fun getCompanyRegistrationNumber() : String = brn
 
     /**
      * 통신 판매업 신고
      * @return 해당 텍스트
      */
-    fun getReportCompany() : String
-    {
-        return mosrn
-    }
+    fun getReportCompany() : String = mosrn
 
-    fun getElectronicPublishingCertification() : String
-    {
-        return ecn_number
-    }
+    fun getElectronicPublishingCertification() : String = ecn_number
 
-    fun getPhoneNumber() : String
-    {
-        return phone
-    }
+    fun getPhoneNumber() : String = phone
 
-    fun getFaxNumber() : String
-    {
-        return fax
-    }
+    fun getFaxNumber() : String = fax
 }

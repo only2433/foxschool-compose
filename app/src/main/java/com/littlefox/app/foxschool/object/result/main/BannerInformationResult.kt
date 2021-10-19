@@ -8,29 +8,13 @@ class BannerInformationResult
     private val type : String           = ""
     private val article_num : String    = ""
 
+    fun getBannerID() : String = id
 
-    fun getBannerID() : String
-    {
-        return id
-    }
+    fun getLinkUrl() : String = link_url
 
-    fun getLinkUrl() : String
-    {
-        return link_url
-    }
+    fun getImageUrl() : String = image_url
 
-    fun getImageUrl() : String
-    {
-        return image_url
-    }
+    fun getType() : String = type
 
-    fun getType() : String
-    {
-        return type
-    }
-
-    fun getArticleNumber() : String
-    {
-        return article_num
-    }
+    fun getArticleNumber() : String = article_num
 }

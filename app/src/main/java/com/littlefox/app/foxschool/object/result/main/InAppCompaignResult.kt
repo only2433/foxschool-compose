@@ -37,53 +37,23 @@ class InAppCompaignResult
                 return false
         }
 
-    fun getID() : Int
-    {
-        return id;
-    }
+    fun getID() : Int = id
 
-    fun getArticleID() : Int
-    {
-        return article_id;
-    }
+    fun getArticleID() : Int = article_id
 
-    fun getTitle() : String
-    {
-        return title;
-    }
+    fun getTitle() : String = title
 
-    fun getContent() : String
-    {
-        return content;
-    }
+    fun getContent() : String = content
 
-    fun getButton1Mode() : String
-    {
-        return btn1_mode;
-    }
+    fun getButton1Mode() : String = btn1_mode
 
-    fun getButton1Text() : String
-    {
-        return btn1_text;
-    }
+    fun getButton1Text() : String = btn1_text
 
-    fun getButton1Link() : String
-    {
-        return btn1_link;
-    }
+    fun getButton1Link() : String = btn1_link
 
-    fun getButton2Mode() : String
-    {
-        return btn2_mode;
-    }
+    fun getButton2Mode() : String = btn2_mode
 
-    fun getButton2Text() : String
-    {
-        return btn2_text;
-    }
+    fun getButton2Text() : String = btn2_text
 
-    fun getNotDisplayDays() : Int
-    {
-        return not_display_days;
-    }
+    fun getNotDisplayDays() : Int = not_display_days
 }

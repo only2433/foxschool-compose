@@ -27,10 +27,7 @@ class CalendarBaseData
         makeMonthData()
     }
 
-    fun getDataList() : ArrayList<CalendarData>
-    {
-        return dateList
-    }
+    fun getDataList() : ArrayList<CalendarData> = dateList
 
     private fun makeMonthData() {
         dateList.clear()

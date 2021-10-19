@@ -8,8 +8,5 @@ class BookshelfBaseObject : BaseResult()
 {
     private val data : MyBookshelfResult? = null
 
-    fun getData() : MyBookshelfResult
-    {
-        return data!!
-    }
+    fun getData() : MyBookshelfResult = data!!
 }

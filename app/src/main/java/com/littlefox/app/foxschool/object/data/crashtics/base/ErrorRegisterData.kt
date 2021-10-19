@@ -23,30 +23,15 @@ class ErrorRegisterData
         this.gender = gender
     }
 
-    fun getID() : String
-    {
-        return id;
-    }
+    fun getID() : String = id
 
-    fun getName() : String
-    {
-        return name;
-    }
+    fun getName() : String = name
 
-    fun getNickName() : String
-    {
-        return nickName;
-    }
+    fun getNickName() : String = nickName
 
-    fun getBirthYear() : String
-    {
-        return birthYear;
-    }
+    fun getBirthYear() : String = birthYear
 
-    fun getMobile() : String
-    {
-        return mobile;
-    }
+    fun getMobile() : String = mobile
 
     fun isEmailAgree() : String
     {
@@ -64,10 +49,7 @@ class ErrorRegisterData
             return "N"
     }
 
-    fun getGender() : String
-    {
-        return gender;
-    }
+    fun getGender() : String = gender
 
 
 }

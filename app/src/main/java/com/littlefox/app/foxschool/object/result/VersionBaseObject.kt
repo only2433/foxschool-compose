@@ -7,8 +7,5 @@ class VersionBaseObject : BaseResult()
 {
     private var data : VersionDataResult? = null
 
-    fun getData() : VersionDataResult
-    {
-        return data!!
-    }
+    fun getData() : VersionDataResult = data!!
 }

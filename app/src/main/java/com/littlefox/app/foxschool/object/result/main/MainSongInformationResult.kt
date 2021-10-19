@@ -8,8 +8,5 @@ class MainSongInformationResult
 {
     private val categories : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
 
-    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>
-    {
-        return categories;
-    }
+    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult> = categories
 }

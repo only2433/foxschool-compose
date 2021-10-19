@@ -25,50 +25,35 @@ class PlayedContentData
         this.isDownloadComplete = isDownloadComplete
     }
 
-    fun getContentID() : String
-    {
-        return contentID;
-    }
+    fun getContentID() : String = contentID
 
     fun setContentID(contentID : String)
     {
         this.contentID = contentID;
     }
 
-    fun getRecentPlayTime() : String
-    {
-        return recentPlayTime;
-    }
+    fun getRecentPlayTime() : String = recentPlayTime
 
     fun setRecentPlayTime(recentPlayTime : String)
     {
         this.recentPlayTime = recentPlayTime;
     }
 
-    fun getFilePath() : String
-    {
-        return filePath;
-    }
+    fun getFilePath() : String = filePath
 
     fun setFilePath(filePath : String)
     {
         this.filePath = filePath;
     }
 
-    fun getTotalPlayTime() : String
-    {
-        return totalPlayTime;
-    }
+    fun getTotalPlayTime() : String = totalPlayTime
 
     fun setTotalPlayTime(totalPlayTime : String)
     {
         this.totalPlayTime = totalPlayTime;
     }
 
-    fun isDownloadComplete() : Boolean
-    {
-        return isDownloadComplete;
-    }
+    fun isDownloadComplete() : Boolean = isDownloadComplete
 
     fun setDownloadComplete(isDownloadComplete : Boolean)
     {

@@ -6,18 +6,9 @@ class LoginInformationResult
     private var user : UserInfoSectionResult? = null
     private var school : UserSchoolSectionResult? = null
 
-    fun getChangeDate() : Int
-    {
-        return change_date
-    }
+    fun getChangeDate() : Int = change_date
 
-    fun getUserInformation() : UserInfoSectionResult
-    {
-        return user!!
-    }
+    fun getUserInformation() : UserInfoSectionResult = user!!
 
-    fun getSchoolInformation() : UserSchoolSectionResult
-    {
-        return school!!
-    }
+    fun getSchoolInformation() : UserSchoolSectionResult = school!!
 }

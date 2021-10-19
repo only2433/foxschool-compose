@@ -48,30 +48,15 @@ class FlashcardDataObject : Parcelable
         dest.writeTypedList(wordList)
     }
 
-    fun getSeriesID() : String
-    {
-        return mSeriesID
-    }
+    fun getSeriesID() : String = mSeriesID
 
-    fun getTitleName() : String
-    {
-        return mTitleName
-    }
+    fun getTitleName() : String = mTitleName
 
-    fun getTitleSubName() : String
-    {
-        return mTitleSubName
-    }
+    fun getTitleSubName() : String = mTitleSubName
 
-    fun getVocabularyType() : VocabularyType
-    {
-        return mVocabularyType
-    }
+    fun getVocabularyType() : VocabularyType = mVocabularyType
 
-    fun getWordList() : ArrayList<VocabularyDataResult>
-    {
-        return wordList
-    }
+    fun getWordList() : ArrayList<VocabularyDataResult> = wordList
 
     fun setVocabularyType(type : VocabularyType)
     {

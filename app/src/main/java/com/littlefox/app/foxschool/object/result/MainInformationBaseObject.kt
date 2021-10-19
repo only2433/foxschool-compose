@@ -7,8 +7,5 @@ class MainInformationBaseObject : BaseResult()
 {
     private val data : MainInformationResult? = null
 
-    fun getData() : MainInformationResult
-    {
-        return data!!
-    }
+    fun getData() : MainInformationResult = data!!
 }

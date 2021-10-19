@@ -16,53 +16,23 @@ class ServiceSupportedTypeResult : Serializable
     private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED  // 플래시카드 서비스
     private var record : String             = Common.SERVICE_NOT_SUPPORTED  // 녹음기 서비스
 
-    fun getStorySupportType() : String
-    {
-        return story;
-    }
+    fun getStorySupportType() : String = story
 
-    fun getServiceSupportType() : String
-    {
-        return service;
-    }
+    fun getServiceSupportType() : String = service
 
-    fun getOriginalTextSupportType() : String
-    {
-        return original_text;
-    }
+    fun getOriginalTextSupportType() : String = original_text
 
-    fun getVocabularySupportType() : String
-    {
-        return vocabulary;
-    }
+    fun getVocabularySupportType() : String = vocabulary
 
-    fun getQuizSupportType() : String
-    {
-        return quiz;
-    }
+    fun getQuizSupportType() : String = quiz
 
-    fun getEbookSupportType() : String
-    {
-        return ebook;
-    }
+    fun getEbookSupportType() : String = ebook
 
-    fun getCrosswordSupportType() : String
-    {
-        return crossword;
-    }
+    fun getCrosswordSupportType() : String = crossword
 
-    fun getStarwordsSupportType() : String
-    {
-        return starwords;
-    }
+    fun getStarwordsSupportType() : String = starwords
 
-    fun getFlashcardSupportType() : String
-    {
-        return flash_card
-    }
+    fun getFlashcardSupportType() : String = flash_card
 
-    fun getRecorderSupportType() : String
-    {
-        return record
-    }
+    fun getRecorderSupportType() : String = record
 }

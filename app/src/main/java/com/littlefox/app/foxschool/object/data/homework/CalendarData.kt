@@ -23,50 +23,32 @@ class CalendarData
         this.isCurrentMonth = isCurrentMonth
     }
 
-    fun getDate() : String
-    {
-        return date
-    }
+    fun getDate() : String = date
 
-    fun getDateType() : CalendarDateType
-    {
-        return dateType
-    }
+    fun getDateType() : CalendarDateType = dateType
 
-    fun isCurrentMonth() : Boolean
-    {
-        return isCurrentMonth
-    }
+    fun isCurrentMonth() : Boolean = isCurrentMonth
 
     fun hasHomework() : Boolean
     {
         return homeworkPosition != -1
     }
 
-    fun isToday() : Boolean
-    {
-        return isToday
-    }
+    fun isToday() : Boolean = isToday
 
     fun setToday(isToday : Boolean)
     {
         this.isToday = isToday
     }
 
-    fun getHomeworkPosition() : Int
-    {
-        return homeworkPosition
-    }
+    fun getHomeworkPosition() : Int = homeworkPosition
 
     fun setHomeworkPosition(position : Int)
     {
         homeworkPosition = position
     }
 
-    fun getImageType() : CalendarImageType
-    {
-        return imageType
-    }
+    fun getImageType() : CalendarImageType = imageType
 
     fun setImageType(type : CalendarImageType)
     {

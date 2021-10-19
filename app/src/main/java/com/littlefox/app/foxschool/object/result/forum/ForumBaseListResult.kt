@@ -8,10 +8,7 @@ class ForumBaseListResult
     private val list : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
     private val meta : MetaDataResult? = null
 
-    fun getIsNew() : String
-    {
-        return isnew
-    }
+    fun getIsNew() : String = isnew
 
     val currentPageIndex : Int
         get()
@@ -48,8 +45,5 @@ class ForumBaseListResult
                 return 0
         }
 
-    fun getNewsList() : ArrayList<ForumBaseResult>
-    {
-        return list
-    }
+    fun getNewsList() : ArrayList<ForumBaseResult> = list
 }

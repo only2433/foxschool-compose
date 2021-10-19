@@ -13,34 +13,16 @@ class MainInformationResult
     private val company_information : CompanyInformationResult? = null
     private val in_app_campaign : InAppCompaignResult? = null
 
-    fun getMainStoryInformation() : MainStoryInformationResult
-    {
-        return story!!
-    }
+    fun getMainStoryInformation() : MainStoryInformationResult = story!!
 
-    fun getMainSongInformationList() : ArrayList<SeriesInformationResult>
-    {
-        return song
-    }
+    fun getMainSongInformationList() : ArrayList<SeriesInformationResult> = song
 
-    fun getBookShelvesList() : ArrayList<MyBookshelfResult>
-    {
-        return bookshelves
-    }
+    fun getBookShelvesList() : ArrayList<MyBookshelfResult> = bookshelves
 
-    fun getVocabulariesList() : ArrayList<MyVocabularyResult>
-    {
-        return vocabularies
-    }
+    fun getVocabulariesList() : ArrayList<MyVocabularyResult> = vocabularies
 
-    fun getCompanyInformation() : CompanyInformationResult?
-    {
-        return company_information
-    }
+    fun getCompanyInformation() : CompanyInformationResult? = company_information
 
-    fun getInAppCompaignInformation() : InAppCompaignResult?
-    {
-        return in_app_campaign
-    }
+    fun getInAppCompaignInformation() : InAppCompaignResult? = in_app_campaign
 
 }

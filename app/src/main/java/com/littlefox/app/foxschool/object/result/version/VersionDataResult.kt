@@ -38,25 +38,12 @@ class VersionDataResult
                 return false
         }
 
-    fun isForceUpdate() : Boolean
-    {
-        return force_update;
-    }
+    fun isForceUpdate() : Boolean = force_update
 
-    fun getStoreUrl() : String
-    {
-        return store_url;
-    }
+    fun getStoreUrl() : String = store_url
 
-    fun getCurrentAppVersion() : String
-    {
-        return installed_version
-    }
+    fun getCurrentAppVersion() : String = installed_version
 
-    fun getServerAppVersion() : String
-    {
-        return latest_version;
-    }
-
+    fun getServerAppVersion() : String = latest_version
 
 }

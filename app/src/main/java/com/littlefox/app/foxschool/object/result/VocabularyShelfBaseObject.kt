@@ -7,8 +7,5 @@ class VocabularyShelfBaseObject : BaseResult()
 {
     private val data : MyVocabularyResult? = null
 
-    fun getData() : MyVocabularyResult
-    {
-        return data!!;
-    }
+    fun getData() : MyVocabularyResult = data!!
 }

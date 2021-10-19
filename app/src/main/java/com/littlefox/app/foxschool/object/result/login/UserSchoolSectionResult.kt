@@ -15,15 +15,9 @@ class UserSchoolSectionResult
     private var address_detail : String = ""
     private var package_name : String = ""
 
-    fun getSchoolID() : String
-    {
-        return school_id
-    }
+    fun getSchoolID() : String = school_id
 
-    fun getGrade() : Int
-    {
-        return grade
-    }
+    fun getGrade() : Int = grade
 
     fun isHaveClass() : Boolean
     {
@@ -35,48 +29,21 @@ class UserSchoolSectionResult
         return if(hasclass == "Y") true else false
     }
 
-    fun getOrganizationName() : String
-    {
-        return name
-    }
+    fun getOrganizationName() : String = name
 
-    fun getClassName() : String
-    {
-        return class_name
-    }
+    fun getClassName() : String = class_name
 
-    fun getOrganizationTypeName() : String
-    {
-        return type_name
-    }
+    fun getOrganizationTypeName() : String = type_name
 
-    fun getTeacherCount() : Int
-    {
-        return teacher_count
-    }
+    fun getTeacherCount() : Int = teacher_count
 
-    fun getStudentCount() : Int
-    {
-        return student_count
-    }
+    fun getStudentCount() : Int = student_count
 
-    fun getClassCount() : Int
-    {
-        return class_count
-    }
+    fun getClassCount() : Int = class_count
 
-    fun getAddress() : String
-    {
-        return address
-    }
+    fun getAddress() : String = address
 
-    fun getAddressDetail() : String
-    {
-        return address_detail
-    }
+    fun getAddressDetail() : String = address_detail
 
-    fun getProductPackageName() : String
-    {
-        return package_name
-    }
+    fun getProductPackageName() : String = package_name
 }

@@ -5,13 +5,7 @@ class IntroduceSeriesCharacterResult
     private var name : String = ""
     private var image : String = ""
 
-    fun getName() : String
-    {
-        return name
-    }
+    fun getName() : String = name
 
-    fun getImage() : String
-    {
-        return image
-    }
+    fun getImage() : String = image
 }

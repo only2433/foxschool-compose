@@ -7,8 +7,5 @@ class PlayerDataBaseObject : BaseResult()
 {
     private val data : PlayItemResult? = null
 
-    fun getData() : PlayItemResult
-    {
-        return data!!
-    }
+    fun getData() : PlayItemResult = data!!
 }

@@ -18,65 +18,29 @@ class IntroduceSeriesInformationResult
     private var characters : ArrayList<IntroduceSeriesCharacterResult> = ArrayList<IntroduceSeriesCharacterResult>()
     private var creators : IntroduceSeriesCreatorsResult? = null
 
-    fun getSeriesID() : String
-    {
-        return id
-    }
+    fun getSeriesID() : String = id
 
-    fun getTitle() : String
-    {
-        return name
-    }
+    fun getTitle() : String = name
 
-    fun getLevel() : Int
-    {
-        return level
-    }
+    fun getLevel() : Int = level
 
-    fun getIntroduction() : String
-    {
-        return introduction
-    }
+    fun getIntroduction() : String = introduction
 
-    fun getCurrentReleaseCount() : Int
-    {
-        return current_count
-    }
+    fun getCurrentReleaseCount() : Int = current_count
 
-    fun getTotalCount() : Int
-    {
-        return total_count
-    }
+    fun getTotalCount() : Int = total_count
 
-    fun getCategories() : String
-    {
-        return categories
-    }
+    fun getCategories() : String = categories
 
-    fun getCharacterInformationList() : ArrayList<IntroduceSeriesCharacterResult>
-    {
-        return characters
-    }
+    fun getCharacterInformationList() : ArrayList<IntroduceSeriesCharacterResult> = characters
 
-    fun getCreatorInformation() : IntroduceSeriesCreatorsResult?
-    {
-        return creators
-    }
+    fun getCreatorInformation() : IntroduceSeriesCreatorsResult? = creators
 
-    fun getIntroduceVideoMp4() : String
-    {
-        return mp4_url
-    }
+    fun getIntroduceVideoMp4() : String = mp4_url
 
-    fun getIntroduceVideoHls() : String
-    {
-        return m3u8_url
-    }
+    fun getIntroduceVideoHls() : String = m3u8_url
 
-    fun getIntroduceThumbnail() : String
-    {
-        return introduce_thumbnail_url
-    }
+    fun getIntroduceThumbnail() : String = introduce_thumbnail_url
 
     val isSingleSeries : Boolean
         get()

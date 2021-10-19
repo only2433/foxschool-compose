@@ -12,30 +12,15 @@ class HomeworkCalendarItemData
     private var eval_comment : String    = ""
     private var eval : String       = ""
 
-    fun getHomeworkNumber() : Int
-    {
-        return hw_no
-    }
+    fun getHomeworkNumber() : Int = hw_no
 
-    fun getStartDate() : String
-    {
-        return start_date
-    }
+    fun getStartDate() : String = start_date
 
-    fun getEndDate() : String
-    {
-        return end_date
-    }
+    fun getEndDate() : String = end_date
 
-    fun getHomeworkTotalItemCount() : Int
-    {
-        return hw_cnt
-    }
+    fun getHomeworkTotalItemCount() : Int = hw_cnt
 
-    fun getHomeworkCompleteItemCount() : Int
-    {
-        return hw_end_cnt
-    }
+    fun getHomeworkCompleteItemCount() : Int = hw_end_cnt
 
     fun isEvaluationComplete() : Boolean
     {
@@ -51,10 +36,7 @@ class HomeworkCalendarItemData
         return "gray"
     }
 
-    fun getEvaluationComment() : String
-    {
-        return eval_comment
-    }
+    fun getEvaluationComment() : String = eval_comment
 
     fun getEvaluationState() : String
     {

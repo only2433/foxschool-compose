@@ -7,8 +7,5 @@ class RecordHistoryBaseObject : BaseResult()
 {
     private val data : ArrayList<RecordHistoryResult>? = null
 
-    fun getDate() : ArrayList<RecordHistoryResult>
-    {
-        return data!!
-    }
+    fun getDate() : ArrayList<RecordHistoryResult> = data!!
 }

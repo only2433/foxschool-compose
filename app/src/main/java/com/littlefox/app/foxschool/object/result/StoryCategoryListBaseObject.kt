@@ -9,8 +9,5 @@ class StoryCategoryListBaseObject : BaseResult()
 {
     private var data : StoryCategoryListResult? = null
 
-    fun getData() : StoryCategoryListResult
-    {
-        return data!!
-    }
+    fun getData() : StoryCategoryListResult = data!!
 }

@@ -8,8 +8,5 @@ class DetailItemInformationBaseObject : BaseResult()
 {
     private var data : DetailItemInformationResult? = null
 
-    fun getData() : DetailItemInformationResult
-    {
-        return data!!
-    }
+    fun getData() : DetailItemInformationResult = data!!
 }

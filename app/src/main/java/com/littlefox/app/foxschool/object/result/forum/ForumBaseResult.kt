@@ -20,15 +20,9 @@ class ForumBaseResult
         return false
     }
 
-    fun getForumId() : String
-    {
-        return idx.toString()
-    }
+    fun getForumId() : String = idx.toString()
 
-    fun getTitle() : String
-    {
-        return title
-    }
+    fun getTitle() : String = title
 
     fun getRegisterDate() : String
     {

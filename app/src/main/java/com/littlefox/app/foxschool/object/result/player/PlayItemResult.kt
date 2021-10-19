@@ -15,48 +15,21 @@ class PlayItemResult
     private var next_content : ContentsBaseResult? = null
     private var subtitle : ArrayList<CaptionDetailInformationResult> = ArrayList<CaptionDetailInformationResult>()
 
-    fun getContentID() : String
-    {
-        return id;
-    }
+    fun getContentID() : String = id
 
-    fun getRecordKey() : String
-    {
-        return record_key;
-    }
+    fun getRecordKey() : String = record_key
 
-    fun getTotalTime() : Int
-    {
-        return total_time;
-    }
+    fun getTotalTime() : Int = total_time
 
-    fun getMovieUrl() : String
-    {
-        return mp4_url;
-    }
+    fun getMovieUrl() : String = mp4_url
 
-    fun getMovieHlsUrl() : String
-    {
-        return m3u8_url;
-    }
+    fun getMovieHlsUrl() : String = m3u8_url
 
-    fun getPreviewTime() : Int
-    {
-        return preview_time;
-    }
+    fun getPreviewTime() : Int = preview_time
 
-    fun getPageByPageMaxCount() : Int
-    {
-        return subtitle_group_count;
-    }
+    fun getPageByPageMaxCount() : Int = subtitle_group_count
 
-    fun getCaptionList() : ArrayList<CaptionDetailInformationResult>
-    {
-        return subtitle;
-    }
+    fun getCaptionList() : ArrayList<CaptionDetailInformationResult> = subtitle
 
-    fun getNextContentData() : ContentsBaseResult?
-    {
-        return next_content;
-    }
+    fun getNextContentData() : ContentsBaseResult? = next_content
 }

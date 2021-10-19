@@ -18,50 +18,23 @@ class HomeworkCalendarBaseResult : BaseResult()
     private val month_end : String      = ""
     private val homework : ArrayList<HomeworkCalendarItemData> = ArrayList()
 
-    fun getToday() : String
-    {
-        return today
-    }
+    fun getToday() : String = today
 
-    fun getCurrentYear() : String
-    {
-        return year
-    }
+    fun getCurrentYear() : String = year
 
-    fun getCurrentMonth() : String
-    {
-        return month
-    }
+    fun getCurrentMonth() : String = month
 
-    fun getPrevYear() : String
-    {
-        return prev_year
-    }
+    fun getPrevYear() : String = prev_year
 
-    fun getPrevMonth() : String
-    {
-        return prev_month
-    }
+    fun getPrevMonth() : String = prev_month
 
-    fun getNextYear(): String
-    {
-        return next_year
-    }
+    fun getNextYear(): String = next_year
 
-    fun getNextMonth() : String
-    {
-        return next_month
-    }
+    fun getNextMonth() : String = next_month
 
-    fun getMonthStartDate() : String
-    {
-        return month_start
-    }
+    fun getMonthStartDate() : String = month_start
 
-    fun getMonthEndDate() : String
-    {
-        return month_end
-    }
+    fun getMonthEndDate() : String = month_end
 
     fun isPossiblePrevMonth() : Boolean
     {

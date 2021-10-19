@@ -8,9 +8,5 @@ class VocabularyContentsBaseObject : BaseResult()
 {
     private val data : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
 
-    fun getData() : ArrayList<VocabularyDataResult>
-    {
-        return data;
-    }
-
+    fun getData() : ArrayList<VocabularyDataResult> = data
 }

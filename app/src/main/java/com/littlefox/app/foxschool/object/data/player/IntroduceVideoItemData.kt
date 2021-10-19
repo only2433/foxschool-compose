@@ -33,10 +33,7 @@ class IntroduceVideoItemData : Parcelable
         dest.writeString(m3u8_url)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
     companion object
     {

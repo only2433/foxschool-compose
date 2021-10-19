@@ -48,30 +48,15 @@ class ContentsBaseResult  : Parcelable
 
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getID() : String
-    {
-        return id
-    }
+    fun getID() : String = id
 
-    fun getIndex() : Int
-    {
-        return seq
-    }
+    fun getIndex() : Int = seq
 
-    fun getType() : String
-    {
-        return type
-    }
+    fun getType() : String = type
 
-    fun getName() : String
-    {
-        return name
-    }
+    fun getName() : String = name
 
     fun getSubName() : String
     {
@@ -82,20 +67,11 @@ class ContentsBaseResult  : Parcelable
         return sub_name!!
     }
 
-    fun getThumbnailUrl() : String
-    {
-        return thumbnail_url
-    }
+    fun getThumbnailUrl() : String = thumbnail_url
 
-    fun getServiceInformation() : ServiceSupportedTypeResult?
-    {
-        return service_info
-    }
+    fun getServiceInformation() : ServiceSupportedTypeResult? = service_info
 
-    fun getUserServiceSupportedInformation() : ServiceSupportedTypeResult?
-    {
-        return user_service_info
-    }
+    fun getUserServiceSupportedInformation() : ServiceSupportedTypeResult? = user_service_info
 
     fun setID(id : String)
     {
@@ -113,27 +89,19 @@ class ContentsBaseResult  : Parcelable
         this.seq = index
     }
 
-    fun isSelected() : Boolean
-    {
-        return isSelected
-    }
+    fun isSelected() : Boolean = isSelected
 
     fun setSelected(isSelect : Boolean)
     {
         isSelected = isSelect
     }
 
-    fun isOptionDisable() : Boolean
-    {
-        return isOptionDisable
-    }
+    fun isOptionDisable() : Boolean = isOptionDisable
 
     fun setOptionDisable(isDisable : Boolean)
     {
         isOptionDisable = isDisable
     }
-
-
 
     companion object
     {

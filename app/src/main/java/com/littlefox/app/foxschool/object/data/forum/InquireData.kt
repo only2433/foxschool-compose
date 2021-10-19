@@ -25,14 +25,8 @@ class InquireData
         }
     }
 
-    fun getInquireText() : String
-    {
-        return mInquireText
-    }
+    fun getInquireText() : String = mInquireText
 
-    fun getUserEmail() : String
-    {
-        return mUserEmail
-    }
+    fun getUserEmail() : String = mUserEmail
 
 }

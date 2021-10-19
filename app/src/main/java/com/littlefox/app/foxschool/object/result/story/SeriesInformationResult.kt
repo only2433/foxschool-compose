@@ -35,14 +35,8 @@ class SeriesInformationResult : SeriesBaseResult
                 return false
         }
 
-    fun getLevel() : Int
-    {
-        return level;
-    }
+    fun getLevel() : Int = level
 
-    fun getContentsCount() : Int
-    {
-        return contents_count;
-    }
+    fun getContentsCount() : Int = contents_count
 
 }

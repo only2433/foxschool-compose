@@ -26,15 +26,9 @@ class RecordUploadedData : Parcelable
         dest.writeString(study_date)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getStudyDate() : String
-    {
-        return study_date;
-    }
+    fun getStudyDate() : String = study_date
 
     companion object
     {

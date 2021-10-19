@@ -7,8 +7,5 @@ class RecordFileUploadBaseObject : BaseResult()
 {
     private val data : RecordUploadedData? = null
 
-    fun getData() : RecordUploadedData?
-    {
-        return data;
-    }
+    fun getData() : RecordUploadedData? = data
 }

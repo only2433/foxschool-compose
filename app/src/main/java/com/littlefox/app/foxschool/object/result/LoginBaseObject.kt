@@ -7,9 +7,5 @@ class LoginBaseObject : BaseResult()
 {
     private var data : LoginInformationResult? = null
 
-    fun getData() : LoginInformationResult
-    {
-        return data!!
-    }
-
+    fun getData() : LoginInformationResult = data!!
 }

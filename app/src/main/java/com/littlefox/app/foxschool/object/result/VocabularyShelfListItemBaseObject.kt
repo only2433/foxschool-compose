@@ -6,8 +6,6 @@ import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyListItem
 class VocabularyShelfListItemBaseObject : BaseResult()
 {
     private val data : VocabularyListItemDataResult? = null
-    fun getData() : VocabularyListItemDataResult?
-    {
-        return data!!
-    }
+
+    fun getData() : VocabularyListItemDataResult? = data!!
 }

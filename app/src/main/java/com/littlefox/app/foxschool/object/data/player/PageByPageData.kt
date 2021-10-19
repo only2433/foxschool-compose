@@ -13,20 +13,11 @@ class PageByPageData
         endTime = 0.0f
     }
 
-    fun getCurrentIndex() : Int
-    {
-        return currentIndex;
-    }
+    fun getCurrentIndex() : Int = currentIndex
 
-    fun getStartTime() : Float
-    {
-        return startTime;
-    }
+    fun getStartTime() : Float = startTime
 
-    fun getEndTime() : Float
-    {
-        return endTime;
-    }
+    fun getEndTime() : Float = endTime
 
     fun setStartTime(time : Float)
     {

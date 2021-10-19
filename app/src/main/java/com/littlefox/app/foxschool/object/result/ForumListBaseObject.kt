@@ -7,8 +7,5 @@ class ForumListBaseObject : BaseResult()
 {
     private val data : ForumBaseListResult? = null
 
-    fun getData() : ForumBaseListResult
-    {
-        return data!!
-    }
+    fun getData() : ForumBaseListResult = data!!
 }

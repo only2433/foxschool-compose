@@ -7,23 +7,11 @@ class CaptionDetailInformationResult
     private var end_time = ""
     private var group_number = 0
 
-    fun getStartTime() : Float
-    {
-        return java.lang.Float.valueOf(start_time)
-    }
+    fun getStartTime() : Float = start_time.toFloat()
 
-    fun getEndTime() : Float
-    {
-        return java.lang.Float.valueOf(end_time)
-    }
+    fun getEndTime() : Float = end_time.toFloat()
 
-    fun getText() : String
-    {
-        return text;
-    }
+    fun getText() : String = text
 
-    fun getPageByPageIndex() : Int
-    {
-        return group_number;
-    }
+    fun getPageByPageIndex() : Int = group_number
 }

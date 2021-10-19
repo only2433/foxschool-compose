@@ -9,19 +9,13 @@ class MainStoryInformationResult
     private var levels : ArrayList<SeriesInformationResult> = ArrayList()
     private val categories : ArrayList<SeriesInformationResult> = ArrayList()
 
-    fun getContentByLevelToList() : ArrayList<SeriesInformationResult>
-    {
-        return levels;
-    }
+    fun getContentByLevelToList() : ArrayList<SeriesInformationResult> = levels
 
     fun setContentByLevelToList(data : ArrayList<SeriesInformationResult>)
     {
         levels = data;
     }
 
-    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult>
-    {
-        return categories;
-    }
+    fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult> = categories
 
 }

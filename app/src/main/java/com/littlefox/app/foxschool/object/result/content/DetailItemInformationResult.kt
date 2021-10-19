@@ -42,15 +42,9 @@ class DetailItemInformationResult
             return if(list.size < info[0].getTotalCount()) true else false
         }
 
-    fun getContentsList() : ArrayList<ContentsBaseResult>
-    {
-        return list
-    }
+    fun getContentsList() : ArrayList<ContentsBaseResult> = list
 
-    fun getCategoryList() : ArrayList<SeriesInformationResult>
-    {
-        return children
-    }
+    fun getCategoryList() : ArrayList<SeriesInformationResult> = children
 
     inner class SeriesInformation
     {
@@ -70,24 +64,12 @@ class DetailItemInformationResult
                 return if(is_single == "Y") true else false
             }
 
-        fun getID() : String
-        {
-            return id
-        }
+        fun getID() : String = id
 
-        fun getLevel() : Int
-        {
-            return level
-        }
+        fun getLevel() : Int = level
 
-        fun getTotalCount() : Int
-        {
-            return contents_count
-        }
+        fun getTotalCount() : Int = contents_count
 
-        fun getARLevel() : Float
-        {
-            return ar_level
-        }
+        fun getARLevel() : Float = ar_level
     }
 }

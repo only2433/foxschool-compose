@@ -33,36 +33,20 @@ open class MyBookshelfResult : Parcelable
         dest.writeInt(contents_count)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getID() : String
-    {
-        return id;
-    }
+    fun getID() : String = id
 
-    fun getName() : String
-    {
-        return name;
-    }
+    fun getName() : String = name
 
-    fun getColor() : String
-    {
-        return color;
-    }
+    fun getColor() : String = color
 
-    fun getContentsCount() : Int
-    {
-        return contents_count;
-    }
+    fun getContentsCount() : Int = contents_count
 
-    fun setCountentsCount(count : Int)
+    fun setContentsCount(count : Int)
     {
-        contents_count = count;
+        contents_count = count
     }
-
 
     companion object
     {

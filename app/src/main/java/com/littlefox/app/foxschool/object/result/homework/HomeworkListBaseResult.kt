@@ -11,25 +11,16 @@ class HomeworkListBaseResult
     private var eval : String       = ""
     private val list : ArrayList<HomeworkListItemData> = ArrayList()
 
-    fun getStartDate() : String
-    {
-        return start_date
-    }
+    fun getStartDate() : String = start_date
 
-    fun getEndDate() : String
-    {
-        return end_date
-    }
+    fun getEndDate() : String = end_date
 
     fun isEvaluationComplete() : Boolean
     {
         return if(is_eval == "Y") true else false
     }
 
-    fun getEvaluationComment() : String
-    {
-        return eval_comment
-    }
+    fun getEvaluationComment() : String = eval_comment
 
     fun getEvaluationState() : String
     {
@@ -40,18 +31,9 @@ class HomeworkListBaseResult
         return "E0"
     }
 
-    fun getStudentComment() : String
-    {
-        return student_comment
-    }
+    fun getStudentComment() : String = student_comment
 
-    fun getTeacherComment() : String
-    {
-        return teacher_comment
-    }
+    fun getTeacherComment() : String = teacher_comment
 
-    fun getHomeworkItemList() : ArrayList<HomeworkListItemData>
-    {
-        return list
-    }
+    fun getHomeworkItemList() : ArrayList<HomeworkListItemData> = list
 }

@@ -9,10 +9,7 @@ class SearchListBaseObject : BaseResult()
     private val data : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private val meta : MetaDataResult? = null
 
-    fun getSearchList() : ArrayList<ContentsBaseResult>
-    {
-        return data
-    }
+    fun getSearchList() : ArrayList<ContentsBaseResult> = data
 
     fun getCurrentPageIndex() : Int
     {

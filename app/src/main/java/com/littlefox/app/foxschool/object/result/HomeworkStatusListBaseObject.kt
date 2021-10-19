@@ -7,8 +7,5 @@ class HomeworkStatusListBaseObject : BaseResult()
 {
     private val data : HomeworkListBaseResult? = null
 
-    fun getData() : HomeworkListBaseResult
-    {
-        return data!!
-    }
+    fun getData() : HomeworkListBaseResult = data!!
 }

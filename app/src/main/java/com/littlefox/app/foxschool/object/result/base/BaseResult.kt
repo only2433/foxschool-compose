@@ -87,20 +87,10 @@ open class BaseResult
             }
         }
 
-    fun getStatus() : Int
-    {
-        return status;
-    }
+    fun getStatus() : Int = status
 
-    fun getMessage() : String
-    {
-        return message;
-    }
+    fun getMessage() : String = message
 
-    fun getAccessToken() : String
-    {
-        return access_token;
-    }
-
+    fun getAccessToken() : String = access_token
 
 }

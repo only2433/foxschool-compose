@@ -7,8 +7,5 @@ class SchoolListBaseObject : BaseResult()
 {
     private var data : ArrayList<SchoolItemDataResult> = ArrayList()
 
-    fun getData() : ArrayList<SchoolItemDataResult>
-    {
-        return data
-    }
+    fun getData() : ArrayList<SchoolItemDataResult> = data
 }

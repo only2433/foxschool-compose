@@ -14,45 +14,21 @@ class UserInfoSectionResult
     private var phone : String = ""
     private var user_type : String = ""
 
-    fun getFoxUserID() : String
-    {
-        return fu_id
-    }
+    fun getFoxUserID() : String = fu_id
 
-    fun getLoginID() : String
-    {
-        return login_id
-    }
+    fun getLoginID() : String = login_id
 
-    fun getName() : String
-    {
-        return name
-    }
+    fun getName() : String = name
 
-    fun getNickName() : String
-    {
-        return nick_name
-    }
+    fun getNickName() : String = nick_name
 
-    fun getSex() : String
-    {
-        return sex
-    }
+    fun getSex() : String = sex
 
-    fun getBirth() : String
-    {
-        return birth
-    }
+    fun getBirth() : String = birth
 
-    fun getEmail() : String
-    {
-        return email
-    }
+    fun getEmail() : String = email
 
-    fun getPhone() : String
-    {
-        return phone
-    }
+    fun getPhone() : String = phone
 
     fun getUserType() : String
     {

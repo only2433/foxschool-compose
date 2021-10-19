@@ -9,35 +9,20 @@ class IntroduceSeriesCreatorsResult
     private var animation : ArrayList<CreatorsData> = ArrayList<CreatorsData>()
     private var cast : ArrayList<CreatorsData> = ArrayList<CreatorsData>()
 
-    fun getDescription() : String
-    {
-        return description
-    }
+    fun getDescription() : String = description
 
-    fun getStoryList() : ArrayList<CreatorsData>
-    {
-        return story
-    }
+    fun getStoryList() : ArrayList<CreatorsData> = story
 
-    fun getAnimationList() : ArrayList<CreatorsData>
-    {
-        return animation
-    }
+    fun getAnimationList() : ArrayList<CreatorsData> = animation
 
-    fun getCastList() : ArrayList<CreatorsData>
-    {
-        return cast
-    }
+    fun getCastList() : ArrayList<CreatorsData> = cast
 
     inner class CreatorsData
     {
         private var name = ""
         private var part : String = ""
 
-        fun getName() : String
-        {
-            return name
-        }
+        fun getName() : String = name
 
         fun getPart() : String
         {

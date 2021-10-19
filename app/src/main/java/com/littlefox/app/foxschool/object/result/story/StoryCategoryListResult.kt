@@ -25,10 +25,7 @@ class StoryCategoryListResult
         return ""
     }
 
-    fun getInformationList() : ArrayList<SeriesInformationResult>
-    {
-        return children
-    }
+    fun getInformationList() : ArrayList<SeriesInformationResult> = children
 
     inner class TitleData
     {

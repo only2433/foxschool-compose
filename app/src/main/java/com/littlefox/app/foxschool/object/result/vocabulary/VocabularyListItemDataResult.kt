@@ -15,8 +15,5 @@ class VocabularyListItemDataResult : MyVocabularyResult
 
     protected constructor(`in` : Parcel) : super(`in`) {}
 
-    fun wordsList() : ArrayList<VocabularyDataResult>
-    {
-        return words
-    }
+    fun wordsList() : ArrayList<VocabularyDataResult> = words
 }

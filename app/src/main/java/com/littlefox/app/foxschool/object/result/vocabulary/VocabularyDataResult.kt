@@ -48,35 +48,17 @@ open class VocabularyDataResult : Parcelable
         dest.writeByte((if (isSelected) 1 else 0).toByte())
     }
 
-    fun getContentID() : String
-    {
-        return content_id;
-    }
+    fun getContentID() : String = content_id
 
-    fun getID() : String
-    {
-        return id;
-    }
+    fun getID() : String = id
 
-    fun getWordText() : String
-    {
-        return text;
-    }
+    fun getWordText() : String = text
 
-    fun getMeaningText() : String
-    {
-        return mean;
-    }
+    fun getMeaningText() : String = mean
 
-    fun getExampleText() : String
-    {
-        return example;
-    }
+    fun getExampleText() : String = example
 
-    fun getSoundURL() : String
-    {
-        return sound_url;
-    }
+    fun getSoundURL() : String = sound_url
 
     fun setContentViewSize(size : Int)
     {
@@ -93,10 +75,7 @@ open class VocabularyDataResult : Parcelable
         isSelected = isSelect;
     }
 
-    fun isSelected() : Boolean
-    {
-        return isSelected;
-    }
+    fun isSelected() : Boolean = isSelected
 
     override fun describeContents() : Int { return 0 }
 

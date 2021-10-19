@@ -7,8 +7,5 @@ class IntroduceSeriesBaseObject : BaseResult()
 {
     private var data : IntroduceSeriesInformationResult? = null
 
-    fun getData() : IntroduceSeriesInformationResult
-    {
-        return data!!
-    }
+    fun getData() : IntroduceSeriesInformationResult = data!!
 }

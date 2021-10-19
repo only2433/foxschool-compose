@@ -25,15 +25,9 @@ class ManagementBooksData : MyBookshelfResult, Parcelable
         booksType = MyBooksType.valueOf(`in`.readString()!!)
     }
 
-    fun getBooksType() : MyBooksType?
-    {
-        return booksType
-    }
+    fun getBooksType() : MyBooksType = booksType
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
     override fun writeToParcel(parcel : Parcel, i : Int)
     {

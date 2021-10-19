@@ -14,40 +14,28 @@ class FlashCardDataResult : VocabularyDataResult
 
     constructor(data : VocabularyDataResult) : super(data)
 
-    fun getIndex() : Int
-    {
-        return index
-    }
+    fun getIndex() : Int = index
 
     fun setIndex(index : Int)
     {
         this.index = index
     }
 
-    fun getCardNumber() : Int
-    {
-        return cardNumber
-    }
+    fun getCardNumber() : Int = cardNumber
 
     fun setCardNumber(cardNumber : Int)
     {
         this.cardNumber = cardNumber
     }
 
-    fun isBookmarked() : Boolean
-    {
-        return isBookmark
-    }
+    fun isBookmarked() : Boolean = isBookmark
 
     fun enableBookmark(isEnable : Boolean)
     {
         isBookmark = isEnable
     }
 
-    fun isBackVisible() : Boolean
-    {
-        return isBackVisible
-    }
+    fun isBackVisible() : Boolean = isBackVisible
 
     fun setBackVisible(isBackVisible : Boolean)
     {

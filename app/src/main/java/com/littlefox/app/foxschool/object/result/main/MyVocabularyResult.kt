@@ -55,40 +55,19 @@ open class MyVocabularyResult : Parcelable
         dest.writeSerializable(vocabularyType)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getID() : String
-    {
-        return id
-    }
+    fun getID() : String = id
 
-    fun getContentID() : String
-    {
-        return contentID
-    }
+    fun getContentID() : String = contentID
 
-    fun getName() : String
-    {
-        return name
-    }
+    fun getName() : String = name
 
-    fun getColor() : String
-    {
-        return color
-    }
+    fun getColor() : String = color
 
-    fun getWordCount() : Int
-    {
-        return words_count
-    }
+    fun getWordCount() : Int = words_count
 
-    fun getVocabularyType() : VocabularyType
-    {
-        return vocabularyType
-    }
+    fun getVocabularyType() : VocabularyType = vocabularyType
 
     fun setWordCount(count : Int)
     {

@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.`object`.result.record
 import android.os.Parcel
 import android.os.Parcelable
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import kotlin.math.exp
 
 class RecordHistoryResult : Parcelable
 {
@@ -39,35 +40,17 @@ class RecordHistoryResult : Parcelable
         dest.writeInt(expire)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getTitle() : String
-    {
-        return title
-    }
+    fun getTitle() : String = title
 
-    fun getDate() : String
-    {
-        return date
-    }
+    fun getDate() : String = date
 
-    fun getMp3Path() : String
-    {
-        return mp3_path
-    }
+    fun getMp3Path() : String = mp3_path
 
-    fun getThumbnailUrl() : String
-    {
-        return thumbnail_url
-    }
+    fun getThumbnailUrl() : String = thumbnail_url
 
-    fun getExpire() : Int
-    {
-        return expire
-    }
+    fun getExpire() : Int = expire
 
     companion object
     {

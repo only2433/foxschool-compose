@@ -7,8 +7,5 @@ class HomeworkManageCalenderBaseObject : BaseResult()
 {
     private val data : HomeworkCalendarBaseResult? = null
 
-    fun getData() : HomeworkCalendarBaseResult
-    {
-        return data!!
-    }
+    fun getData() : HomeworkCalendarBaseResult = data!!
 }

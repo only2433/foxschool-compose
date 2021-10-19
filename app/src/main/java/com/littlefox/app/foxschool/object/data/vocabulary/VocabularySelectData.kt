@@ -72,20 +72,10 @@ class VocabularySelectData
         return isSelectAll
     }
 
-    fun isSelectedWord() : Boolean
-    {
-        return isSelectedWord;
-    }
+    fun isSelectedWord() : Boolean = isSelectedWord
 
-    fun isSelectedMeaning() : Boolean
-    {
-        return isSelectedMeaning;
-    }
+    fun isSelectedMeaning() : Boolean = isSelectedMeaning
 
-    fun isSelectedExample() : Boolean
-    {
-        return isSelectedExample;
-    }
-
+    fun isSelectedExample() : Boolean = isSelectedExample
 
 }

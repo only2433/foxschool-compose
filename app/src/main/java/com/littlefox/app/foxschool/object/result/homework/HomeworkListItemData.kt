@@ -22,15 +22,9 @@ class HomeworkListItemData
         return false
     }
 
-    fun getCompleteDate() : String
-    {
-        return compleate_date
-    }
+    fun getCompleteDate() : String = compleate_date
 
-    fun getContentID() : String
-    {
-        return content_id
-    }
+    fun getContentID() : String = content_id
 
     fun getContentType() : ContentType
     {
@@ -43,10 +37,7 @@ class HomeworkListItemData
         }
     }
 
-    fun getThumbnailUrl() : String
-    {
-        return thumbnail_url
-    }
+    fun getThumbnailUrl() : String = thumbnail_url
 
     fun getHomeworkType() : HomeworkType
     {
@@ -62,8 +53,5 @@ class HomeworkListItemData
         }
     }
 
-    fun getTitle() : String
-    {
-        return title
-    }
+    fun getTitle() : String = title
 }

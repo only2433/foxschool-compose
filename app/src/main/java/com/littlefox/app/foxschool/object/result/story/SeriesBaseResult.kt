@@ -47,20 +47,11 @@ open class SeriesBaseResult : Parcelable
         dest.writeSerializable(series)
     }
 
-    override fun describeContents() : Int
-    {
-        return 0
-    }
+    override fun describeContents() : Int = 0
 
-    fun getDisplayID() : String
-    {
-        return id
-    }
+    fun getDisplayID() : String = id
 
-    fun getSeriesName() : String
-    {
-        return name
-    }
+    fun getSeriesName() : String = name
 
     fun getSeriesType() : String
     {
@@ -71,30 +62,15 @@ open class SeriesBaseResult : Parcelable
         return seriesType!!;
     }
 
-    fun getThumbnailUrl() : String
-    {
-        return thumbnail_url;
-    }
+    fun getThumbnailUrl() : String = thumbnail_url
 
-    fun getTransitionType() : TransitionType
-    {
-        return transitionType;
-    }
+    fun getTransitionType() : TransitionType = transitionType
 
-    fun getFreeSingleSortNumber() : Int
-    {
-        return free_single_sort_number;
-    }
+    fun getFreeSingleSortNumber() : Int = free_single_sort_number
 
-    fun getFreeSeriesSortNumber() : Int
-    {
-        return free_series_sort_number;
-    }
+    fun getFreeSeriesSortNumber() : Int = free_series_sort_number
 
-    fun getBasicSortNumber() : Int
-    {
-        return basic_sort_number;
-    }
+    fun getBasicSortNumber() : Int = basic_sort_number
 
     fun setContentsName(name : String)
     {
