@@ -2468,9 +2468,9 @@ class CommonUtils
     }
 
     /**
-     * 달력 선생님 평가 이미지 가져오기 (학생용 달력에서 사용)
+     * 숙제 선생님 평가 이미지 가져오기
      */
-    fun getCalendarEvalImage(eval : String) : Drawable?
+    fun getHomeworkEvalImage(eval : String) : Drawable?
     {
         when(eval)
         {

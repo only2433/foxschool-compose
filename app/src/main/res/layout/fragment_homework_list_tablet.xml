@@ -120,11 +120,12 @@
         android:id="@+id/_oneCommentLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:scale_base_width="1920"
         app:scale_base_height="100">
 
         <ImageView
-            android:id="@+id/_homeworkStudentCommentBg1"
+            android:id="@+id/_homeworkOneCommentBg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/box_list_green"
@@ -134,6 +135,7 @@
             app:scale_height="80"/>
 
         <ImageView
+            android:id="@+id/_homeworkOneCommentIcon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/icon_smile_chat"
@@ -143,7 +145,7 @@
             app:scale_height="55"/>
 
         <TextView
-            android:id="@+id/_homeworkStudentComment1"
+            android:id="@+id/_homeworkOneCommentTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_homework_student_comment"
@@ -156,7 +158,7 @@
             app:scale_textsize="32"/>
 
         <TextView
-            android:id="@+id/_homeworkStudentCommentButton1"
+            android:id="@+id/_homeworkOneCommentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_homework_comment_write"
@@ -183,7 +185,7 @@
         app:scale_base_height="100">
 
         <ImageView
-            android:id="@+id/_homeworkStudentCommentBg2"
+            android:id="@+id/_homeworkStudentCommentBg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/box_list_green"
@@ -202,7 +204,7 @@
             app:scale_height="55"/>
 
         <TextView
-            android:id="@+id/_homeworkStudentComment2"
+            android:id="@+id/_homeworkStudentComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_homework_student_comment"
@@ -215,7 +217,7 @@
             app:scale_textsize="32"/>
 
         <TextView
-            android:id="@+id/_homeworkStudentCommentButton2"
+            android:id="@+id/_homeworkStudentCommentButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/text_homework_comment_write"

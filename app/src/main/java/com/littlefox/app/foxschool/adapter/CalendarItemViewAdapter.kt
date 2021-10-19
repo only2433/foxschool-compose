@@ -147,7 +147,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
                     if (homework.isEvaluationComplete())
                     {
                         // 선생님 평가 있는 경우 아이콘 표시
-                        val image = CommonUtils.getInstance(mContext).getCalendarEvalImage(homework.getEvaluationState())
+                        val image = CommonUtils.getInstance(mContext).getHomeworkEvalImage(homework.getEvaluationState())
                         if (image != null)
                         {
                             holder._StampImage.visibility = View.VISIBLE

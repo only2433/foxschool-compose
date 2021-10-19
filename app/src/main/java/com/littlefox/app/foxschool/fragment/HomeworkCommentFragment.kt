@@ -19,6 +19,9 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkCommentFragmentObserver
 import com.littlefox.logmonitor.Log
@@ -56,13 +59,22 @@ class HomeworkCommentFragment : Fragment()
     @BindView(R.id._commentDeleteButton)
     lateinit var _CommentDeleteButton : TextView
 
+    companion object
+    {
+        private const val DIALOG_COMMENT_DELETE : Int = 10001
+    }
+
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     private lateinit var mHomeworkCommentFragmentObserver : HomeworkCommentFragmentObserver
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
 
-    private var hasStudentComment : Boolean = false // 학습자 코멘트 여부 플래그
+    private var mClickEnable : Boolean = false          // 중복 클릭 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+
+    private var isCompleted : Boolean = false           // 최종평가 여부
+    private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -136,7 +148,7 @@ class HomeworkCommentFragment : Fragment()
     private fun initView()
     {
         _CommentEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && hasStudentComment)
+            if (hasFocus && mComment != "")
             {
                 setUpdateButtonEnable(true)
             }
@@ -161,42 +173,28 @@ class HomeworkCommentFragment : Fragment()
         mHomeworkCommentFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkCommentFragmentObserver::class.java)
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
+        // 코멘트 적용
+        mHomeworkManagePresenterObserver.setCommentData.observe(mContext as AppCompatActivity, { comment ->
+            mComment = comment
+        })
+
         // 페이지 세팅
-        mHomeworkManagePresenterObserver.setPageType.observe(mContext as AppCompatActivity, { position ->
-            setPageType(position)
-        })
-
-        // 학습자 코멘트 설정
-        mHomeworkManagePresenterObserver.setStudentCommentData.observe(mContext as AppCompatActivity, { comment ->
-            hasStudentComment = (comment != "") // 기존에 입력된 코멘트 있는지 확인하는 플래그 설정
-            setStudentCommentLayout(comment)
-        })
-
-        // 선생님 코멘트 설정
-        mHomeworkManagePresenterObserver.setTeacherCommentData.observe(mContext as AppCompatActivity, { comment ->
-            _CommentEditText.visibility = View.VISIBLE
-            _CommentEditText.setText(comment)
-            _CommentEditText.isEnabled = false
-        })
-
-        // 화면 데이터 초기화
-        mHomeworkManagePresenterObserver.clearScreenData.observe(mContext as AppCompatActivity, {
-            clearScreenData()
+        mHomeworkManagePresenterObserver.setPageType.observe(mContext as AppCompatActivity, { pair ->
+            clearScreenData() // 화면 초기화
+            isCompleted = pair.second
+            settingPageType(pair.first)
+            mClickEnable = true
         })
     }
 
     /**
      * 화면 세팅
      */
-    private fun setPageType(position : Int)
+    private fun settingPageType(position : Int)
     {
-        // 버튼 전부 숨김 (학생용 세팅은 따로 진행하기 때문에)
-        setRegisterButtonVisible(false)
-        setUpdateButtonVisible(false)
-        setDeleteButtonVisible(false)
-
         if (position == Common.PAGE_HOMEWORK_STUDENT_COMMENT)
         {
+            // 학생용 한마디 화면
             _CommentInputCountText.visibility = View.VISIBLE
 
             if (CommonUtils.getInstance(mContext).checkTablet)
@@ -209,9 +207,12 @@ class HomeworkCommentFragment : Fragment()
                 _CommentInputLayout.moveChildView(_CommentBoxImage, 28f, 140f)
                 _CommentInputLayout.moveChildView(_CommentEditText, 62f, 180f)
             }
+
+            setStudentCommentLayout()
         }
         else if (position == Common.PAGE_HOMEWORK_TEACHER_COMMENT)
         {
+            // 선생님 한마디 화면
             _CommentInputCountText.visibility = View.GONE
 
             if (CommonUtils.getInstance(mContext).checkTablet)
@@ -224,22 +225,36 @@ class HomeworkCommentFragment : Fragment()
                 _CommentInputLayout.moveChildView(_CommentBoxImage, 28f, 60f)
                 _CommentInputLayout.moveChildView(_CommentEditText, 62f, 105f)
             }
+
+            _CommentEditText.visibility = View.VISIBLE
+            _CommentEditText.setText(mComment)
+            _CommentEditText.isEnabled = false
         }
     }
 
     /**
      * [학습자 한마디] 코멘트 및 버튼 표시 설정
+     * - 최종평가 이후에는 텍스트 수정 불가
      */
-    private fun setStudentCommentLayout(comment : String)
+    private fun setStudentCommentLayout()
     {
-        _CommentEditText.setText(comment)
+        _CommentEditText.setText(mComment)
 
         _CommentEditText.visibility = View.VISIBLE
         _CommentEditText.isEnabled = true
         _MainBaseLayout.requestFocus() // EditText 커서 제거하기 위해 사용
 
-        if (hasStudentComment)
+        if (isCompleted)
         {
+            // 최종평가를 한 경우 코멘트 수정 불가
+            _CommentInputCountText.visibility = View.GONE
+            setRegisterButtonVisible(false)
+            setUpdateButtonVisible(false)
+            setDeleteButtonVisible(false)
+        }
+        else if (mComment != "")
+        {
+            // 코멘트가 있는 경우
             setCommentCountText()
             setUpdateButtonEnable(false)
             setRegisterButtonVisible(false)
@@ -248,6 +263,7 @@ class HomeworkCommentFragment : Fragment()
         }
         else
         {
+            // 코멘트가 없는 경우
             setRegisterButtonVisible(true)
             setUpdateButtonVisible(false)
             setDeleteButtonVisible(false)
@@ -347,23 +363,38 @@ class HomeworkCommentFragment : Fragment()
      */
     private fun clearScreenData()
     {
-        hasStudentComment = false
         _CommentEditText.setText("")
         setRegisterButtonVisible(false)
         setUpdateButtonVisible(false)
         setDeleteButtonVisible(false)
     }
 
+    /**
+     * 코멘트 삭제 확인 다이얼로그
+     */
+    private fun showCommentDeleteDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_comment_delete_check))
+        mTemplateAlertDialog.setDialogEventType(DIALOG_COMMENT_DELETE)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
+    }
+
     @Optional
     @OnClick(R.id._commentInputLayout, R.id._commentRegisterButton, R.id._commentUpdateButton, R.id._commentDeleteButton)
     fun onClickView(view : View)
     {
+        if (mClickEnable == false) return
+
         when(view.id)
         {
             R.id._commentInputLayout -> CommonUtils.getInstance(mContext).hideKeyboard()
             R.id._commentRegisterButton -> mHomeworkCommentFragmentObserver.onClickRegisterButton(_CommentEditText.text.toString())
             R.id._commentUpdateButton -> mHomeworkCommentFragmentObserver.onClickUpdateButton(_CommentEditText.text.toString())
-            R.id._commentDeleteButton -> mHomeworkCommentFragmentObserver.onClickDeleteButton()
+            R.id._commentDeleteButton -> showCommentDeleteDialog()
         }
     }
 
@@ -398,9 +429,33 @@ class HomeworkCommentFragment : Fragment()
             setCommentCountText() // 글자 byte 실시간 갱신
         }
 
-        override fun afterTextChanged(text : Editable?)
-        {
+        override fun afterTextChanged(text : Editable?) { }
+    }
 
+    /**
+     * 다이얼로그 Listener
+     */
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int) { }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            if (eventType == DIALOG_COMMENT_DELETE)
+            {
+                when(buttonType)
+                {
+                    DialogButtonType.BUTTON_1 ->
+                    {
+                        // 코멘트 삭제 취소
+                    }
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        // 코멘트 삭제 통신 요청
+                        mHomeworkCommentFragmentObserver.onClickDeleteButton()
+                    }
+                }
+            }
         }
     }
 }

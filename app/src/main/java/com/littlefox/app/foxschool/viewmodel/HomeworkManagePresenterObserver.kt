@@ -2,94 +2,38 @@ package com.littlefox.app.foxschool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListBaseResult
-import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
-import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 
+/**
+ * 숙제(달력, 리스트, 코멘트) Presenter Observer
+ */
 class HomeworkManagePresenterObserver : ViewModel()
 {
-    var setCalendarListView = MutableLiveData<CalendarItemViewAdapter>()
-    var setCalendarMonthTitle = MutableLiveData<String>()
-    var setCalendarPrevButton = MutableLiveData<Boolean>()
-    var setCalendarNextButton = MutableLiveData<Boolean>()
-    var setScrollTop = MutableLiveData<Boolean>()
+    var setCalendarData = MutableLiveData<HomeworkCalendarBaseResult>()
 
-    var setHomeworkListView = MutableLiveData<Pair<HomeworkItemViewAdapter, Boolean>>()
-    var setHomeworkDateText = MutableLiveData<String>()
-    var setHomeworkFilterText = MutableLiveData<String>()
-    var setResultCommentLayout = MutableLiveData<HomeworkListBaseResult>()
-    var setStudentCommentLayout = MutableLiveData<Boolean>()
-    var setTeacherCommentLayout = MutableLiveData<Boolean>()
+    var updateHomeworkListData = MutableLiveData<HomeworkListBaseResult>()
     var setHomeworkPrevButton = MutableLiveData<Boolean>()
     var setHomeworkNextButton = MutableLiveData<Boolean>()
-    var setHomeworkLoadingProgressBar = MutableLiveData<Boolean>()
     var clearHomeworkList = MutableLiveData<Boolean>()
 
-    var setPageType = MutableLiveData<Int>()
-    var setStudentCommentData = MutableLiveData<String>()
-    var setTeacherCommentData = MutableLiveData<String>()
-    var clearScreenData = MutableLiveData<Boolean>()
-
+    var setPageType = MutableLiveData<Pair<Int, Boolean>>()
+    var setCommentData = MutableLiveData<String>()
 
     /**
      * 숙제관리 화면 (달력)
      */
-    fun setCalendarListView(calendarAdapter : CalendarItemViewAdapter)
+    fun setCalendarData(homeworkCalendarBaseResult : HomeworkCalendarBaseResult)
     {
-        setCalendarListView.value = calendarAdapter
-    }
-
-    fun setCalendarMonthTitle(title : String)
-    {
-        setCalendarMonthTitle.value = title
-    }
-
-    fun setCalendarPrevButton(isEnable : Boolean)
-    {
-        setCalendarPrevButton.value = isEnable
-    }
-
-    fun setCalendarNextButton(isEnable : Boolean)
-    {
-        setCalendarNextButton.value = isEnable
-    }
-
-    fun setScrollTop()
-    {
-        setScrollTop.value = true
+        setCalendarData.value = homeworkCalendarBaseResult
     }
 
     /**
      * 숙제현황 화면 (리스트)
      */
-    fun setHomeworkListView(homeworkListAdapter : HomeworkItemViewAdapter, animation : Boolean)
+    fun updateHomeworkListData(item : HomeworkListBaseResult)
     {
-        setHomeworkListView.value = Pair<HomeworkItemViewAdapter, Boolean>(homeworkListAdapter, animation)
-    }
-
-    fun setHomeworkDateText(date : String)
-    {
-        setHomeworkDateText.value = date
-    }
-
-    fun setHomeworkFilterText(text : String)
-    {
-        setHomeworkFilterText.value = text
-    }
-
-    fun setResultCommentLayout(item : HomeworkListBaseResult)
-    {
-        setResultCommentLayout.value = item
-    }
-
-    fun setStudentCommentLayout(hasComment : Boolean)
-    {
-        setStudentCommentLayout.value = hasComment
-    }
-
-    fun setTeacherCommentLayout(hasComment : Boolean)
-    {
-        setTeacherCommentLayout.value = hasComment
+        updateHomeworkListData.value = item
     }
 
     fun setHomeworkPrevButton(isEnable : Boolean)
@@ -102,11 +46,6 @@ class HomeworkManagePresenterObserver : ViewModel()
         setHomeworkNextButton.value = isEnable
     }
 
-    fun setHomeworkLoadingProgressBar(isVisible : Boolean)
-    {
-        setHomeworkLoadingProgressBar.value = isVisible
-    }
-
     fun clearHomeworkList(allClear : Boolean)
     {
         clearHomeworkList.value = allClear
@@ -115,23 +54,13 @@ class HomeworkManagePresenterObserver : ViewModel()
     /**
      * 학습자/선생님 한마디 화면
      */
-    fun setPageType(position : Int)
+    fun setPageType(position : Int, isCompleted : Boolean)
     {
-        setPageType.value = position
+        setPageType.value = Pair(position, isCompleted)
     }
 
-    fun setStudentCommentData(comment : String)
+    fun setCommentData(comment : String)
     {
-        setStudentCommentData.value = comment
-    }
-
-    fun setTeacherCommentData(comment : String)
-    {
-        setTeacherCommentData.value = comment
-    }
-
-    fun clearScreenData()
-    {
-        clearScreenData.value = true
+        setCommentData.value = comment
     }
 }

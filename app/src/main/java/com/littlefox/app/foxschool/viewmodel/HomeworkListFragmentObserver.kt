@@ -10,8 +10,7 @@ class HomeworkListFragmentObserver : ViewModel()
     var onClickAfterButton = MutableLiveData<Boolean>()
     var onClickStudentCommentButton = MutableLiveData<Boolean>()
     var onClickTeacherCommentButton = MutableLiveData<Boolean>()
-    var onClickHomeworkInfoButton = MutableLiveData<Boolean>()
-    var onClickListFilterButton = MutableLiveData<Boolean>()
+    var onClickHomeworkItem = MutableLiveData<HomeworkListItemData>()
 
     fun onClickBeforeButton()
     {
@@ -33,13 +32,8 @@ class HomeworkListFragmentObserver : ViewModel()
         onClickTeacherCommentButton.value = true
     }
 
-    fun onClickHomeworkInfoButton()
+    fun onClickHomeworkItem(item : HomeworkListItemData)
     {
-        onClickHomeworkInfoButton.value = true
-    }
-
-    fun onClickListFilterButton()
-    {
-        onClickListFilterButton.value = true
+        onClickHomeworkItem.value = item
     }
 }

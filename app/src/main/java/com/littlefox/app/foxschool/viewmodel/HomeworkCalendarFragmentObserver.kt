@@ -8,7 +8,7 @@ class HomeworkCalendarFragmentObserver : ViewModel()
     var onClickCalendarBefore = MutableLiveData<Boolean>()
     var onClickCalendarAfter = MutableLiveData<Boolean>()
     var onClickCalendarItem = MutableLiveData<Int>()
-    var onCompletedListSet = MutableLiveData<Boolean>()
+    var onCompletedCalendarSet = MutableLiveData<Boolean>()
 
     fun onClickCalendarBefore()
     {
@@ -25,8 +25,8 @@ class HomeworkCalendarFragmentObserver : ViewModel()
         onClickCalendarItem.value = calendarItem
     }
 
-    fun onCompletedListSet(isCompleted : Boolean)
+    fun onCompletedCalendarSet()
     {
-        onCompletedListSet.value = isCompleted
+        onCompletedCalendarSet.value = true
     }
 }
