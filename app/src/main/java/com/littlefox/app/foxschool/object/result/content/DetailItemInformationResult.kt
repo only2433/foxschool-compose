@@ -57,7 +57,7 @@ class DetailItemInformationResult
         private var id : String = ""
         private var is_single : String = ""
         private var level : Int = -1
-        private var total_count : Int = 0
+        private var contents_count : Int = 0
         private var ar_level = 0.0f
 
         val isSingle : Boolean
@@ -82,7 +82,7 @@ class DetailItemInformationResult
 
         fun getTotalCount() : Int
         {
-            return total_count
+            return contents_count
         }
 
         fun getARLevel() : Float

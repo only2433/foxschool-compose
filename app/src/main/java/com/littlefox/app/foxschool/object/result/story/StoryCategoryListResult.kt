@@ -4,22 +4,35 @@ import java.util.*
 
 class StoryCategoryListResult
 {
-    private var id : String = ""
-    private var name : String = ""
+    private var theme_info : TitleData? = null
     private var children = ArrayList<SeriesInformationResult>()
 
     fun getID() : String
     {
-        return id
+        if(theme_info != null)
+        {
+            return theme_info!!.id
+        }
+        return ""
     }
 
     fun getName() : String
     {
-        return name
+        if(theme_info != null)
+        {
+            return theme_info!!.name
+        }
+        return ""
     }
 
     fun getInformationList() : ArrayList<SeriesInformationResult>
     {
         return children
+    }
+
+    inner class TitleData
+    {
+        var id : String = ""
+        var name : String = ""
     }
 }

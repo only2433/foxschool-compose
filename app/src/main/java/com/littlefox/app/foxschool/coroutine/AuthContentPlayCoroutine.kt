@@ -14,7 +14,6 @@ import java.io.File
 class AuthContentPlayCoroutine : BaseCoroutine
 {
     private var mContentID = ""
-    private var mIsClassUser = "N"
 
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_AUTH_CONTENT_PLAY) {}
 
@@ -25,10 +24,19 @@ class AuthContentPlayCoroutine : BaseCoroutine
             return null
         }
         lateinit var result : PlayerDataBaseObject
+        var response : String? = ""
         synchronized(mSync) {
             isRunning = true
             val resolutionValue : String = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_VIDEO_HIGH_RESOLUTION, "N")
-            val response = requestServerPair(mContext, Common.API_AUTH_CONTENT_PLAY.toString() + mContentID + File.separator + "player" + "?is_high_resolution=" + resolutionValue + "&&is_class_user=" + mIsClassUser, null, NetworkUtil.GET_METHOD)
+            if(resolutionValue.equals("Y"))
+            {
+                response = requestServerPair(mContext, Common.API_AUTH_CONTENT_PLAY + mContentID + File.separator + "Y", null, NetworkUtil.GET_METHOD)
+            }
+            else
+            {
+                response = requestServerPair(mContext, Common.API_AUTH_CONTENT_PLAY + mContentID, null, NetworkUtil.GET_METHOD)
+            }
+
             result = Gson().fromJson(response, PlayerDataBaseObject::class.java)
             if(result.getAccessToken().equals("") == false)
             {
@@ -41,9 +49,5 @@ class AuthContentPlayCoroutine : BaseCoroutine
     override fun setData(vararg objects : Any?)
     {
         mContentID = objects[0] as String
-        if(objects.size > 1)
-        {
-            mIsClassUser = objects[1] as String
-        }
     }
 }

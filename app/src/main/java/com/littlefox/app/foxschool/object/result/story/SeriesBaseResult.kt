@@ -9,7 +9,7 @@ import java.io.Serializable
 open class SeriesBaseResult : Parcelable
 {
     private var id : String = ""
-    private var content_name : String = ""
+    private var name : String = ""
     private var thumbnail_url : String = ""
     private var colors : ColorData? = null
     private var series : SeriesData? = null
@@ -22,7 +22,7 @@ open class SeriesBaseResult : Parcelable
     protected constructor(`in` : Parcel)
     {
         id = `in`.readString()!!
-        content_name = `in`.readString()!!
+        name = `in`.readString()!!
         seriesType = `in`.readString()
         thumbnail_url = `in`.readString()!!
         transitionType = `in`.readSerializable() as TransitionType
@@ -36,7 +36,7 @@ open class SeriesBaseResult : Parcelable
     override fun writeToParcel(dest : Parcel, flags : Int)
     {
         dest.writeString(id)
-        dest.writeString(content_name)
+        dest.writeString(name)
         dest.writeString(seriesType)
         dest.writeString(thumbnail_url)
         dest.writeSerializable(transitionType)
@@ -59,7 +59,7 @@ open class SeriesBaseResult : Parcelable
 
     fun getSeriesName() : String
     {
-        return content_name
+        return name
     }
 
     fun getSeriesType() : String
@@ -98,7 +98,7 @@ open class SeriesBaseResult : Parcelable
 
     fun setContentsName(name : String)
     {
-        this.content_name = name
+        this.name = name
     }
 
     fun setDisplayId(id : String)

@@ -28,7 +28,7 @@ class QuizInformationRequestCoroutine : BaseCoroutine
             isRunning = true
             val response = requestServerPair(
                 mContext,
-                "${Common.API_QUIZ}${mContentId}${File.separator}quiz",
+                "${Common.API_QUIZ}${mContentId}",
                 null,
                 NetworkUtil.GET_METHOD
             )
