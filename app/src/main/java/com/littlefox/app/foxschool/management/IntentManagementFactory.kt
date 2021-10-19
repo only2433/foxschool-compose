@@ -12,6 +12,8 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
+import com.littlefox.app.foxschool.`object`.result.base.QuizBaseObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
@@ -239,7 +241,7 @@ class IntentManagementFactory
                 intent = Intent(mContext, QuizActivity::class.java)
                 if(`object` != null)
                 {
-                    intent.putExtra(Common.INTENT_QUIZ_PARAMS, `object` as String?)
+                    intent.putExtra(Common.INTENT_QUIZ_PARAMS, `object` as QuizDataObject?)
                 }
             }
 

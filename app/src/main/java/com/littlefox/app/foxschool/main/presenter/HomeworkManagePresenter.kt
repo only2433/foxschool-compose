@@ -7,11 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkManageCalenderBaseObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkStatusListBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListItemData
 import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
@@ -42,6 +44,8 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         private const val MESSAGE_LIST_SET_COMPLETE : Int   = 100
         private const val MESSAGE_PAGE_CHANGE : Int         = 101
+
+        private const val REQUEST_CODE_NOTIFY : Int         = 1000
     }
 
     private lateinit var mContext : Context
@@ -80,6 +84,8 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     /** 학습자한마디 **/
     // 학습자 한마디 (통신 입력용)
     private var mStudentComment : String = ""
+
+    private var mSelectHomeworkData : HomeworkCalendarItemData? = null
 
     constructor(context : Context)
     {
@@ -139,7 +145,14 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         mStudentCommentDeleteCoroutine = null
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    {
+        Log.f("requestCode : $requestCode, resultCode : $resultCode")
+        when(requestCode)
+        {
+            REQUEST_CODE_NOTIFY -> onPageChanged(Common.PAGE_HOMEWORK_LIST)
+        }
+    }
 
     override fun sendMessageEvent(msg : Message)
     {
@@ -274,6 +287,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             .readyActivityMode(ActivityMode.PLAYER)
             .setData(arrayListOf(content))
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
     }
 
@@ -293,11 +307,16 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun startQuizActivity(contentID : String)
     {
         Log.f("")
-        //        IntentManagementFactory.getInstance()
-        //            .readyActivityMode(ActivityMode.QUIZ)
-        //            .setData(contentID)
-        //            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-        //            .startActivity()
+        var quizDataObject : QuizDataObject = QuizDataObject(
+            contentID,
+            mSelectHomeworkData!!.getHomeworkNumber())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.QUIZ)
+            .setData(quizDataObject)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .startActivity()
     }
 
     /**
@@ -337,6 +356,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
             .setData(content)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
     }
 
@@ -367,10 +387,10 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         Log.f("")
 
         // 숙제 아이템 정보 요청
-        val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
+        mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
 
         mHomeworkStatusListCoroutine = HomeworkStatusListCoroutine(mContext)
-        mHomeworkStatusListCoroutine!!.setData(homework.getHomeworkNumber().toString())
+        mHomeworkStatusListCoroutine!!.setData(mSelectHomeworkData!!.getHomeworkNumber().toString())
         mHomeworkStatusListCoroutine!!.asyncListener = mAsyncListener
         mHomeworkStatusListCoroutine!!.execute()
     }

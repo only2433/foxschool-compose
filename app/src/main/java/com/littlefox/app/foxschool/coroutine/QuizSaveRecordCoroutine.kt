@@ -17,6 +17,7 @@ import java.lang.String
 class QuizSaveRecordCoroutine : BaseCoroutine
 {
     private var mQuizRequestObject : QuizStudyRecordData? = null
+    private var mHomeworkNumber : Int = 0
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_QUIZ_SAVE_RECORD)
 
     override fun doInBackground() : Any?
@@ -58,9 +59,14 @@ class QuizSaveRecordCoroutine : BaseCoroutine
 
             list.put("results_json", jsonArray.toString())
 
+            if(mHomeworkNumber != 0)
+            {
+                list.put("hw_no", mHomeworkNumber)
+            }
+
             val response = NetworkUtil.requestServerPair(
                 mContext,
-                "${Common.API_QUIZ_SAVE_RECORD}${mQuizRequestObject!!.getContentId()}/quiz/result",
+                "${Common.API_QUIZ_SAVE_RECORD}${mQuizRequestObject!!.getContentId()}/result",
                 list,
                 NetworkUtil.POST_METHOD
             )
@@ -77,5 +83,11 @@ class QuizSaveRecordCoroutine : BaseCoroutine
     override fun setData(vararg objects : Any?)
     {
         mQuizRequestObject = objects[0] as QuizStudyRecordData
+
+        if(objects.size > 1)
+        {
+            mHomeworkNumber     = objects[1] as Int
+        }
+
     }
 }

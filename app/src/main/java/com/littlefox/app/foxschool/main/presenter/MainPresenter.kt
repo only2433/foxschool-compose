@@ -16,6 +16,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -621,9 +622,10 @@ class MainPresenter : MainContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
+        var quizDataObject : QuizDataObject = QuizDataObject(mCurrentDetailOptionResult.getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(mCurrentDetailOptionResult.getID())
+            .setData(quizDataObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

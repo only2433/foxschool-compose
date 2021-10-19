@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.IntroduceSeriesBaseObject
@@ -405,9 +406,10 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
+        var quizDataObject : QuizDataObject = QuizDataObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            .setData(quizDataObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

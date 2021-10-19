@@ -36,7 +36,7 @@ class TemplateAlertDialog
     protected var mButtonCount = -1
     protected var mDialogEventType = -1
     protected var mIconResource = -1
-    private lateinit var mDialogListener : DialogListener
+    private var mDialogListener : DialogListener? = null
     private lateinit var mAlertDialogBuilder : AlertDialog.Builder
     private val _BaseTitleLayout : LinearLayout? = null
     private val _TitleText : TextView? = null
@@ -198,11 +198,11 @@ class TemplateAlertDialog
                 {
                     if(mButtonCount == 1)
                     {
-                        mDialogListener.onConfirmButtonClick(mDialogEventType)
+                        mDialogListener?.onConfirmButtonClick(mDialogEventType)
                     }
                     else
                     {
-                        mDialogListener.onChoiceButtonClick(DialogButtonType.BUTTON_1, mDialogEventType)
+                        mDialogListener?.onChoiceButtonClick(DialogButtonType.BUTTON_1, mDialogEventType)
                     }
                 }
                 catch(e : NullPointerException)
@@ -218,7 +218,7 @@ class TemplateAlertDialog
                 {
                     try
                     {
-                        mDialogListener.onChoiceButtonClick(DialogButtonType.BUTTON_2, mDialogEventType)
+                        mDialogListener?.onChoiceButtonClick(DialogButtonType.BUTTON_2, mDialogEventType)
                     }
                     catch(e : NullPointerException) { }
                 }

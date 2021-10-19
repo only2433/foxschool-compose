@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Message
@@ -108,6 +109,12 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     {
         super.finish()
         overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
+    }
+
+    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    {
+        super.onActivityResult(requestCode, resultCode, data)
+        mHomeworkManagePresenter.activityResult(requestCode, resultCode, data)
     }
     /** LifeCycle end **/
 

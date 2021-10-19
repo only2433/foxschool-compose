@@ -25,6 +25,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
@@ -1376,19 +1377,32 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.QUIZ).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        var quizDataObject : QuizDataObject = QuizDataObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.QUIZ)
+            .setData(quizDataObject)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startOriginTranslateActivity()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
+            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startEbookActivity()
     {
         Log.f("")
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.WEBVIEW_EBOOK).setData(mPlayInformationList[mSelectItemOptionIndex].getID()).setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startVocabularyActivity()

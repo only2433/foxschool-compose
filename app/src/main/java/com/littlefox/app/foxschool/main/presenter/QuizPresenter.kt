@@ -124,7 +124,8 @@ class QuizPresenter : QuizContract.Presenter
         "http://cdn.littlefox.co.kr/contents/quiz/data/d.mp3"
     )
 
-    private var mContentID : String         = ""
+    private var mQuizDataObject : QuizDataObject? = null
+
 
     private var mQuizPlayingCount : Int     = -1
     private var mCorrectAnswerCount : Int   = 0
@@ -167,7 +168,7 @@ class QuizPresenter : QuizContract.Presenter
 
     private fun init()
     {
-        mContentID = (mContext as AppCompatActivity).intent.getStringExtra(Common.INTENT_QUIZ_PARAMS)
+        mQuizDataObject = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_QUIZ_PARAMS)
         mQuizUserSelectObjectList = ArrayList()
         mQuizSelectionPagerAdapter = QuizSelectionPagerAdapter(
             (mContext as AppCompatActivity).supportFragmentManager,
@@ -271,7 +272,7 @@ class QuizPresenter : QuizContract.Presenter
                 else
                 {
                     mQuizRequestObject =
-                        QuizStudyRecordData(mContentID, mQuizUserSelectObjectList!!)
+                        QuizStudyRecordData(mQuizDataObject!!.getContentID(), mQuizUserSelectObjectList!!)
                     requestQuizSaveRecord()
                 }
             })
@@ -320,9 +321,9 @@ class QuizPresenter : QuizContract.Presenter
      */
     private fun requestQuizInformation()
     {
-        Log.f("mContentID : $mContentID")
+        Log.f("mContentID : $mQuizDataObject!!.getContentID()")
         mQuizInformationRequestCoroutine = QuizInformationRequestCoroutine(mContext)
-        mQuizInformationRequestCoroutine?.setData(mContentID)
+        mQuizInformationRequestCoroutine?.setData(mQuizDataObject!!.getContentID())
         mQuizInformationRequestCoroutine?.asyncListener = mQuizRequestListener
         mQuizInformationRequestCoroutine?.execute()
     }
@@ -356,7 +357,7 @@ class QuizPresenter : QuizContract.Presenter
     {
         mQuizContractView.showLoading()
         mQuizSaveRecordCoroutine = QuizSaveRecordCoroutine(mContext)
-        mQuizSaveRecordCoroutine?.setData(mQuizRequestObject)
+        mQuizSaveRecordCoroutine?.setData(mQuizRequestObject, mQuizDataObject!!.getHomeworkNumber())
         mQuizSaveRecordCoroutine?.asyncListener = mQuizRequestListener
         mQuizSaveRecordCoroutine?.execute()
     }
@@ -1076,7 +1077,7 @@ class QuizPresenter : QuizContract.Presenter
                         {
                             val data = ErrorRequestData(
                                 CrashlyticsHelper.ERROR_CODE_QUIZ_REQUEST,
-                                mContentID,
+                                mQuizDataObject!!.getContentID(),
                                 result.getStatus(),
                                 result.getMessage(),
                                 java.lang.Exception()
