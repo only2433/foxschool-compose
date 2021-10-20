@@ -893,6 +893,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         var isVocabularyAvailable = true
         var isFlashcardAvailable = true
         var isStarwordsAvailable = true
+        var isCrosswordAvailable = true
         var isTranslateAvailable = true
         val data : ContentsBaseResult = mPlayInformationList[mCurrentPlayMovieIndex]
         var isNextMovieHave = false
@@ -922,6 +923,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             isStarwordsAvailable = false
         }
+        if(data.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+        {
+            isCrosswordAvailable = false
+        }
         if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
         {
             isTranslateAvailable = false
@@ -940,6 +945,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             isVocabularyAvailable = isVocabularyAvailable,
             isFlashcardAvailable = isFlashcardAvailable,
             isStarwordsAvailable = isStarwordsAvailable,
+            isCrosswordAvailable = isCrosswordAvailable,
             isTranslateAvailable = isTranslateAvailable,
             isNextButtonVisible = isNextMovieHave
         )

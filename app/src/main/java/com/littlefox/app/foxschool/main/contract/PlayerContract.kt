@@ -34,7 +34,7 @@ class PlayerContract
         fun showPreviewUserEndView()
         fun showPaymentUserStartView()
         fun showPaymentUserEndView()
-        fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
+        fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isCrosswordAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
         fun PlayFirstIndexMovie()
         fun PlayNormalIndexMovie()
         fun PlayLastIndexMovie()

@@ -212,6 +212,9 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._starwordsButtonImage)
     lateinit var _StarwordsButtonImage : ImageView
 
+    @BindView(R.id._crosswordButtonImage)
+    lateinit var _CrosswordButtonImage : ImageView
+
     @BindView(R.id._translateButtonImage)
     lateinit var _OriginalTranslateButtonImage : ImageView
 
@@ -1321,7 +1324,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         showPlayerEndLayoutAnimation()
     }
 
-    override fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
+    override fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isCrosswordAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
     {
         mPlayEndStudyOptionIconList.clear()
         isNextMovieVisibleFromEndView = isNextButtonVisible
@@ -1369,6 +1372,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         else
         {
             _StarwordsButtonImage!!.visibility = View.GONE
+        }
+
+        if(isCrosswordAvailable)
+        {
+            mPlayEndStudyOptionIconList.add(_CrosswordButtonImage)
+        }
+        else
+        {
+            _CrosswordButtonImage!!.visibility = View.GONE
         }
 
         if(isTranslateAvailable)
