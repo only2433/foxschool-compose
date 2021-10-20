@@ -36,7 +36,7 @@ class Common
 
         const val API_QUIZ : String                 = API_CONTENTS + "quiz/"
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS + "player/"
-        const val API_STUDY_LOG_SAVE : String       = API_CONTENTS
+        const val API_STUDY_LOG_SAVE : String       = API_CONTENTS + "player/save"
         const val API_QUIZ_SAVE_RECORD : String     = API_CONTENTS + "quiz/"
         const val API_VOCABULARY_CONTENTS : String  = API_CONTENTS
         const val API_SEARCH_LIST : String          = BASE_PUBLIC_API + "contents"

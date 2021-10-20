@@ -13,7 +13,7 @@ class ContentsBaseResult  : Parcelable
     private var sub_name : String? = ""
     private var thumbnail_url : String = ""
     private var service_info : ServiceSupportedTypeResult? = null
-    private var user_service_info : ServiceSupportedTypeResult? = null
+    private var story_chk : String? = ""
     private var isSelected = false
     private var isOptionDisable = false
 
@@ -30,7 +30,7 @@ class ContentsBaseResult  : Parcelable
         isSelected = `in`.readByte().toInt() != 0
         isOptionDisable = `in`.readByte().toInt() != 0
         service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
-        user_service_info = `in`.readSerializable() as ServiceSupportedTypeResult?
+        story_chk = `in`.readString()
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)
@@ -44,8 +44,7 @@ class ContentsBaseResult  : Parcelable
         dest.writeByte((if(isSelected) 1 else 0).toByte())
         dest.writeByte((if(isOptionDisable) 1 else 0).toByte())
         dest.writeSerializable(service_info)
-        dest.writeSerializable(user_service_info)
-
+        dest.writeString(story_chk)
     }
 
     override fun describeContents() : Int = 0
@@ -71,7 +70,16 @@ class ContentsBaseResult  : Parcelable
 
     fun getServiceInformation() : ServiceSupportedTypeResult? = service_info
 
-    fun getUserServiceSupportedInformation() : ServiceSupportedTypeResult? = user_service_info
+    val isStoryViewComplete : Boolean
+    get()
+    {
+        if(story_chk.equals("") == false)
+        {
+            return true
+        }
+
+        return false
+    }
 
     fun setID(id : String)
     {

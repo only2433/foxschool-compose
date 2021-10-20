@@ -9,7 +9,8 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
-import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
+import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.base.SearchListBaseObject
@@ -365,9 +366,11 @@ class SearchListPresenter : SearchListContract.Presenter
         Log.f("Movie ID : " + mSearchItemList[mCurrentPlayIndex].getID())
         val sendItemList = java.util.ArrayList<ContentsBaseResult>()
         sendItemList.add(mSearchItemList[mCurrentPlayIndex])
+        val playerParamsObject = PlayerIntentParamsObject(sendItemList)
+
         IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setData(sendItemList)
+            .setData(playerParamsObject)
             .startActivity()
     }
 
@@ -377,10 +380,10 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
-        var quizDataObject : QuizDataObject = QuizDataObject(mSearchItemList[mCurrentOptionIndex].getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(quizDataObject)
+            .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

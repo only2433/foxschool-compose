@@ -3,7 +3,7 @@ package com.littlefox.app.foxschool.`object`.data.quiz
 import android.os.Parcel
 import android.os.Parcelable
 
-class QuizDataObject : Parcelable
+class QuizIntentParamsObject : Parcelable
 {
     private var mContentID : String = ""
     private var mHomeworkNumber : Int = 0
@@ -41,14 +41,14 @@ class QuizDataObject : Parcelable
         dest.writeInt(mHomeworkNumber)
     }
 
-    companion object CREATOR : Parcelable.Creator<QuizDataObject>
+    companion object CREATOR : Parcelable.Creator<QuizIntentParamsObject>
     {
-        override fun createFromParcel(parcel : Parcel) : QuizDataObject
+        override fun createFromParcel(parcel : Parcel) : QuizIntentParamsObject
         {
-            return QuizDataObject(parcel)
+            return QuizIntentParamsObject(parcel)
         }
 
-        override fun newArray(size : Int) : Array<QuizDataObject?>
+        override fun newArray(size : Int) : Array<QuizIntentParamsObject?>
         {
             return arrayOfNulls(size)
         }

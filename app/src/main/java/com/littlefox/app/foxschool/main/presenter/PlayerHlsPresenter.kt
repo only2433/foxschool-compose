@@ -20,12 +20,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import com.google.gson.Gson
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
-import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
+import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
@@ -166,24 +166,25 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mCurrentPlayDuration : Long = 0L
     private var mCurrentPlayerStatus : PlayerStatus = PlayerStatus.STOP
     private var mCurrentPlayerUserType : PlayerUserType = PlayerUserType.PREVIEW
-    private var isLockMode = false
-    private var mCurrentLockTime = 0
-    private var mFreeUserPreviewTime = 0
+    private var isLockMode : Boolean = false
+    private var mCurrentLockTime : Int = 0
+    private var mFreeUserPreviewTime : Int  = 0
 
     private lateinit var mPlayInformationList : ArrayList<ContentsBaseResult>
+    private lateinit var mPlayerIntentParamsObject : PlayerIntentParamsObject
     private lateinit var mAuthContentResult : PlayItemResult
     private var mAuthContentPlayCoroutine : AuthContentPlayCoroutine? = null
     private var mStudyLogSaveCoroutine : StudyLogSaveCoroutine? = null
     private var mBookshelfContentAddCoroutine : BookshelfContentAddCoroutine? = null
-    private var mCurrentPlayMovieIndex = 0
-    private var mSelectItemOptionIndex = 0
-    private var mCurrentSaveLogIndex = 0
-    private var mCurrentCaptionIndex = 0
-    private var mCurrentWatchingTime = 0
-    private var mCurrentStudyLogMilliSeconds = 0f
-    private var mCurrentOrientation = 0
-    private var isAuthorizationComplete = false
-    private var isRepeatOn = false
+    private var mCurrentPlayMovieIndex : Int  = 0
+    private var mSelectItemOptionIndex : Int  = 0
+    private var mCurrentSaveLogIndex : Int  = 0
+    private var mCurrentCaptionIndex : Int  = 0
+    private var mCurrentWatchingTime : Int  = 0
+    private var mCurrentOrientation : Int = 0
+    private var isAuthorizationComplete : Boolean = false
+    private var isRepeatOn : Boolean = false
+    private var mCurrentStudyLogMilliSeconds : Float = 0f
 
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentBookshelfAddResult : MyBookshelfResult
@@ -200,9 +201,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     protected var mJob: Job? = null;
     private lateinit var mLoginInformationResult : LoginInformationResult
     private lateinit var _PlayerView : PlayerView
-
-    private val testUserInformation : String = "{\"data\":{\"current_user_id\":\"U201501051459287843\",\"login_id\":\"only2433\",\"country_code\":\"KR\",\"language_code\":\"ko\",\"www_url\":\"https:\\/\\/www.littlefox.co.kr\\/ko\",\"mobile_url\":\"https:\\/\\/m.littlefox.co.kr\\/ko\",\"users\":[{\"id\":\"U201501051459287843\",\"type\":\"M\",\"name\":\"\\uc7ac\\ud604\",\"nickname\":\"only2433\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201602221544353888\",\"type\":\"S\",\"nickname\":\"\\ud551\\ud4015\",\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"},{\"id\":\"U201603021547356385\",\"type\":\"S\",\"name\":\"\\ucd94\\uac00 \\uc0ac\\uc6a9\\uc790\",\"nickname\":\"You12\",\"birth_year\":2016,\"avatar_image_url\":\"https:\\/\\/img.littlefox.co.kr\\/static\\/layout\\/global\\/img\\/contents\\/default_badge.png\",\"is_custom_avatar\":\"N\"}],\"expire_date\":\"2021-07-01 09:12:44\",\"remaining_day\":16},\"status\":200,\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJodHRwczpcL1wvYXBpcy5saXR0bGVmb3guY29tXC9hcGlcL3YxXC9hdXRoXC9tZSIsImlhdCI6MTYyMzcyNDAxMywiZXhwIjoxNjI2MzE2MDEzLCJuYmYiOjE2MjM3MjQwMTMsImp0aSI6IkRoNWx4VGlRZUhjVzdFdXQiLCJzdWIiOiJVMjAxNTAxMDUxNDU5Mjg3ODQzIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyIsImF1dGhfa2V5IjoiNTAxMDE0NTk5NTE1ODQ3MCIsImN1cnJlbnRfdXNlcl9pZCI6IlUyMDE1MDEwNTE0NTkyODc4NDMiLCJleHBpcmVfZGF0ZSI6MTYyNTA5ODM2NH0.FfjT2ypwKE2e1HQ9T9ULlsln_q5NE6-nnZm6eMDtDf-O5wLWw6n63CJVjQ4rUIvURLWtjQrSynAqcuTpVpzWhQ\"}"
-
 
     constructor(context : Context, videoView : PlayerView, orientation : Int)
     {
@@ -336,7 +334,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun init()
     {
-        mPlayInformationList = (mContext as AppCompatActivity).getIntent().getParcelableArrayListExtra<ContentsBaseResult>(Common.INTENT_PLAYER_DATA_PARAMS)
+        mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)
+        mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
         Log.f("list size : " + mPlayInformationList.size + ", isOptionDisable :" + mPlayInformationList[0].isOptionDisable())
         mCurrentPlayMovieIndex = 0
 
@@ -1314,7 +1313,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         val studyLogSeconds = Math.round(mCurrentStudyLogMilliSeconds / Common.DURATION_LONG.toFloat())
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
         mStudyLogSaveCoroutine = StudyLogSaveCoroutine(mContext)
-        mStudyLogSaveCoroutine?.setData(mPlayInformationList[mCurrentSaveLogIndex].getID(), autoPlay, studyLogSeconds)
+        mStudyLogSaveCoroutine?.setData(
+            mPlayInformationList[mCurrentSaveLogIndex].getID(),
+            autoPlay,
+            studyLogSeconds,
+            mPlayerIntentParamsObject.getHomeworkNumber())
         mStudyLogSaveCoroutine?.asyncListener = mAsyncListener
         mStudyLogSaveCoroutine?.execute()
     }
@@ -1377,10 +1380,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizDataObject : QuizDataObject = QuizDataObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(quizDataObject)
+            .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

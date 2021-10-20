@@ -8,10 +8,10 @@ import android.os.Message
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
-import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
+import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.IntroduceSeriesBaseObject
@@ -261,6 +261,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         if(mStoryDetailItemAdapter.getSelectedList().size > 0)
         {
             val sendItemList : ArrayList<ContentsBaseResult> = mStoryDetailItemAdapter.getSelectedList()
+            val playerIntentParamsObject = PlayerIntentParamsObject(sendItemList)
             if(isStillOnSeries)
             {
                 Log.f("onClickSelectPlay List isStillOnSeries : " + mDetailItemInformationResult.seriesID)
@@ -269,7 +270,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.PLAYER)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-                .setData(sendItemList)
+                .setData(playerIntentParamsObject)
                 .startActivity()
         }
         else
@@ -395,21 +396,21 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 
         val sendItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
         sendItemList.add(mDetailItemInformationResult.getContentsList().get(mCurrentPlayIndex))
-
+        val playerIntentParamsObject = PlayerIntentParamsObject(sendItemList)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.PLAYER)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setData(sendItemList)
+            .setData(playerIntentParamsObject)
             .startActivity();
     }
 
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizDataObject : QuizDataObject = QuizDataObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(quizDataObject)
+            .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

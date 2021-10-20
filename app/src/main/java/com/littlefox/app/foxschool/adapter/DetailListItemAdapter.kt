@@ -150,14 +150,14 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             holder._BackgroundImage.setImageResource(R.drawable.box_list)
         }
 
-        /*if(mDataList[position].getUserServiceSupportedInformation()!!.getStorySupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mDataList[position].isStoryViewComplete)
         {
             holder._StudiedCheckIcon.visibility = View.VISIBLE
         }
         else
         {
             holder._StudiedCheckIcon.visibility = View.GONE
-        }*/
+        }
 
         if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
         {

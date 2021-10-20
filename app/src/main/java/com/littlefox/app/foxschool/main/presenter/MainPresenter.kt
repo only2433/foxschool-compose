@@ -16,7 +16,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
-import com.littlefox.app.foxschool.`object`.data.quiz.QuizDataObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -33,9 +33,7 @@ import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
-import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
-import com.littlefox.app.foxschool.coroutine.HomeworkManageStudentCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
@@ -622,10 +620,10 @@ class MainPresenter : MainContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizDataObject : QuizDataObject = QuizDataObject(mCurrentDetailOptionResult.getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mCurrentDetailOptionResult.getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(quizDataObject)
+            .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
