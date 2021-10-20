@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_ebook_player"
             android:scaleType="fitXY"
-            app:scale_left="360"
+            app:scale_left="255"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -112,7 +112,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_quiz_player"
             android:scaleType="fitXY"
-            app:scale_left="570"
+            app:scale_left="465"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_voca_player"
             android:scaleType="fitXY"
-            app:scale_left="780"
+            app:scale_left="675"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -134,7 +134,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_flashcard_player"
             android:scaleType="fitXY"
-            app:scale_left="990"
+            app:scale_left="885"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -145,7 +145,18 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_starwords_player"
             android:scaleType="fitXY"
-            app:scale_left="1200"
+            app:scale_left="1095"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="150"/>
+
+        <ImageView
+            android:id="@+id/_crosswordButtonImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_crossword_player"
+            android:scaleType="fitXY"
+            app:scale_left="1305"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>
@@ -156,7 +167,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/icon_org_player"
             android:scaleType="fitXY"
-            app:scale_left="1410"
+            app:scale_left="1515"
             app:scale_top="0"
             app:scale_width="150"
             app:scale_height="150"/>

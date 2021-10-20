@@ -2064,17 +2064,41 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             {
                 when(views.size)
                 {
-                    1 -> _PaidUserEndLayout.moveChildView(views[0], 478f, 0f, 125f, 125f)
+                    1 -> _PaidUserEndLayout.moveChildView(views[0], 483f, 0f, 114f, 114f)
                     2 ->
                     {
-                        _PaidUserEndLayout.moveChildView(views[0], 390f, 0f, 125f, 125f)
-                        _PaidUserEndLayout.moveChildView(views[1], 556f, 0f, 125f, 125f)
+                        _PaidUserEndLayout.moveChildView(views[0], 406f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[1], 560f, 0f, 114f, 114f)
                     }
                     3 ->
                     {
-                        _PaidUserEndLayout.moveChildView(views[0], 300f, 0f, 125f, 125f)
-                        _PaidUserEndLayout.moveChildView(views[1], 478f, 0f, 125f, 125f)
-                        _PaidUserEndLayout.moveChildView(views[2], 653f, 0f, 125f, 125f)
+                        _PaidUserEndLayout.moveChildView(views[0], 329f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[1], 483f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[2], 637f, 0f, 114f, 114f)
+                    }
+                    4 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 252f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[1], 406f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[2], 560f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[3], 714f, 0f, 114f, 114f)
+                    }
+                    5 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 175f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[1], 329f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[2], 483f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[3], 637f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[4], 791f, 0f, 114f, 114f)
+                    }
+                    6 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 134f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[1], 274f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[2], 414f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[3], 553f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[4], 693f, 0f, 114f, 114f)
+                        _PaidUserEndLayout.moveChildView(views[5], 833f, 0f, 114f, 114f)
                     }
                 }
             }
@@ -2121,6 +2145,33 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                         _PaidUserEndLayout.moveChildView(views[1], 780f, 0f, 150f, 150f)
                         _PaidUserEndLayout.moveChildView(views[2], 990f, 0f, 150f, 150f)
                         _PaidUserEndLayout.moveChildView(views[3], 1200f, 0f, 150f, 150f)
+                    }
+                    5 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 465f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[1], 675f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[2], 885f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[3], 1095f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[4], 1305f, 0f, 150f, 150f)
+                    }
+                    6 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 360f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[1], 570f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[2], 780f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[3], 990f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[4], 1200f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[5], 1410f, 0f, 150f, 150f)
+                    }
+                    7 ->
+                    {
+                        _PaidUserEndLayout.moveChildView(views[0], 255f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[1], 465f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[2], 675f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[3], 885f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[4], 1095f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[5], 1305f, 0f, 150f, 150f)
+                        _PaidUserEndLayout.moveChildView(views[6], 1515f, 0f, 150f, 150f)
                     }
                 }
             }

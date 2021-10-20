@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.main.presenter
 import android.content.Context
 import android.content.Intent
 import android.os.Message
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -569,12 +570,14 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 {
                     mHomeworkContractView.hideLoading()
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_register))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
                 {
                     mHomeworkContractView.hideLoading()
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
@@ -582,6 +585,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                     mHomeworkContractView.hideLoading()
                     mStudentComment = ""
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_comment_delete))
                 }
             }
@@ -597,11 +601,15 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 }
                 else
                 {
-                    if (code == Common.COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT   ||
-                        code == Common.COROUTINE_CODE_HOMEWORK_STATUS_LIST      ||
-                        code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER  ||
-                        code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE    ||
-                        code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
+                    if (code == Common.COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT ||
+                        code == Common.COROUTINE_CODE_HOMEWORK_STATUS_LIST)
+                    {
+                        Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                        (mContext as AppCompatActivity).onBackPressed()
+                    }
+                    else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER ||
+                             code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE   ||
+                             code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
                     {
                         mHomeworkContractView.showErrorMessage(result.getMessage())
                     }
