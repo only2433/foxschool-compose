@@ -1,6 +1,6 @@
 package com.littlefox.app.foxschool.main.contract
 
-import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.enumerate.RecorderStatus
 import com.littlefox.app.foxschool.main.contract.base.BaseContract
 
@@ -8,7 +8,7 @@ class RecordPlayerContract
 {
     interface View : BaseContract.View
     {
-        fun setRecordTitle(contents : ContentsBaseResult)           // 화면의 녹음 컨텐츠 타이틀 변경
+        fun setRecordTitle(contents : RecordIntentParamsObject)     // 화면의 녹음 컨텐츠 타이틀 변경
         fun setTimerText(time : String)                             // 화면의 타이머 텍스트 변경
         fun setCoachMarkView()                                      // 코치마크 표시 설정
         fun setRecorderStatus(status : RecorderStatus)              // 녹음기 상태에 따른 화면 세팅

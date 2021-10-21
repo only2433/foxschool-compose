@@ -12,6 +12,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.IntroduceSeriesBaseObject
@@ -478,9 +479,11 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startRecordPlayerActivity()
     {
         Log.f("")
+        val recordIntentParamsObject = RecordIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
-            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
+            .setData(recordIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.record.RecordInfoData
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.Common.Companion.MILLI_SECOND
@@ -52,6 +52,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         private const val MESSAGE_PLAY_TIME_CHECK : Int         = 102
         private const val MESSAGE_RECORD_UPLOAD_SUCCESS : Int   = 103
         private const val MESSAGE_RECORD_UPLOAD_FAIL : Int      = 104
+        private const val MESSAGE_START_RECORD_HISTORY : Int    = 105
 
         private const val DIALOG_RECORD_RESET : Int             = 10001
         private const val DIALOG_WARNING_RECORD_RESET : Int     = 10001
@@ -64,7 +65,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     private lateinit var mMainHandler : WeakReferenceHandler
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
-    private lateinit var mRecordInformation : ContentsBaseResult
+    private lateinit var mRecordInformation : RecordIntentParamsObject
     private lateinit var mUserInformationResult : LoginInformationResult
     private var mCoachingMarkUserDao : CoachmarkDao?    = null
     private var mCurrentUserID : String                 = ""
@@ -142,7 +143,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
         PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
         // TODO 김태은 파일명 추후 변경
-        mFileName = CommonUtils.getInstance(mContext).getContentsName(mRecordInformation).replace(":","")
+        mFileName = CommonUtils.getInstance(mContext).getContentsName(mRecordInformation.getName(), mRecordInformation.getSubName()).replace(":","")
         val isDirectoryMakeComplete = FileUtils.createDirectory(PATH_MP3_ROOT)
         if(isDirectoryMakeComplete == false)
         {
@@ -220,6 +221,11 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 mRecordPlayerContractView.showErrorMessage(mContext.resources.getString(R.string.message_record_upload_fail));
                 mRecordPlayerContractView.setUploadButtonEnable(true)
+            }
+            MESSAGE_START_RECORD_HISTORY ->
+            {
+                startRecordHistoryActivity()
+                (mContext as AppCompatActivity).finish() // 녹음기 화면 종료
             }
         }
     }
@@ -728,7 +734,9 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             filePath = PATH_MP3_ROOT,
             fileName = "$mFileName.mp3",
             contentsID = mRecordInformation.getID(),
-            recordTime = mTime.toInt())
+            recordTime = mTime.toInt(),
+            homeworkNo = mRecordInformation.getHomeworkNumber()
+        )
 
         if (mRecordFileUploadHelper == null)
         {
@@ -847,7 +855,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 녹음 기록 화면으로 이동하기
-                        startRecordHistoryActivity()
+                        mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_HISTORY, Common.DURATION_SHORT)
                     }
                 }
             }

@@ -1,11 +1,12 @@
 package com.littlefox.app.foxschool.`object`.data.record
 
-class RecordInfoData(filePath : String, fileName : String, contentsID : String, recordTime : Int)
+class RecordInfoData(filePath : String, fileName : String, contentsID : String, recordTime : Int, homeworkNo : Int)
 {
     private val mFilePath : String
     private val mFileName : String
     private val mContentsID : String
     private val mRecordTime : Int
+    private val mHomeworkNumber : Int
 
     init
     {
@@ -13,6 +14,7 @@ class RecordInfoData(filePath : String, fileName : String, contentsID : String, 
         mFileName = fileName
         mContentsID = contentsID
         mRecordTime = recordTime
+        mHomeworkNumber = homeworkNo
     }
 
     fun getFilePath() : String
@@ -33,5 +35,10 @@ class RecordInfoData(filePath : String, fileName : String, contentsID : String, 
     fun getRecordTime() : Int
     {
         return mRecordTime
+    }
+
+    fun getHomeworkNumber() : Int
+    {
+        return mHomeworkNumber
     }
 }

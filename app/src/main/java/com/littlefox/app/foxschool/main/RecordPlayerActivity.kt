@@ -19,7 +19,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Optional
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -287,9 +287,9 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
     /**
      * 컨텐츠 제목 세팅
      */
-    override fun setRecordTitle(contents : ContentsBaseResult)
+    override fun setRecordTitle(contents : RecordIntentParamsObject)
     {
-        _RecordTitleText.setText(CommonUtils.getInstance(this).getContentsName(contents))
+        _RecordTitleText.setText(CommonUtils.getInstance(this).getContentsName(contents.getName(), contents.getSubName()))
     }
 
     /**

@@ -99,6 +99,7 @@ class RecordFileUploadHelper(private val mContext : Context)
         val audioFile : File = File(mRecordInfoData.getFilePath() + mRecordInfoData.getFileName())
         val request : Request
         val requestBody : RequestBody
+        val multipartBody = MultipartBody.Builder()
         val deviceType : String =
             if(CommonUtils.getInstance(mContext).checkTablet)
                 Common.DEVICE_TYPE_TABLET
@@ -110,11 +111,16 @@ class RecordFileUploadHelper(private val mContext : Context)
         if(audioFile.exists())
         {
             Log.f("파일 있음")
-            requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
+            multipartBody.setType(MultipartBody.FORM)
                 .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("audio/mpeg"), audioFile))
                 .addFormDataPart("content_id", java.lang.String.valueOf(mRecordInfoData.getContentsID()))
                 .addFormDataPart("record_time", mRecordInfoData.getRecordTime().toString())
-                .build()
+
+            if (mRecordInfoData.getHomeworkNumber() > 0)
+            {
+                multipartBody.addFormDataPart("hw_no", mRecordInfoData.getHomeworkNumber().toString())
+            }
+            requestBody = multipartBody.build()
             val requestBodyData : RequestBody = ProgressHelper.withProgress(requestBody, object : ProgressListener()
             {
                 override fun onProgressChanged(numBytes : Long, totalBytes : Long, percent : Float, speed : Float)

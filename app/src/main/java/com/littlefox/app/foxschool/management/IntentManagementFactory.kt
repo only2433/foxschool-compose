@@ -14,7 +14,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
-import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
@@ -269,7 +269,7 @@ class IntentManagementFactory
                 intent = Intent(mContext, RecordPlayerActivity::class.java)
                 if(`object` != null)
                 {
-                    intent.putExtra(Common.INTENT_RECORD_PLAYER_DATA, `object` as ContentsBaseResult?)
+                    intent.putExtra(Common.INTENT_RECORD_PLAYER_DATA, `object` as RecordIntentParamsObject?)
                 }
             }
 

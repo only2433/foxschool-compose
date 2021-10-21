@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkManageCalenderBaseObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkStatusListBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
@@ -363,9 +364,14 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun startRecordActivity(content : ContentsBaseResult)
     {
         Log.f("")
+
+        val recordIntentParamsObject = RecordIntentParamsObject(
+            content,
+            mSelectHomeworkData!!.getHomeworkNumber())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
-            .setData(content)
+            .setData(recordIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
