@@ -370,6 +370,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 _RecordProgressImageView.setImageResource(R.drawable.progress_circle_off)
                 stopFrameAnimation()
             }
+            RecorderStatus.RECORD_MERGE,
             RecorderStatus.AUDIO_STOP ->
             {
                 // 오디오 준비 (오디오 초기상태)
@@ -463,7 +464,9 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 anim.repeatMode = Animation.REVERSE
                 _RecordStartButton.startAnimation(anim)
             }
-            RecorderStatus.AUDIO_STOP, RecorderStatus.AUDIO_PAUSE ->
+            RecorderStatus.RECORD_MERGE,
+            RecorderStatus.AUDIO_STOP,
+            RecorderStatus.AUDIO_PAUSE ->
             {
                 // 오디오 정지 (오디오 초기상태), 일시정지
                 _RecordStartButton.visibility = View.GONE
@@ -474,6 +477,17 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 _RecordStopButtonRect.visibility = View.GONE
                 _RecordUploadButton.visibility = View.VISIBLE
                 _RecordUploadButtonRect.visibility = View.VISIBLE
+
+                if (status == RecorderStatus.RECORD_MERGE)
+                {
+                    // 녹음파일 합치는 도중일 때 툴바 버튼 비활성화
+                    setAudioToolEnable(false)
+                }
+                else if (status == RecorderStatus.AUDIO_STOP)
+                {
+                    // 오디오 파일 세팅된 후 툴바 버튼 활성화
+                    setAudioToolEnable(true)
+                }
             }
             RecorderStatus.AUDIO_PLAY ->
             {
@@ -487,6 +501,35 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 _RecordUploadButton.visibility = View.VISIBLE
                 _RecordUploadButtonRect.visibility = View.VISIBLE
             }
+        }
+    }
+
+    /**
+     * 오디오 툴바 버튼 On/Off 처리
+     */
+    private fun setAudioToolEnable(isEnable : Boolean)
+    {
+        if (isEnable)
+        {
+            _RecordResetButton.alpha = 1.0f
+            _RecordPlayButton.alpha = 1.0f
+            _RecordUploadButton.alpha = 1.0f
+            _RecordResetButton.isEnabled = true
+            _RecordResetButtonRect.isEnabled = true
+            _RecordPlayButton.isEnabled = true
+            _RecordUploadButton.isEnabled = true
+            _RecordUploadButtonRect.isEnabled = true
+        }
+        else
+        {
+            _RecordResetButton.alpha = 0.5f
+            _RecordPlayButton.alpha = 0.5f
+            _RecordUploadButton.alpha = 0.5f
+            _RecordResetButton.isEnabled = false
+            _RecordResetButtonRect.isEnabled = false
+            _RecordPlayButton.isEnabled = false
+            _RecordUploadButton.isEnabled = false
+            _RecordUploadButtonRect.isEnabled = false
         }
     }
 

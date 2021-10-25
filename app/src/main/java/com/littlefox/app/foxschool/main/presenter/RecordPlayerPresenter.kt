@@ -53,6 +53,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         private const val MESSAGE_RECORD_UPLOAD_SUCCESS : Int   = 103
         private const val MESSAGE_RECORD_UPLOAD_FAIL : Int      = 104
         private const val MESSAGE_START_RECORD_HISTORY : Int    = 105
+        private const val MESSAGE_RECORD_FILE_MERGED : Int      = 106
 
         private const val DIALOG_RECORD_RESET : Int             = 10001
         private const val DIALOG_WARNING_RECORD_RESET : Int     = 10001
@@ -226,6 +227,10 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 startRecordHistoryActivity()
                 (mContext as AppCompatActivity).finish() // 녹음기 화면 종료
+            }
+            MESSAGE_RECORD_FILE_MERGED ->
+            {
+                mRecordPlayerContractView.setRecorderStatus(RecorderStatus.AUDIO_STOP)
             }
         }
     }
@@ -443,12 +448,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             enableTimer(false)
             mMainHandler.removeMessages(MESSAGE_RECORD_TIME_CHECK)
 
-            mRecordPlayerContractView.setRecorderStatus(RecorderStatus.AUDIO_STOP)
+            mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_MERGE)
             mRecordPlayerContractView.stopRecordingAnimation(0)
             setTimerText()
 
-           // mRecordPlayerContractView.showLoading()
-            mVoiceRecorderHelper!!.mergeMediaFiles(mRecordingPathList, "$PATH_MP3_ROOT$mFileName.mp3")
+            CoroutineScope(Dispatchers.IO).launch {
+                mVoiceRecorderHelper!!.mergeMediaFiles(mRecordingPathList, "$PATH_MP3_ROOT$mFileName.mp3")
+                mMainHandler.sendEmptyMessage(MESSAGE_RECORD_FILE_MERGED)
+            }
         }
     }
 
