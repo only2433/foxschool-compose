@@ -11,14 +11,16 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.base.SearchListBaseObject
+import com.littlefox.app.foxschool.`object`.result.SearchListBaseObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
+import com.littlefox.app.foxschool.`object`.result.search.SearchListResult
 import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
 import com.littlefox.app.foxschool.adapter.listener.DetailItemListener
 import com.littlefox.app.foxschool.common.Common
@@ -64,7 +66,7 @@ class SearchListPresenter : SearchListContract.Presenter
 
     private lateinit var mContext : Context
     private lateinit var mSearchListContractView : SearchListContract.View
-    private var mCurrentSearchListBaseObject : SearchListBaseObject? = null
+    private var mCurrentSearchListBaseResult : SearchListResult? = null
     private val mSearchItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
 
@@ -111,7 +113,7 @@ class SearchListPresenter : SearchListContract.Presenter
     override fun requestRefresh()
     {
         Log.f("")
-        if(mCurrentSearchListBaseObject!!.isLastPage())
+        if(mCurrentSearchListBaseResult!!.isLastPage())
         {
             Log.f("LAST PAGE")
             mSearchListContractView.showErrorMessage(mContext.resources.getString(R.string.message_last_page))
@@ -163,7 +165,7 @@ class SearchListPresenter : SearchListContract.Presenter
         if(mCurrentKeyword != "")
         {
             mRequestPagePosition = 1
-            mCurrentSearchListBaseObject = null
+            mCurrentSearchListBaseResult = null
             mSearchItemList.clear()
             if(mSearchListItemAdapter != null)
             {
@@ -230,7 +232,7 @@ class SearchListPresenter : SearchListContract.Presenter
         Log.f("")
         mSearchListContractView.hideContentsListLoading()
         mSearchListContractView.cancelRefreshView()
-        mSearchItemList.addAll(mCurrentSearchListBaseObject!!.getSearchList())
+        mSearchItemList.addAll(mCurrentSearchListBaseResult!!.getSearchList())
         initRecyclerView()
     }
 
@@ -240,7 +242,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun clearData()
     {
         mRequestPagePosition = 1
-        mCurrentSearchListBaseObject = null
+        mCurrentSearchListBaseResult = null
         mCurrentKeyword = ""
         mSearchItemList.clear()
         mSearchListItemAdapter?.notifyDataSetChanged()
@@ -295,9 +297,9 @@ class SearchListPresenter : SearchListContract.Presenter
         /**
          * NULL 이면 처음 검색 했거나 , 아니면 타입이 변경된 경우다. 해당 상황에만 로딩 다이얼로그를 보여준다.
          */
-        if(mCurrentSearchListBaseObject != null)
+        if(mCurrentSearchListBaseResult != null)
         {
-            mRequestPagePosition = mCurrentSearchListBaseObject!!.getCurrentPageIndex() + 1
+            mRequestPagePosition = mCurrentSearchListBaseResult!!.getCurrentPageIndex() + 1
         }
         else
         {
@@ -488,9 +490,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startRecordPlayerActivity()
     {
         Log.f("")
+        val recordIntentParamsObject = RecordIntentParamsObject(mSearchItemList[mCurrentOptionIndex])
+
         IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.FLASHCARD)
-            .setData(mSearchItemList[mCurrentOptionIndex])
+            .readyActivityMode(ActivityMode.RECORD_PLAYER)
+            .setData(recordIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -675,7 +679,7 @@ class SearchListPresenter : SearchListContract.Presenter
                 if(code == Common.COROUTINE_CODE_SEARCH_LIST)
                 {
                     mSearchListContractView.hideContentsListLoading()
-                    mCurrentSearchListBaseObject = `object` as SearchListBaseObject
+                    mCurrentSearchListBaseResult = (`object` as SearchListBaseObject).getData()
                     notifyData()
                 }
                 else if(code == Common.COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD)

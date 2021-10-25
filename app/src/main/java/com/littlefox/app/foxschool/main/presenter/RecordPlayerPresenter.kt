@@ -447,7 +447,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             mRecordPlayerContractView.stopRecordingAnimation(0)
             setTimerText()
 
-            mRecordPlayerContractView.showLoading()
+           // mRecordPlayerContractView.showLoading()
             mVoiceRecorderHelper!!.mergeMediaFiles(mRecordingPathList, "$PATH_MP3_ROOT$mFileName.mp3")
         }
     }

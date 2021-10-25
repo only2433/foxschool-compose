@@ -1,15 +1,15 @@
-package com.littlefox.app.foxschool.`object`.result.base
+package com.littlefox.app.foxschool.`object`.result.search
 
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.forum.MetaDataResult
-import java.util.*
+import java.util.ArrayList
 
-class SearchListBaseObject : BaseResult()
+class SearchListResult
 {
-    private val data : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
+    private val list : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private val meta : MetaDataResult? = null
 
-    fun getSearchList() : ArrayList<ContentsBaseResult> = data
+    fun getSearchList() : ArrayList<ContentsBaseResult> = list
 
     fun getCurrentPageIndex() : Int
     {
