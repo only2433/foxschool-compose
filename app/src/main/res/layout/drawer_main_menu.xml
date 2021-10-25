@@ -145,11 +145,12 @@
             app:scale_width="282" />
 
         <ImageView
-            android:id="@+id/_menuhomeworkManageNewIcon"
+            android:id="@+id/_menuHomeworkManageNewIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/main_option_new"
             android:scaleType="fitXY"
+            android:visibility="gone"
             app:scale_left="795"
             app:scale_top="61"
             app:scale_width="34"

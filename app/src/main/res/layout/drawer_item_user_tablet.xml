@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:src="@drawable/main_option_new"
+            android:visibility="gone"
             app:scale_left="127"
             app:scale_top="15"
             app:scale_width="20"

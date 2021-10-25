@@ -115,6 +115,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     @BindView(R.id._homeworkManageText)
     lateinit var _HomeworkManageText : TextView
 
+    @BindView(R.id._menuHomeworkManageNewIcon)
+    lateinit var _MenuHomeworkManageNewIcon : ImageView
 
     @BindView(R.id._menuItemScrollView)
     lateinit var _MenuItemScrollView : ScrollView
@@ -312,9 +314,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     /**
      * 사용자 데이터 화면에 세팅
      */
-    override fun settingUserInformation(loginInformationResult : LoginInformationResult?)
+    override fun settingUserInformation(loginInformationResult : LoginInformationResult?, isUpdateHomework : Boolean, isUpdateNews : Boolean)
     {
-        initMenuView()
+        Log.f("isUpdateHomework : "+isUpdateHomework+", isUpdateNews : "+isUpdateNews)
+        initMenuView(isUpdateHomework, isUpdateNews)
 
         var name = loginInformationResult?.getUserInformation()?.getName()
         if (CommonUtils.getInstance(this).isTeacherMode)
@@ -430,7 +433,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     /**
      * 메뉴화면 생성 (팍스스쿨 소식 ~ 로그아웃)
      */
-    private fun initMenuView()
+    private fun initMenuView(isUpdateHomework : Boolean, isUpdateNews : Boolean)
     {
         val MENU_TEXTVIEW_ID_LIST = intArrayOf(
             R.id._menuFoxschoolNewsText,
@@ -476,6 +479,25 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                     imageView.visibility = View.GONE
                 }
             }
+        }
+
+        val iconUpdateNewsView = addLayout.findViewById<View>(R.id._menuFoxschoolNewsNewIcon) as ImageView
+        if(isUpdateNews)
+        {
+            iconUpdateNewsView.visibility = View.VISIBLE
+        }
+        else
+        {
+            iconUpdateNewsView.visibility = View.GONE
+        }
+
+        if(isUpdateHomework)
+        {
+            _MenuHomeworkManageNewIcon.visibility = View.VISIBLE
+        }
+        else
+        {
+            _MenuHomeworkManageNewIcon.visibility = View.GONE
         }
 
         // 학생의 경우 교사 메뉴얼, 가정 통신문 항목 숨김

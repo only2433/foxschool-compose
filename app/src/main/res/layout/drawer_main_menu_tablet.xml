@@ -144,6 +144,18 @@
             app:scale_height="40"
             app:scale_textsize="18" />
 
+        <ImageView
+            android:id="@+id/_menuHomeworkManageNewIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/main_option_new"
+            android:visibility="gone"
+            app:scale_left="453"
+            app:scale_top="36"
+            app:scale_width="20"
+            app:scale_height="20"/>
+
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <!-- TODO: 여기서 부터 다시 -->

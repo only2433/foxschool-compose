@@ -141,7 +141,9 @@ class MainPresenter : MainContract.Presenter
         mFragmentList = mMainFragmentSelectionPagerAdapter.pagerFragmentList
         mMainContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
         mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult?
-        mMainContractView.settingUserInformation(mLoginInformationResult)
+        mMainContractView.settingUserInformation(mLoginInformationResult,
+            mMainInformationResult.isUpdateHomework,
+            mMainInformationResult.isUpdateNews)
         initIACInformation()
 
         mMainStoryFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity)
@@ -168,7 +170,9 @@ class MainPresenter : MainContract.Presenter
     private fun notifyDataChangeAllFragment()
     {
         mMainPresenterDataObserver.notifyDataChangeAll(FragmentDataMode.CREATE, mMainInformationResult)
-        mMainContractView.settingUserInformation(mLoginInformationResult)
+        mMainContractView.settingUserInformation(mLoginInformationResult,
+            mMainInformationResult.isUpdateHomework,
+            mMainInformationResult.isUpdateNews)
     }
 
     private fun initIACInformation()
@@ -724,7 +728,10 @@ class MainPresenter : MainContract.Presenter
         if(MainObserver.isUpdateUserStatus())
         {
             mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
-            mMainContractView.settingUserInformation(mLoginInformationResult)
+            mMainContractView.settingUserInformation(mLoginInformationResult,
+                mMainInformationResult.isUpdateHomework,
+                mMainInformationResult.isUpdateNews)
+
             MainObserver.clearUserStatus()
         }
     }
