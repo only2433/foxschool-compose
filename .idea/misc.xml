@@ -33,6 +33,9 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/drawable/seekbar_thumb.xml" value="0.20260416666666667" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_main.xml" value="0.19718309859154928" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_player_hls.xml" value="0.18645833333333334" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_webview.xml" value="0.2520833333333333" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_webview_starwords.xml" value="0.26875" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_webview_tablet.xml" value="0.2520833333333333" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/dialog_audio_play.xml" value="0.33" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/dialog_audio_play_tablet.xml" value="0.33" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/dialog_bookshelf_add_option.xml" value="0.18645833333333334" />

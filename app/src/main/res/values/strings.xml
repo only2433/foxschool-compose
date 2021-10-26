@@ -271,6 +271,7 @@
     <string name="message_warning_homework_info">- 숙제기록은 숙제관리 내에서 학습한 내용만 인정됩니다.</string>
     <string name="message_warning_homework_ebook">eBook은 PC 또는 태블릿을 이용해 주세요.</string>
     <string name="message_warning_record_empty">저장된 녹음기록이 없습니다.</string>
+    <string name="message_webview_connect_error">연결에 실패하였습니다.</string>
 
     <string-array name="text_list_gender">
         <item>남</item>

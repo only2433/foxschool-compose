@@ -26,8 +26,6 @@ import com.littlefox.app.foxschool.main.webview.*
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.logmonitor.Log
 
-import java.util.*
-
 /**
  * 모든 Intent Activity를 관리하는 클래스
  */
@@ -289,6 +287,15 @@ class IntentManagementFactory
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_GAME_STARWORDS_ID, `object` as String?)
+                }
+            }
+
+            ActivityMode.WEBVIEW_GAME_CROSSWORD ->
+            {
+                intent = Intent(mContext, WebviewGameCrosswordActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_GAME_CROSSWORD_ID, `object` as String?)
                 }
             }
 

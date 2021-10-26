@@ -45,12 +45,13 @@ class Common
         const val API_RECORD_UPLOAD : String        = API_CONTENTS + "record"
         const val API_RECORD_HISTORY : String       = API_CONTENTS + "record/history"
 
-        const val BASE_WEBVIEW_URL : String                 = BASE_URL + "web/"
+        const val BASE_WEBVIEW_URL : String                 = DEVELOP_BASE_API + "web/"
         const val DEVELOP_BASE_WEBVIEW_URL  : String        = DEVELOP_API_BASE_URL + "web/"
         const val URL_LEARNING_LOG : String         = BASE_WEBVIEW_URL + "studylog/summary"
         const val URL_FAQS : String                 = BASE_WEBVIEW_URL + "help/faq/list"
         const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
-        const val URL_GAME_STARWORDS : String       = BASE_WEBVIEW_URL + "supplement/starwords/"
+        const val URL_GAME_STARWORDS : String       = DEVELOP_BASE_WEBVIEW_URL + "game/starwords/"
+        const val URL_GAME_CROSSWORD : String       = DEVELOP_BASE_WEBVIEW_URL + "game/crossword/"
 
         const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_BASE_WEBVIEW_URL + "forum/board/news/"
         const val URL_FAQ_DETAIL : String               = DEVELOP_BASE_WEBVIEW_URL + "forum/board/faq/"
@@ -92,6 +93,7 @@ class Common
         const val INTENT_SERIES_INFORMATION_ID : String             = "series_information_id"
         const val INTENT_QUIZ_PARAMS : String                       = "quiz_params"
         const val INTENT_GAME_STARWORDS_ID : String                 = "starwords_id"
+        const val INTENT_GAME_CROSSWORD_ID : String                 = "crossword_id"
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
         const val INTENT_RECORD_PLAYER_DATA : String                = "record_player_data"
         const val INTENT_ORIGIN_TRANSLATE_ID : String               = "origin_translate"

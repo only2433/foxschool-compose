@@ -11,28 +11,36 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
 import butterknife.ButterKnife
-import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.enumerate.ActivityMode
-import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.webview.bridge.BaseWebviewBridge
-import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
+import com.ssomai.android.scalablelayout.ScalableLayout
 
-class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
+class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
+
+    @BindView(R.id._titleBaselayout)
+    lateinit var _TitleBaseLayout : ScalableLayout
+
+    @BindView(R.id._titleText)
+    lateinit var _TitleText : TextView
+
+    @BindView(R.id._closeButtonRect)
+    lateinit var _CloseButtonRect : ImageView
 
     @BindView(R.id._closeButton)
     lateinit var _CloseButton : ImageView
@@ -40,14 +48,14 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
 
-    private var mCurrentContentID = ""
-    private var mLoadingDialog : MaterialLoadingDialog? = null
-    private var mMainHandler : WeakReferenceHandler? = null
-
     companion object
     {
         const val MESSAGE_GAME_LOAD_ERROR : Int = 10
     }
+
+    private var mCurrentContentID = ""
+    private var mLoadingDialog : MaterialLoadingDialog? = null
+    private var mMainHandler : WeakReferenceHandler? = null
 
     /** ========== LifeCycle ========== */
     override fun onCreate(savedInstanceState : Bundle?)
@@ -56,8 +64,16 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
         super.onCreate(savedInstanceState)
         Log.f("")
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        setContentView(R.layout.activity_webview_starwords)
+        if(CommonUtils.getInstance(this).checkTablet)
+        {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            setContentView(R.layout.activity_webview_tablet)
+        }
+        else
+        {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            setContentView(R.layout.activity_webview)
+        }
         ButterKnife.bind(this)
         mMainHandler = WeakReferenceHandler(this)
 
@@ -100,42 +116,25 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     {
         val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+
+        _TitleBaseLayout.visibility = View.GONE
     }
 
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_STARWORDS_ID)
+        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_CROSSWORD_ID)
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl("${Common.URL_GAME_STARWORDS}${mCurrentContentID}", extraHeaders)
+        _WebView.loadUrl("${Common.URL_GAME_CROSSWORD}${mCurrentContentID}", extraHeaders)
+
         _WebView.addJavascriptInterface(
             DataInterfaceBridge(this, _MainBaseLayout, _WebView),
             Common.BRIDGE_NAME
         )
     }
     /** ========== Init end ========== */
-
-    private fun startLearningLogActivity()
-    {
-        Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_LEARNING_LOG)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    override fun onBackPressed() { super.onBackPressed() }
-
-    @OnClick(R.id._closeButton)
-    fun onClickView(view : View)
-    {
-        when(view.id)
-        {
-            R.id._closeButton -> super.onBackPressed()
-        }
-    }
 
     override fun handlerMessage(message : Message)
     {
@@ -144,7 +143,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
             MESSAGE_GAME_LOAD_ERROR ->
             {
                 finish()
-                Toast.makeText(WebviewGameStarwordsActivity@this,
+                Toast.makeText(WebviewGameCrosswordActivity@this,
                     resources.getString(R.string.message_webview_connect_error),
                     Toast.LENGTH_LONG).show()
             }
@@ -172,15 +171,6 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
         }
     }
 
-    override fun onWindowFocusChanged(hasFocus : Boolean)
-    {
-        super.onWindowFocusChanged(hasFocus)
-        if(hasFocus)
-        {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION and View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        }
-    }
-
     internal inner class DataWebViewClient : WebViewClient()
     {
         override fun shouldOverrideUrlLoading(view : WebView, request : WebResourceRequest) : Boolean
@@ -202,12 +192,6 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
                 : super(context, coordinatorLayout, webView)
 
         @JavascriptInterface
-        fun onInterfaceSendStudyLog()
-        {
-            _WebView.postDelayed({startLearningLogActivity()}, Common.DURATION_SHORTER)
-        }
-
-        @JavascriptInterface
         fun onInterfaceGameLoadComplete()
         {
             _WebView.postDelayed({
@@ -217,4 +201,5 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
             }, Common.DURATION_SHORTER)
         }
     }
+
 }

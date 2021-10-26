@@ -30,8 +30,9 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         private const val SERVICE_INFO_ORIGINAL_TEXT : Int  = 3
         private const val SERVICE_INFO_EBOOK : Int          = 4
         private const val SERVICE_INFO_STARWORDS : Int      = 5
-        private const val SERVICE_INFO_FLASHCARD : Int      = 6
-        private const val SERVICE_INFO_RECORD_PLAYER : Int  = 7
+        private const val SERVICE_INFO_CROSSWORD : Int     = 6
+        private const val SERVICE_INFO_FLASHCARD : Int      = 7
+        private const val SERVICE_INFO_RECORD_PLAYER : Int  = 8
     }
 
     @BindView(R.id._thumbnailInformationLayout)
@@ -221,6 +222,11 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             {
                 mAddItemTypeList.add(ContentItemType.STARWORDS)
             }
+
+            if(mContentsInformationResult.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_SUPPORTED_PAID) && isDisableGame == false)
+            {
+                mAddItemTypeList.add(ContentItemType.CROSSWORD)
+            }
         }
 
         if(mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
@@ -350,9 +356,21 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     }
                 })
             }
-            ContentItemType.RECORDER ->
+            ContentItemType.CROSSWORD ->
             {
                 icon.setImageResource(R.drawable.learning_09)
+                title.setText(mContext.resources.getString(R.string.text_crossword))
+                iconLayout.setOnClickListener(View.OnClickListener {
+                    dismiss()
+                    if(isServiceAvailable(SERVICE_INFO_CROSSWORD))
+                    {
+                        mItemOptionListener?.onClickGameCrossword()
+                    }
+                })
+            }
+            ContentItemType.RECORDER ->
+            {
+                icon.setImageResource(R.drawable.learning_10)
                 title.setText(mContext.resources.getString(R.string.text_recorder))
                 iconLayout.setOnClickListener(View.OnClickListener {
                     dismiss()
@@ -419,6 +437,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             SERVICE_INFO_VOCA -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getVocabularySupportType()
             SERVICE_INFO_EBOOK -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getEbookSupportType()
             SERVICE_INFO_STARWORDS -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getStarwordsSupportType()
+            SERVICE_INFO_CROSSWORD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getCrosswordSupportType()
             SERVICE_INFO_FLASHCARD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getFlashcardSupportType()
             SERVICE_INFO_RECORD_PLAYER -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType()
         }

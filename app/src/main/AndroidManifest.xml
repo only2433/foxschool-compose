@@ -190,6 +190,12 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
+        <activity android:name=".main.webview.WebviewGameCrosswordActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default">
+        </activity>
+
         <activity android:name=".main.webview.WebviewOriginTranslateActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
