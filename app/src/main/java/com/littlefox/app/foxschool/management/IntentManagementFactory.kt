@@ -21,6 +21,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.enumerate.FindType
 import com.littlefox.app.foxschool.main.*
 import com.littlefox.app.foxschool.main.webview.*
 import com.littlefox.app.foxschool.observer.MainObserver
@@ -305,6 +306,17 @@ class IntentManagementFactory
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_ORIGIN_TRANSLATE_ID, `object` as String?)
+                }
+            }
+
+            ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE -> intent = Intent(mContext, WebviewFoxSchoolIntroduceActivity::class.java)
+
+            ActivityMode.WEBVIEW_USER_FIND_INFORMATION ->
+            {
+                intent = Intent(mContext, WebviewUserFindInformationActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_FIND_INFORMATION, `object` as FindType?)
                 }
             }
 

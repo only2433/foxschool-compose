@@ -396,12 +396,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startOriginTranslateActivity()
     {
         Log.f("")
-        // TODO : WEBVIEW_ORIGIN_TRANSLATE 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-//            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
+            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**

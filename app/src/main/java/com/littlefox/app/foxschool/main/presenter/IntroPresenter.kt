@@ -382,7 +382,11 @@ class IntroPresenter : IntroContract.Presenter
 
     override fun onClickIntroduce()
     {
-        // TODO 팍스스쿨 소개 (WEB)
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     override fun onClickHomeButton()

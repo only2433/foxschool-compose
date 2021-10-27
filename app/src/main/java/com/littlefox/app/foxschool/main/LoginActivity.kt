@@ -192,6 +192,8 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _CloseButtonRect.visibility = View.VISIBLE
 
         _InputSchoolEditText.addTextChangedListener(mEditTextChangeListener)
+        _InputIdEditText.addTextChangedListener(mLoginTextChangeListener)
+        _InputPasswordEditText.addTextChangedListener(mLoginTextChangeListener)
         _InputSchoolEditText.onFocusChangeListener = mEditFocusListener
         _InputIdEditText.onFocusChangeListener = mEditFocusListener
         _InputPasswordEditText.onFocusChangeListener = mEditFocusListener
@@ -291,7 +293,12 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             }
             R.id._forgetIDText -> mLoginPresenter.onClickFindID()
             R.id._forgetPasswordText -> mLoginPresenter.onClickFindPassword()
-            R.id._inputSchoolDeleteButton -> _InputSchoolEditText.text.clear()
+            R.id._inputSchoolDeleteButton ->
+            {
+                _InputSchoolEditText.text.clear()
+                mSelectedSchoolData = null // 선택 학교 데이터 초기화
+                setLoginButtonBackground()
+            }
         }
     }
 
@@ -334,6 +341,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                     _InputSchoolEditText.clearFocus()
                     mSearchSchoolList.clear() // 검색결과 리스트 초기화
                     clearSearchView() // 검색화면(팝업)초기화
+                    setLoginButtonBackground()
                 }
 
                 _SearchView.addView(schoolText, mSearchTextLeft, mSearchTextHeight * i, 650f, mSearchTextHeight)
@@ -388,6 +396,23 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     }
 
     /**
+     * 로그인 버튼 배경화면 설정
+     */
+    private fun setLoginButtonBackground()
+    {
+        if (mSelectedSchoolData != null &&
+            _InputIdEditText.text.isNotEmpty() &&
+            _InputPasswordEditText.text.isNotEmpty())
+        {
+            _LoginButtonText.background = resources.getDrawable(R.drawable.round_box_light_blue_84)
+        }
+        else
+        {
+            _LoginButtonText.background = resources.getDrawable(R.drawable.round_box_gray_84)
+        }
+    }
+
+    /**
      * 검색뷰(팝업) 초기화
      */
     private fun clearSearchView()
@@ -409,7 +434,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     }
 
     /**
-     * EditText TextChange Listener
+     * 학교검색 EditText TextChange Listener
      */
     private val mEditTextChangeListener = object : TextWatcher
     {
@@ -429,6 +454,22 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
 
         override fun afterTextChanged(s : Editable?) { }
     }
+
+    /**
+     * 아이디/비밀번호 EditText TextChange Listener
+     */
+    private val mLoginTextChangeListener = object : TextWatcher
+    {
+        override fun beforeTextChanged(s : CharSequence?, start : Int, count : Int, after : Int) { }
+
+        override fun onTextChanged(s : CharSequence?, start : Int, before : Int, count : Int)
+        {
+            setLoginButtonBackground()
+        }
+
+        override fun afterTextChanged(s : Editable?) { }
+    }
+
 
     /**
      * EditText Focusing Listener

@@ -24,8 +24,7 @@ import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
 import com.littlefox.app.foxschool.enc.SimpleCrypto
-import com.littlefox.app.foxschool.enumerate.InputDataType
-import com.littlefox.app.foxschool.enumerate.PasswordGuideType
+import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.LoginContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.library.system.async.listener.AsyncListener
@@ -133,7 +132,12 @@ class LoginPresenter : LoginContract.Presenter
      */
     override fun onClickFindID()
     {
-        // TODO 아이디찾기 화면 연결 (웹)
+        Log.f("findID")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_USER_FIND_INFORMATION)
+            .setData(FindType.ID)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -141,7 +145,12 @@ class LoginPresenter : LoginContract.Presenter
      */
     override fun onClickFindPassword()
     {
-        // TODO 비밀번호찾기 화면 연결 (웹)
+        Log.f("findPassword")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_USER_FIND_INFORMATION)
+            .setData(FindType.PASSWORD)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
