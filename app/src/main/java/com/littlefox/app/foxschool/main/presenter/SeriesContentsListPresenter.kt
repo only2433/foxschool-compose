@@ -513,7 +513,8 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         Log.f("mCurrentOptionIndex() : $mCurrentOptionIndex")
         mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
         mBottomContentItemOptionDialog
-            .setPosition(mCurrentOptionIndex).setIndexColor(seriesColor)
+            .setPosition(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getIndex())
+            .setIndexColor(seriesColor)
             .setItemOptionListener(mStoryDetailOptionListener)
             .setView()
         mBottomContentItemOptionDialog.show()

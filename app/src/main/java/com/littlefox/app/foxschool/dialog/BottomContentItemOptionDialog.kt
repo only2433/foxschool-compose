@@ -100,7 +100,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
 
     fun setPosition(position : Int) : BottomContentItemOptionDialog
     {
-        mPosition = position + 1
+        mPosition = position
         return this
     }
 

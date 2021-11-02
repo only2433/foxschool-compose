@@ -63,6 +63,9 @@ class Common
         const val URL_TERMS : String                    = DEVELOP_BASE_WEBVIEW_URL + "forum/usernote"
         const val URL_PRIVACY : String                  = DEVELOP_BASE_WEBVIEW_URL + "forum/privacy"
         const val URL_ORIGIN_TRANSLATE : String         = DEVELOP_BASE_WEBVIEW_URL + "contents/originaltranslate/"
+        const val URL_FIND_ID : String                  = DEVELOP_BASE_WEBVIEW_URL + "auth/find/id"
+        const val URL_FIND_PW : String                  = DEVELOP_BASE_WEBVIEW_URL + "auth/find/pw"
+        const val URL_FOXSCHOOL_INTRODUCE : String      = "https://foxschool.littlefox.co.kr/home/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"
         const val PARAMS_REGISTER_APP_VERSION : String          = "app_version"
@@ -102,6 +105,7 @@ class Common
         const val INTENT_FLASHCARD_DATA : String                    = "flashcard_data"
         const val INTENT_RECORD_PLAYER_DATA : String                = "record_player_data"
         const val INTENT_ORIGIN_TRANSLATE_ID : String               = "origin_translate"
+        const val INTENT_FIND_INFORMATION : String                  = "find_information"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"

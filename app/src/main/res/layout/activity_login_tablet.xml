@@ -211,7 +211,7 @@
                 android:id="@+id/_loginButtonText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/round_box_light_blue_84"
+                android:background="@drawable/round_box_gray_84"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:text="@string/text_login"
