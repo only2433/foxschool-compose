@@ -2,7 +2,7 @@ package com.littlefox.app.foxschool.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListItemData
+import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 
 class HomeworkListFragmentObserver : ViewModel()
 {
@@ -10,7 +10,7 @@ class HomeworkListFragmentObserver : ViewModel()
     var onClickAfterButton = MutableLiveData<Boolean>()
     var onClickStudentCommentButton = MutableLiveData<Boolean>()
     var onClickTeacherCommentButton = MutableLiveData<Boolean>()
-    var onClickHomeworkItem = MutableLiveData<HomeworkListItemData>()
+    var onClickHomeworkItem = MutableLiveData<HomeworkDetailItemData>()
 
     fun onClickBeforeButton()
     {
@@ -32,7 +32,7 @@ class HomeworkListFragmentObserver : ViewModel()
         onClickTeacherCommentButton.value = true
     }
 
-    fun onClickHomeworkItem(item : HomeworkListItemData)
+    fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
         onClickHomeworkItem.value = item
     }

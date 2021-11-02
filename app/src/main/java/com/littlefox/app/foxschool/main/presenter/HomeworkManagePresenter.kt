@@ -11,14 +11,16 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
-import com.littlefox.app.foxschool.`object`.result.HomeworkManageCalenderBaseObject
-import com.littlefox.app.foxschool.`object`.result.HomeworkStatusListBaseObject
+import com.littlefox.app.foxschool.`object`.result.HomeworkCalenderBaseObject
+import com.littlefox.app.foxschool.`object`.result.HomeworkDetailListBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListBaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListItemData
+
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.calendar.HomeworkCalendarItemData
+import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
+
 import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
@@ -65,15 +67,15 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private lateinit var mHomeworkCommentFragmentObserver : HomeworkCommentFragmentObserver
 
     // 통신
-    private var mHomeworkManageStudentCoroutine : HomeworkManageStudentCoroutine? = null
-    private var mHomeworkStatusListCoroutine : HomeworkStatusListCoroutine? = null
+    private var mStudentHomeworkCalenderCoroutine : StudentHomeworkCalenderCoroutine? = null
+    private var mStudentHomeworkDetailListCoroutine : StudentHomeworkDetailListCoroutine? = null
     private var mStudentCommentRegisterCoroutine : StudentCommentRegisterCoroutine? = null
     private var mStudentCommentUpdateCoroutine : StudentCommentUpdateCoroutine? = null
     private var mStudentCommentDeleteCoroutine : StudentCommentDeleteCoroutine? = null
 
     // 통신 응답 데이터
     private var mHomeworkCalendarBaseResult : HomeworkCalendarBaseResult? = null
-    private var mHomeworkListBaseResult : HomeworkListBaseResult? = null
+    private var mHomeworkDetailBaseResult : HomeworkDetailBaseResult? = null
 
     private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR // 현재 보여지고있는 페이지 포지션
 
@@ -136,10 +138,10 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     override fun destroy()
     {
         Log.f("")
-        mHomeworkManageStudentCoroutine?.cancel()
-        mHomeworkManageStudentCoroutine = null
-        mHomeworkStatusListCoroutine?.cancel()
-        mHomeworkStatusListCoroutine = null
+        mStudentHomeworkCalenderCoroutine?.cancel()
+        mStudentHomeworkCalenderCoroutine = null
+        mStudentHomeworkDetailListCoroutine?.cancel()
+        mStudentHomeworkDetailListCoroutine = null
         mStudentCommentRegisterCoroutine?.cancel()
         mStudentCommentRegisterCoroutine = null
         mStudentCommentUpdateCoroutine?.cancel()
@@ -251,7 +253,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     /**
      * 숙제현황 리스트 클릭 이벤트
      */
-    private fun onClickHomeworkItem(item : HomeworkListItemData)
+    private fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
@@ -390,10 +392,10 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         Log.f("")
         mHomeworkContractView.showLoading()
-        mHomeworkManageStudentCoroutine = HomeworkManageStudentCoroutine(mContext)
-        mHomeworkManageStudentCoroutine!!.setData(mYear, mMonth)
-        mHomeworkManageStudentCoroutine!!.asyncListener = mAsyncListener
-        mHomeworkManageStudentCoroutine!!.execute()
+        mStudentHomeworkCalenderCoroutine = StudentHomeworkCalenderCoroutine(mContext)
+        mStudentHomeworkCalenderCoroutine!!.setData(mYear, mMonth)
+        mStudentHomeworkCalenderCoroutine!!.asyncListener = mAsyncListener
+        mStudentHomeworkCalenderCoroutine!!.execute()
     }
 
     /**
@@ -405,10 +407,10 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
         // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mHomeworkStatusListCoroutine = HomeworkStatusListCoroutine(mContext)
-        mHomeworkStatusListCoroutine!!.setData(mSelectHomeworkData!!.getHomeworkNumber().toString())
-        mHomeworkStatusListCoroutine!!.asyncListener = mAsyncListener
-        mHomeworkStatusListCoroutine!!.execute()
+        mStudentHomeworkDetailListCoroutine = StudentHomeworkDetailListCoroutine(mContext)
+        mStudentHomeworkDetailListCoroutine!!.setData(mSelectHomeworkData!!.getHomeworkNumber())
+        mStudentHomeworkDetailListCoroutine!!.asyncListener = mAsyncListener
+        mStudentHomeworkDetailListCoroutine!!.execute()
     }
 
     /**
@@ -513,16 +515,16 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
             mPagePosition = Common.PAGE_HOMEWORK_STUDENT_COMMENT
             mHomeworkContractView.setCurrentViewPage(mPagePosition)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkListBaseResult!!.getStudentComment())
-            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
+            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
+            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
         })
 
         // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
             mPagePosition = Common.PAGE_HOMEWORK_TEACHER_COMMENT
             mHomeworkContractView.setCurrentViewPage(mPagePosition)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkListBaseResult!!.getTeacherComment())
-            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
+            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
+            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
         })
 
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
@@ -570,37 +572,37 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             if (result.getStatus() == BaseResult.SUCCESS_CODE_OK)
             {
                 // 통신 성공
-                if (code == Common.COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT)
+                if (code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_CALENDER)
                 {
                     // 숙제관리 (달력)
-                    mHomeworkCalendarBaseResult = (result as HomeworkManageCalenderBaseObject).getData()
+                    mHomeworkCalendarBaseResult = (result as HomeworkCalenderBaseObject).getData()
                     mHomeworkManagePresenterObserver.setCalendarData(mHomeworkCalendarBaseResult!!)
                 }
-                else if (code == Common.COROUTINE_CODE_HOMEWORK_STATUS_LIST)
+                else if (code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST)
                 {
                     // 숙제현황 (리스트)
-                    mHomeworkListBaseResult = (result as HomeworkStatusListBaseObject).getData()
-                    mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkListBaseResult!!)
+                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
+                    mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
                     setHomeworkDateButton()
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
                 {
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_register))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
                 {
 
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
                 {
                     mStudentComment = ""
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkListBaseResult!!.isEvaluationComplete())
+                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
                     mHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_comment_delete))
                 }
             }
@@ -615,8 +617,8 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 }
                 else
                 {
-                    if (code == Common.COROUTINE_CODE_HOMEWORK_MANAGE_STUDENT ||
-                        code == Common.COROUTINE_CODE_HOMEWORK_STATUS_LIST)
+                    if (code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_CALENDER ||
+                        code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST)
                     {
                         Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                         (mContext as AppCompatActivity).onBackPressed()

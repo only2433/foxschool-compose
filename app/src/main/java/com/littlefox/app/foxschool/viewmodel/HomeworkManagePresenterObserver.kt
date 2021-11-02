@@ -3,7 +3,7 @@ package com.littlefox.app.foxschool.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
 
 /**
  * 숙제(달력, 리스트, 코멘트) Presenter Observer
@@ -12,7 +12,7 @@ class HomeworkManagePresenterObserver : ViewModel()
 {
     var setCalendarData = MutableLiveData<HomeworkCalendarBaseResult>()
 
-    var updateHomeworkListData = MutableLiveData<HomeworkListBaseResult>()
+    var updateHomeworkListData = MutableLiveData<HomeworkDetailBaseResult>()
     var setHomeworkPrevButton = MutableLiveData<Boolean>()
     var setHomeworkNextButton = MutableLiveData<Boolean>()
     var clearHomeworkList = MutableLiveData<Boolean>()
@@ -31,7 +31,7 @@ class HomeworkManagePresenterObserver : ViewModel()
     /**
      * 숙제현황 화면 (리스트)
      */
-    fun updateHomeworkListData(item : HomeworkListBaseResult)
+    fun updateHomeworkListData(item : HomeworkDetailBaseResult)
     {
         updateHomeworkListData.value = item
     }

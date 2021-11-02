@@ -1,11 +1,12 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
-import com.littlefox.app.foxschool.`object`.result.base.BaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.calendar.HomeworkCalendarItemData
+
 
 /**
  * 숙제관리 학생용 통신 응답 데이터
  */
-class HomeworkCalendarBaseResult : BaseResult()
+class HomeworkCalendarBaseResult
 {
     private val today : String          = ""
     private val year : String           = ""

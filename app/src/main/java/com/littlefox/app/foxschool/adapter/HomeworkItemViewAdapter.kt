@@ -12,7 +12,7 @@ import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListItemData
+import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.listener.HomeworkItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -25,7 +25,7 @@ import com.littlefox.app.foxschool.common.Font
 class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.ViewHolder?>
 {
     private val mContext : Context
-    private var mItemList : ArrayList<HomeworkListItemData> = ArrayList<HomeworkListItemData>() // 숙제 리스트
+    private var mItemDetail : ArrayList<HomeworkDetailItemData> = ArrayList<HomeworkDetailItemData>() // 숙제 리스트
     private var mHomeworkItemListener : HomeworkItemListener? = null
 
     constructor(context : Context)
@@ -33,15 +33,15 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
         mContext = context
     }
 
-    fun setItemList(list : ArrayList<HomeworkListItemData>) : HomeworkItemViewAdapter
+    fun setItemList(detail : ArrayList<HomeworkDetailItemData>) : HomeworkItemViewAdapter
     {
-        mItemList = list
+        mItemDetail = detail
         return this
     }
 
     override fun getItemCount() : Int
     {
-        return mItemList.size
+        return mItemDetail.size
     }
 
     fun setHomeworkItemListener(homeworkItemListener : HomeworkItemListener) : HomeworkItemViewAdapter
@@ -66,7 +66,7 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
 
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
-        val item = mItemList[position]
+        val item = mItemDetail[position]
 
         // 컨텐츠 아이템 세팅
         Glide.with(mContext)

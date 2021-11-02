@@ -9,11 +9,22 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil
 import com.littlefox.library.system.coroutine.BaseCoroutine
 
-class StudentCommentRegisterCoroutine : BaseCoroutine
+class TeacherHomeworkCheckingCoroutine : BaseCoroutine
 {
-    private var mComment : String = ""
     private var mHomeworkNumber : Int = 0
-    constructor(context : Context) : super(context, Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
+    private var mClassID : Int = 0
+    private var mUserID : String = ""
+    private var mEvaluationState : String = ""
+    private var mEvaluationComment : String = ""
+
+    constructor(context : Context) : super(context, Common.COROUTINE_CODE_TEACHER_HOMEWORK_CHECKING)
+    {
+        mHomeworkNumber = 0
+        mClassID = 0
+        mUserID = ""
+        mEvaluationState = ""
+        mEvaluationComment = ""
+    }
 
     override fun doInBackground() : Any?
     {
@@ -26,31 +37,44 @@ class StudentCommentRegisterCoroutine : BaseCoroutine
         synchronized(mSync)
         {
             isRunning = true
-            val list = ContentValues()
-            list.put("comment", mComment)
-            list.put("hw_no", mHomeworkNumber)
 
-            val response = NetworkUtil.requestServerPair(
+            val list = ContentValues()
+            list.put("hw_no", mHomeworkNumber)
+            list.put("school_class_id", mClassID)
+            list.put("fu_id", mUserID)
+            list.put("eval", mEvaluationState)
+
+            if(mEvaluationComment != "")
+            {
+                list.put("eval_comment", mEvaluationComment)
+            }
+
+            val response  = NetworkUtil.requestServerPair(
                 mContext,
-                Common.API_STUDENT_HOMEWORK,
+                Common.API_TEACHER_HOMEWORK,
                 list,
-                NetworkUtil.PUT_METHOD
-            )
+                NetworkUtil.POST_METHOD)
 
             result = Gson().fromJson(response, BaseResult::class.java)
             if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
             }
-        }
 
+        }
         return result
     }
 
     override fun setData(vararg objects : Any?)
     {
-        mComment = objects[0] as String
-        mHomeworkNumber = objects[1] as Int
-    }
+        mHomeworkNumber = objects[0] as Int
+        mClassID = objects[1] as Int
+        mUserID = objects[2] as String
+        mEvaluationState = objects[3] as String
 
+        if(objects.size > 4)
+        {
+            mEvaluationComment = objects[4] as String
+        }
+    }
 }

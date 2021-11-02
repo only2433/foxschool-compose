@@ -1,6 +1,8 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
-class HomeworkListBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
+
+class HomeworkDetailBaseResult
 {
     private val start_date : String = ""
     private val end_date : String = ""
@@ -9,7 +11,7 @@ class HomeworkListBaseResult
     private var is_eval : String    = ""
     private var eval_comment : String    = ""
     private var eval : String       = ""
-    private val list : ArrayList<HomeworkListItemData> = ArrayList()
+    private val detail : ArrayList<HomeworkDetailItemData> = ArrayList()
 
     fun getStartDate() : String = start_date
 
@@ -35,5 +37,5 @@ class HomeworkListBaseResult
 
     fun getTeacherComment() : String = teacher_comment
 
-    fun getHomeworkItemList() : ArrayList<HomeworkListItemData> = list
+    fun getHomeworkItemList() : ArrayList<HomeworkDetailItemData> = detail
 }

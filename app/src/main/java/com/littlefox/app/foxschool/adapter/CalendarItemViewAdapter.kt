@@ -12,7 +12,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarItemData
+import com.littlefox.app.foxschool.`object`.result.homework.calendar.HomeworkCalendarItemData
 import com.littlefox.app.foxschool.adapter.listener.CalendarItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font

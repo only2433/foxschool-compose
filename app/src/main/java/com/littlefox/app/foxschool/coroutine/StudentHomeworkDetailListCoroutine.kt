@@ -2,17 +2,17 @@ package com.littlefox.app.foxschool.coroutine
 
 import android.content.Context
 import com.google.gson.Gson
-import com.littlefox.app.foxschool.`object`.result.HomeworkStatusListBaseObject
+import com.littlefox.app.foxschool.`object`.result.HomeworkDetailListBaseObject
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil
 import com.littlefox.library.system.coroutine.BaseCoroutine
 import java.io.File
 
-class HomeworkStatusListCoroutine : BaseCoroutine
+class StudentHomeworkDetailListCoroutine : BaseCoroutine
 {
-    private var mHomeworkID : String = ""
-    constructor(context : Context) : super(context, Common.COROUTINE_CODE_HOMEWORK_STATUS_LIST)
+    private var mHomeworkNumber : Int = 0
+    constructor(context : Context) : super(context, Common.COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST)
 
     override fun doInBackground() : Any?
     {
@@ -21,18 +21,18 @@ class HomeworkStatusListCoroutine : BaseCoroutine
             return null
         }
 
-        lateinit var result : HomeworkStatusListBaseObject
+        lateinit var result : HomeworkDetailListBaseObject
         synchronized(mSync)
         {
             isRunning = true
             var response = NetworkUtil.requestServerPair(
                 mContext,
-                "${Common.API_HOMEWORK_STATUS_LIST}${File.separator}${mHomeworkID}",
+                "${Common.API_STUDENT_HOMEWORK_DETAIL_LIST}${File.separator}${mHomeworkNumber}",
                 null,
                 NetworkUtil.GET_METHOD
             )
 
-            result = Gson().fromJson(response, HomeworkStatusListBaseObject::class.java)
+            result = Gson().fromJson(response, HomeworkDetailListBaseObject::class.java)
 
             if(result.getAccessToken() != "")
             {
@@ -44,7 +44,7 @@ class HomeworkStatusListCoroutine : BaseCoroutine
 
     override fun setData(vararg objects : Any?)
     {
-        mHomeworkID = objects[0] as String
+        mHomeworkNumber = objects[0] as Int
     }
 
 }

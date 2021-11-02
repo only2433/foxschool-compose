@@ -22,8 +22,8 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListBaseResult
-import com.littlefox.app.foxschool.`object`.result.homework.HomeworkListItemData
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.HomeworkItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -142,9 +142,9 @@ class HomeworkListFragment : Fragment()
     private lateinit var mHomeworkListFragmentObserver : HomeworkListFragmentObserver
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
 
-    private var mHomeworkListBaseResult : HomeworkListBaseResult? = null // 통신 응답받은 데이터
+    private var mHomeworkDetailBaseResult : HomeworkDetailBaseResult? = null // 통신 응답받은 데이터
     private var mHomeworkItemViewAdapter : HomeworkItemViewAdapter? = null // 숙제현황 리스트 Adapter
-    private var mHomeworkItemList : ArrayList<HomeworkListItemData> = ArrayList<HomeworkListItemData>() // 숙제현황 리스트에 표시되는 숙제목록 아이템
+    private var mHomeworkItemDetail : ArrayList<HomeworkDetailItemData> = ArrayList<HomeworkDetailItemData>() // 숙제현황 리스트에 표시되는 숙제목록 아이템
 
     // 숙제 목록 필터링 다이얼로그 데이터
     private var mHomeworkFilterList : Array<String>?    = null
@@ -253,7 +253,7 @@ class HomeworkListFragment : Fragment()
 
         // 숙제현황 데이터
         mHomeworkManagePresenterObserver.updateHomeworkListData.observe(mContext as AppCompatActivity, { item ->
-            mHomeworkListBaseResult = item
+            mHomeworkDetailBaseResult = item
             updateHomeworkListData()
         })
 
@@ -297,33 +297,33 @@ class HomeworkListFragment : Fragment()
         _HomeworkFilterText.text = mHomeworkFilterList!![mHomeworkFilterIndex] // 리스트 필터링 텍스트 설정
 
         // 리스트 아이템 생성
-        mHomeworkItemList.clear()
-        if (mHomeworkListBaseResult != null)
+        mHomeworkItemDetail.clear()
+        if (mHomeworkDetailBaseResult != null)
         {
             if (mHomeworkFilterIndex == 0)
             {
                 // 전체
-                mHomeworkItemList.addAll(mHomeworkListBaseResult!!.getHomeworkItemList())
+                mHomeworkItemDetail.addAll(mHomeworkDetailBaseResult!!.getHomeworkItemList())
             }
             else if (mHomeworkFilterIndex == 1)
             {
                 // 완료한 숙제
-                for (i in mHomeworkListBaseResult!!.getHomeworkItemList().indices)
+                for (i in mHomeworkDetailBaseResult!!.getHomeworkItemList().indices)
                 {
-                    if (mHomeworkListBaseResult!!.getHomeworkItemList()[i].isComplete == true)
+                    if (mHomeworkDetailBaseResult!!.getHomeworkItemList()[i].isComplete == true)
                     {
-                        mHomeworkItemList.add(mHomeworkListBaseResult!!.getHomeworkItemList()[i])
+                        mHomeworkItemDetail.add(mHomeworkDetailBaseResult!!.getHomeworkItemList()[i])
                     }
                 }
             }
             else
             {
                 // 남은 숙제
-                for (i in mHomeworkListBaseResult!!.getHomeworkItemList().indices)
+                for (i in mHomeworkDetailBaseResult!!.getHomeworkItemList().indices)
                 {
-                    if (mHomeworkListBaseResult!!.getHomeworkItemList()[i].isComplete == false)
+                    if (mHomeworkDetailBaseResult!!.getHomeworkItemList()[i].isComplete == false)
                     {
-                        mHomeworkItemList.add(mHomeworkListBaseResult!!.getHomeworkItemList()[i])
+                        mHomeworkItemDetail.add(mHomeworkDetailBaseResult!!.getHomeworkItemList()[i])
                     }
                 }
             }
@@ -342,14 +342,14 @@ class HomeworkListFragment : Fragment()
             // 초기 생성
             Log.f("mHomeworkItemViewAdapter == null")
             mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext)
-                .setItemList(mHomeworkItemList)
+                .setItemList(mHomeworkItemDetail)
                 .setHomeworkItemListener(mHomeworkItemListener)
         }
         else
         {
             // 데이터 변경
             Log.f("mHomeworkItemViewAdapter notifyDataSetChanged")
-            mHomeworkItemViewAdapter!!.setItemList(mHomeworkItemList)
+            mHomeworkItemViewAdapter!!.setItemList(mHomeworkItemDetail)
             mHomeworkItemViewAdapter!!.notifyDataSetChanged()
         }
 
@@ -372,8 +372,8 @@ class HomeworkListFragment : Fragment()
     private fun setHomeworkDateText()
     {
         var homeworkDate = ""
-        val startDate = CommonUtils.getInstance(mContext).getHomeworkDateText(mHomeworkListBaseResult!!.getStartDate())
-        val endDate = CommonUtils.getInstance(mContext).getHomeworkDateText(mHomeworkListBaseResult!!.getEndDate())
+        val startDate = CommonUtils.getInstance(mContext).getHomeworkDateText(mHomeworkDetailBaseResult!!.getStartDate())
+        val endDate = CommonUtils.getInstance(mContext).getHomeworkDateText(mHomeworkDetailBaseResult!!.getEndDate())
         if (startDate == endDate)
         {
             homeworkDate = startDate
@@ -391,7 +391,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setCommentLayout()
     {
-        val homework = mHomeworkListBaseResult!!
+        val homework = mHomeworkDetailBaseResult!!
 
         // [최종평가 영역 설정]
         if (homework.isEvaluationComplete())
@@ -442,7 +442,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setResultCommentLayout()
     {
-        val homework = mHomeworkListBaseResult!!
+        val homework = mHomeworkDetailBaseResult!!
 
         _HomeworkResultImage.background = CommonUtils.getInstance(mContext).getHomeworkEvalImage(homework.getEvaluationState())
 
@@ -491,7 +491,7 @@ class HomeworkListFragment : Fragment()
         }
 
         _HomeworkOneCommentButton.visibility = View.VISIBLE
-        if (mHomeworkListBaseResult!!.getStudentComment() == "")
+        if (mHomeworkDetailBaseResult!!.getStudentComment() == "")
         {
             _HomeworkOneCommentButton.text = resources.getString(R.string.text_homework_comment_write)
             _HomeworkOneCommentButton.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
@@ -534,7 +534,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setHomeworkStudentLayout()
     {
-        if (mHomeworkListBaseResult!!.getStudentComment() == "")
+        if (mHomeworkDetailBaseResult!!.getStudentComment() == "")
         {
             // 학습자 한마디 없을 때 -> 작성
             _HomeworkStudentCommentButton.text = resources.getString(R.string.text_homework_comment_write)
@@ -618,7 +618,7 @@ class HomeworkListFragment : Fragment()
         _OneCommentLayout.visibility = View.GONE
         _TwoCommentLayout.visibility = View.GONE
 
-        mHomeworkItemList.clear()
+        mHomeworkItemDetail.clear()
         mHomeworkFilterIndex = 0
         _HomeworkFilterText.text = mHomeworkFilterList!![mHomeworkFilterIndex]
         setHomeworkListView()
@@ -744,7 +744,7 @@ class HomeworkListFragment : Fragment()
             {
                 mClickEnable = false
                 mListAnimationEffect = false
-                mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemList[position])
+                mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemDetail[position])
                 mClickEnable = true // TODO 김태은 컨텐츠 연결 전까지 임시로 사용
             }
         }

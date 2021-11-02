@@ -1,12 +1,12 @@
-package com.littlefox.app.foxschool.`object`.result.homework
+package com.littlefox.app.foxschool.`object`.result.homework.detail
 
 import com.littlefox.app.foxschool.enumerate.ContentType
 import com.littlefox.app.foxschool.enumerate.HomeworkType
 
-class HomeworkListItemData
+class HomeworkDetailItemData
 {
-    private var is_compleate : String        = ""
-    private var compleate_date : String      = ""
+    private var is_complete : String        = ""
+    private var complete_date : String      = ""
     private var content_id : String         = ""
     private var content_type : String       = ""
     private var thumbnail_url : String      = ""
@@ -16,13 +16,12 @@ class HomeworkListItemData
     val isComplete : Boolean
     get()
     {
-        if(is_compleate.equals("Y"))
+        if(is_complete.equals("Y"))
             return true
-
         return false
     }
 
-    fun getCompleteDate() : String = compleate_date
+    fun getCompleteDate() : String = complete_date
 
     fun getContentID() : String = content_id
 

@@ -12,7 +12,7 @@ import com.littlefox.library.system.coroutine.BaseCoroutine
 class StudentCommentUpdateCoroutine : BaseCoroutine
 {
     private var mComment : String = ""
-    private var mHomeworkID : Int = 0
+    private var mHomeworNumber : Int = 0
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
 
     override fun doInBackground() : Any?
@@ -22,11 +22,11 @@ class StudentCommentUpdateCoroutine : BaseCoroutine
             isRunning = true
             val list = ContentValues()
             list.put("comment", mComment)
-            list.put("hw_no", mHomeworkID)
+            list.put("hw_no", mHomeworNumber)
 
             val response = NetworkUtil.requestServerPair(
                 mContext,
-                Common.API_HOMEWORK_MANAGE_STUDENT,
+                Common.API_STUDENT_HOMEWORK,
                 list,
                 NetworkUtil.POST_METHOD
             )
@@ -44,6 +44,6 @@ class StudentCommentUpdateCoroutine : BaseCoroutine
     override fun setData(vararg objects : Any?)
     {
         mComment = objects[0] as String
-        mHomeworkID = objects[1] as Int
+        mHomeworNumber = objects[1] as Int
     }
 }
