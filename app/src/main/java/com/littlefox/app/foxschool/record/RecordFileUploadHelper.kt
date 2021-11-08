@@ -77,7 +77,7 @@ class RecordFileUploadHelper(private val mContext : Context)
                         return
                     }
 
-                    /*try
+                    try
                     {
                         if(result?.getAccessToken().equals("") === false)
                         {
@@ -90,7 +90,7 @@ class RecordFileUploadHelper(private val mContext : Context)
                         mAsyncListener.onErrorListener(Common.COROUTINE_CODE_CLASS_RECORD_FILE, e.message)
                         return
                     }
-                    mAsyncListener.onRunningEnd(Common.COROUTINE_CODE_CLASS_RECORD_FILE, result)*/
+                    mAsyncListener.onRunningEnd(Common.COROUTINE_CODE_CLASS_RECORD_FILE, result)
                 }
             })
         }

@@ -171,7 +171,7 @@ class CommonUtils
      */
     fun getHomeworkDateText(date : String) : String
     {
-        val fullDate = SimpleDateFormat("yyyy-MM-dd").parse(date)
+        val fullDate : Date = SimpleDateFormat("yyyy-MM-dd").parse(date)
         val month = SimpleDateFormat("MM").format(fullDate).toInt()
         val day = SimpleDateFormat("dd").format(fullDate).toInt()
         return "${month}.${day}"
