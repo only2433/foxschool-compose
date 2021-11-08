@@ -78,7 +78,7 @@ dependencies {
     // Add the Firebase Crashlytics SDK.
     implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
 
-    implementation 'com.github.only2433:LittlefoxLogMoniter:1.0.4'
+    implementation 'com.github.only2433:LittlefoxLogMoniter:1.0.5'
     implementation 'com.github.only2433:LittlefoxSystemLibrary:2.0.11'
     implementation 'com.github.only2433:LittlefoxViewLibrary:1.1.4'
     implementation 'com.ssomai:android.scalablelayout:2.1.6'

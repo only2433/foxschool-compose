@@ -11,7 +11,7 @@ class HomeworkDetailBaseResult
     private var is_eval : String    = ""
     private var eval_comment : String    = ""
     private var eval : String       = ""
-    private val detail : ArrayList<HomeworkDetailItemData> = ArrayList()
+    private val list : ArrayList<HomeworkDetailItemData> = ArrayList()
 
     fun getStartDate() : String = start_date
 
@@ -37,5 +37,5 @@ class HomeworkDetailBaseResult
 
     fun getTeacherComment() : String = teacher_comment
 
-    fun getHomeworkItemList() : ArrayList<HomeworkDetailItemData> = detail
+    fun getHomeworkItemList() : ArrayList<HomeworkDetailItemData> = list
 }

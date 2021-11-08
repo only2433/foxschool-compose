@@ -35,6 +35,8 @@ class RecordFileUploadHelper(private val mContext : Context)
     fun setData(vararg objects : Any?) : RecordFileUploadHelper
     {
         mRecordInfoData = objects[0] as RecordInfoData
+
+
         return this
     }
 
@@ -64,9 +66,9 @@ class RecordFileUploadHelper(private val mContext : Context)
                 {
                     val gson : Gson = GsonBuilder().create()
                     var result : RecordFileUploadBaseObject? = null
-                    result = try
+                    try
                     {
-                        gson.fromJson(response.body()!!.string(), RecordFileUploadBaseObject::class.java)
+                        result = gson.fromJson(response.body()!!.string(), RecordFileUploadBaseObject::class.java)
                     }
                     catch(e : Exception)
                     {
@@ -74,7 +76,8 @@ class RecordFileUploadHelper(private val mContext : Context)
                         mAsyncListener.onErrorListener(Common.COROUTINE_CODE_CLASS_RECORD_FILE, e.message)
                         return
                     }
-                    try
+
+                    /*try
                     {
                         if(result?.getAccessToken().equals("") === false)
                         {
@@ -87,7 +90,7 @@ class RecordFileUploadHelper(private val mContext : Context)
                         mAsyncListener.onErrorListener(Common.COROUTINE_CODE_CLASS_RECORD_FILE, e.message)
                         return
                     }
-                    mAsyncListener.onRunningEnd(Common.COROUTINE_CODE_CLASS_RECORD_FILE, result)
+                    mAsyncListener.onRunningEnd(Common.COROUTINE_CODE_CLASS_RECORD_FILE, result)*/
                 }
             })
         }
@@ -111,6 +114,10 @@ class RecordFileUploadHelper(private val mContext : Context)
         if(audioFile.exists())
         {
             Log.f("파일 있음")
+            Log.f("record_file : " + mRecordInfoData.getFileName());
+            Log.f("content_id : " + mRecordInfoData.getContentsID());
+            Log.f("record_time : " + mRecordInfoData.getRecordTime().toString());
+            Log.f("hw_no : " + mRecordInfoData.getHomeworkNumber().toString());
             multipartBody.setType(MultipartBody.FORM)
                 .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("audio/mpeg"), audioFile))
                 .addFormDataPart("content_id", java.lang.String.valueOf(mRecordInfoData.getContentsID()))
