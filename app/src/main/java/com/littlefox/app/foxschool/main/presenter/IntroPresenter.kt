@@ -41,6 +41,7 @@ import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
+import com.littlefox.logmonitor.enumItem.MonitorMode
 
 import java.util.*
 
@@ -121,7 +122,15 @@ class IntroPresenter : IntroContract.Presenter
 
     private fun init()
     {
-        Log.init(Common.LOG_FILE)
+        if(Feature.IS_WEBVIEW_DEBUGING)
+        {
+            Log.init(mContext, Common.LOG_FILE , MonitorMode.DEBUG_MODE)
+        }
+        else
+        {
+            Log.init(mContext, Common.LOG_FILE , MonitorMode.RELEASE_MODE)
+        }
+
         CommonUtils.getInstance(mContext).windowInfo()
         CommonUtils.getInstance(mContext).showDeviceInfo()
         CommonUtils.getInstance(mContext).initFeature()
@@ -277,7 +286,14 @@ class IntroPresenter : IntroContract.Presenter
         Log.f("Log file Size : $logfileSize")
         if(logfileSize > Common.MAXIMUM_LOG_FILE_SIZE || logfileSize == 0L)
         {
-            Log.initWithDeleteFile(Common.LOG_FILE)
+            if(Feature.IS_WEBVIEW_DEBUGING)
+            {
+                Log.initWithDeleteFile(mContext, Common.LOG_FILE, MonitorMode.DEBUG_MODE)
+            }
+            else
+            {
+                Log.initWithDeleteFile(mContext, Common.LOG_FILE, MonitorMode.RELEASE_MODE)
+            }
         }
     }
 
