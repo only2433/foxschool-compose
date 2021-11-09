@@ -18,5 +18,7 @@ class IntroContract
         fun onClickHomeButton()
         fun onClickLogin()
         fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
+        fun onActivateEasterEgg()
+        fun onDeactivateEasterEgg()
     }
 }

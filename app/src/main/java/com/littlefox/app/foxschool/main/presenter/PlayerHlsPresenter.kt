@@ -334,7 +334,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun init()
     {
-        mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)
+        mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)!!
         mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
         Log.f("list size : " + mPlayInformationList.size + ", isOptionDisable :" + mPlayInformationList[0].isOptionDisable())
         mCurrentPlayMovieIndex = 0

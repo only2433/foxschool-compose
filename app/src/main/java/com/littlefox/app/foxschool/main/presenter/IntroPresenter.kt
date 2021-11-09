@@ -63,6 +63,7 @@ class IntroPresenter : IntroContract.Presenter
         private const val MESSAGE_START_LOGIN : Int                 = 104
         private const val MESSAGE_START_MAIN : Int                  = 105
         private const val MESSAGE_APP_SERVER_ERROR : Int            = 106
+        private const val MESSAGE_DEVELOPER_TO_EMAIL : Int          = 107
 
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
@@ -448,6 +449,18 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
+    override fun onActivateEasterEgg()
+    {
+        Log.f("")
+        mMainHandler.sendEmptyMessageDelayed(MESSAGE_DEVELOPER_TO_EMAIL, Common.DURATION_EASTER_EGG)
+    }
+
+    override fun onDeactivateEasterEgg()
+    {
+        Log.f("")
+        mMainHandler.removeMessages(MESSAGE_DEVELOPER_TO_EMAIL)
+    }
+
     override fun sendMessageEvent(msg : Message)
     {
         when(msg.what)
@@ -468,6 +481,11 @@ class IntroPresenter : IntroContract.Presenter
                 Toast.makeText(mContext, mContext.resources.getString(R.string.message_warning_app_server_error), Toast.LENGTH_LONG).show()
                 (mContext as AppCompatActivity).finish()
                 IntentManagementFactory.getInstance().initScene()
+            }
+            MESSAGE_DEVELOPER_TO_EMAIL ->
+            {
+                Log.f("Send to email ------- Developer")
+                CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
             }
         }
     }

@@ -105,7 +105,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_STARWORDS_ID)
+        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_STARWORDS_ID)!!
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true

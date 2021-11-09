@@ -30,6 +30,7 @@ class FAQPresenter : ForumContract.Presenter
     companion object
     {
         private const val MESSAGE_GO_TO_ARTICLE : Int   = 100
+
         private const val MAX_PER_PAGE_COUNT : Int      = 30
     }
 

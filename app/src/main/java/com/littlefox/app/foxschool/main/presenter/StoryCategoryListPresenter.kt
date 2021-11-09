@@ -48,7 +48,7 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mCurrentCategoryBaseData = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_CATEGORY_DATA)
+        mCurrentCategoryBaseData = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_CATEGORY_DATA)!!
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
         mStoryCategoryListContractView = mContext as StoryCategoryListContract.View
         mStoryCategoryListContractView.initView()

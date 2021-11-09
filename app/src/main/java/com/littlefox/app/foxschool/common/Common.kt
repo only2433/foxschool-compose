@@ -194,7 +194,7 @@ class Common
         const val DURATION_LONG : Long                   = 1000
         const val DURATION_LONGER : Long                 = 1500
         const val DURATION_LONGEST : Long                = 2000
-
+        const val DURATION_EASTER_EGG : Long             = 8000
         /**
          * 한 화면에 페이지 표시 개수
          */

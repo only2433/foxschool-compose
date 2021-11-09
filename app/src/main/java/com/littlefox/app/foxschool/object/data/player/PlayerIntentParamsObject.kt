@@ -21,7 +21,7 @@ class PlayerIntentParamsObject : Parcelable
 
     protected constructor(`in` : Parcel)
     {
-        `in`.readTypedList(mPlayInformationList as List<ContentsBaseResult?>?, ContentsBaseResult.CREATOR)
+        `in`.readTypedList(mPlayInformationList as List<ContentsBaseResult?>, ContentsBaseResult.CREATOR)
         mHomeworkNumber = `in`.readInt()
     }
 

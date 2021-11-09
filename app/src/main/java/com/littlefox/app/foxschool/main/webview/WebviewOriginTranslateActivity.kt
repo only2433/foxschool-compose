@@ -126,7 +126,7 @@ class WebviewOriginTranslateActivity : BaseActivity(), MessageHandlerCallback
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_ORIGIN_TRANSLATE_ID)
+        mCurrentContentID = intent.getStringExtra(Common.INTENT_ORIGIN_TRANSLATE_ID)!!
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true

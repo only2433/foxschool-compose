@@ -10,6 +10,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.os.Message
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -39,6 +40,9 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 
     @BindView(R.id._introBaseLayout)
     lateinit var _IntroBaseLayout : RelativeLayout
+
+    @BindView(R.id._logoTextImage)
+    lateinit var  _IntroLogoTextImage : ImageView
 
     @BindView(R.id._introProgressPercent)
     lateinit var _IntroProgressPercent : ProgressBar
@@ -123,7 +127,10 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         stopFrameAnimation()
     }
 
-    override fun initView() {}
+    override fun initView()
+    {
+        _IntroLogoTextImage.setOnTouchListener(mLogoTouchListener)
+    }
 
     override fun initFont()
     {
@@ -139,7 +146,9 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     }
 
     override fun showLoading() {}
+
     override fun hideLoading() {}
+
     override fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
@@ -229,6 +238,24 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         }
     }
 
+    private val mLogoTouchListener : View.OnTouchListener = object : View.OnTouchListener
+    {
+        override fun onTouch(view : View?, event : MotionEvent?) : Boolean
+        {
+            if(event?.action == MotionEvent.ACTION_DOWN)
+            {
+                mIntroPresenter.onActivateEasterEgg()
+            }
+            else if(event?.action == MotionEvent.ACTION_UP || event?.action == MotionEvent.ACTION_OUTSIDE)
+            {
+                mIntroPresenter.onDeactivateEasterEgg()
+            }
+
+            return true
+        }
+
+    }
+
     private val mBroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver()
     {
         override fun onReceive(context : Context, intent : Intent)
@@ -237,7 +264,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
             val action : String? = intent.getAction()
             if(action == Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
             {
-                val reason : String = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY)
+                val reason : String = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY)!!
                 if(reason != null)
                 {
                     if(reason == SYSTEM_DIALOG_REASON_HOME_KEY)

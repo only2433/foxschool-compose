@@ -99,7 +99,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     {
         Log.f("onCreate")
         mContext = context
-        mCurrentSeriesBaseResult = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_SERIES_DATA) as SeriesBaseResult
+        mCurrentSeriesBaseResult = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_SERIES_DATA)!!
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
         mStoryDetailListContractView = mContext as SeriesContentsListContract.View
         mStoryDetailListContractView.initView()

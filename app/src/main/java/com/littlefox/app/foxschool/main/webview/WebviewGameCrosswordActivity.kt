@@ -123,7 +123,7 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_CROSSWORD_ID)
+        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_CROSSWORD_ID)!!
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true

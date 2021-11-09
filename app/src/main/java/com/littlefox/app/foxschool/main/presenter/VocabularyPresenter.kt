@@ -162,7 +162,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
         {
             REQUEST_CODE_UPDATE_VOCABULARY -> if(resultCode == Activity.RESULT_OK)
             {
-                val bookName : String = data!!.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME)
+                val bookName : String = data!!.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME)!!
                 Log.f("bookName : $bookName")
                 mVocabularyContractView!!.setTitle(bookName)
             }

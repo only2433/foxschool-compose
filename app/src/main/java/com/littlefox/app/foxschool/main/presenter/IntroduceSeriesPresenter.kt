@@ -34,7 +34,7 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
     {
         mContext = context
 
-        mSeriesID = (mContext as AppCompatActivity).intent.getStringExtra(Common.INTENT_SERIES_INFORMATION_ID)
+        mSeriesID = (mContext as AppCompatActivity).intent.getStringExtra(Common.INTENT_SERIES_INFORMATION_ID)!!
         Log.f("SeriesID : $mSeriesID")
 
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)

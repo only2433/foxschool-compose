@@ -36,7 +36,7 @@ class FlashcardDataObject : Parcelable
         mTitleName = `in`.readString()!!
         mTitleSubName = `in`.readString()!!
         mVocabularyType = `in`.readSerializable()!! as VocabularyType
-        `in`.readTypedList(wordList as List<VocabularyDataResult?>?, VocabularyDataResult.CREATOR)
+        `in`.readTypedList(wordList as List<VocabularyDataResult?>, VocabularyDataResult.CREATOR)
     }
 
     override fun writeToParcel(dest : Parcel, flags : Int)

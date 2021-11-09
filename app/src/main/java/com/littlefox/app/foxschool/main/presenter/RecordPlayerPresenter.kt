@@ -125,7 +125,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
     private fun init()
     {
-        mRecordInformation = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_RECORD_PLAYER_DATA)
+        mRecordInformation = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_RECORD_PLAYER_DATA)!!
         mRecordPlayerContractView.setRecordTitle(mRecordInformation)
 
         mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao()

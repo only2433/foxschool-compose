@@ -1413,7 +1413,7 @@ class CommonUtils
     /**
      * 1:1문의 메일 보내기
      */
-    fun inquireForDeveloper(sendUrl : String?, message : String?)
+    fun inquireForDeveloper(sendUrl : String?, message : String? = "")
     {
         var userID = ""
         val userLoginData : UserLoginData? = getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
