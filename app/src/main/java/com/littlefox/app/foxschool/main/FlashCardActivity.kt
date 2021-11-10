@@ -195,7 +195,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
 
     private fun settingCoachMarkImage()
     {
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             _CoachmarkImage.setImageResource(R.drawable.coachmark_flashcard_2192_1080)
         }

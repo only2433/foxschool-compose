@@ -82,7 +82,7 @@ class FlashCardResultFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             view = inflater.inflate(R.layout.fragment_flashcard_result_20_9_phone, container, false)
         }
@@ -175,7 +175,7 @@ class FlashCardResultFragment : Fragment()
     {
         if(isBookmarkEnable)
         {
-            if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+            if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
             {
                 _ContentLayout.moveChildView(_ReplayButton, 610f, 762f)
                 _ContentLayout.moveChildView(_ReplayIcon, 698f, 810f)
@@ -193,7 +193,7 @@ class FlashCardResultFragment : Fragment()
         }
         else
         {
-            if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+            if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
             {
                 _ContentLayout.moveChildView(_ReplayButton, 868f, 762f)
                 _ContentLayout.moveChildView(_ReplayIcon, 956f, 810f)

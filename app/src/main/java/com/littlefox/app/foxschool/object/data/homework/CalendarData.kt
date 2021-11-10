@@ -13,7 +13,7 @@ class CalendarData
     private var isCurrentMonth : Boolean = false                        // 선택된 달 인지 (색 차이를 위해)
     private var isToday : Boolean = false                               // 오늘 날짜인지 (오늘날짜 표시를 위해)
     private var homeworkPosition : Int = -1                             // 숙제 포지션
-    private var imageType : CalendarImageType = CalendarImageType.ONE   // 색 바 종류 (하루, 시작, 중간, 끝)
+    private var imageType : CalendarImageType = CalendarImageType.ONE_DAY   // 색 바 종류 (하루, 시작, 중간, 끝)
 
     constructor(date : String, dateType : CalendarDateType, isCurrentMonth : Boolean)
     {

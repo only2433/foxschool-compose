@@ -259,7 +259,7 @@ class HomeworkCalendarFragment : Fragment()
             if (startPosition == lastPosition)
             {
                 // 숙제 시작 포지션 == 숙제 종료 포지션 : 숙제가 1일 짜리
-                dateList[startPosition].setImageType(CalendarImageType.ONE) // 색 바 이미지 타입 지정 (하루)
+                dateList[startPosition].setImageType(CalendarImageType.ONE_DAY) // 색 바 이미지 타입 지정 (하루)
                 dateList[startPosition].setHomeworkPosition(pos)            // 숙제 아이템 포지션 저장
             }
             else
@@ -279,11 +279,11 @@ class HomeworkCalendarFragment : Fragment()
                     when
                     {
                         // 숙제 시작일
-                        (index == startPosition) -> dateList[index].setImageType(CalendarImageType.START)
+                        (index == startPosition) -> dateList[index].setImageType(CalendarImageType.SEVERAL_DAY_START)
                         // 숙제 종료일
-                        (index == lastPosition) -> dateList[index].setImageType(CalendarImageType.END)
+                        (index == lastPosition) -> dateList[index].setImageType(CalendarImageType.SEVERAL_DAY_END)
                         // 숙제 중간날짜
-                        else -> dateList[index].setImageType(CalendarImageType.CENTER)
+                        else -> dateList[index].setImageType(CalendarImageType.SEVERAL_DAY_CENTER)
                     }
                     dateList[startPosition + i].setHomeworkPosition(pos)    // 숙제 아이템 포지션 저장
                 }

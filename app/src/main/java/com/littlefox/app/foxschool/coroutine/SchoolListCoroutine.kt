@@ -7,6 +7,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil
 import com.littlefox.library.system.coroutine.BaseCoroutine
+import com.littlefox.logmonitor.Log
 
 class SchoolListCoroutine : BaseCoroutine
 {
@@ -22,6 +23,7 @@ class SchoolListCoroutine : BaseCoroutine
         synchronized(mSync) {
             isRunning = true
             val response = NetworkUtil.requestServerPair(mContext, Common.API_SCHOOL_LIST, null, NetworkUtil.GET_METHOD)
+            Log.f("response : "+response);
             result = Gson().fromJson(response, SchoolListBaseObject::class.java)
             if(result.getAccessToken() != "")
             {

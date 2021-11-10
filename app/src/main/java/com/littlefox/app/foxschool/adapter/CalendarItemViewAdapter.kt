@@ -28,8 +28,8 @@ import java.util.ArrayList
 class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.ViewHolder?>
 {
     private val mContext : Context
-    private lateinit var mItemList : ArrayList<CalendarData>                    // 달력 아이템 리스트
-    private lateinit var mHomeworkList : ArrayList<HomeworkCalendarItemData>    // 숙제 데이터 리스트
+    private lateinit var mCalendarStatusList : ArrayList<CalendarData>               // 달력 날짜에 대한 상태 리스트
+    private lateinit var mHomeworkDataList : ArrayList<HomeworkCalendarItemData>    // 숙제 데이터 리스트
     private var mCalendarItemListener : CalendarItemListener? = null
 
     private lateinit var mLayout : LinearLayout
@@ -49,19 +49,19 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
 
     fun setItemList(list : ArrayList<CalendarData>) : CalendarItemViewAdapter
     {
-        mItemList = list
+        mCalendarStatusList = list
         return this
     }
 
     fun setHomeworkList(list : ArrayList<HomeworkCalendarItemData>) : CalendarItemViewAdapter
     {
-        mHomeworkList = list
+        mHomeworkDataList = list
         return this
     }
 
     override fun getItemCount() : Int
     {
-        return mItemList.size
+        return mCalendarStatusList.size
     }
 
     fun setCalendarItemListener(calendarItemListener : CalendarItemListener) : CalendarItemViewAdapter
@@ -96,7 +96,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         holder.itemView.layoutParams.height = itemHeight
 
         // 아이템 변수로 빼기
-        val item = mItemList[position]
+        val item = mCalendarStatusList[position]
         holder._DateText.text = item.getDate()
 
         // 현재 선택된 달이 아닌 미리보기로 보여지는 날짜는 불투명하게 표시한다.
@@ -119,7 +119,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         }
 
         // Visibility 초기화
-        holder._TodayImage.visibility = View.GONE
+
         holder._ColorBarImage.visibility = View.GONE
         holder._HomeworkStateText.visibility = View.GONE
         holder._StampImage.visibility = View.GONE
@@ -130,10 +130,14 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
             holder._DateText.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
             holder._TodayImage.setImageResource(R.drawable.icon_calendar_today_green)
         }
+        else
+        {
+            holder._TodayImage.visibility = View.GONE
+        }
 
         if (item.hasHomework()) // 숙제 있을 때
         {
-            val homework = mHomeworkList[item.getHomeworkPosition()]
+            val homework = mHomeworkDataList[item.getHomeworkPosition()]
 
             // 숙제 있을 경우 색 바 이미지 세팅
             holder._ColorBarImage.visibility = View.VISIBLE
@@ -142,7 +146,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
             // 검사결과 도장, 숙제 진행상황 텍스트 : 숙제가 하루짜리 이거나 첫번째 날 일 때에만 표시
             when(item.getImageType())
             {
-                CalendarImageType.ONE, CalendarImageType.START ->
+                CalendarImageType.ONE_DAY, CalendarImageType.SEVERAL_DAY_START ->
                 {
                     if (homework.isEvaluationComplete())
                     {
@@ -181,7 +185,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
      */
     private fun getDateTextColor(position : Int) : Int
     {
-        when(mItemList[position].getDateType())
+        when(mCalendarStatusList[position].getDateType())
         {
             CalendarDateType.SUN -> return mContext.resources.getColor(R.color.color_ff974b)
             CalendarDateType.SAT -> return mContext.resources.getColor(R.color.color_29c8e6)

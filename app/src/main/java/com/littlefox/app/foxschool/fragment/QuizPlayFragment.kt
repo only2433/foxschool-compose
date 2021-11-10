@@ -23,6 +23,7 @@ import com.littlefox.app.foxschool.`object`.data.quiz.QuizTextData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizUserInteractionData
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
 import com.littlefox.logmonitor.Log
@@ -108,7 +109,18 @@ class QuizPlayFragment : Fragment()
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
-        val view = inflater.inflate(R.layout.fragment_quiz_play, container, false)
+        var view : View
+
+
+        if(CommonUtils.getInstance(mContext).checkTablet == false && Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        {
+            view = inflater.inflate(R.layout.fragment_quiz_play_20_9_phone, container, false)
+        }
+        else
+        {
+           view = inflater.inflate(R.layout.fragment_quiz_play, container, false)
+        }
+
         mUnbinder = ButterKnife.bind(this, view)
         initFont()
         return view
@@ -217,15 +229,8 @@ class QuizPlayFragment : Fragment()
     private fun settingNextPlayLayout()
     {
         val params = _QuestionNextButtonLayout.layoutParams as RelativeLayout.LayoutParams
-        if(CommonUtils.getInstance(mContext).checkTablet)
-        {
-            params.addRule(RelativeLayout.BELOW, R.id._questionBackgroundLayout)
-            params.topMargin = CommonUtils.getInstance(mContext).getPixel(50)
-        }
-        else
-        {
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-        }
+        params.addRule(RelativeLayout.BELOW, R.id._questionBackgroundLayout)
+        params.topMargin = CommonUtils.getInstance(mContext).getPixel(50)
         _QuestionNextButtonLayout.layoutParams = params
     }
 
@@ -248,7 +253,16 @@ class QuizPlayFragment : Fragment()
             R.drawable.icon_index_4
         )
 
-        val exampleMarginTop = if(mQuizTextData.getExampleList().size == 3) 50 else 30
+        var exampleMarginTop : Int = 0
+        if(mQuizTextData.getExampleList().size == 3)
+        {
+            exampleMarginTop = 50
+        }
+        else
+        {
+            exampleMarginTop = 30
+        }
+
         Log.f("list Size : " + mQuizTextData.getExampleList().size)
 
         for(i in 0 until mQuizTextData.getExampleList().size)

@@ -94,7 +94,7 @@ class FlashCardIntroFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             view = inflater.inflate(R.layout.fragment_flashcard_intro_20_9_phone, container, false)
         }
@@ -172,7 +172,7 @@ class FlashCardIntroFragment : Fragment()
     /** 디스플레이에 따른 버튼 텍스트 위치 변경 */
     private fun settingButtonText()
     {
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             _ContentLayout.moveChildView(_StartWordMessageText, 716f, 529f, 244f, 48f)
             _ContentLayout.moveChildView(_StartMeaningMessageText, 1232f, 529f, 244f, 48f)

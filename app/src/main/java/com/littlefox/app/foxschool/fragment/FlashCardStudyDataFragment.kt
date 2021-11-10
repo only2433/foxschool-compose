@@ -171,7 +171,7 @@ class FlashCardStudyDataFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             view = inflater.inflate(R.layout.fragment_flashcard_study_data_20_9_phone, container, false)
         }
@@ -276,7 +276,7 @@ class FlashCardStudyDataFragment : Fragment()
         _Item2ContainerLayout = FrameLayout(mContext)
 
         // 플래시카드 앞면 세팅
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             card1FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_20_9_phone, null, false)
             card2FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_20_9_phone, null, false)
@@ -306,7 +306,7 @@ class FlashCardStudyDataFragment : Fragment()
         _Item2FrontBookmarkButton.setOnClickListener(mOnClickListener)
 
         // 플래시카드 뒷면 세팅
-        if(Feature.IS_20_9_SUPPORT_RADIO_DISPLAY)
+        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
         {
             card1BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_20_9_phone, null, false)
             card2BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_20_9_phone, null, false)

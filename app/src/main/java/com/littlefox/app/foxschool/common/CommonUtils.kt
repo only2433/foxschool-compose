@@ -18,7 +18,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import android.os.StatFs
 import android.provider.Settings
@@ -253,12 +252,12 @@ class CommonUtils
             if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_20_9)
             {
                 Log.f("PHONE = 20 : 9 비율 ")
-                Feature.IS_20_9_SUPPORT_RADIO_DISPLAY = true
+                Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = true
             }
             else
             {
                 Log.f("PHONE = 16 : 9 비율 ")
-                Feature.IS_20_9_SUPPORT_RADIO_DISPLAY = false
+                Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = false
             }
         }
 
@@ -2445,10 +2444,10 @@ class CommonUtils
         var imageType = "one"
         when(calType)
         {
-            CalendarImageType.ONE -> imageType = "one"
-            CalendarImageType.START -> imageType = "start"
-            CalendarImageType.CENTER -> imageType = "center"
-            CalendarImageType.END -> imageType = "end"
+            CalendarImageType.ONE_DAY -> imageType = "one"
+            CalendarImageType.SEVERAL_DAY_START -> imageType = "start"
+            CalendarImageType.SEVERAL_DAY_CENTER -> imageType = "center"
+            CalendarImageType.SEVERAL_DAY_END -> imageType = "end"
         }
 
         // 색 바 이미지 파일명 가져오기

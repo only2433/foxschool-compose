@@ -18,6 +18,7 @@ import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizResultViewData
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.Grade
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
@@ -97,7 +98,16 @@ class QuizResultFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         Log.i("")
-        val view : View = inflater.inflate(R.layout.fragment_quiz_result, container, false)
+        var view : View
+        if(CommonUtils.getInstance(mContext).checkTablet == false && Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        {
+            view = inflater.inflate(R.layout.fragment_quiz_result_20_9_phone, container, false)
+        }
+        else
+        {
+            view = inflater.inflate(R.layout.fragment_quiz_result, container, false)
+        }
+
         mUnbinder = ButterKnife.bind(this, view)
         initFont()
         return view

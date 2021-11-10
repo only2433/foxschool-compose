@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_baseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    tools:ignore="MissingPrefix">
+
+    <!-- 문제 타이틀 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_questionStatusLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_ffffff"
+        app:scale_base_height="281"
+        app:scale_base_width="2402">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@color/color_ceddec"
+            app:scale_top="118"
+            app:scale_left="0"
+            app:scale_width="2402"
+            app:scale_height="2" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@color/color_eff4f6"
+            app:scale_top="120"
+            app:scale_left="0"
+            app:scale_width="2402"
+            app:scale_height="157" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@color/color_ceddec"
+            app:scale_top="277"
+            app:scale_left="0"
+            app:scale_width="2402"
+            app:scale_height="2" />
+
+        <TextView
+            android:id="@+id/_questionIndexText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:text="1"
+            android:textColor="@color/color_444444"
+            app:scale_top="145"
+            app:scale_left="170"
+            app:scale_width="100"
+            app:scale_height="104"
+            app:scale_textsize="45" />
+
+        <TextView
+            android:id="@+id/_questionTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/color_444444"
+            app:scale_top="145"
+            app:scale_left="300"
+            app:scale_width="1380"
+            app:scale_height="104"
+            app:scale_textsize="45" />
+
+        <ImageView
+            android:id="@+id/_questionPlayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_speaker"
+            app:scale_top="170"
+            app:scale_left="80"
+            app:scale_width="60"
+            app:scale_height="60" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- 문제 영역 (위치잡기용) -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_questionBackgroundLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/_questionStatusLayout"
+        app:scale_base_height="500"
+        app:scale_base_width="2402" />
+
+    <!-- 이미지형 문제 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_questionImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/_questionStatusLayout"
+        android:visibility="visible"
+        app:scale_base_height="500"
+        app:scale_base_width="2402">
+
+        <ImageView
+            android:id="@+id/_imageIndexFirstImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_top="61"
+            app:scale_left="556"
+            app:scale_width="545"
+            app:scale_height="410" />
+
+        <ImageView
+            android:id="@+id/_imageIndexFirstSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/img_quiz_correct"
+            android:visibility="gone"
+            app:scale_top="61"
+            app:scale_left="556"
+            app:scale_width="545"
+            app:scale_height="410" />
+
+        <ImageView
+            android:id="@+id/_imageIndexSecondImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_top="61"
+            app:scale_left="1301"
+            app:scale_width="545"
+            app:scale_height="410" />
+
+        <ImageView
+            android:id="@+id/_imageIndexSecondSelectImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/img_quiz_correct"
+            android:visibility="gone"
+            app:scale_top="61"
+            app:scale_left="1301"
+            app:scale_width="545"
+            app:scale_height="410" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <!-- 텍스트형 문제 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_questionTextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/_questionStatusLayout"
+        android:visibility="gone"
+        app:scale_base_height="500"
+        app:scale_base_width="2402"/>
+
+    <!-- 다음 버튼 영역 -->
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_questionNextButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:scale_base_height="110"
+        app:scale_base_width="2402">
+
+        <TextView
+            android:id="@+id/_questionNextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_quiz"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/color_000000"
+            android:enabled="false"
+            android:text="@string/text_next"
+            app:scale_top="0"
+            app:scale_left="1040"
+            app:scale_width="323"
+            app:scale_height="92"
+            app:scale_textsize="47"/>
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+</RelativeLayout>
