@@ -7,7 +7,7 @@ import com.littlefox.app.foxschool.enumerate.VocabularyType
 
 class FlashcardDataObject : Parcelable
 {
-    private var mSeriesID : String = ""
+    private var mContentID : String = ""
     private var mTitleName : String = ""
     private var mTitleSubName : String = ""
     private var mVocabularyType : VocabularyType = VocabularyType.VOCABULARY_CONTENTS
@@ -15,7 +15,7 @@ class FlashcardDataObject : Parcelable
 
     constructor(seriesID : String, title : String, subTitle : String, type : VocabularyType, list : ArrayList<VocabularyDataResult>)
     {
-        mSeriesID = seriesID
+        mContentID = seriesID
         mTitleName = title
         mTitleSubName = subTitle
         mVocabularyType = type
@@ -24,7 +24,7 @@ class FlashcardDataObject : Parcelable
 
     constructor(seriesID : String, title : String, subTitle : String, type : VocabularyType)
     {
-        mSeriesID = seriesID
+        mContentID = seriesID
         mTitleName = title
         mTitleSubName = subTitle
         mVocabularyType = type
@@ -32,7 +32,7 @@ class FlashcardDataObject : Parcelable
 
     constructor(`in` : Parcel)
     {
-        mSeriesID = `in`.readString()!!
+        mContentID = `in`.readString()!!
         mTitleName = `in`.readString()!!
         mTitleSubName = `in`.readString()!!
         mVocabularyType = `in`.readSerializable()!! as VocabularyType
@@ -41,14 +41,14 @@ class FlashcardDataObject : Parcelable
 
     override fun writeToParcel(dest : Parcel, flags : Int)
     {
-        dest.writeString(mSeriesID)
+        dest.writeString(mContentID)
         dest.writeString(mTitleName)
         dest.writeString(mTitleSubName)
         dest.writeSerializable(mVocabularyType)
         dest.writeTypedList(wordList)
     }
 
-    fun getSeriesID() : String = mSeriesID
+    fun getContentID() : String = mContentID
 
     fun getTitleName() : String = mTitleName
 

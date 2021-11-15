@@ -43,12 +43,13 @@ class Common
         const val API_AUTH_CONTENT_PLAY : String    = API_CONTENTS + "player/"
         const val API_STUDY_LOG_SAVE : String       = API_CONTENTS + "player/save"
         const val API_QUIZ_SAVE_RECORD : String     = API_CONTENTS + "quiz/"
-        const val API_VOCABULARY_CONTENTS : String  = API_CONTENTS
+        const val API_VOCABULARY_CONTENTS : String  = API_CONTENTS + "vocabularies"
         const val API_SEARCH_LIST : String          = API_CONTENTS + "search"
         const val API_BOOKSHELF : String            = BASE_PUBLIC_API + "bookshelves"
         const val API_VOCABULARY_SHELF : String     = BASE_PUBLIC_API + "vocabularies/"
         const val API_RECORD_UPLOAD : String        = API_CONTENTS + "record"
         const val API_RECORD_HISTORY : String       = API_CONTENTS + "record/history"
+        const val API_FLASHCARD_SAVE : String       = API_CONTENTS + "flashcard"
 
         const val BASE_WEBVIEW_URL : String                 = DEVELOP_BASE_API + "web/"
         const val DEVELOP_BASE_WEBVIEW_URL  : String        = DEVELOP_API_BASE_URL + "web/"
@@ -135,6 +136,7 @@ class Common
         const val COROUTINE_CODE_PASSWORD_CHANGE : String               = "password_change"
         const val COROUTINE_CODE_INQUIRE : String                       = "inquire"
         const val COROUTINE_CODE_FORUM : String                         = "forum"
+        const val COROUTINE_CODE_FLASHCARD_SAVE : String                = "flashcard_save"
 
         const val COROUTINE_CODE_STUDENT_HOMEWORK_CALENDER              = "student_homework_calender"
         const val COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST           = "student_homework_status_list"

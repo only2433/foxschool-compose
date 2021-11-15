@@ -30,6 +30,7 @@ import com.littlefox.app.foxschool.adapter.FlashcardSelectionPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
+import com.littlefox.app.foxschool.coroutine.FlashcardSaveCoroutine
 import com.littlefox.app.foxschool.coroutine.VocabularyContentsAddCoroutine
 import com.littlefox.app.foxschool.coroutine.VocabularyContentsListCoroutine
 import com.littlefox.app.foxschool.database.CoachmarkDao
@@ -82,6 +83,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     private var mMainHandler : WeakReferenceHandler? = null
     private var mVocabularyContentsListCoroutine : VocabularyContentsListCoroutine? = null
     private var mVocabularyContentsAddCoroutine : VocabularyContentsAddCoroutine? = null
+    private var mFlashcardSaveCoroutine : FlashcardSaveCoroutine? = null
 
     // Fragment 관련 변수
     private var mCurrentFlashcardStatus : FlashcardStatus = FlashcardStatus.INTRO
@@ -250,6 +252,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
                 mFlashcardPresenterObserver.setBookmarkButton(isHaveBookmarkedItem())
                 mFlashcardContractView.settingBaseControlView(mCurrentFlashcardStatus)
                 mFlashcardContractView.nextPageView()
+                requestFlashcardSaveAsync()
             }
         }
     }
@@ -306,9 +309,9 @@ class FlashcardPresenter : FlashcardContract.Presenter
      */
     private fun requestVocabularyContentsListAsync()
     {
-        Log.f("Vocabulary Series ID : " + mFlashcardDataObject.getSeriesID())
+        Log.f("Vocabulary Series ID : " + mFlashcardDataObject.getContentID())
         mVocabularyContentsListCoroutine = VocabularyContentsListCoroutine(mContext)
-        mVocabularyContentsListCoroutine!!.setData(mFlashcardDataObject.getSeriesID())
+        mVocabularyContentsListCoroutine!!.setData(mFlashcardDataObject.getContentID())
         mVocabularyContentsListCoroutine!!.asyncListener = mAsyncListener
         mVocabularyContentsListCoroutine!!.execute()
     }
@@ -319,16 +322,27 @@ class FlashcardPresenter : FlashcardContract.Presenter
      */
     private fun requestVocabularyContentsAddAsync()
     {
-        Log.f("Vocabulary Contents ID : " + mFlashcardDataObject.getSeriesID())
+        Log.f("Vocabulary Contents ID : " + mFlashcardDataObject.getContentID())
         Log.f("Vocabulary ID : " + mCurrentVocabularyAddResult?.getID())
         mVocabularyContentsAddCoroutine = VocabularyContentsAddCoroutine(mContext)
         mVocabularyContentsAddCoroutine!!.setData(
-            mFlashcardDataObject.getSeriesID(),
+            mFlashcardDataObject.getContentID(),
             mCurrentVocabularyAddResult?.getID(),
             getBookmarkedVocabularyItemList()
         )
         mVocabularyContentsAddCoroutine!!.asyncListener = mAsyncListener
         mVocabularyContentsAddCoroutine!!.execute()
+    }
+
+    private fun requestFlashcardSaveAsync()
+    {
+        Log.f("")
+        mFlashcardContractView.showLoading()
+
+        mFlashcardSaveCoroutine = FlashcardSaveCoroutine(mContext)
+        mFlashcardSaveCoroutine!!.setData(mFlashcardDataObject.getContentID())
+        mFlashcardSaveCoroutine!!.asyncListener = mAsyncListener
+        mFlashcardSaveCoroutine!!.execute()
     }
 
     /**
@@ -1129,6 +1143,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
                     message.obj = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
                     message.arg1 = RESULT_OK
                     mMainHandler!!.sendMessageDelayed(message, Common.DURATION_NORMAL)
+                }
+                else if(code == Common.COROUTINE_CODE_FLASHCARD_SAVE)
+                {
+                    Log.f("SAVE FLASHCARD SUCCESS")
+                    mFlashcardContractView.hideLoading()
                 }
             }
             else
