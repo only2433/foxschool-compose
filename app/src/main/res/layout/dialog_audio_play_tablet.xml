@@ -4,13 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingPrefix"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_000000"
-        android:alpha="0.6"/>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:layout_width="match_parent"

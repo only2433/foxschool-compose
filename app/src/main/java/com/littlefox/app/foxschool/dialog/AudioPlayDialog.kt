@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -9,14 +10,12 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 
-import android.view.Window
-import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
@@ -57,8 +56,8 @@ class AudioPlayDialog : Dialog
         private const val TEST_TITLE : String = "Where Am I? 4"
         private const val TEST_THUMB_URL : String = "https://img.littlefox.co.kr/static/contents/img/C0006514/notext_ipad.jpg?1559537329"
         private const val TEST_AUDIO_URL : String = "https://cdn.littlefox.co.kr/contents/ebook/mp3/whereami04_movie.mp3"
-
-        private const val MESSAGE_UI_UPDATE : Int                       = 100
+        private const val DIALOG_WIDTH : Int = 1020
+        private const val MESSAGE_UI_UPDATE : Int  = 100
     }
 
     @BindView(R.id._closeButtonRect)
@@ -82,25 +81,21 @@ class AudioPlayDialog : Dialog
     @BindView(R.id._playButton)
     lateinit var _PlayButton : ImageView
 
+
     private val mContext : Context
     private var mMediaPlayer : MediaPlayer? = null
     private var mAudioAttributes : AudioAttributes? = null
     private var mUIUpdateTimer : Timer? = null
 
-    private var mTitle = ""
-    private var mThumbnailUrl = ""
-    private var mAudioPath = ""
+    private var mTitle : String         = ""
+    private var mThumbnailUrl : String  = ""
+    private var mAudioPath : String     = ""
+    private var isPrepareComplete : Boolean = false
 
-    constructor(context : Context, title : String, thumbnailUrl : String, audioPath : String) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
+    constructor(context : Context, title : String, thumbnailUrl : String, audioPath : String) : super(context)
     {
-        if(CommonUtils.getInstance(context).checkTablet)
-        {
-            setContentView(R.layout.dialog_audio_play_tablet)
-        }
-        else
-        {
-            setContentView(R.layout.dialog_audio_play)
-        }
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setContentView(R.layout.dialog_audio_play)
         ButterKnife.bind(this)
         mContext = context
 
@@ -114,10 +109,12 @@ class AudioPlayDialog : Dialog
         super.onCreate(savedInstanceState)
 
         var params : WindowManager.LayoutParams = getWindow()!!.attributes
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        params.width = CommonUtils.getInstance(mContext).getPixel(DIALOG_WIDTH)
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        params.gravity = Gravity.CENTER
         params.windowAnimations = R.style.DialogScaleAnimation
         getWindow()!!.attributes = params
+        getWindow()!!.decorView.setBackgroundColor(Color.TRANSPARENT)
 
         initView()
         initFont()
@@ -179,6 +176,7 @@ class AudioPlayDialog : Dialog
                 override fun onPrepared(mediaPlayer : MediaPlayer)
                 {
                     Log.f("")
+                    isPrepareComplete = true
                     setRemainDuration()
                     enableTimer(isStart = true)
                     mMediaPlayer?.start()
@@ -188,8 +186,22 @@ class AudioPlayDialog : Dialog
                 override fun onCompletion(mediaPlayer : MediaPlayer)
                 {
                     Log.f("---- End ----")
-                    setMaxDuration()
-                    enableTimer(false)
+                    if(isPrepareComplete)
+                    {
+                        isPrepareComplete = false
+                        setMaxDuration()
+                        enableTimer(false)
+                    }
+                    else
+                    {
+                        Toast.makeText(mContext,
+                            mContext.resources.getString(R.string.message_warning_record_empty),
+                            Toast.LENGTH_SHORT).show()
+
+                        releaseAudio()
+                        dismiss()
+                    }
+
                 }
 
             })

@@ -118,9 +118,8 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
      */
     private fun showAudioPlayDialog(item : RecordHistoryResult)
     {
-        // TODO 김태은 녹음파일 재생 다이얼로그 연결하기
-//        mAudioPlayDialog = AudioPlayDialog(mContext, item.getTitle(), item.getThumbnailUrl(), item.getMp3Path())
-//        mAudioPlayDialog!!.show()
+        mAudioPlayDialog = AudioPlayDialog(mContext, item.getTitle(), item.getThumbnailUrl(), item.getMp3Path())
+        mAudioPlayDialog!!.show()
     }
 
     /**
