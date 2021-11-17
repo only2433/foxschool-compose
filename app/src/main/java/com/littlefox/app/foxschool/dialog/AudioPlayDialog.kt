@@ -268,6 +268,15 @@ class AudioPlayDialog : Dialog
         }
     }
 
+    override fun onBackPressed()
+    {
+        super.onBackPressed()
+        releaseAudio()
+        enableTimer(false)
+        mDialogHandler.removeMessages(MESSAGE_UI_UPDATE)
+        dismiss()
+    }
+
     @OnClick(R.id._closeButtonRect, R.id._playButton)
     fun onClickView(view : View)
     {

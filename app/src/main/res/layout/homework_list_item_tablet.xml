@@ -8,6 +8,7 @@
     android:orientation="vertical">
 
     <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_baseLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:scale_base_width="1920"
@@ -64,6 +65,42 @@
             app:scale_top="51"
             app:scale_width="230"
             app:scale_height="55"/>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_homeworkRecordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:scale_left="1020"
+            app:scale_top="0"
+            app:scale_width="417"
+            app:scale_height="163"
+            app:scale_base_width="417"
+            app:scale_base_height="163">
+
+            <ImageView
+                android:id="@+id/_homeworkRecordImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_homework_recorder_on"
+                app:scale_left="90"
+                app:scale_top="37"
+                app:scale_width="230"
+                app:scale_height="55"/>
+
+            <TextView
+                android:id="@+id/_homeworkRecordDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/color_444444"
+                app:scale_left="0"
+                app:scale_top="103"
+                app:scale_width="417"
+                app:scale_height="55"
+                app:scale_textsize="26"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
 
         <ImageView
             android:id="@+id/_homeworkCheckImage"

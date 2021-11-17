@@ -8,7 +8,7 @@ import com.littlefox.app.foxschool.`object`.result.RecordHistoryBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.record.RecordHistoryResult
 import com.littlefox.app.foxschool.adapter.RecordHistoryListAdapter
-import com.littlefox.app.foxschool.adapter.listener.RecordItemListener
+import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.coroutine.RecordHistoryCoroutine
 import com.littlefox.app.foxschool.dialog.AudioPlayDialog
@@ -194,9 +194,9 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     /**
      * 녹음 기록 리스트 클릭 이벤트 Listener
      */
-    private val mRecordHistoryItemListener : RecordItemListener = object : RecordItemListener
+    private val mRecordHistoryItemListener : OnItemViewClickListener = object : OnItemViewClickListener
     {
-        override fun onClickItem(position : Int)
+        override fun onItemClick(position : Int)
         {
             onClickRecordItem(mRecordHistoryResult[position])
         }

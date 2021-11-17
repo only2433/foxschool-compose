@@ -171,9 +171,27 @@ class CommonUtils
     fun getHomeworkDateText(date : String) : String
     {
         val fullDate : Date = SimpleDateFormat("yyyy-MM-dd").parse(date)
-        val month = SimpleDateFormat("MM").format(fullDate).toInt()
-        val day = SimpleDateFormat("dd").format(fullDate).toInt()
-        return "${month}.${day}"
+        return SimpleDateFormat("M.d").format(fullDate)
+    }
+
+    /**
+     * 학습일시 날짜 변환
+     * - 형식 : YYYY.MM.dd 오전/오후 h:mm
+     * - MM, dd, hh가 0으로 시작하는 경우 앞의 0 제거
+     * - 모바일인 경우 오전/오후 부터 한 줄 띄워서 표시
+     */
+    fun getStudyCompleteDateText(date : String) : String
+    {
+        val fullDate : Date = SimpleDateFormat("yyyy.MM.dd hh:mm").parse(date)
+
+        if (checkTablet)
+        {
+            return SimpleDateFormat("yyyy.M.d a h:mm").format(fullDate)
+        }
+        else
+        {
+            return SimpleDateFormat("yyyy.M.d \na h:mm").format(fullDate)
+        }
     }
 
     fun showDeviceInfo()
@@ -2156,13 +2174,13 @@ class CommonUtils
     {
         if (fullName.indexOf(":") > 0)
         {
-            val name = fullName.substring(0, fullName.indexOf(":"))
-            val subName = fullName.substring(fullName.indexOf(":") + 2, fullName.length)
+            val name : String = fullName.substring(0, fullName.indexOf(":"))
+            val subName : String = fullName.substring(fullName.indexOf(":") + 2, fullName.length)
             return Pair<String, String>(name, subName)
         }
         else
         {
-            return Pair(fullName, "")
+            return Pair<String, String>(fullName, "")
         }
     }
 
@@ -2496,11 +2514,10 @@ class CommonUtils
 
     /**
      * 숙제 종류에 따른 bar 이미지
-     * TODO 이후에 선생님도 사용할 수 있음.
      */
-    fun getHomeworkTypeImage(type : HomeworkType) : Drawable
+    fun getHomeworkTypeImage(type : HomeworkType, isEnable : Boolean = false) : Drawable
     {
-        var filename = ""
+        var filename : String = ""
         when(type)
         {
             HomeworkType.ANIMATION -> filename = "icon_homework_animation"
@@ -2511,7 +2528,14 @@ class CommonUtils
             HomeworkType.RECORDER -> filename = "icon_homework_recorder"
         }
 
-        filename += "_on"
+        if (isEnable)
+        {
+            filename += "_off"
+        }
+        else
+        {
+            filename += "_on"
+        }
 
         val id = sContext.resources.getIdentifier(filename, "drawable", sContext.packageName) // 아이디 가져오기
         var drawable : Drawable? = null

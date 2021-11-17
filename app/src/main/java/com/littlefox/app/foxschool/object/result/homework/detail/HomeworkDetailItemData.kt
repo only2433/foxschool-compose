@@ -13,6 +13,10 @@ class HomeworkDetailItemData
     private var hw_type : String            = ""
     private var title : String              = ""
 
+    // 선생님 데이터
+    private var mp3_expired : Int           = 0
+    private var mp3_path : String           = ""
+
     val isComplete : Boolean
     get()
     {
@@ -53,4 +57,9 @@ class HomeworkDetailItemData
     }
 
     fun getTitle() : String = title
+
+    // 선생님용 ----------
+    fun getExpired() : Int = mp3_expired
+
+    fun getMp3Path() : String = mp3_path
 }

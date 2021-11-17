@@ -13,6 +13,7 @@ class UserInfoSectionResult
     private var email : String = ""
     private var phone : String = ""
     private var user_type : String = ""
+    private var hasclass : String = ""
 
     fun getFoxUserID() : String = fu_id
 
@@ -37,5 +38,15 @@ class UserInfoSectionResult
             return Common.USER_TYPE_STUDENT
         }
         return user_type
+    }
+
+    fun isHaveClass() : Boolean
+    {
+        if(hasclass == "")
+        {
+            return false
+        }
+
+        return if(hasclass == "Y") true else false
     }
 }

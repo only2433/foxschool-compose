@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkStatusBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.TeacherClassItemData
 
 /**
  * 숙제(달력, 리스트, 코멘트) Presenter Observer
@@ -13,12 +15,19 @@ class HomeworkManagePresenterObserver : ViewModel()
     var setCalendarData = MutableLiveData<HomeworkCalendarBaseResult>()
 
     var updateHomeworkListData = MutableLiveData<HomeworkDetailBaseResult>()
-    var setHomeworkPrevButton = MutableLiveData<Boolean>()
-    var setHomeworkNextButton = MutableLiveData<Boolean>()
     var clearHomeworkList = MutableLiveData<Boolean>()
 
     var setPageType = MutableLiveData<Pair<Int, Boolean>>()
     var setCommentData = MutableLiveData<String>()
+
+    // 선생님 ----
+    var setClassData = MutableLiveData<ArrayList<TeacherClassItemData>>()
+    var setClassName = MutableLiveData<String>()
+
+    var setStatusListData = MutableLiveData<HomeworkStatusBaseResult>()
+    var clearStatusList = MutableLiveData<Boolean>()
+    var setClickEnable = MutableLiveData<Boolean>()
+    // ----------
 
     /**
      * 숙제관리 화면 (달력)
@@ -34,16 +43,6 @@ class HomeworkManagePresenterObserver : ViewModel()
     fun updateHomeworkListData(item : HomeworkDetailBaseResult)
     {
         updateHomeworkListData.value = item
-    }
-
-    fun setHomeworkPrevButton(isEnable : Boolean)
-    {
-        setHomeworkPrevButton.value = isEnable
-    }
-
-    fun setHomeworkNextButton(isEnable : Boolean)
-    {
-        setHomeworkNextButton.value = isEnable
     }
 
     fun clearHomeworkList(allClear : Boolean)
@@ -62,5 +61,35 @@ class HomeworkManagePresenterObserver : ViewModel()
     fun setCommentData(comment : String)
     {
         setCommentData.value = comment
+    }
+
+    /**
+     * 선생님
+     */
+
+    // 선생님 학급 리스트
+    fun setClassData(classData : ArrayList<TeacherClassItemData>)
+    {
+        setClassData.value = classData
+    }
+
+    fun setClassName(className : String)
+    {
+        setClassName.value = className
+    }
+
+    fun setStatusListData(homeworkStatusBaseResult : HomeworkStatusBaseResult)
+    {
+        setStatusListData.value = homeworkStatusBaseResult
+    }
+
+    fun clearStatusList()
+    {
+        clearStatusList.value = true
+    }
+
+    fun setClickEnable()
+    {
+        setClickEnable.value = true
     }
 }

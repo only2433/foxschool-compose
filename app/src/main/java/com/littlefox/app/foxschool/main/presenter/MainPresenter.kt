@@ -429,21 +429,24 @@ class MainPresenter : MainContract.Presenter
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_HISTORY, Common.DURATION_SHORT)
     }
 
+    /**
+     * 메뉴 숙제관리 클릭 이벤트
+     */
     override fun onClickMenuHomeworkManage()
     {
         Log.f("")
         if (CommonUtils.getInstance(mContext).isTeacherMode == false)
         {
+            // 학생
             if(mLoginInformationResult!!.getSchoolInformation().isHaveClass())
             {
-                // 학생
                 // 학급정보 있는 경우 화면 이동
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_HOMEWORK, Common.DURATION_SHORT)
             }
             else
             {
                 showTemplateAlertDialog(
-                    mContext.resources.getString(R.string.message_warning_not_have_class),
+                    mContext.resources.getString(R.string.message_warning_not_have_class_student),
                     DIALOG_EVENT_NOT_HAVE_CLASS,
                     DialogButtonType.BUTTON_1
                 )
@@ -451,7 +454,20 @@ class MainPresenter : MainContract.Presenter
         }
         else
         {
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_HOMEWORK, Common.DURATION_SHORT)
+            // 선생님
+            if(mLoginInformationResult!!.getUserInformation().isHaveClass() == false)
+            {
+                // 학급 정보 없을 때
+                showTemplateAlertDialog(
+                    mContext.resources.getString(R.string.message_warning_not_have_class_teacher),
+                    DIALOG_EVENT_NOT_HAVE_CLASS,
+                    DialogButtonType.BUTTON_1
+                )
+            }
+            else
+            {
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_HOMEWORK, Common.DURATION_SHORT)
+            }
         }
     }
 

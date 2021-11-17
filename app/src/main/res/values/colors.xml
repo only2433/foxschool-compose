@@ -134,4 +134,6 @@
     <color name="color_a4abb3">#a4abb3</color>
     <color name="color_ff974b">#ff974b</color>
     <color name="color_cccccc">#cccccc</color>
+    <color name="color_29c8e6_alpha_50">#8029c8e6</color>
+    <color name="color_23cc8a_alpha_50">#8023cc8a</color>
 </resources>

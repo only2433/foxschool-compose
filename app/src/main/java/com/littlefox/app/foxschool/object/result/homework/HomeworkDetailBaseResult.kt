@@ -12,6 +12,9 @@ class HomeworkDetailBaseResult
     private var eval_comment : String    = ""
     private var eval : String       = ""
     private val list : ArrayList<HomeworkDetailItemData> = ArrayList()
+    // 선생님용 ----------
+    private var fragmentType : Int = 0
+    private var fragmentTitle : String = ""
 
     fun getStartDate() : String = start_date
 
@@ -38,4 +41,19 @@ class HomeworkDetailBaseResult
     fun getTeacherComment() : String = teacher_comment
 
     fun getHomeworkItemList() : ArrayList<HomeworkDetailItemData> = list
+
+    // 선생님용 ----------
+    fun setFragmentTitle(title : String)
+    {
+        this.fragmentTitle = title
+    }
+
+    fun getFragmentTitle() : String = fragmentTitle
+
+    fun setFragmentType(index : Int)
+    {
+        fragmentType = index
+    }
+
+    fun getFragmentType() : Int = fragmentType
 }

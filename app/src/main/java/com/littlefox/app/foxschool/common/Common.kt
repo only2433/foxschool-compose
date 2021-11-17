@@ -107,6 +107,7 @@ class Common
         const val INTENT_RECORD_PLAYER_DATA : String                = "record_player_data"
         const val INTENT_ORIGIN_TRANSLATE_ID : String               = "origin_translate"
         const val INTENT_FIND_INFORMATION : String                  = "find_information"
+        const val INTENT_HOMEWORK_CHECKING_DATA : String            = "homework_checking_data"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -196,7 +197,7 @@ class Common
         const val DURATION_LONG : Long                   = 1000
         const val DURATION_LONGER : Long                 = 1500
         const val DURATION_LONGEST : Long                = 2000
-        const val DURATION_EASTER_EGG : Long             = 8000
+        const val DURATION_EASTER_EGG : Long             = 5000
         /**
          * 한 화면에 페이지 표시 개수
          */
@@ -229,19 +230,17 @@ class Common
 
         /**
          * 숙제관리 화면 페이지
-         *  - 공통 : 달력 0, 컨텐츠 리스트 1 (학생 숙제현황, 선생님 숙제내용)
-         *  - 학생 : 학습자 한마디 2, 선생님 한마디 3
-         *  - 선생님 : 숙제리스트 2, 숙제검사 3, 숙제현황상세보기 4
+         *  - 공통 : 달력 0, 숙제 현황 1, 학습자 한마디 4, 선생님 한마디 5
+         *  - 선생님 : 숙제현황상세보기 2, 숙제 내용 3
          */
         const val PAGE_HOMEWORK_CALENDAR : Int          = 0
-        const val PAGE_HOMEWORK_LIST : Int              = 1
+        const val PAGE_HOMEWORK_STATUS : Int            = 1
 
-        const val PAGE_HOMEWORK_STUDENT_COMMENT : Int   = 2
-        const val PAGE_HOMEWORK_TEACHER_COMMENT : Int   = 3
+        const val PAGE_HOMEWORK_STATUS_DETAIL : Int     = 2
+        const val PAGE_HOMEWORK_DETAIL : Int            = 3
 
-        const val PAGE_HOMEWORK_LIST_DETAIL : Int       = 2
-        const val PAGE_HOMEWORK_CHECK : Int             = 3
-        const val PAGE_HOMEWORK_STATUS_DETAIL : Int     = 4
+        const val PAGE_HOMEWORK_STUDENT_COMMENT : Int   = 4
+        const val PAGE_HOMEWORK_TEACHER_COMMENT : Int   = 5
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 

@@ -45,9 +45,9 @@
                 android:gravity="center_vertical"
                 android:text="@string/message_1on1_check_email"
                 android:textColor="@color/color_666666"
-                app:scale_left="100"
+                app:scale_left="90"
                 app:scale_top="50"
-                app:scale_width="880"
+                app:scale_width="920"
                 app:scale_height="150"
                 app:scale_textsize="36" />
 
@@ -145,7 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/icon_info"
-                app:scale_left="131"
+                app:scale_left="127"
                 app:scale_top="920"
                 app:scale_width="34"
                 app:scale_height="40" />
@@ -157,9 +157,9 @@
                 android:gravity="top"
                 android:text="@string/message_1on1_tip"
                 android:textColor="@color/color_fa4959"
-                app:scale_left="130"
+                app:scale_left="125"
                 app:scale_top="920"
-                app:scale_width="800"
+                app:scale_width="820"
                 app:scale_height="170"
                 app:scale_textsize="36" />
 
@@ -201,9 +201,9 @@
                 android:gravity="center_vertical"
                 android:text="@string/message_1on1_reply"
                 android:textColor="@color/color_444444"
-                app:scale_left="160"
+                app:scale_left="150"
                 app:scale_top="1500"
-                app:scale_width="770"
+                app:scale_width="800"
                 app:scale_height="180"
                 app:scale_textsize="38" />
 

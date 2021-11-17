@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.annotation.Nullable
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,7 +24,7 @@ import com.littlefox.app.foxschool.`object`.data.homework.CalendarBaseData
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
-import com.littlefox.app.foxschool.adapter.listener.CalendarItemListener
+import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
@@ -32,7 +35,7 @@ import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
- * 숙제관리 달력 화면 (학생용)
+ * 숙제관리 달력 화면
  * @author 김태은
  */
 class HomeworkCalendarFragment : Fragment()
@@ -43,8 +46,22 @@ class HomeworkCalendarFragment : Fragment()
     @BindView(R.id._scrollView)
     lateinit var _ScrollView : ScrollView
 
-    @BindView(R.id._calendarPickLayout)
-    lateinit var _CalendarPickLayout : ScalableLayout
+    // [선생님] 학급 선택 -----------------------------
+    @Nullable
+    @BindView(R.id._calendarClassLayout)
+    lateinit var _CalendarClassLayout : ScalableLayout
+
+    @Nullable
+    @BindView(R.id._textClassName)
+    lateinit var _TextClassName : TextView
+
+    @Nullable
+    @BindView(R.id._calendarClassBackground)
+    lateinit var _CalendarClassBackground : ImageView
+    // ----------------------------------------------
+
+    @BindView(R.id._homeworkPickLayout)
+    lateinit var _HomeworkPickLayout : ScalableLayout
 
     @BindView(R.id._beforeButton)
     lateinit var _BeforeButton : ImageView
@@ -98,7 +115,12 @@ class HomeworkCalendarFragment : Fragment()
     private var mCalendarItemViewAdapter : CalendarItemViewAdapter? = null          // 숙제관리 리스트 Adapter
     private var mCalendarItemList : ArrayList<CalendarData> = ArrayList<CalendarData>()
 
-    private var mClickEnable : Boolean = false          // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var mClickEnable : Boolean = false              // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+
+    // [선생님] 학급 선택 -----------------------------
+    private var mClassNameList : Array<String>? = null      // 통신에서 응답받은 학급 리스트
+    private var mClassIndex : Int = 0                       // 선택한 학급 인덱스
+    // ----------------------------------------------
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -119,9 +141,17 @@ class HomeworkCalendarFragment : Fragment()
         if(CommonUtils.getInstance(mContext).checkTablet)
         {
             view = inflater.inflate(R.layout.fragment_homework_calendar_tablet, container, false)
-        } else
+        }
+        else
         {
-            view = inflater.inflate(R.layout.fragment_homework_calendar, container, false)
+            if (CommonUtils.getInstance(mContext).isTeacherMode)
+            {
+                view = inflater.inflate(R.layout.fragment_homework_teacher_calendar, container, false)
+            }
+            else
+            {
+                view = inflater.inflate(R.layout.fragment_homework_student_calendar, container, false)
+            }
         }
         mUnbinder = ButterKnife.bind(this, view)
         return view
@@ -133,6 +163,11 @@ class HomeworkCalendarFragment : Fragment()
         Log.f("")
         initView()
         initFont()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -173,6 +208,12 @@ class HomeworkCalendarFragment : Fragment()
     {
         if (CommonUtils.getInstance(mContext).checkTablet)
         {
+            if (CommonUtils.getInstance(mContext).isTeacherMode)
+            {
+                // 선생님 모드일 때만 학급 선택 영역 표시
+                _CalendarClassLayout.visibility = View.VISIBLE
+            }
+
             if (Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
             {
                 // 태블릿 4:3 모델 대응
@@ -195,6 +236,10 @@ class HomeworkCalendarFragment : Fragment()
         _TextThursday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _TextFriday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _TextSaturday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        if (CommonUtils.getInstance(mContext).isTeacherMode)
+        {
+            _TextClassName.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        }
     }
     /** ========== Init ========== */
 
@@ -204,12 +249,22 @@ class HomeworkCalendarFragment : Fragment()
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
         // 달력 아이템
-        mHomeworkManagePresenterObserver.setCalendarData.observe((mContext as AppCompatActivity), Observer {result ->
+        mHomeworkManagePresenterObserver.setCalendarData.observe(viewLifecycleOwner, Observer {result ->
+            Log.f("[CAL_SET_OBS] || ${viewLifecycleOwner.lifecycle.currentState}")
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
             mClickEnable = true // 클릭이벤트 허용
+        })
+
+        // 학급 데이터
+        mHomeworkManagePresenterObserver.setClassData.observe(viewLifecycleOwner, { classData ->
+            Log.f("[CAL_CLASS_OBS] || ${viewLifecycleOwner.lifecycle.currentState}")
+            mClassNameList = Array<String>(classData!!.size) { index ->
+                classData[index].getClassName()
+            }
+            setClassName(mClassNameList!![mClassIndex])
         })
     }
 
@@ -226,7 +281,7 @@ class HomeworkCalendarFragment : Fragment()
         {
             // 초기생성
             Log.f("mCalendarItemViewAdapter == null")
-            mCalendarItemViewAdapter = CalendarItemViewAdapter(mContext)
+            mCalendarItemViewAdapter = CalendarItemViewAdapter(mContext, CommonUtils.getInstance(mContext).isTeacherMode)
                 .setItemList(mCalendarItemList)
                 .setHomeworkList(mHomeworkCalendarBaseResult!!.getHomeworkDataList())
                 .setCalendarItemListener(mCalendarItemListener)
@@ -321,6 +376,14 @@ class HomeworkCalendarFragment : Fragment()
     }
 
     /**
+     * 학급 리스트 설정
+     */
+    private fun setClassName(className : String)
+    {
+        _TextClassName.text = className
+    }
+
+    /**
      * 달력 이전/다음 화살표 버튼 설정
      */
     private fun setCalendarButton()
@@ -380,8 +443,27 @@ class HomeworkCalendarFragment : Fragment()
         _AfterButtonRect.visibility = View.GONE
     }
 
+    /**
+     * 학급 선택 다이얼로그
+     */
+    private fun showClassSelectDialog()
+    {
+        Log.f("")
+        val builder = AlertDialog.Builder(mContext)
+        builder.setSingleChoiceItems(mClassNameList, mClassIndex, DialogInterface.OnClickListener {dialog, index ->
+            dialog.dismiss()
+            mClassIndex = index
+            setClassName(mClassNameList!!.get(mClassIndex))
+            mHomeworkCalendarFragmentObserver.onClickClassPicker(mClassIndex)
+        })
+
+        val dialog : AlertDialog = builder.show()
+        dialog.show()
+    }
+
     @Optional
-    @OnClick(R.id._beforeButtonRect, R.id._afterButtonRect)
+    @OnClick(R.id._beforeButtonRect, R.id._afterButtonRect,
+        R.id._calendarClassBackground, R.id._textClassName)
     fun onClickView(view : View)
     {
         if (mClickEnable == false) return // 중복 클릭이벤트 막기
@@ -398,23 +480,27 @@ class HomeworkCalendarFragment : Fragment()
                 mClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
             }
+
+            // 선생님 클래스 선택
+            R.id._calendarClassBackground, R.id._textClassName ->
+            {
+                showClassSelectDialog()
+            }
         }
     }
 
     /**
      * 숙제관리 리스트 클릭 이벤트 Listener
      */
-    private val mCalendarItemListener : CalendarItemListener = object : CalendarItemListener
+    private val mCalendarItemListener : OnItemViewClickListener = object : OnItemViewClickListener
     {
-        override fun onClickItem(position : Int)
+        override fun onItemClick(position : Int)
         {
-            mCalendarItemList.let { list ->
-                if (list[position].hasHomework() && mClickEnable)
-                {
-                    mClickEnable = false
-                    mHomeworkCalendarFragmentObserver.onClickCalendarItem(list[position].getHomeworkPosition())
-                    _ScrollView.scrollTo(0, 0)
-                }
+            if (mCalendarItemList[position].hasHomework() && mClickEnable)
+            {
+                mClickEnable = false
+                mHomeworkCalendarFragmentObserver.onClickCalendarItem(mCalendarItemList[position].getHomeworkPosition())
+                _ScrollView.scrollTo(0, 0)
             }
         }
     }

@@ -15,6 +15,7 @@ import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCheckingIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
@@ -272,7 +273,26 @@ class IntentManagementFactory
                 }
             }
 
-            ActivityMode.HOMEWORK_MANAGE -> intent = Intent(mContext, HomeworkManageActivity::class.java)
+            ActivityMode.HOMEWORK_MANAGE ->
+            {
+                if (CommonUtils.getInstance(mContext).isTeacherMode)
+                {
+                    intent = Intent(mContext, TeacherHomeworkManageActivity::class.java)
+                }
+                else
+                {
+                    intent = Intent(mContext, HomeworkManageActivity::class.java)
+                }
+            }
+
+            ActivityMode.HOMEWORK_CHECKING ->
+            {
+                intent = Intent(mContext, TeacherHomeworkCheckingActivity::class.java)
+                if (`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_HOMEWORK_CHECKING_DATA, `object` as HomeworkCheckingIntentParamsObject?)
+                }
+            }
 
             ActivityMode.RECORD_HISTORY -> intent = Intent(mContext, RecordHistoryActivity::class.java)
 

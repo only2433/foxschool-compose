@@ -59,6 +59,9 @@ class HomeworkCommentFragment : Fragment()
     @BindView(R.id._commentDeleteButton)
     lateinit var _CommentDeleteButton : TextView
 
+    @BindView(R.id._commentTeacherMessage)
+    lateinit var _CommentTeacherMessage : TextView
+
     companion object
     {
         private const val DIALOG_COMMENT_DELETE : Int = 10001
@@ -109,6 +112,11 @@ class HomeworkCommentFragment : Fragment()
         Log.f("")
         initView()
         initFont()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -165,6 +173,7 @@ class HomeworkCommentFragment : Fragment()
         _CommentRegisterButton.typeface = Font.getInstance(mContext).getRobotoBold()
         _CommentUpdateButton.typeface = Font.getInstance(mContext).getRobotoBold()
         _CommentDeleteButton.typeface = Font.getInstance(mContext).getRobotoBold()
+        _CommentTeacherMessage.typeface = Font.getInstance(mContext).getRobotoRegular()
     }
     /** ========== Init ========== */
 
@@ -174,12 +183,12 @@ class HomeworkCommentFragment : Fragment()
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
         // 코멘트 적용
-        mHomeworkManagePresenterObserver.setCommentData.observe(mContext as AppCompatActivity, { comment ->
+        mHomeworkManagePresenterObserver.setCommentData.observe(viewLifecycleOwner, { comment ->
             mComment = comment
         })
 
         // 페이지 세팅
-        mHomeworkManagePresenterObserver.setPageType.observe(mContext as AppCompatActivity, { pair ->
+        mHomeworkManagePresenterObserver.setPageType.observe(viewLifecycleOwner, { pair ->
             clearScreenData() // 화면 초기화
             isCompleted = pair.second
             settingPageType(pair.first)
@@ -192,21 +201,38 @@ class HomeworkCommentFragment : Fragment()
      */
     private fun settingPageType(position : Int)
     {
+        val boxLeft : Float = if (CommonUtils.getInstance(mContext).checkTablet) 46f else 28f
+        var boxTop : Float = 0f
+        val textLeft : Float = if (CommonUtils.getInstance(mContext).checkTablet) 66f else 62f
+        var textTop : Float = 0f
+
         if (position == Common.PAGE_HOMEWORK_STUDENT_COMMENT)
         {
             // 학생용 한마디 화면
             _CommentInputCountText.visibility = View.VISIBLE
-
-            if (CommonUtils.getInstance(mContext).checkTablet)
+            if (CommonUtils.getInstance(mContext).isTeacherMode == false)
             {
-                _CommentInputLayout.moveChildView(_CommentBoxImage, 46f, 96f)
-                _CommentInputLayout.moveChildView(_CommentEditText, 66f, 125f)
+                // 학생모드
+                if (CommonUtils.getInstance(mContext).checkTablet)
+                {
+                    boxTop = if (isCompleted == true) 42f else 96f
+                    textTop = if (isCompleted == true) 73f else 125f
+                }
+                else
+                {
+                    boxTop = if (isCompleted == true) 60f else 140f
+                    textTop = if (isCompleted == true) 105f else 195f
+                }
             }
             else
             {
-                _CommentInputLayout.moveChildView(_CommentBoxImage, 28f, 140f)
-                _CommentInputLayout.moveChildView(_CommentEditText, 62f, 180f)
+                // 선생님모드
+                boxTop = if (CommonUtils.getInstance(mContext).checkTablet) 42f else 60f
+                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 73f else 105f
             }
+
+            _CommentInputLayout.moveChildView(_CommentBoxImage, boxLeft, boxTop)
+            _CommentInputLayout.moveChildView(_CommentEditText, textLeft, textTop)
 
             setStudentCommentLayout()
         }
@@ -214,21 +240,24 @@ class HomeworkCommentFragment : Fragment()
         {
             // 선생님 한마디 화면
             _CommentInputCountText.visibility = View.GONE
-
-            if (CommonUtils.getInstance(mContext).checkTablet)
+            if (CommonUtils.getInstance(mContext).isTeacherMode == false)
             {
-                _CommentInputLayout.moveChildView(_CommentBoxImage, 46f, 42f)
-                _CommentInputLayout.moveChildView(_CommentEditText, 66f, 73f)
+                // 학생 모드
+                boxTop = if (   CommonUtils.getInstance(mContext).checkTablet) 42f else 60f
+                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 73f else 105f
             }
             else
             {
-                _CommentInputLayout.moveChildView(_CommentBoxImage, 28f, 60f)
-                _CommentInputLayout.moveChildView(_CommentEditText, 62f, 105f)
+                // 선생님 모드
+                _CommentTeacherMessage.visibility = View.VISIBLE
+                boxTop = if (CommonUtils.getInstance(mContext).checkTablet) 76f else 116f
+                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 106f else 171f
             }
 
-            _CommentEditText.visibility = View.VISIBLE
-            _CommentEditText.setText(mComment)
-            _CommentEditText.isEnabled = false
+            _CommentInputLayout.moveChildView(_CommentBoxImage, boxLeft, boxTop)
+            _CommentInputLayout.moveChildView(_CommentEditText, textLeft, textTop)
+
+            setTeacherCommentLayout()
         }
     }
 
@@ -241,16 +270,17 @@ class HomeworkCommentFragment : Fragment()
         _CommentEditText.setText(mComment)
 
         _CommentEditText.visibility = View.VISIBLE
-        _CommentEditText.isEnabled = true
         _MainBaseLayout.requestFocus() // EditText 커서 제거하기 위해 사용
 
         if (isCompleted)
         {
             // 최종평가를 한 경우 코멘트 수정 불가
             _CommentInputCountText.visibility = View.GONE
+            _CommentEditText.isEnabled = false
             setRegisterButtonVisible(false)
             setUpdateButtonVisible(false)
             setDeleteButtonVisible(false)
+            return
         }
         else if (mComment != "")
         {
@@ -268,6 +298,30 @@ class HomeworkCommentFragment : Fragment()
             setUpdateButtonVisible(false)
             setDeleteButtonVisible(false)
         }
+        _CommentEditText.isEnabled = true
+    }
+
+    /**
+     * [학습자 한마디]코멘트 카운트 텍스트 설정
+     */
+    private fun setCommentCountText()
+    {
+        // 바이트 사이즈 구하기 위해 코멘트 바이트로 변경
+        val inputByte = (_CommentEditText.text.toString()).toByteArray(charset("EUC-KR"))
+        val text = "${inputByte.size}/400 byte"
+        _CommentInputCountText.text = text
+    }
+
+    /**
+     * [선생님 한마디]
+     * - 통신 응답받은 코멘트 입력
+     * - 텍스트 수정 불가
+     */
+    private fun setTeacherCommentLayout()
+    {
+        _CommentEditText.visibility = View.VISIBLE
+        _CommentEditText.setText(mComment)
+        _CommentEditText.isEnabled = false
     }
 
     /**
@@ -348,22 +402,12 @@ class HomeworkCommentFragment : Fragment()
     }
 
     /**
-     * 코멘트 카운트 텍스트 설정
-     */
-    private fun setCommentCountText()
-    {
-        // 바이트 사이즈 구하기 위해 코멘트 바이트로 변경
-        val inputByte = (_CommentEditText.text.toString()).toByteArray(charset("EUC-KR"))
-        val text = "${inputByte.size}${resources.getString(R.string.message_comment_max)}"
-        _CommentInputCountText.text = text
-    }
-
-    /**
      * 화면 초기화
      */
     private fun clearScreenData()
     {
         _CommentEditText.setText("")
+        _CommentTeacherMessage.visibility = View.GONE
         setRegisterButtonVisible(false)
         setUpdateButtonVisible(false)
         setDeleteButtonVisible(false)

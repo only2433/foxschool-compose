@@ -65,6 +65,42 @@
             app:scale_width="279"
             app:scale_height="67"/>
 
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_homeworkRecordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:scale_left="260"
+            app:scale_top="228"
+            app:scale_width="320"
+            app:scale_height="122"
+            app:scale_base_width="320"
+            app:scale_base_height="123">
+
+            <ImageView
+                android:id="@+id/_homeworkRecordImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_homework_recorder_on"
+                app:scale_left="20"
+                app:scale_top="6"
+                app:scale_width="279"
+                app:scale_height="67"/>
+
+            <TextView
+                android:id="@+id/_homeworkRecordDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/color_444444"
+                app:scale_left="0"
+                app:scale_top="70"
+                app:scale_width="320"
+                app:scale_height="50"
+                app:scale_textsize="32"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
         <ImageView
             android:id="@+id/_homeworkCheckImage"
             android:layout_width="match_parent"

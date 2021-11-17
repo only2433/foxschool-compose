@@ -189,7 +189,7 @@
             android:textColor="@color/color_ffffff"
             app:scale_left="80"
             app:scale_top="27"
-            app:scale_width="350"
+            app:scale_width="400"
             app:scale_height="130"
             app:scale_textsize="50" />
 

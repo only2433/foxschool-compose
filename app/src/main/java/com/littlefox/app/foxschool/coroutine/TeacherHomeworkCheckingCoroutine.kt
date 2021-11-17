@@ -71,10 +71,6 @@ class TeacherHomeworkCheckingCoroutine : BaseCoroutine
         mClassID = objects[1] as Int
         mUserID = objects[2] as String
         mEvaluationState = objects[3] as String
-
-        if(objects.size > 4)
-        {
-            mEvaluationComment = objects[4] as String
-        }
+        mEvaluationComment = objects[4] as String
     }
 }

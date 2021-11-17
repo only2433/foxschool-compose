@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.record.RecordHistoryResult
-import com.littlefox.app.foxschool.adapter.listener.RecordItemListener
+import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 
@@ -24,8 +24,8 @@ import com.littlefox.app.foxschool.common.Font
 class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.ViewHolder?>
 {
     private val mContext : Context
-    private var mItemList : ArrayList<RecordHistoryResult> = ArrayList<RecordHistoryResult>() // 녹음기록 리스트
-    private var mRecordItemListener : RecordItemListener? = null
+    private var mRecordHistoryList : ArrayList<RecordHistoryResult> = ArrayList<RecordHistoryResult>() // 녹음기록 리스트
+    private var mRecordItemListener : OnItemViewClickListener? = null
 
     constructor(context : Context)
     {
@@ -34,16 +34,16 @@ class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.V
 
     fun setItemList(list : ArrayList<RecordHistoryResult>) : RecordHistoryListAdapter
     {
-        mItemList = list
+        mRecordHistoryList = list
         return this
     }
 
     override fun getItemCount() : Int
     {
-        return mItemList.size
+        return mRecordHistoryList.size
     }
 
-    fun setHomeworkItemListener(recordItemListener : RecordItemListener) : RecordHistoryListAdapter
+    fun setHomeworkItemListener(recordItemListener : OnItemViewClickListener) : RecordHistoryListAdapter
     {
         mRecordItemListener = recordItemListener
         return this
@@ -65,7 +65,7 @@ class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.V
 
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
-        val item = mItemList[position]
+        val item = mRecordHistoryList[position]
 
         // 컨텐츠 아이템 세팅
         Glide.with(mContext)
@@ -86,7 +86,7 @@ class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.V
         holder._RecordDateText.text = "${mContext.resources.getString(R.string.text_study_date)} ${item.getDate()}"
 
         holder.itemView.setOnClickListener {
-            mRecordItemListener?.onClickItem(position)
+            mRecordItemListener?.onItemClick(position)
         }
     }
 

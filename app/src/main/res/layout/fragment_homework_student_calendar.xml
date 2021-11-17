@@ -20,10 +20,10 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             app:scale_base_width="1080"
-            app:scale_base_height="1704">
+            app:scale_base_height="1920">
 
             <com.ssomai.android.scalablelayout.ScalableLayout
-                android:id="@+id/_calendarPickLayout"
+                android:id="@+id/_homeworkPickLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:scale_left="0"

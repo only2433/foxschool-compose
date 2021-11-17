@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix, NewApi">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_homeworkClassLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_29c8e6_alpha_50"
+        app:scale_base_width="1920"
+        app:scale_base_height="88">
+
+        <com.littlefox.library.view.text.SeparateTextView
+            android:id="@+id/_textClassName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/color_000000"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="1920"
+            app:scale_height="88"
+            app:scale_textsize="32" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_manageToolLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_left="0"
+        app:scale_top="88"
+        app:scale_width="1920"
+        app:scale_height="80"
+        app:scale_base_width="1920"
+        app:scale_base_height="111">
+
+        <ImageView
+            android:id="@+id/_allCheckIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/radio_off"
+            android:scaleType="centerInside"
+            app:scale_left="77"
+            app:scale_top="33"
+            app:scale_width="45"
+            app:scale_height="45"/>
+
+        <TextView
+            android:id="@+id/_allText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/text_all"
+            android:textColor="@color/color_666666"
+            app:scale_left="130"
+            app:scale_top="0"
+            app:scale_width="150"
+            app:scale_height="111"
+            app:scale_textsize="32" />
+
+        <TextView
+            android:id="@+id/_allHomeworkCheckingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/text_homework_all_eval"
+            android:textColor="@color/color_29c8e6"
+            android:background="@drawable/round_box_empty_light_blue_60"
+            app:scale_left="1174"
+            app:scale_top="30"
+            app:scale_width="344"
+            app:scale_height="60"
+            app:scale_textsize="32" />
+
+        <TextView
+            android:id="@+id/_homeworkContentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/text_homework_contents"
+            android:textColor="@color/color_29c8e6"
+            android:background="@drawable/round_box_empty_light_blue_60"
+            app:scale_left="1530"
+            app:scale_top="30"
+            app:scale_width="344"
+            app:scale_height="60"
+            app:scale_textsize="32" />
+
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/_statusListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

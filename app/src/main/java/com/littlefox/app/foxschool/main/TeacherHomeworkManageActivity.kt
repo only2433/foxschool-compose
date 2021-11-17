@@ -17,13 +17,13 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Optional
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
+import com.littlefox.app.foxschool.adapter.TeacherHomeworkPagerAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.HomeworkContract
-import com.littlefox.app.foxschool.main.presenter.HomeworkManagePresenter
+import com.littlefox.app.foxschool.main.contract.TeacherHomeworkContract
+import com.littlefox.app.foxschool.main.presenter.TeacherHomeworkManagePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
@@ -33,10 +33,10 @@ import com.ssomai.android.scalablelayout.ScalableLayout
 import java.lang.reflect.Field
 
 /**
- * 숙제관리 화면
+ * 선생님용 숙제관리 화면
  * @author 김태은
  */
-class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkContract.View
+class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, TeacherHomeworkContract.View
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -62,7 +62,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     @BindView(R.id._homeworkViewpager)
     lateinit var _HomeworkViewPager : SwipeDisableViewPager
 
-    private lateinit var mHomeworkManagePresenter : HomeworkManagePresenter
+    private lateinit var mHomeworkManagePresenter : TeacherHomeworkManagePresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
 
@@ -84,7 +84,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         }
 
         ButterKnife.bind(this)
-        mHomeworkManagePresenter = HomeworkManagePresenter(this)
+        mHomeworkManagePresenter = TeacherHomeworkManagePresenter(this)
     }
 
     override fun onResume()
@@ -130,7 +130,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         _TitleText.typeface = Font.getInstance(this).getRobotoBold()
     }
 
-    override fun initViewPager(mHomeworkPagerAdapter : HomeworkPagerAdapter)
+    override fun initViewPager(mHomeworkPagerAdapter : TeacherHomeworkPagerAdapter)
     {
         _HomeworkViewPager.adapter = mHomeworkPagerAdapter
         _HomeworkViewPager.addOnPageChangeListener(mOnPageChangeListener)
@@ -142,10 +142,8 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
      */
     private fun settingLayoutColor()
     {
-        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
-        _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_25b4cf))
+        _TitleBaselayout.setBackgroundColor(resources.getColor(R.color.color_29c8e6))
     }
     /** Init end **/
 
@@ -169,7 +167,14 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
      */
     override fun setCurrentViewPage(position : Int)
     {
-        _HomeworkViewPager.currentItem = position
+        if (position == Common.PAGE_HOMEWORK_DETAIL)
+        {
+            _HomeworkViewPager.currentItem = Common.PAGE_HOMEWORK_STATUS_DETAIL
+        }
+        else
+        {
+            _HomeworkViewPager.currentItem = position
+        }
         setTitleView(position)
     }
 
@@ -184,6 +189,8 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         {
             Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
             Common.PAGE_HOMEWORK_STATUS -> _TitleText.text = resources.getString(R.string.text_homework_status)
+            Common.PAGE_HOMEWORK_STATUS_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_status_detail)
+            Common.PAGE_HOMEWORK_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_contents)
             Common.PAGE_HOMEWORK_STUDENT_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_student_comment)
             Common.PAGE_HOMEWORK_TEACHER_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
         }
@@ -206,6 +213,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
 
     override fun showLoading()
     {
+        Log.f("")
         mMaterialLoadingDialog = MaterialLoadingDialog(
             this,
             CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
@@ -215,6 +223,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
 
     override fun hideLoading()
     {
+        Log.f("")
         mMaterialLoadingDialog?.dismiss()
         mMaterialLoadingDialog = null
     }

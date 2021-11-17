@@ -8,9 +8,9 @@ class HomeworkStatusBaseResult
     private val end_date : String = ""
     private val list : ArrayList<HomeworkStatusItemData>? = null
 
-    fun getStartDate() : String = ""
+    fun getStartDate() : String = start_date
 
-    fun getEndDate() : String = ""
+    fun getEndDate() : String = end_date
 
-    fun getStudentStatusItemList() : ArrayList<HomeworkStatusItemData>? = null
+    fun getStudentStatusItemList() : ArrayList<HomeworkStatusItemData>? = list
 }

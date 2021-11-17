@@ -40,7 +40,7 @@ import com.littlefox.logmonitor.Log
 import kotlin.collections.ArrayList
 
 /**
- * 숙제관리 Presenter
+ * 학생 숙제관리 Presenter
  * @author 김태은
  */
 class HomeworkManagePresenter : HomeworkContract.Presenter
@@ -79,18 +79,16 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
     private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR // 현재 보여지고있는 페이지 포지션
 
-    /** 숙제관리 (달력) */
     // 통신에 입력되는 년도, 월
     private var mYear : String  = ""
     private var mMonth : String = ""
 
     private var mSelectedHomeworkPosition : Int = -1 // 숙제관리에서 선택한 숙제 포지션 (List/Comment 화면 공동 사용)
 
-    /** 학습자한마디 **/
     // 학습자 한마디 (통신 입력용)
     private var mStudentComment : String = ""
 
-    private var mSelectHomeworkData : HomeworkCalendarItemData? = null
+    private var mSelectHomeworkData : HomeworkCalendarItemData? = null // 선택한 숙제 아이템
 
     constructor(context : Context)
     {
@@ -158,7 +156,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             REQUEST_CODE_NOTIFY ->
             {
                 mHomeworkContractView.showLoading()
-                onPageChanged(Common.PAGE_HOMEWORK_LIST)
+                onPageChanged(Common.PAGE_HOMEWORK_STATUS)
             }
         }
     }
@@ -173,10 +171,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 when(msg.obj)
                 {
                     Common.PAGE_HOMEWORK_CALENDAR -> requestStudentHomework()   // 숙제관리(달력) 통신 요청
-                    Common.PAGE_HOMEWORK_LIST ->
-                    {
-                        requestHomeworkList()       // 숙제현황(리스트) 통신 요청
-                    }
+                    Common.PAGE_HOMEWORK_STATUS -> requestHomeworkList()        // 숙제현황(리스트) 통신 요청
                 }
             }
         }
@@ -190,7 +185,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     override fun onClickBackButton()
     {
         Log.f("")
-        if (mPagePosition == Common.PAGE_HOMEWORK_LIST)
+        if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
         {
             mHomeworkManagePresenterObserver.clearHomeworkList(true) // 숙제현황 리스트 초기화
 
@@ -201,8 +196,8 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                  mPagePosition == Common.PAGE_HOMEWORK_TEACHER_COMMENT)
         {
             CommonUtils.getInstance(mContext).hideKeyboard() // 키보드 닫기 처리
-            mPagePosition = Common.PAGE_HOMEWORK_LIST
-            mHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_LIST)
+            mPagePosition = Common.PAGE_HOMEWORK_STATUS
+            mHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_STATUS)
         }
     }
 
@@ -220,35 +215,9 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
     /**
      * ======================================================================================
-     *                              숙제 현황 (리스트) 화면
+     *                              숙제 - 다른 화면으로 이동
      * ======================================================================================
      */
-
-    /**
-     * 날짜 변경 화살표 표시 설정
-     */
-    private fun setHomeworkDateButton()
-    {
-        // 숙제현황 이전 버튼 설정
-        if (mSelectedHomeworkPosition > 0)
-        {
-            mHomeworkManagePresenterObserver.setHomeworkPrevButton(true)
-        }
-        else
-        {
-            mHomeworkManagePresenterObserver.setHomeworkPrevButton(false)
-        }
-
-        // 숙제현황 다음 버튼 설정
-        if (mSelectedHomeworkPosition < mHomeworkCalendarBaseResult!!.getHomeworkDataList().size - 1)
-        {
-            mHomeworkManagePresenterObserver.setHomeworkNextButton(true)
-        }
-        else
-        {
-            mHomeworkManagePresenterObserver.setHomeworkNextButton(false)
-        }
-    }
 
     /**
      * 숙제현황 리스트 클릭 이벤트
@@ -262,29 +231,13 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         when(item.getHomeworkType())
         {
             HomeworkType.ANIMATION -> startPlayerActivity(content)
-            HomeworkType.EBOOK -> {
-                if (CommonUtils.getInstance(mContext).checkTablet)
-                {
-                    startEBookActivity()
-                }
-                else
-                {
-                    // 모바일이면서 eBook 컨텐츠 학습 시도 시 이용안내 메세지 표시
-                    mHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_homework_ebook))
-                }
-            }
+            HomeworkType.EBOOK -> startEBookActivity()
             HomeworkType.QUIZ -> startQuizActivity(item.getContentID())
             HomeworkType.CROSSWORD -> startCrosswordActivity(item.getContentID())
             HomeworkType.STARWORDS -> startStarWordsActivity(item.getContentID())
             HomeworkType.RECORDER -> startRecordActivity(content)
         }
     }
-
-    /**
-     * ======================================================================================
-     *                              숙제 - 다른 화면으로 이동
-     * ======================================================================================
-     */
 
     /**
      * 동화/동요 플레이어로 이동
@@ -386,7 +339,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
      */
 
     /**
-     * 숙제관리 통신 요청 (학생)
+     * 숙제관리 달력 통신 요청 (학생)
      */
     private fun requestStudentHomework()
     {
@@ -481,7 +434,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
 
             // 숙제 현황 페이지로 이동
-            mPagePosition = Common.PAGE_HOMEWORK_LIST
+            mPagePosition = Common.PAGE_HOMEWORK_STATUS
             mHomeworkContractView.setCurrentViewPage(mPagePosition)
         })
 
@@ -493,24 +446,6 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
     private fun setupListFragmentListener()
     {
-        // 이전 화살표 클릭 이벤트
-        mHomeworkListFragmentObserver.onClickBeforeButton.observe(mContext as AppCompatActivity, {
-            if (mSelectedHomeworkPosition > 0)
-            {
-                mSelectedHomeworkPosition -= 1
-                requestHomeworkList() // 숙제현황 통신 요청
-            }
-        })
-
-        // 다음 화살표 클릭 이벤트
-        mHomeworkListFragmentObserver.onClickAfterButton.observe(mContext as AppCompatActivity, {
-            if (mSelectedHomeworkPosition < mHomeworkCalendarBaseResult!!.getHomeworkDataList().size - 1)
-            {
-                mSelectedHomeworkPosition += 1
-                requestHomeworkList() // 숙제현황 통신 요청
-            }
-        })
-
         // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
             mPagePosition = Common.PAGE_HOMEWORK_STUDENT_COMMENT
@@ -581,9 +516,11 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 else if (code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST)
                 {
                     // 숙제현황 (리스트)
-                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
-                    mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
-                    setHomeworkDateButton()
+                    if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
+                    {
+                        mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
+                        mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
+                    }
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
                 {

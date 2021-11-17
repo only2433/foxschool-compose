@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_edeef2"
+    tools:ignore="MissingPrefix, NewApi"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaseLayout"
+            layout="@layout/topbar_common_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:id="@+id/_homeworkCheckingLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1080"
+            app:scale_base_height="1704">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_box_1w"
+                app:scale_left="30"
+                app:scale_top="44"
+                app:scale_width="1020"
+                app:scale_height="460" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE0Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/check_off"
+                app:scale_left="197"
+                app:scale_top="113"
+                app:scale_width="60"
+                app:scale_height="60" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE1Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/check_on"
+                app:scale_left="511"
+                app:scale_top="113"
+                app:scale_width="60"
+                app:scale_height="60" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE2Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/check_off"
+                app:scale_left="824"
+                app:scale_top="113"
+                app:scale_width="60"
+                app:scale_height="60" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE0Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_stamp_e0"
+                app:scale_left="145"
+                app:scale_top="193"
+                app:scale_width="164"
+                app:scale_height="162" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE1Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_stamp_e1"
+                app:scale_left="459"
+                app:scale_top="193"
+                app:scale_width="164"
+                app:scale_height="162" />
+
+            <ImageView
+                android:id="@+id/_homeworkEvalE2Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_stamp_e2"
+                app:scale_left="772"
+                app:scale_top="193"
+                app:scale_width="164"
+                app:scale_height="162" />
+
+            <TextView
+                android:id="@+id/_homeworkEvalE0Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_homework_eval_e0"
+                android:textColor="@color/color_444444"
+                app:scale_left="140"
+                app:scale_top="360"
+                app:scale_width="250"
+                app:scale_height="80"
+                app:scale_textsize="36"/>
+
+            <TextView
+                android:id="@+id/_homeworkEvalE1Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_homework_eval_e1"
+                android:textColor="@color/color_444444"
+                app:scale_left="474"
+                app:scale_top="360"
+                app:scale_width="250"
+                app:scale_height="80"
+                app:scale_textsize="36"/>
+
+            <TextView
+                android:id="@+id/_homeworkEvalE2Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="@string/text_homework_eval_e2"
+                android:textColor="@color/color_444444"
+                app:scale_left="747"
+                app:scale_top="360"
+                app:scale_width="300"
+                app:scale_height="80"
+                app:scale_textsize="36"/>
+
+            <TextView
+                android:id="@+id/_homeworkTeacherComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="선생님 말씀"
+                android:textColor="@color/color_000000"
+                app:scale_left="50"
+                app:scale_top="504"
+                app:scale_width="300"
+                app:scale_height="120"
+                app:scale_textsize="40"/>
+
+            <TextView
+                android:id="@+id/_commentInputCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|end"
+                android:text="0/100 byte"
+                android:textColor="@color/color_b7b7b7"
+                app:scale_left="50"
+                app:scale_top="504"
+                app:scale_width="987"
+                app:scale_height="120"
+                app:scale_textsize="40"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/info_box_1w"
+                app:scale_left="30"
+                app:scale_top="624"
+                app:scale_width="1020"
+                app:scale_height="350" />
+
+            <EditText
+                android:id="@+id/_commentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@string/text_homework_comment_option"
+                android:inputType="textMultiLine"
+                android:textColorHint="@color/color_b7b7b7"
+                android:textColor="@color/color_444444"
+                app:scale_left="62"
+                app:scale_top="679"
+                app:scale_width="952"
+                app:scale_height="270"
+                app:scale_textsize="40"/>
+
+            <TextView
+                android:id="@+id/_checkingRegisterButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_box_light_blue_84"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="@string/text_register"
+                android:textColor="@color/color_ffffff"
+                app:scale_left="100"
+                app:scale_top="1054"
+                app:scale_width="880"
+                app:scale_height="120"
+                app:scale_textsize="42" />
+
+            <TextView
+                android:id="@+id/_checkingCancelButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/round_box_empty_light_blue_84"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                android:text="@string/text_cancel"
+                android:textColor="@color/color_29c8e6"
+                app:scale_left="100"
+                app:scale_top="1210"
+                app:scale_width="880"
+                app:scale_height="120"
+                app:scale_textsize="42" />
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

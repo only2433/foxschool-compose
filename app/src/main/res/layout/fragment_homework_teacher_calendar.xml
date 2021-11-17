@@ -19,39 +19,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
-            app:scale_base_width="1920"
-            app:scale_base_height="1066">
+            app:scale_base_width="1080"
+            app:scale_base_height="1920">
 
             <com.ssomai.android.scalablelayout.ScalableLayout
                 android:id="@+id/_calendarClassLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/color_29c8e6_alpha_50"
                 app:scale_left="0"
                 app:scale_top="0"
-                app:scale_width="600"
-                app:scale_height="141"
-                app:scale_base_width="600"
-                app:scale_base_height="141"
-                android:visibility="gone">
+                app:scale_width="1080"
+                app:scale_height="160"
+                app:scale_base_width="1080"
+                app:scale_base_height="160">
 
                 <ImageView
                     android:id="@+id/_calendarClassBackground"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/text_box"
-                    app:scale_left="46"
-                    app:scale_top="30"
-                    app:scale_width="500"
-                    app:scale_height="80"/>
+                    app:scale_left="98"
+                    app:scale_top="20"
+                    app:scale_width="884"
+                    app:scale_height="120"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_pop_down"
-                    app:scale_left="498"
-                    app:scale_top="62"
-                    app:scale_width="23"
-                    app:scale_height="13"/>
+                    app:scale_left="912"
+                    app:scale_top="68"
+                    app:scale_width="35"
+                    app:scale_height="20"/>
 
                 <TextView
                     android:id="@+id/_textClassName"
@@ -59,11 +59,11 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:textColor="@color/color_444444"
-                    app:scale_left="66"
-                    app:scale_top="30"
-                    app:scale_width="400"
-                    app:scale_height="80"
-                    app:scale_textsize="32"/>
+                    app:scale_left="128"
+                    app:scale_top="20"
+                    app:scale_width="760"
+                    app:scale_height="120"
+                    app:scale_textsize="40"/>
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
 
@@ -72,10 +72,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:scale_left="0"
-                app:scale_top="0"
-                app:scale_width="1920"
+                app:scale_top="160"
+                app:scale_width="1080"
                 app:scale_height="140"
-                app:scale_base_width="1920"
+                app:scale_base_width="1080"
                 app:scale_base_height="140">
 
                 <ImageView
@@ -83,16 +83,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_calendar_left"
-                    app:scale_left="680"
-                    app:scale_top="50"
-                    app:scale_width="24"
-                    app:scale_height="40"/>
+                    app:scale_left="120"
+                    app:scale_top="40"
+                    app:scale_width="33"
+                    app:scale_height="57"/>
 
                 <ImageView
                     android:id="@+id/_beforeButtonRect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:scale_left="660"
+                    app:scale_left="110"
                     app:scale_top="30"
                     app:scale_width="60"
                     app:scale_height="80"/>
@@ -103,27 +103,27 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/color_000000"
-                    app:scale_left="810"
-                    app:scale_top="0"
-                    app:scale_width="300"
                     app:scale_height="140"
-                    app:scale_textsize="32" />
+                    app:scale_left="390"
+                    app:scale_textsize="40"
+                    app:scale_top="0"
+                    app:scale_width="300" />
 
                 <ImageView
                     android:id="@+id/_afterButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_calendar_right"
-                    app:scale_left="1216"
-                    app:scale_top="50"
-                    app:scale_width="24"
-                    app:scale_height="40"/>
+                    app:scale_left="927"
+                    app:scale_top="40"
+                    app:scale_width="33"
+                    app:scale_height="57"/>
 
                 <ImageView
                     android:id="@+id/_afterButtonRect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:scale_left="1200"
+                    app:scale_left="910"
                     app:scale_top="30"
                     app:scale_width="60"
                     app:scale_height="80"/>
@@ -132,19 +132,19 @@
 
             <LinearLayout
                 android:id="@+id/_calendarListLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:scale_left="0"
-                app:scale_top="200"
-                app:scale_width="1918"
-                app:scale_height="852">
+                app:scale_top="375"
+                app:scale_width="1079"
+                app:scale_height="1380">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/_calendarView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:overScrollMode="never" />
+                    android:overScrollMode="never"/>
 
             </LinearLayout>
 
@@ -153,11 +153,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:scale_left="0"
-                app:scale_top="140"
-                app:scale_width="1920"
+                app:scale_top="300"
+                app:scale_width="1080"
                 app:scale_height="1456"
-                app:scale_base_width="1920"
-                app:scale_base_height="925">
+                app:scale_base_width="1080"
+                app:scale_base_height="1456">
 
                 <TextView
                     android:id="@+id/_textSunday"
@@ -168,9 +168,9 @@
                     android:textColor="@color/color_ff974b"
                     app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textMonday"
@@ -179,11 +179,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_monday"
                     android:textColor="@color/color_444444"
-                    app:scale_left="274"
+                    app:scale_left="154"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textTuesday"
@@ -192,11 +192,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_tuesday"
                     android:textColor="@color/color_444444"
-                    app:scale_left="548"
+                    app:scale_left="308"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textWednesday"
@@ -205,11 +205,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_wednesday"
                     android:textColor="@color/color_444444"
-                    app:scale_left="822"
+                    app:scale_left="462"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textThursday"
@@ -218,11 +218,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_thursday"
                     android:textColor="@color/color_444444"
-                    app:scale_left="1096"
+                    app:scale_left="616"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textFriday"
@@ -231,11 +231,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_friday"
                     android:textColor="@color/color_444444"
-                    app:scale_left="1370"
+                    app:scale_left="770"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <TextView
                     android:id="@+id/_textSaturday"
@@ -244,11 +244,11 @@
                     android:gravity="center"
                     android:text="@string/text_calendar_saturday"
                     android:textColor="@color/color_29c8e6"
-                    app:scale_left="1644"
+                    app:scale_left="924"
                     app:scale_top="0"
-                    app:scale_width="274"
-                    app:scale_height="60"
-                    app:scale_textsize="30" />
+                    app:scale_width="154"
+                    app:scale_height="75"
+                    app:scale_textsize="32" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -256,7 +256,7 @@
                     android:src="@color/color_cacaca"
                     app:scale_left="0"
                     app:scale_top="0"
-                    app:scale_width="1920"
+                    app:scale_width="1080"
                     app:scale_height="1" />
 
                 <ImageView
@@ -264,64 +264,8 @@
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
                     app:scale_left="0"
-                    app:scale_top="60"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <!--            -->
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="202"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="344"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="486"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="628"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="770"
-                    app:scale_width="1920"
-                    app:scale_height="1" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@color/color_cacaca"
-                    app:scale_left="0"
-                    app:scale_top="912"
-                    app:scale_width="1920"
+                    app:scale_top="75"
+                    app:scale_width="1080"
                     app:scale_height="1" />
 
                 <!--            -->
@@ -330,55 +274,111 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="274"
-                    app:scale_top="0"
-                    app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_left="0"
+                    app:scale_top="305"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="548"
-                    app:scale_top="0"
-                    app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_left="0"
+                    app:scale_top="535"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="822"
-                    app:scale_top="0"
-                    app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_left="0"
+                    app:scale_top="765"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="1096"
-                    app:scale_top="0"
-                    app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_left="0"
+                    app:scale_top="995"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="1370"
-                    app:scale_top="0"
-                    app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_left="0"
+                    app:scale_top="1225"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@color/color_cacaca"
-                    app:scale_left="1644"
+                    app:scale_left="0"
+                    app:scale_top="1455"
+                    app:scale_width="1080"
+                    app:scale_height="1" />
+
+                <!--            -->
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="154"
                     app:scale_top="0"
                     app:scale_width="1"
-                    app:scale_height="912" />
+                    app:scale_height="1455" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="308"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="1455" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="462"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="1455" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="616"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="1455" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="770"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="1455" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@color/color_cacaca"
+                    app:scale_left="924"
+                    app:scale_top="0"
+                    app:scale_width="1"
+                    app:scale_height="1455" />
 
             </com.ssomai.android.scalablelayout.ScalableLayout>
         </com.ssomai.android.scalablelayout.ScalableLayout>

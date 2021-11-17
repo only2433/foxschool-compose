@@ -191,7 +191,7 @@
             android:textColor="@color/color_ffffff"
             app:scale_left="46"
             app:scale_top="14"
-            app:scale_width="200"
+            app:scale_width="300"
             app:scale_height="76"
             app:scale_textsize="27"/>
 

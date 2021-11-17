@@ -326,6 +326,7 @@ class MyInfoChangeFragment : Fragment()
         _InputNewPasswordConfirmEditText.setText("")
         resetEditTextBackground()
         setSaveInfoButtonEnable(false)
+        setSavePasswordButtonEnable(false)
     }
 
     /**

@@ -11,6 +11,8 @@ class HomeworkStatusItemData
     private val is_complete : String = ""
     private val is_student_comment : String = ""
     private val is_comment : String = ""
+    private val eval_comment : String = ""
+    private var isSelected = false
 
     fun getUserID() : String = fu_id
 
@@ -24,7 +26,7 @@ class HomeworkStatusItemData
 
     fun getEvaluationState() : String
     {
-        if(eval != "")
+        if(eval != null && eval != "")
         {
             return eval
         }
@@ -61,4 +63,13 @@ class HomeworkStatusItemData
         }
         return false
     }
+
+    fun isSelected() : Boolean = isSelected
+
+    fun setSelected(isSelect : Boolean)
+    {
+        isSelected = isSelect
+    }
+
+    fun getEvalComment() : String = eval_comment
 }

@@ -6,21 +6,9 @@ import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetai
 
 class HomeworkListFragmentObserver : ViewModel()
 {
-    var onClickBeforeButton = MutableLiveData<Boolean>()
-    var onClickAfterButton = MutableLiveData<Boolean>()
     var onClickStudentCommentButton = MutableLiveData<Boolean>()
     var onClickTeacherCommentButton = MutableLiveData<Boolean>()
     var onClickHomeworkItem = MutableLiveData<HomeworkDetailItemData>()
-
-    fun onClickBeforeButton()
-    {
-        onClickBeforeButton.value = true
-    }
-
-    fun onClickAfterButton()
-    {
-        onClickAfterButton.value = true
-    }
 
     fun onClickStudentCommentButton()
     {

@@ -9,67 +9,48 @@
     android:orientation="vertical"
     tools:ignore="MissingPrefix, NewApi">
 
-    <!-- 날짜 선택 영역 -->
+    <!-- 숙제현황 서브 타이틀  -->
     <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_datePickLayout"
+        android:id="@+id/_subTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:scale_base_width="1920"
         app:scale_base_height="131">
 
-        <ImageView
-            android:id="@+id/_beforeButton"
+        <View
+            android:id="@+id/_homeworkSubTitleBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_calendar_left"
-            android:visibility="gone"
-            app:scale_left="680"
-            app:scale_top="50"
-            app:scale_width="24"
-            app:scale_height="40"/>
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="1920"
+            app:scale_height="88"/>
 
-        <ImageView
-            android:id="@+id/_beforeButtonRect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_left="660"
-            app:scale_top="30"
-            app:scale_width="60"
-            app:scale_height="80"/>
-
-        <TextView
-            android:id="@+id/_homeworkDateText"
+        <com.littlefox.library.view.text.SeparateTextView
+            android:id="@+id/_homeworkSubTitleSep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/color_000000"
-            app:scale_left="810"
+            android:visibility="gone"
+            app:scale_left="0"
             app:scale_top="0"
-            app:scale_width="300"
-            app:scale_height="131"
+            app:scale_width="1920"
+            app:scale_height="88"
+            app:scale_textsize="34" />
+
+        <TextView
+            android:id="@+id/_homeworkSubTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/color_000000"
+            android:visibility="gone"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="1920"
+            app:scale_height="88"
             app:scale_textsize="32" />
-
-        <ImageView
-            android:id="@+id/_afterButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_calendar_right"
-            android:visibility="gone"
-            app:scale_left="1216"
-            app:scale_top="50"
-            app:scale_width="24"
-            app:scale_height="40"/>
-
-        <ImageView
-            android:id="@+id/_afterButtonRect"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_left="1200"
-            app:scale_top="30"
-            app:scale_width="60"
-            app:scale_height="80"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 

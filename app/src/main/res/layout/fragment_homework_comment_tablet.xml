@@ -33,6 +33,20 @@
             app:scale_top="0"
             app:scale_textsize="30"/>
 
+        <TextView
+            android:id="@+id/_commentTeacherMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/message_comment_teacher"
+            android:textColor="@color/color_666666"
+            android:visibility="gone"
+            app:scale_width="1784"
+            app:scale_height="76"
+            app:scale_left="66"
+            app:scale_top="0"
+            app:scale_textsize="28"/>
+
         <ImageView
             android:id="@+id/_commentBoxImage"
             android:layout_width="match_parent"

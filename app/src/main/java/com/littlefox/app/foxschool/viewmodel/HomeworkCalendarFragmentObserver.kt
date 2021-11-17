@@ -10,6 +10,9 @@ class HomeworkCalendarFragmentObserver : ViewModel()
     var onClickCalendarItem = MutableLiveData<Int>()
     var onCompletedCalendarSet = MutableLiveData<Boolean>()
 
+    // 선생님 ---------
+    var onClickClassPicker = MutableLiveData<Int>()
+
     fun onClickCalendarBefore()
     {
         onClickCalendarBefore.value = true
@@ -28,5 +31,11 @@ class HomeworkCalendarFragmentObserver : ViewModel()
     fun onCompletedCalendarSet()
     {
         onCompletedCalendarSet.value = true
+    }
+
+    // 선생님 ---------
+    fun onClickClassPicker(index : Int)
+    {
+        onClickClassPicker.value = index
     }
 }

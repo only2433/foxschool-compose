@@ -60,6 +60,17 @@
             app:scale_width="107"
             app:scale_height="107"/>
 
+        <ImageView
+            android:id="@+id/_teacherCheckedImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/icon_homework_checked"
+            android:visibility="gone"
+            app:scale_left="25"
+            app:scale_top="70"
+            app:scale_width="107"
+            app:scale_height="107"/>
+
         <TextView
             android:id="@+id/_homeworkStateText"
             android:layout_width="wrap_content"

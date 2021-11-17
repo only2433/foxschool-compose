@@ -13,7 +13,7 @@ import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
 import com.littlefox.app.foxschool.`object`.result.homework.calendar.HomeworkCalendarItemData
-import com.littlefox.app.foxschool.adapter.listener.CalendarItemListener
+import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.CalendarDateType
@@ -22,23 +22,26 @@ import com.ssomai.android.scalablelayout.ScalableLayout
 import java.util.ArrayList
 
 /**
- * 숙제관리 달력 아이템 Adapter (학생용)
+ * 숙제관리 달력 아이템 Adapter
+ * - 학생용, 선생님용 같이 사용
  * @author 김태은
  */
 class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.ViewHolder?>
 {
     private val mContext : Context
-    private lateinit var mCalendarStatusList : ArrayList<CalendarData>               // 달력 날짜에 대한 상태 리스트
+    private lateinit var mCalendarStatusList : ArrayList<CalendarData>              // 달력 날짜에 대한 상태 리스트
     private lateinit var mHomeworkDataList : ArrayList<HomeworkCalendarItemData>    // 숙제 데이터 리스트
-    private var mCalendarItemListener : CalendarItemListener? = null
+    private var mCalendarItemListener : OnItemViewClickListener? = null
+    private var isTeacher : Boolean = false
 
     private lateinit var mLayout : LinearLayout
     private var itemWidth : Int     = 0
     private var itemHeight : Int    = 0
 
-    constructor(context: Context)
+    constructor(context: Context, isTeacher : Boolean)
     {
         mContext = context
+        this.isTeacher = isTeacher
     }
 
     // 레이아웃 셀 크기 동일하게 고정시키기 위해 사용
@@ -64,7 +67,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         return mCalendarStatusList.size
     }
 
-    fun setCalendarItemListener(calendarItemListener : CalendarItemListener) : CalendarItemViewAdapter
+    fun setCalendarItemListener(calendarItemListener : OnItemViewClickListener) : CalendarItemViewAdapter
     {
         mCalendarItemListener = calendarItemListener
         return this
@@ -119,16 +122,24 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         }
 
         // Visibility 초기화
-
         holder._ColorBarImage.visibility = View.GONE
         holder._HomeworkStateText.visibility = View.GONE
         holder._StampImage.visibility = View.GONE
+        holder._TeacherCheckedImage.visibility = View.GONE
 
-        if (item.isToday()) // 오늘 날짜인 경우
+        if (item.isToday())
         {
+            // 오늘 날짜인 경우 날짜에 배경 추가
             holder._TodayImage.visibility = View.VISIBLE
             holder._DateText.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
-            holder._TodayImage.setImageResource(R.drawable.icon_calendar_today_green)
+            if (isTeacher)
+            {
+                holder._TodayImage.setImageResource(R.drawable.icon_calendar_today_blue)
+            }
+            else
+            {
+                holder._TodayImage.setImageResource(R.drawable.icon_calendar_today_green)
+            }
         }
         else
         {
@@ -144,10 +155,38 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
             holder._ColorBarImage.background = CommonUtils.getInstance(mContext).getCalendarBarImage(homework.getColor(), item.getImageType())
 
             // 검사결과 도장, 숙제 진행상황 텍스트 : 숙제가 하루짜리 이거나 첫번째 날 일 때에만 표시
-            when(item.getImageType())
+            if(item.getImageType() == CalendarImageType.ONE_DAY ||
+               item.getImageType() == CalendarImageType.SEVERAL_DAY_START)
             {
-                CalendarImageType.ONE_DAY, CalendarImageType.SEVERAL_DAY_START ->
+                if (isTeacher)
                 {
+                    // [선생님용]
+                    if (homework.isComplete)
+                    {
+                        holder._TeacherCheckedImage.visibility = View.VISIBLE
+                    }
+                    else
+                    {
+                        // 검사 진행상황 텍스트 "검사완료한수/전체학생수 검사 중"
+                        var evalState = "${homework.getEvaluationCompleteCount()}/${homework.getStudentCount()}"
+                        if (CommonUtils.getInstance(mContext).checkTablet)
+                        {
+                            // 태블릿인 경우
+                            evalState += " 검사 중"
+                        }
+                        else
+                        {
+                            // 스마트폰인 경우
+                            evalState += "\n검사 중"
+                        }
+
+                        holder._HomeworkStateText.text = evalState
+                        holder._HomeworkStateText.visibility = View.VISIBLE
+                    }
+                }
+                else
+                {
+                    // [학생용]
                     if (homework.isEvaluationComplete())
                     {
                         // 선생님 평가 있는 경우 아이콘 표시
@@ -160,10 +199,18 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
                     }
                     else
                     {
-                        // 숙제 진행상황 텍스트 (태블릿 1줄, 모바일 2줄) "숙제완료한수/전체숙제수 완료"
+                        // 숙제 진행상황 텍스트 "숙제완료한수/전체숙제수 완료"
                         var homeworkState = "${homework.getHomeworkCompleteItemCount()}/${homework.getHomeworkTotalItemCount()}"
-                        if (CommonUtils.getInstance(mContext).checkTablet) homeworkState += "완료"
-                        else homeworkState += "\n완료"
+                        if (CommonUtils.getInstance(mContext).checkTablet)
+                        {
+                            // 태블릿인 경우
+                            homeworkState += " 완료"
+                        }
+                        else
+                        {
+                            // 스마트폰인 경우
+                            homeworkState += "\n완료"
+                        }
 
                         holder._HomeworkStateText.text = homeworkState
                         holder._HomeworkStateText.visibility = View.VISIBLE
@@ -173,7 +220,7 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
         }
 
         holder.itemView.setOnClickListener {
-            mCalendarItemListener?.onClickItem(position)
+            mCalendarItemListener?.onItemClick(position)
         }
     }
 
@@ -209,6 +256,9 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
 
         @BindView(R.id._stampImage)
         lateinit var _StampImage : ImageView
+
+        @BindView(R.id._teacherCheckedImage)
+        lateinit var _TeacherCheckedImage : ImageView
 
         @BindView(R.id._homeworkStateText)
         lateinit var _HomeworkStateText : TextView

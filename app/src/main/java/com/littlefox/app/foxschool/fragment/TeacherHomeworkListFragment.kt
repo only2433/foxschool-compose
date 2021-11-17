@@ -26,11 +26,13 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.HomeworkType
 import com.littlefox.app.foxschool.viewmodel.HomeworkListFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.library.view.text.SeparateTextView
@@ -38,17 +40,19 @@ import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
- * 숙제관리 리스트 화면 (학생용)
+ * 숙제관리 리스트 화면 (선생님용)
+ * - 숙제 현황 상세 보기  (학생 숙제 현황)
+ * - 숙제 내용          (반 숙제 내용)
  * @author 김태은
  */
-class HomeworkListFragment : Fragment()
+class TeacherHomeworkListFragment : Fragment()
 {
     /** 서브타이틀 (이름 숙제기간) */
     @BindView(R.id._homeworkSubTitleBackground)
     lateinit var _HomeworkSubTitleBackground : View
 
-    @BindView(R.id._homeworkSubTitle)
-    lateinit var _HomeworkSubTitle : TextView
+    @BindView(R.id._homeworkSubTitleSep)
+    lateinit var _HomeworkSubTitle : SeparateTextView
 
     @BindView(R.id._resultCommentLayout)
     lateinit var _ResultCommentLayout : ScalableLayout
@@ -122,6 +126,14 @@ class HomeworkListFragment : Fragment()
     {
         const val COMMENT_ONLY_STUDENT : Int = 100  // 코멘트 1개일 때 (학습자)
         const val COMMENT_ONLY_TEACHER : Int = 101  // 코멘트 1개일 때 (선생님)
+
+        const val CONTENTS_TYPE_ALL : Int = 0
+        const val CONTENTS_TYPE_ANIMATION : Int = 1
+        const val CONTENTS_TYPE_EBOOK : Int = 2
+        const val CONTENTS_TYPE_QUIZ : Int = 3
+        const val CONTENTS_TYPE_STARWORDS : Int = 4
+        const val CONTENTS_TYPE_CROSSWORD : Int = 5
+        const val CONTENTS_TYPE_RECORDER : Int = 6
     }
 
     private lateinit var mContext : Context
@@ -221,14 +233,13 @@ class HomeworkListFragment : Fragment()
     /** ========== Init ========== */
     private fun initView()
     {
-        mHomeworkFilterList = mContext.resources.getStringArray(R.array.text_list_homework_filter)
-        _HomeworkSubTitleBackground.setBackgroundColor(mContext.resources.getColor(R.color.color_23cc8a_alpha_50))
+        mHomeworkFilterList = mContext.resources.getStringArray(R.array.text_list_homework_filter_teacher)
+        _HomeworkSubTitleBackground.setBackgroundColor(mContext.resources.getColor(R.color.color_29c8e6_alpha_50))
         _HomeworkSubTitle.visibility = View.VISIBLE
     }
 
     private fun initFont()
     {
-        _HomeworkSubTitle.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _HomeworkResultText.setTypeface(Font.getInstance(mContext).getRobotoBold())
         _HomeworkOneCommentTitle.setTypeface(Font.getInstance(mContext).getRobotoMedium())
         _HomeworkOneCommentButton.setTypeface(Font.getInstance(mContext).getRobotoMedium())
@@ -247,13 +258,13 @@ class HomeworkListFragment : Fragment()
         mHomeworkListFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkListFragmentObserver::class.java)
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
-        // 숙제현황 데이터
+        // 숙제현황||숙제내용 데이터
         mHomeworkManagePresenterObserver.updateHomeworkListData.observe(viewLifecycleOwner, { item ->
             mHomeworkDetailBaseResult = item
             updateHomeworkListData()
         })
 
-        // 숙제 현황 화면 초기화
+        // 숙제현황||숙제내용 화면 초기화
         mHomeworkManagePresenterObserver.clearHomeworkList.observe(viewLifecycleOwner, { allClear ->
             clearScreenData(allClear)
         })
@@ -265,13 +276,16 @@ class HomeworkListFragment : Fragment()
     private fun updateHomeworkListData()
     {
         mClickEnable = false // 클릭 이벤트 막기
-        if (mListAnimationEffect == true) setContentListLoadingVisible(true) // 애니메이션 효과 켜져있을때만 컨텐츠 로딩 다이얼로그 표시
+        if (mListAnimationEffect == true)
+        {
+            setContentListLoadingVisible(true) // 애니메이션 효과 켜져있을때만 컨텐츠 로딩 다이얼로그 표시
+        }
 
         setHomeworkListData()       // 숙제 리스트
         setHomeworkSubTitleText()   // 숙제 기간 텍스트 (서브타이틀)
         setCommentLayout()          // 코멘트 영역
 
-        mClickEnable = true     // 클릭 이벤트 허용3
+        mClickEnable = true     // 클릭 이벤트 허용
         setContentListLoadingVisible(false) // 컨텐츠 로딩 다이얼로그 숨김
     }
 
@@ -286,28 +300,30 @@ class HomeworkListFragment : Fragment()
         mHomeworkItemDetail.clear()
         if (mHomeworkDetailBaseResult != null)
         {
-            if (mHomeworkFilterIndex == 0)
+            val homeworkType : HomeworkType?
+            when (mHomeworkFilterIndex)
+            {
+                CONTENTS_TYPE_ALL -> homeworkType = null
+                CONTENTS_TYPE_ANIMATION -> homeworkType = HomeworkType.ANIMATION
+                CONTENTS_TYPE_EBOOK -> homeworkType = HomeworkType.EBOOK
+                CONTENTS_TYPE_QUIZ -> homeworkType = HomeworkType.QUIZ
+                CONTENTS_TYPE_STARWORDS -> homeworkType = HomeworkType.STARWORDS
+                CONTENTS_TYPE_CROSSWORD -> homeworkType = HomeworkType.CROSSWORD
+                CONTENTS_TYPE_RECORDER -> homeworkType = HomeworkType.RECORDER
+                else -> homeworkType = null
+            }
+
+            if (homeworkType == null)
             {
                 // 전체
                 mHomeworkItemDetail.addAll(mHomeworkDetailBaseResult!!.getHomeworkItemList())
             }
-            else if (mHomeworkFilterIndex == 1)
-            {
-                // 완료한 숙제
-                for (i in mHomeworkDetailBaseResult!!.getHomeworkItemList().indices)
-                {
-                    if (mHomeworkDetailBaseResult!!.getHomeworkItemList()[i].isComplete == true)
-                    {
-                        mHomeworkItemDetail.add(mHomeworkDetailBaseResult!!.getHomeworkItemList()[i])
-                    }
-                }
-            }
             else
             {
-                // 남은 숙제
+                // 컨텐츠 필터링
                 for (i in mHomeworkDetailBaseResult!!.getHomeworkItemList().indices)
                 {
-                    if (mHomeworkDetailBaseResult!!.getHomeworkItemList()[i].isComplete == false)
+                    if (homeworkType == mHomeworkDetailBaseResult!!.getHomeworkItemList()[i].getHomeworkType())
                     {
                         mHomeworkItemDetail.add(mHomeworkDetailBaseResult!!.getHomeworkItemList()[i])
                     }
@@ -327,14 +343,30 @@ class HomeworkListFragment : Fragment()
         {
             // 초기 생성
             Log.f("mHomeworkItemViewAdapter == null")
-            mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext, isTeacher = false)
+            mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext, isTeacher = true)
                 .setItemList(mHomeworkItemDetail)
                 .setHomeworkItemListener(mHomeworkItemListener)
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == Common.PAGE_HOMEWORK_DETAIL)
+            {
+                mHomeworkItemViewAdapter!!.setButtonEnable(false)
+            }
+            else
+            {
+                mHomeworkItemViewAdapter!!.setButtonEnable(true)
+            }
         }
         else
         {
             // 데이터 변경
             Log.f("mHomeworkItemViewAdapter notifyDataSetChanged")
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == Common.PAGE_HOMEWORK_DETAIL)
+            {
+                mHomeworkItemViewAdapter!!.setButtonEnable(false)
+            }
+            else
+            {
+                mHomeworkItemViewAdapter!!.setButtonEnable(true)
+            }
             mHomeworkItemViewAdapter!!.setItemList(mHomeworkItemDetail)
             mHomeworkItemViewAdapter!!.notifyDataSetChanged()
         }
@@ -369,7 +401,14 @@ class HomeworkListFragment : Fragment()
             homeworkDate = "$startDate ~ $endDate"
         }
 
-        _HomeworkSubTitle.text = homeworkDate
+        val name = mHomeworkDetailBaseResult!!.getFragmentTitle()
+
+        val textSize = if (CommonUtils.getInstance(mContext).checkTablet) 32 else 40
+        _HomeworkSubTitle.setSeparateText(name, " $homeworkDate")
+            .setSeparateColor(resources.getColor(R.color.color_000000), resources.getColor(R.color.color_000000))
+            .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(textSize), CommonUtils.getInstance(mContext).getPixel(textSize))
+            .setSeparateTextStyle((Font.getInstance(mContext).getRobotoBold()), (Font.getInstance(mContext).getRobotoRegular()))
+            .showView()
     }
 
     /**
@@ -388,25 +427,16 @@ class HomeworkListFragment : Fragment()
         }
 
         // [학습자/선생님 코멘트 영역 설정]
-        if (homework.getStudentComment() == "" && homework.getTeacherComment() == "")
+        if (homework.getStudentComment() != "" && homework.getTeacherComment() != "")
         {
-            if (homework.isEvaluationComplete() == false)
-            {
-                // 최종평가 미완료 일 때
-                // 학습자/선생님 코멘트 둘 다 없으면 [학습자 작성]
-                _OneCommentLayout.visibility = View.VISIBLE
-                mOneCommentType = COMMENT_ONLY_STUDENT
-                setOneCommentStudent()
-            }
-        }
-        else if (homework.getStudentComment() != "" && homework.getTeacherComment() != "")
-        {
+            Log.f("[COMMENT] 2")
             // 학습자/선생님 코멘트 둘 다 있는 경우
             _TwoCommentLayout.visibility = View.VISIBLE
             setHomeworkStudentLayout()
         }
-        else
+        else if (homework.getStudentComment() != "" || homework.getTeacherComment() != "")
         {
+            Log.f("[COMMENT] 1")
             // 학습자/선생님 코멘트 한개라도 있는 경우
             _OneCommentLayout.visibility = View.VISIBLE
 
@@ -542,6 +572,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setContentListLoadingVisible(isVisible : Boolean)
     {
+        Log.f("[LIST LOADING] : $isVisible")
         if (isVisible)
         {
             _LoadingProgressLayout.visibility = View.VISIBLE
@@ -573,7 +604,6 @@ class HomeworkListFragment : Fragment()
         mHomeworkItemDetail.clear()
         mHomeworkFilterIndex = 0
         _HomeworkFilterText.text = mHomeworkFilterList!![mHomeworkFilterIndex]
-        setHomeworkListView()
     }
 
     /**

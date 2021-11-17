@@ -45,7 +45,7 @@ class TeacherHomeworkStatusCoroutine : BaseCoroutine
     override fun setData(vararg objects : Any?)
     {
         mClassID = objects[0] as Int
-        mHomeworkNumber = objects[0] as Int
+        mHomeworkNumber = objects[1] as Int
     }
 
 }
