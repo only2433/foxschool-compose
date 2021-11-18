@@ -23,6 +23,7 @@ import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.main.contract.QuizContract
 import com.littlefox.app.foxschool.main.presenter.QuizPresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -132,19 +133,6 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         } catch(e : Exception)
         {
             e.printStackTrace()
-        }
-
-        if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
-        {
-            val params = _QuizDisplayPager.layoutParams as RelativeLayout.LayoutParams
-            params.topMargin = CommonUtils.getInstance(this).getPixel(80)
-            _QuizDisplayPager.layoutParams = params
-            val aniParams = _AniAnswerLayout.getChildLayoutParams(_AniAnswerView)
-            _AniAnswerLayout.moveChildView(
-                _AniAnswerView,
-                aniParams.scale_Left,
-                aniParams.scale_Top + 80
-            )
         }
     }
 

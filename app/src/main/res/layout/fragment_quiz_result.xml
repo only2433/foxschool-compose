@@ -11,7 +11,7 @@
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_quizContentsLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         app:scale_base_width="1920"
         app:scale_base_height="730">
@@ -19,8 +19,8 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
             android:src="@drawable/img_quiz_result_bg"
+            android:scaleType="fitXY"
             app:scale_top="0"
             app:scale_left="0"
             app:scale_width="1920"
@@ -30,8 +30,8 @@
             android:id="@+id/_quizResultImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
             android:src="@drawable/img_excellent"
+            android:scaleType="fitXY"
             app:scale_top="21"
             app:scale_left="573"
             app:scale_width="774"

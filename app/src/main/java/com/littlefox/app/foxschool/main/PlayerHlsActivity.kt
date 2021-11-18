@@ -33,6 +33,7 @@ import com.littlefox.app.foxschool.adapter.PlayerSpeedListAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.common.listener.OrientationChangeListener
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.main.contract.PlayerContract
 import com.littlefox.app.foxschool.main.presenter.PlayerHlsPresenter
 import com.littlefox.library.system.handler.WeakReferenceHandler
@@ -685,7 +686,9 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
             _PlayerBackground.layoutParams = baseLayoutParams
             _PlayerOptionBackground.layoutParams = baseLayoutParams
-            if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+
+            if(CommonUtils.getInstance(this).checkTablet
+                && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
             {
                 baseLayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT)
                 baseLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL)
@@ -1614,11 +1617,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
-                        R.drawable.coachmark_story_landscape_kr_tablet_4_3
+                        return R.drawable.coachmark_story_landscape_kr_tablet_4_3
                     }
-                    else R.drawable.coachmark_story_landscape_kr
+                    else
+                    {
+                        return R.drawable.coachmark_story_landscape_kr
+                    }
                 }
             }
             else if(Locale.getDefault().toString().contains(Locale.JAPANESE.toString()))
@@ -1629,11 +1636,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
-                        R.drawable.coachmark_story_landscape_jp_tablet_4_3
+                        return R.drawable.coachmark_story_landscape_jp_tablet_4_3
                     }
-                    else R.drawable.coachmark_story_landscape_jp
+                    else
+                    {
+                        return R.drawable.coachmark_story_landscape_jp
+                    }
                 }
             }
             else if(Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString()))
@@ -1644,11 +1655,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
-                        R.drawable.coachmark_story_landscape_cn_tablet_4_3
+                        return  R.drawable.coachmark_story_landscape_cn_tablet_4_3
                     }
-                    else R.drawable.coachmark_story_landscape_cn
+                    else
+                    {
+                        return R.drawable.coachmark_story_landscape_cn
+                    }
                 }
             }
             else if(Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString()))
@@ -1659,11 +1674,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
-                        R.drawable.coachmark_story_landscape_tw_tablet_4_3
+                        return R.drawable.coachmark_story_landscape_tw_tablet_4_3
                     }
-                    else R.drawable.coachmark_story_landscape_tw
+                    else
+                    {
+                        return R.drawable.coachmark_story_landscape_tw
+                    }
                 }
             }
             else
@@ -1674,11 +1693,15 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    return if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
-                        R.drawable.coachmark_story_landscape_en_tablet_4_3
+                        return R.drawable.coachmark_story_landscape_en_tablet_4_3
                     }
-                    else R.drawable.coachmark_story_landscape_en
+                    else
+                    {
+                        return R.drawable.coachmark_story_landscape_en
+                    }
                 }
             }
         }
@@ -1694,7 +1717,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
                         return R.drawable.coachmark_song_landscape_kr_tablet_4_3
                     }
@@ -1710,7 +1734,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
                         return R.drawable.coachmark_song_landscape_jp_tablet_4_3
                     }
@@ -1726,7 +1751,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
                         return R.drawable.coachmark_song_landscape_cn_tablet_4_3
                     }
@@ -1742,7 +1768,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
                         return R.drawable.coachmark_song_landscape_tw_tablet_4_3
                     }
@@ -1758,7 +1785,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 else
                 {
-                    if(CommonUtils.getInstance(this).checkTablet && Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+                    if(CommonUtils.getInstance(this).checkTablet
+                        && CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
                     {
                         return R.drawable.coachmark_song_landscape_en_tablet_4_3
                     }

@@ -25,6 +25,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -112,7 +113,7 @@ class QuizPlayFragment : Fragment()
         var view : View
 
 
-        if(CommonUtils.getInstance(mContext).checkTablet == false && Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
             view = inflater.inflate(R.layout.fragment_quiz_play_20_9_phone, container, false)
         }

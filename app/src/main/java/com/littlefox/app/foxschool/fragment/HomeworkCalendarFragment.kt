@@ -29,6 +29,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.CalendarImageType
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.viewmodel.HomeworkCalendarFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.logmonitor.Log
@@ -214,7 +215,7 @@ class HomeworkCalendarFragment : Fragment()
                 _CalendarClassLayout.visibility = View.VISIBLE
             }
 
-            if (Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+            if (CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
             {
                 // 태블릿 4:3 모델 대응
                 _MainBackgroundView.moveChildView(_CalendarListLayout, 0f, 200f, 1920f, 860f)

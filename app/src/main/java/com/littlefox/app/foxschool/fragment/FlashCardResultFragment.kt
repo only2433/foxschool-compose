@@ -15,8 +15,11 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
 import com.littlefox.app.foxschool.viewmodel.FlashcardResultFragmentObserver
 import com.littlefox.logmonitor.Log
@@ -82,9 +85,9 @@ class FlashCardResultFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            view = inflater.inflate(R.layout.fragment_flashcard_result_20_9_phone, container, false)
+            view = inflater.inflate(R.layout.fragment_flashcard_result_flip_phone, container, false)
         }
         else
         {
@@ -139,7 +142,8 @@ class FlashCardResultFragment : Fragment()
     /** ========== Init ========== */
     private fun initView()
     {
-        if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).checkTablet
+            && CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
         {
             _TopTermsLayout.setScaleSize(1920f, 250f)
             _EffectLayout.setScaleSize(1920f, 1156f)
@@ -175,11 +179,11 @@ class FlashCardResultFragment : Fragment()
     {
         if(isBookmarkEnable)
         {
-            if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+            if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
             {
-                _ContentLayout.moveChildView(_ReplayButton, 610f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 698f, 810f)
-                _ContentLayout.moveChildView(_ReplayText, 760f, 762f)
+                _ContentLayout.moveChildView(_ReplayButton, 715f, 762f)
+                _ContentLayout.moveChildView(_ReplayIcon, 803f, 810f)
+                _ContentLayout.moveChildView(_ReplayText, 865f, 762f)
             }
             else
             {
@@ -193,11 +197,11 @@ class FlashCardResultFragment : Fragment()
         }
         else
         {
-            if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+            if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
             {
-                _ContentLayout.moveChildView(_ReplayButton, 868f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 956f, 810f)
-                _ContentLayout.moveChildView(_ReplayText, 1018f, 762f)
+                _ContentLayout.moveChildView(_ReplayButton, 973f, 762f)
+                _ContentLayout.moveChildView(_ReplayIcon, 1061f, 810f)
+                _ContentLayout.moveChildView(_ReplayText, 1123f, 762f)
             }
             else
             {

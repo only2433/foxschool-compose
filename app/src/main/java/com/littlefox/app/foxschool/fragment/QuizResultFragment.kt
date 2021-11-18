@@ -20,6 +20,7 @@ import com.littlefox.app.foxschool.`object`.data.quiz.QuizResultViewData
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.Grade
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.QuizPresenterDataObserver
@@ -97,9 +98,9 @@ class QuizResultFragment : Fragment()
 
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
-        Log.i("")
+        Log.i("checkTablet : "+CommonUtils.getInstance(mContext).checkTablet+", radio : "+CommonUtils.getInstance(mContext).getPhoneDisplayRadio())
         var view : View
-        if(CommonUtils.getInstance(mContext).checkTablet == false && Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
             view = inflater.inflate(R.layout.fragment_quiz_result_20_9_phone, container, false)
         }
@@ -179,13 +180,16 @@ class QuizResultFragment : Fragment()
     /** 결과 화면 위치조정 */
     private fun settingResultView()
     {
-        if(CommonUtils.getInstance(mContext).checkTablet)
+        /*if(CommonUtils.getInstance(mContext).checkTablet == false)
         {
-            _QuizResultButtonLayout.setScaleSize(1920f, 160f)
+            if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.RADIO_FLIP)
+            {
+                _QuizContentsLayout.moveChildView(_QuizResultLayout, 500f, 345f, 919f, 382f);
+            }
             val params = _QuizResultButtonLayout.layoutParams as RelativeLayout.LayoutParams
             params.removeRule(RelativeLayout.BELOW)
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-        }
+        }*/
     }
 
     /** 결과 */

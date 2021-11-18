@@ -20,6 +20,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.viewmodel.FlashcardIntroFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
@@ -94,9 +95,9 @@ class FlashCardIntroFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            view = inflater.inflate(R.layout.fragment_flashcard_intro_20_9_phone, container, false)
+            view = inflater.inflate(R.layout.fragment_flashcard_intro_flip_phone, container, false)
         }
         else
         {
@@ -172,10 +173,10 @@ class FlashCardIntroFragment : Fragment()
     /** 디스플레이에 따른 버튼 텍스트 위치 변경 */
     private fun settingButtonText()
     {
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            _ContentLayout.moveChildView(_StartWordMessageText, 716f, 529f, 244f, 48f)
-            _ContentLayout.moveChildView(_StartMeaningMessageText, 1232f, 529f, 244f, 48f)
+            _ContentLayout.moveChildView(_StartWordMessageText, 821f, 529f, 244f, 48f)
+            _ContentLayout.moveChildView(_StartMeaningMessageText, 1337f, 529f, 244f, 48f)
         }
         else
         {

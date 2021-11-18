@@ -21,6 +21,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.FlashcardStatus
 import com.littlefox.app.foxschool.main.contract.FlashcardContract
 import com.littlefox.app.foxschool.main.presenter.FlashcardPresenter
@@ -195,7 +196,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
 
     private fun settingCoachMarkImage()
     {
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(this).getPhoneDisplayRadio() == DisplayPhoneType.RADIO_20_9)
         {
             _CoachmarkImage.setImageResource(R.drawable.coachmark_flashcard_2192_1080)
         }

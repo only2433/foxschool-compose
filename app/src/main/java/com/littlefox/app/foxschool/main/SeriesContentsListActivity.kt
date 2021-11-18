@@ -56,6 +56,7 @@ import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.enumerate.TransitionType
 import com.littlefox.app.foxschool.main.contract.SeriesContentsListContract
 import com.littlefox.app.foxschool.main.presenter.SeriesContentsListPresenter
@@ -279,7 +280,16 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         }
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            val TABLET_LIST_WIDTH : Int = if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY) 860 else 960
+            val TABLET_LIST_WIDTH : Int
+            if(CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
+            {
+                TABLET_LIST_WIDTH = 860
+            }
+            else
+            {
+                TABLET_LIST_WIDTH = 960
+            }
+
             val LEFT_MARGIN : Int = 60
             val TOP_MARGIN : Int = 24
             val params : LinearLayout.LayoutParams = _DetailInformationList.getLayoutParams() as LinearLayout.LayoutParams
@@ -288,7 +298,15 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
             params.topMargin = CommonUtils.getInstance(this).getPixel(TOP_MARGIN)
             _DetailInformationList.setLayoutParams(params)
 
-            val PROGRESS_MARGIN_LEFT = if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY) 1185 else 1095
+            val PROGRESS_MARGIN_LEFT : Int
+            if(CommonUtils.getInstance(this).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
+            {
+                PROGRESS_MARGIN_LEFT = 1185
+            }
+            else
+            {
+                PROGRESS_MARGIN_LEFT = 1095
+            }
             _LoadingProgressLayout.moveChildView(_ProgressWheelView, PROGRESS_MARGIN_LEFT.toFloat(), 0f)
         }
     }

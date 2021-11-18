@@ -28,8 +28,11 @@ import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.enumerate.FlashcardStudyType
 import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
 import com.littlefox.app.foxschool.viewmodel.FlashcardStudyFragmentObserver
@@ -171,9 +174,9 @@ class FlashCardStudyDataFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            view = inflater.inflate(R.layout.fragment_flashcard_study_data_20_9_phone, container, false)
+            view = inflater.inflate(R.layout.fragment_flashcard_study_data_flip_phone, container, false)
         }
         else
         {
@@ -231,7 +234,8 @@ class FlashCardStudyDataFragment : Fragment()
     /** ========== Init ========== */
     private fun initView()
     {
-        if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).checkTablet
+            && CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
         {
             _TopTermsLayout.setScaleSize(1920f, 300f)
             _StudyControllerLayout.setScaleSize(1920f, 730f)
@@ -276,10 +280,10 @@ class FlashCardStudyDataFragment : Fragment()
         _Item2ContainerLayout = FrameLayout(mContext)
 
         // 플래시카드 앞면 세팅
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            card1FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_20_9_phone, null, false)
-            card2FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_20_9_phone, null, false)
+            card1FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_flip_phone, null, false)
+            card2FrontView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_front_flip_phone, null, false)
         }
         else
         {
@@ -306,10 +310,10 @@ class FlashCardStudyDataFragment : Fragment()
         _Item2FrontBookmarkButton.setOnClickListener(mOnClickListener)
 
         // 플래시카드 뒷면 세팅
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            card1BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_20_9_phone, null, false)
-            card2BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_20_9_phone, null, false)
+            card1BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_flip_phone, null, false)
+            card2BackView = LayoutInflater.from(mContext).inflate(R.layout.include_flashcard_card_back_flip_phone, null, false)
         }
         else
         {

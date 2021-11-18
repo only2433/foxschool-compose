@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_topTermsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:scale_base_height="100"
+        app:scale_base_width="2192"></com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_studyControllerLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:scale_base_width="2402"
+        app:scale_base_height="550">
+
+        <ImageView
+            android:id="@+id/_prevButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_prev_arrow"
+            android:scaleType="fitXY"
+            app:scale_left="194"
+            app:scale_top="393"
+            app:scale_width="59"
+            app:scale_height="113"/>
+
+        <ImageView
+            android:id="@+id/_nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/flashcard_next_arrow"
+            android:scaleType="fitXY"
+            app:scale_left="2167"
+            app:scale_top="393"
+            app:scale_width="59"
+            app:scale_height="113"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/_itemViewFlipper"
+        app:scale_base_width="2402"
+        app:scale_base_height="158">
+        <ImageView
+            android:id="@+id/_flipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/btn_flashcard_flip"
+            android:visibility="visible"
+            app:scale_left="1144"
+            app:scale_top="0"
+            app:scale_width="114"
+            app:scale_height="123"/>
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+
+    <com.ssomai.android.scalablelayout.ScalableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:scale_base_height="414"
+        app:scale_base_width="2402">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/flashcard_bottom_bg_img02"
+            app:scale_height="414"
+            app:scale_left="0"
+            app:scale_top="0"
+            app:scale_width="2402" />
+    </com.ssomai.android.scalablelayout.ScalableLayout>
+
+    <ViewFlipper
+        android:id="@+id/_itemViewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/_topTermsLayout">
+    </ViewFlipper>
+
+</RelativeLayout>

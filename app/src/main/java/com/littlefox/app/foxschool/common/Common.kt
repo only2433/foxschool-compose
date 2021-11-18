@@ -90,6 +90,8 @@ class Common
         const val PARAMS_IS_TEACHER_MODE : String               = "is_teacher_mode"
         const val PARAMS_CHECK_TABLET : String                  = "check_tablet"
         const val PARAMS_IS_BIO_LOGIN_DATA : String             = "is_bio_login_data"
+        const val PARAMS_CHECK_PHONE_DEVICE_RADIO : String      = "check_phone_device_radio"
+        const val PARAMS_CHECK_TABLET_DEVICE_RADIO : String     = "check_tablet_device_radio"
 
         const val INTENT_IS_LOGIN_FROM_MAIN : String                = "init_intro_login"
         const val INTENT_PLAYER_DATA_PARAMS : String                = "player_data_params"
@@ -181,6 +183,7 @@ class Common
         const val SECOND : Int = 1000
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float  = 1.4f
         const val PHONE_DISPLAY_RADIO_20_9 : Float      = 1.9f
+        const val PHONE_DISPLAY_RADIO_FLIP : Float      = 2.2f
 
         const val TARGET_PHONE_DISPLAY_WIDTH : Float = 1080.0f
         const val TARGET_TABLET_DISPLAY_WIDTH : Float = 1920.0f

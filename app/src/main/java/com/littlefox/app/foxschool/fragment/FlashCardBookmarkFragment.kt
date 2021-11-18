@@ -24,6 +24,8 @@ import com.littlefox.app.foxschool.adapter.listener.BookmarkItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
+import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.view.decoration.GridSpacingItemDecoration
 import com.littlefox.app.foxschool.viewmodel.FlashcardBookmarkFragmentObserver
@@ -109,9 +111,9 @@ class FlashCardBookmarkFragment : Fragment()
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            view = inflater.inflate(R.layout.fragment_flashcard_bookmark_20_9_phone, container, false)
+            view = inflater.inflate(R.layout.fragment_flashcard_bookmark_flip_phone, container, false)
         }
         else
         {
@@ -166,7 +168,8 @@ class FlashCardBookmarkFragment : Fragment()
     /** ========== Init ========== */
     private fun initView()
     {
-        if(Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).checkTablet
+            && CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
         {
             _BookmarkItemLayout.setScaleSize(1920f, 810f)
             _BookmarkItemLayout.moveChildView(_BookmarkBgImage, 59f, 0f, 1802f, 810f)
@@ -229,10 +232,10 @@ class FlashCardBookmarkFragment : Fragment()
     /** 디스플레이에 따른 버튼 위치 조정 */
     private fun settingButtonText()
     {
-        if(Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY)
+        if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            _ButtonLayout.moveChildView(_StartWordMessageText, 716f, 95f, 244f, 48f)
-            _ButtonLayout.moveChildView(_StartMeaningMessageText, 1232f, 95f, 244f, 48f)
+            _ButtonLayout.moveChildView(_StartWordMessageText, 821f, 50f, 244f, 48f)
+            _ButtonLayout.moveChildView(_StartMeaningMessageText, 1337f, 50f, 244f, 48f)
         } else
         {
             _ButtonLayout.moveChildView(_StartWordMessageText, 580f, 50f, 244f, 48f)

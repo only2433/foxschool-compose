@@ -257,25 +257,31 @@ class CommonUtils
             if(currentDisplayRadio < Common.MINIMUM_TABLET_DISPLAY_RADIO)
             {
                 Log.f("TABLET = 4 : 3 비율 ")
-                Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = true
+                setSharedPreference(Common.PARAMS_CHECK_TABLET_DEVICE_RADIO, DisplayTabletType.RADIO_4_3.toString())
             } else
             {
                 Log.f("TABLET = 16 : 9 비율 ")
-                Feature.IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY = false
+                setSharedPreference(Common.PARAMS_CHECK_TABLET_DEVICE_RADIO, DisplayTabletType.DEFAULT.toString())
             }
         }
         else
         {
             val currentDisplayRadio : Float = (displayHeightPixel.toFloat() / displayWidthPixel.toFloat())
-            if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_20_9)
+
+
+            if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_FLIP)
+            {
+                setSharedPreference(Common.PARAMS_CHECK_PHONE_DEVICE_RADIO, DisplayPhoneType.RADIO_FLIP.toString())
+            }
+            else if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_20_9)
             {
                 Log.f("PHONE = 20 : 9 비율 ")
-                Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = true
+                setSharedPreference(Common.PARAMS_CHECK_PHONE_DEVICE_RADIO, DisplayPhoneType.RADIO_20_9.toString())
             }
             else
             {
                 Log.f("PHONE = 16 : 9 비율 ")
-                Feature.IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = false
+                setSharedPreference(Common.PARAMS_CHECK_PHONE_DEVICE_RADIO, DisplayPhoneType.DEFAULT.toString())
             }
         }
 
@@ -288,6 +294,21 @@ class CommonUtils
         }
 
     }
+
+    fun getPhoneDisplayRadio(): DisplayPhoneType
+    {
+        val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
+        val value : String = pref.getString(Common.PARAMS_CHECK_PHONE_DEVICE_RADIO, DisplayPhoneType.DEFAULT.toString()).toString()
+        return DisplayPhoneType.toDisplayPhoneType(value)
+    }
+
+    fun getTabletDisplayRadio() : DisplayTabletType
+    {
+        val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
+        val value : String = pref.getString(Common.PARAMS_CHECK_TABLET_DEVICE_RADIO, DisplayTabletType.DEFAULT.toString()).toString()
+        return DisplayTabletType.toDisplayTabletType(value)
+    }
+
     /**
      * 방어코드 가끔 OS 결함으로 width , height 가 잘못들어올때 방어코드 처리
      */
