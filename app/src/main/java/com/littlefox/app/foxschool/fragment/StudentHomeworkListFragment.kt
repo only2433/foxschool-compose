@@ -41,7 +41,7 @@ import com.ssomai.android.scalablelayout.ScalableLayout
  * 숙제관리 리스트 화면 (학생용)
  * @author 김태은
  */
-class HomeworkListFragment : Fragment()
+class StudentHomeworkListFragment : Fragment()
 {
     /** 서브타이틀 (이름 숙제기간) */
     @BindView(R.id._homeworkSubTitleBackground)
@@ -388,37 +388,47 @@ class HomeworkListFragment : Fragment()
         }
 
         // [학습자/선생님 코멘트 영역 설정]
-        if (homework.getStudentComment() == "" && homework.getTeacherComment() == "")
+        if (homework.isEvaluationComplete())
         {
-            if (homework.isEvaluationComplete() == false)
+            // 최종평가 완료
+            if (homework.getStudentComment() != "" && homework.getTeacherComment() != "")
             {
-                // 최종평가 미완료 일 때
-                // 학습자/선생님 코멘트 둘 다 없으면 [학습자 작성]
-                _OneCommentLayout.visibility = View.VISIBLE
-                mOneCommentType = COMMENT_ONLY_STUDENT
-                setOneCommentStudent()
+                // 학습자/선생님 코멘트 둘 다 있는 경우
+                _TwoCommentLayout.visibility = View.VISIBLE
+                setHomeworkStudentLayout()
             }
-        }
-        else if (homework.getStudentComment() != "" && homework.getTeacherComment() != "")
-        {
-            // 학습자/선생님 코멘트 둘 다 있는 경우
-            _TwoCommentLayout.visibility = View.VISIBLE
-            setHomeworkStudentLayout()
+            else
+            {
+                // 학습자/선생님 코멘트 한개라도 있는 경우
+                if (homework.getStudentComment() != "")
+                {
+                    mOneCommentType = COMMENT_ONLY_STUDENT
+                    setOneCommentStudent()
+                }
+                else if (homework.getTeacherComment() != "")
+                {
+                    mOneCommentType = COMMENT_ONLY_TEACHER
+                    setOneCommentTeacher()
+                }
+            }
         }
         else
         {
-            // 학습자/선생님 코멘트 한개라도 있는 경우
-            _OneCommentLayout.visibility = View.VISIBLE
-
-            if (homework.getStudentComment() != "")
+            // 최종평가 미완료
+            if (homework.getTeacherComment() != "")
             {
+                // 선생님 코멘트 있을 때
+                // 선생님 - 보기, 학생 - 작성 (2개)
+                _TwoCommentLayout.visibility = View.VISIBLE
+                setHomeworkStudentLayout()
+            }
+            else
+            {
+                // 학생 코멘트만 있을 때
+                // 학생 - 작성 or 보기 (1개)
+                _OneCommentLayout.visibility = View.VISIBLE
                 mOneCommentType = COMMENT_ONLY_STUDENT
                 setOneCommentStudent()
-            }
-            else if (homework.getTeacherComment() != "")
-            {
-                mOneCommentType = COMMENT_ONLY_TEACHER
-                setOneCommentTeacher()
             }
         }
     }
@@ -464,6 +474,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setOneCommentStudent()
     {
+        _OneCommentLayout.visibility = View.VISIBLE
         _HomeworkOneCommentTitle.text = mContext.resources.getString(R.string.text_homework_student_comment)
         _HomeworkOneCommentBg.background = mContext.resources.getDrawable(R.drawable.box_list_green)
         _HomeworkOneCommentIcon.background = mContext.resources.getDrawable(R.drawable.icon_smile_chat)
@@ -496,6 +507,7 @@ class HomeworkListFragment : Fragment()
      */
     private fun setOneCommentTeacher()
     {
+        _OneCommentLayout.visibility = View.VISIBLE
         _HomeworkOneCommentTitle.text = mContext.resources.getString(R.string.text_homework_teacher_comment)
         _HomeworkOneCommentBg.background = mContext.resources.getDrawable(R.drawable.box_list_yellow)
         _HomeworkOneCommentIcon.background = mContext.resources.getDrawable(R.drawable.icon_homework_speaker)

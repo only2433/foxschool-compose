@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.`object`.result.homework
 
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
+import com.littlefox.app.foxschool.enumerate.HomeworkDetailType
 
 class HomeworkDetailBaseResult
 {
@@ -13,7 +14,7 @@ class HomeworkDetailBaseResult
     private var eval : String       = ""
     private val list : ArrayList<HomeworkDetailItemData> = ArrayList()
     // 선생님용 ----------
-    private var fragmentType : Int = 0
+    private var fragmentType : HomeworkDetailType = HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL
     private var fragmentTitle : String = ""
 
     fun getStartDate() : String = start_date
@@ -50,10 +51,10 @@ class HomeworkDetailBaseResult
 
     fun getFragmentTitle() : String = fragmentTitle
 
-    fun setFragmentType(index : Int)
+    fun setFragmentType(detailType : HomeworkDetailType)
     {
-        fragmentType = index
+        fragmentType = detailType
     }
 
-    fun getFragmentType() : Int = fragmentType
+    fun getFragmentType() : HomeworkDetailType = fragmentType
 }

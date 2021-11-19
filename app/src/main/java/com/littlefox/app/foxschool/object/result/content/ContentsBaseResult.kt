@@ -92,6 +92,11 @@ class ContentsBaseResult  : Parcelable
         this.sub_name = pair.second
     }
 
+    fun setThumbnailUrl(url : String)
+    {
+        this.thumbnail_url = url
+    }
+
     fun setIndex(index : Int)
     {
         this.seq = index

@@ -83,11 +83,7 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
     {
         when(msg.what)
         {
-            MESSAGE_CHECKING_SUCCESS ->
-            {
-                (mContext as AppCompatActivity).setResult(Activity.RESULT_OK)
-                (mContext as AppCompatActivity).finish()
-            }
+            MESSAGE_CHECKING_SUCCESS -> (mContext as AppCompatActivity).finish()
         }
     }
 
@@ -152,7 +148,6 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
                 if (result.isAuthenticationBroken)
                 {
                     Log.f("== isAuthenticationBroken ==")
-                    (mContext as AppCompatActivity).setResult(Activity.RESULT_CANCELED)
                     (mContext as AppCompatActivity).finish()
                     IntentManagementFactory.getInstance().initScene()
                 }

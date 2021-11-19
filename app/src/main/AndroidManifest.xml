@@ -128,7 +128,7 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
-        <activity android:name=".main.HomeworkManageActivity"
+        <activity android:name=".main.StudentHomeworkManageActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default">

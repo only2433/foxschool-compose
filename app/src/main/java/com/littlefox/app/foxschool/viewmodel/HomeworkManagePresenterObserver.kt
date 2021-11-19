@@ -6,6 +6,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBase
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkStatusBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.TeacherClassItemData
+import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
 
 /**
  * 숙제(달력, 리스트, 코멘트) Presenter Observer
@@ -17,7 +18,8 @@ class HomeworkManagePresenterObserver : ViewModel()
     var updateHomeworkListData = MutableLiveData<HomeworkDetailBaseResult>()
     var clearHomeworkList = MutableLiveData<Boolean>()
 
-    var setPageType = MutableLiveData<Pair<Int, Boolean>>()
+    // 코멘트 화면
+    var setPageType = MutableLiveData<Pair<HomeworkCommentType, Boolean>>()
     var setCommentData = MutableLiveData<String>()
 
     // 선생님 ----
@@ -53,9 +55,9 @@ class HomeworkManagePresenterObserver : ViewModel()
     /**
      * 학습자/선생님 한마디 화면
      */
-    fun setPageType(position : Int, isCompleted : Boolean)
+    fun setPageType(commentType : HomeworkCommentType, isCompleted : Boolean)
     {
-        setPageType.value = Pair(position, isCompleted)
+        setPageType.value = Pair(commentType, isCompleted)
     }
 
     fun setCommentData(comment : String)

@@ -233,17 +233,13 @@ class Common
 
         /**
          * 숙제관리 화면 페이지
-         *  - 공통 : 달력 0, 숙제 현황 1, 학습자 한마디 4, 선생님 한마디 5
-         *  - 선생님 : 숙제현황상세보기 2, 숙제 내용 3
+         *  - 공통 : 달력 0, 숙제 현황 1, 코멘트(학습자/선생님 한마디) 3
+         *  - 선생님 : 숙제현황상세보기/숙제 내용 2
          */
         const val PAGE_HOMEWORK_CALENDAR : Int          = 0
         const val PAGE_HOMEWORK_STATUS : Int            = 1
-
-        const val PAGE_HOMEWORK_STATUS_DETAIL : Int     = 2
-        const val PAGE_HOMEWORK_DETAIL : Int            = 3
-
-        const val PAGE_HOMEWORK_STUDENT_COMMENT : Int   = 4
-        const val PAGE_HOMEWORK_TEACHER_COMMENT : Int   = 5
+        const val PAGE_HOMEWORK_DETAIL : Int            = 2
+        const val PAGE_HOMEWORK_COMMENT : Int           = 3
 
         const val BRIDGE_NAME : String = "littlefoxJavaInterface"
 

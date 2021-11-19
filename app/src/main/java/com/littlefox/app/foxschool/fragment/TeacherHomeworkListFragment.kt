@@ -26,12 +26,12 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.HomeworkDetailType
 import com.littlefox.app.foxschool.enumerate.HomeworkType
 import com.littlefox.app.foxschool.viewmodel.HomeworkListFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
@@ -346,7 +346,7 @@ class TeacherHomeworkListFragment : Fragment()
             mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext, isTeacher = true)
                 .setItemList(mHomeworkItemDetail)
                 .setHomeworkItemListener(mHomeworkItemListener)
-            if (mHomeworkDetailBaseResult!!.getFragmentType() == Common.PAGE_HOMEWORK_DETAIL)
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
             {
                 mHomeworkItemViewAdapter!!.setButtonEnable(false)
             }
@@ -359,7 +359,7 @@ class TeacherHomeworkListFragment : Fragment()
         {
             // 데이터 변경
             Log.f("mHomeworkItemViewAdapter notifyDataSetChanged")
-            if (mHomeworkDetailBaseResult!!.getFragmentType() == Common.PAGE_HOMEWORK_DETAIL)
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
             {
                 mHomeworkItemViewAdapter!!.setButtonEnable(false)
             }

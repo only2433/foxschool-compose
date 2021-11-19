@@ -22,8 +22,9 @@ import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.HomeworkContract
-import com.littlefox.app.foxschool.main.presenter.HomeworkManagePresenter
+import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
+import com.littlefox.app.foxschool.main.contract.StudentHomeworkContract
+import com.littlefox.app.foxschool.main.presenter.StudentHomeworkManagePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
@@ -33,10 +34,10 @@ import com.ssomai.android.scalablelayout.ScalableLayout
 import java.lang.reflect.Field
 
 /**
- * 숙제관리 화면
+ * 학생용 숙제관리 화면
  * @author 김태은
  */
-class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkContract.View
+class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, StudentHomeworkContract.View
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -62,7 +63,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     @BindView(R.id._homeworkViewpager)
     lateinit var _HomeworkViewPager : SwipeDisableViewPager
 
-    private lateinit var mHomeworkManagePresenter : HomeworkManagePresenter
+    private lateinit var mStudentHomeworkManagePresenter : StudentHomeworkManagePresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
 
@@ -84,25 +85,25 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         }
 
         ButterKnife.bind(this)
-        mHomeworkManagePresenter = HomeworkManagePresenter(this)
+        mStudentHomeworkManagePresenter = StudentHomeworkManagePresenter(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mHomeworkManagePresenter.resume()
+        mStudentHomeworkManagePresenter.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mHomeworkManagePresenter.pause()
+        mStudentHomeworkManagePresenter.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mHomeworkManagePresenter.destroy()
+        mStudentHomeworkManagePresenter.destroy()
     }
 
     override fun finish()
@@ -114,7 +115,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
-        mHomeworkManagePresenter.activityResult(requestCode, resultCode, data)
+        mStudentHomeworkManagePresenter.activityResult(requestCode, resultCode, data)
     }
     /** LifeCycle end **/
 
@@ -122,7 +123,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     override fun initView()
     {
         settingLayoutColor()
-        setTitleView(Common.PAGE_MY_INFO)
+        setTitleView(Common.PAGE_HOMEWORK_CALENDAR)
     }
 
     override fun initFont()
@@ -167,10 +168,10 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
     /**
      * ViewPager 페이지 변경
      */
-    override fun setCurrentViewPage(position : Int)
+    override fun setCurrentViewPage(position : Int, commentType : HomeworkCommentType?)
     {
         _HomeworkViewPager.currentItem = position
-        setTitleView(position)
+        setTitleView(position, commentType)
     }
 
     /**
@@ -178,14 +179,23 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
      * 숙제관리 : X버튼 표시
      * 그 외 : <-버튼 표시
      */
-    private fun setTitleView(position : Int)
+    private fun setTitleView(position : Int, commentType : HomeworkCommentType? = null)
     {
         when(position)
         {
             Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
             Common.PAGE_HOMEWORK_STATUS -> _TitleText.text = resources.getString(R.string.text_homework_status)
-            Common.PAGE_HOMEWORK_STUDENT_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_student_comment)
-            Common.PAGE_HOMEWORK_TEACHER_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
+            Common.PAGE_HOMEWORK_COMMENT ->
+            {
+                if (commentType == HomeworkCommentType.COMMENT_STUDENT)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_student_comment)
+                }
+                else if (commentType == HomeworkCommentType.COMMENT_TEACHER)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
+                }
+            }
         }
 
         if (position == Common.PAGE_HOMEWORK_CALENDAR)
@@ -231,7 +241,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
 
     override fun handlerMessage(message : Message)
     {
-        mHomeworkManagePresenter.sendMessageEvent(message)
+        mStudentHomeworkManagePresenter.sendMessageEvent(message)
     }
 
     override fun onBackPressed()
@@ -243,7 +253,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         }
         else
         {
-            mHomeworkManagePresenter.onClickBackButton()
+            mStudentHomeworkManagePresenter.onClickBackButton()
         }
     }
 
@@ -254,7 +264,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._backButtonRect -> mHomeworkManagePresenter.onClickBackButton()
+            R.id._backButtonRect -> mStudentHomeworkManagePresenter.onClickBackButton()
         }
     }
 
@@ -265,7 +275,7 @@ class HomeworkManageActivity : BaseActivity(), MessageHandlerCallback, HomeworkC
         override fun onPageSelected(position : Int)
         {
             Log.f("position : $position")
-            mHomeworkManagePresenter.onPageChanged(position)
+            mStudentHomeworkManagePresenter.onPageChanged(position)
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

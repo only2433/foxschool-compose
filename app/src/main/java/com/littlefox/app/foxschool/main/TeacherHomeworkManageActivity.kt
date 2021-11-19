@@ -22,6 +22,8 @@ import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
+import com.littlefox.app.foxschool.enumerate.HomeworkDetailType
 import com.littlefox.app.foxschool.main.contract.TeacherHomeworkContract
 import com.littlefox.app.foxschool.main.presenter.TeacherHomeworkManagePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
@@ -122,7 +124,7 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
     override fun initView()
     {
         settingLayoutColor()
-        setTitleView(Common.PAGE_MY_INFO)
+        setTitleView(Common.PAGE_HOMEWORK_CALENDAR)
     }
 
     override fun initFont()
@@ -165,17 +167,10 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
     /**
      * ViewPager 페이지 변경
      */
-    override fun setCurrentViewPage(position : Int)
+    override fun setCurrentViewPage(position : Int, detailType : HomeworkDetailType?, commentType : HomeworkCommentType?)
     {
-        if (position == Common.PAGE_HOMEWORK_DETAIL)
-        {
-            _HomeworkViewPager.currentItem = Common.PAGE_HOMEWORK_STATUS_DETAIL
-        }
-        else
-        {
-            _HomeworkViewPager.currentItem = position
-        }
-        setTitleView(position)
+        _HomeworkViewPager.currentItem = position
+        setTitleView(position, detailType, commentType)
     }
 
     /**
@@ -183,16 +178,34 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
      * 숙제관리 : X버튼 표시
      * 그 외 : <-버튼 표시
      */
-    private fun setTitleView(position : Int)
+    private fun setTitleView(position : Int, detailType : HomeworkDetailType? = null, commentType : HomeworkCommentType? = null)
     {
         when(position)
         {
             Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
             Common.PAGE_HOMEWORK_STATUS -> _TitleText.text = resources.getString(R.string.text_homework_status)
-            Common.PAGE_HOMEWORK_STATUS_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_status_detail)
-            Common.PAGE_HOMEWORK_DETAIL -> _TitleText.text = resources.getString(R.string.text_homework_contents)
-            Common.PAGE_HOMEWORK_STUDENT_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_student_comment)
-            Common.PAGE_HOMEWORK_TEACHER_COMMENT -> _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
+            Common.PAGE_HOMEWORK_DETAIL ->
+            {
+                if (detailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_status_detail)
+                }
+                else if (detailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_contents)
+                }
+            }
+            Common.PAGE_HOMEWORK_COMMENT ->
+            {
+                if (commentType == HomeworkCommentType.COMMENT_STUDENT)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_student_comment)
+                }
+                else if (commentType == HomeworkCommentType.COMMENT_TEACHER)
+                {
+                    _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
+                }
+            }
         }
 
         if (position == Common.PAGE_HOMEWORK_CALENDAR)

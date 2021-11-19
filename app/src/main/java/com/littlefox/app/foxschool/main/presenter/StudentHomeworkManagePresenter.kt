@@ -27,7 +27,7 @@ import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.coroutine.*
 import com.littlefox.app.foxschool.enumerate.*
-import com.littlefox.app.foxschool.main.contract.HomeworkContract
+import com.littlefox.app.foxschool.main.contract.StudentHomeworkContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.viewmodel.HomeworkCalendarFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkCommentFragmentObserver
@@ -43,7 +43,7 @@ import kotlin.collections.ArrayList
  * 학생 숙제관리 Presenter
  * @author 김태은
  */
-class HomeworkManagePresenter : HomeworkContract.Presenter
+class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 {
     companion object
     {
@@ -54,7 +54,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     }
 
     private lateinit var mContext : Context
-    private lateinit var mHomeworkContractView : HomeworkContract.View
+    private lateinit var mStudentHomeworkContractView : StudentHomeworkContract.View
     private var mMainHandler : WeakReferenceHandler? = null
 
     // 숙제 페이지 Adapter 관련 데이터 (숙제관리, 숙제현황, 코멘트)
@@ -77,7 +77,8 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private var mHomeworkCalendarBaseResult : HomeworkCalendarBaseResult? = null
     private var mHomeworkDetailBaseResult : HomeworkDetailBaseResult? = null
 
-    private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR // 현재 보여지고있는 페이지 포지션
+    private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR                         // 현재 보여지고있는 페이지 포지션
+    private var mCommentType : HomeworkCommentType = HomeworkCommentType.COMMENT_STUDENT    // 코멘트 화면 타입
 
     // 통신에 입력되는 년도, 월
     private var mYear : String  = ""
@@ -94,9 +95,9 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mHomeworkContractView = mContext as HomeworkContract.View
-        mHomeworkContractView.initView()
-        mHomeworkContractView.initFont()
+        mStudentHomeworkContractView = mContext as StudentHomeworkContract.View
+        mStudentHomeworkContractView.initView()
+        mStudentHomeworkContractView.initFont()
 
         Log.f("")
         init()
@@ -109,7 +110,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         // set ViewPager
         mHomeworkPagerAdapter = HomeworkPagerAdapter((mContext as AppCompatActivity).supportFragmentManager, mHomeworkFragmentList)
         mHomeworkPagerAdapter!!.setFragment()
-        mHomeworkContractView.initViewPager(mHomeworkPagerAdapter!!)
+        mStudentHomeworkContractView.initViewPager(mHomeworkPagerAdapter!!)
 
         // set Observer
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
@@ -155,7 +156,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         {
             REQUEST_CODE_NOTIFY ->
             {
-                mHomeworkContractView.showLoading()
+                mStudentHomeworkContractView.showLoading()
                 onPageChanged(Common.PAGE_HOMEWORK_STATUS)
             }
         }
@@ -165,7 +166,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         when(msg.what)
         {
-            MESSAGE_LIST_SET_COMPLETE -> mHomeworkContractView.hideLoading()
+            MESSAGE_LIST_SET_COMPLETE -> mStudentHomeworkContractView.hideLoading()
             MESSAGE_PAGE_CHANGE ->
             {
                 when(msg.obj)
@@ -190,14 +191,13 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
             mHomeworkManagePresenterObserver.clearHomeworkList(true) // 숙제현황 리스트 초기화
 
             mPagePosition = Common.PAGE_HOMEWORK_CALENDAR
-            mHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_CALENDAR)
+            mStudentHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_CALENDAR)
         }
-        else if (mPagePosition == Common.PAGE_HOMEWORK_STUDENT_COMMENT ||
-                 mPagePosition == Common.PAGE_HOMEWORK_TEACHER_COMMENT)
+        else if (mPagePosition == Common.PAGE_HOMEWORK_COMMENT)
         {
             CommonUtils.getInstance(mContext).hideKeyboard() // 키보드 닫기 처리
             mPagePosition = Common.PAGE_HOMEWORK_STATUS
-            mHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_STATUS)
+            mStudentHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_STATUS)
         }
     }
 
@@ -227,6 +227,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
         content.setTitle(CommonUtils.getInstance(mContext).getSubStringTitleName(item.getTitle()))
+        content.setThumbnailUrl(item.getThumbnailUrl())
 
         when(item.getHomeworkType())
         {
@@ -293,11 +294,11 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun startCrosswordActivity(contentID : String)
     {
         Log.f("")
-        //        IntentManagementFactory.getInstance()
-        //            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-        //            .setData(contentID)
-        //            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-        //            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
+            .setData(contentID)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -306,11 +307,11 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun startStarWordsActivity(contentID : String)
     {
         Log.f("")
-        //        IntentManagementFactory.getInstance()
-        //            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-        //            .setData(contentID)
-        //            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-        //            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
+            .setData(contentID)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
@@ -344,7 +345,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     private fun requestStudentHomework()
     {
         Log.f("")
-        mHomeworkContractView.showLoading()
+        mStudentHomeworkContractView.showLoading()
         mStudentHomeworkCalenderCoroutine = StudentHomeworkCalenderCoroutine(mContext)
         mStudentHomeworkCalenderCoroutine!!.setData(mYear, mMonth)
         mStudentHomeworkCalenderCoroutine!!.asyncListener = mAsyncListener
@@ -373,7 +374,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mHomeworkContractView.showLoading()
+        mStudentHomeworkContractView.showLoading()
         mStudentCommentRegisterCoroutine = StudentCommentRegisterCoroutine(mContext)
         mStudentCommentRegisterCoroutine!!.setData(mStudentComment, homework.getHomeworkNumber())
         mStudentCommentRegisterCoroutine!!.asyncListener = mAsyncListener
@@ -387,7 +388,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mHomeworkContractView.showLoading()
+        mStudentHomeworkContractView.showLoading()
         mStudentCommentUpdateCoroutine = StudentCommentUpdateCoroutine(mContext)
         mStudentCommentUpdateCoroutine!!.setData(mStudentComment, homework.getHomeworkNumber())
         mStudentCommentUpdateCoroutine!!.asyncListener = mAsyncListener
@@ -401,7 +402,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mHomeworkContractView.showLoading()
+        mStudentHomeworkContractView.showLoading()
         mStudentCommentDeleteCoroutine = StudentCommentDeleteCoroutine(mContext)
         mStudentCommentDeleteCoroutine!!.setData(homework.getHomeworkNumber())
         mStudentCommentDeleteCoroutine!!.asyncListener = mAsyncListener
@@ -435,7 +436,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
             // 숙제 현황 페이지로 이동
             mPagePosition = Common.PAGE_HOMEWORK_STATUS
-            mHomeworkContractView.setCurrentViewPage(mPagePosition)
+            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition)
         })
 
         // 달력 세팅 완료 (Activity 로딩 다이얼로그 닫기)
@@ -448,18 +449,20 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
     {
         // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
-            mPagePosition = Common.PAGE_HOMEWORK_STUDENT_COMMENT
-            mHomeworkContractView.setCurrentViewPage(mPagePosition)
+            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+            mCommentType = HomeworkCommentType.COMMENT_STUDENT
+            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
             mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
-            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+            mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
         })
 
         // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
-            mPagePosition = Common.PAGE_HOMEWORK_TEACHER_COMMENT
-            mHomeworkContractView.setCurrentViewPage(mPagePosition)
+            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+            mCommentType = HomeworkCommentType.COMMENT_TEACHER
+            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
             mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
-            mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+            mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
         })
 
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
@@ -503,7 +506,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
 
             Log.f("code : $code, status : ${result.getStatus()}")
 
-            mHomeworkContractView.hideLoading()
+            mStudentHomeworkContractView.hideLoading()
             if (result.getStatus() == BaseResult.SUCCESS_CODE_OK)
             {
                 // 통신 성공
@@ -525,22 +528,22 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
                 {
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_register))
+                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+                    mStudentHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_register))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
                 {
 
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))
+                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+                    mStudentHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
                 {
                     mStudentComment = ""
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mPagePosition, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_comment_delete))
+                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+                    mStudentHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_comment_delete))
                 }
             }
             else
@@ -564,7 +567,7 @@ class HomeworkManagePresenter : HomeworkContract.Presenter
                              code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE   ||
                              code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
                     {
-                        mHomeworkContractView.showErrorMessage(result.getMessage())
+                        mStudentHomeworkContractView.showErrorMessage(result.getMessage())
                     }
                 }
             }

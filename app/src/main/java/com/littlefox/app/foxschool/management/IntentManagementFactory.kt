@@ -281,7 +281,7 @@ class IntentManagementFactory
                 }
                 else
                 {
-                    intent = Intent(mContext, HomeworkManageActivity::class.java)
+                    intent = Intent(mContext, StudentHomeworkManageActivity::class.java)
                 }
             }
 

@@ -16,12 +16,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import butterknife.*
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkCommentFragmentObserver
 import com.littlefox.logmonitor.Log
@@ -199,14 +199,14 @@ class HomeworkCommentFragment : Fragment()
     /**
      * 화면 세팅
      */
-    private fun settingPageType(position : Int)
+    private fun settingPageType(commentType : HomeworkCommentType)
     {
         val boxLeft : Float = if (CommonUtils.getInstance(mContext).checkTablet) 46f else 28f
         var boxTop : Float = 0f
         val textLeft : Float = if (CommonUtils.getInstance(mContext).checkTablet) 66f else 62f
         var textTop : Float = 0f
 
-        if (position == Common.PAGE_HOMEWORK_STUDENT_COMMENT)
+        if (commentType == HomeworkCommentType.COMMENT_STUDENT)
         {
             // 학생용 한마디 화면
             _CommentInputCountText.visibility = View.VISIBLE
@@ -236,7 +236,7 @@ class HomeworkCommentFragment : Fragment()
 
             setStudentCommentLayout()
         }
-        else if (position == Common.PAGE_HOMEWORK_TEACHER_COMMENT)
+        else if (commentType == HomeworkCommentType.COMMENT_TEACHER)
         {
             // 선생님 한마디 화면
             _CommentInputCountText.visibility = View.GONE

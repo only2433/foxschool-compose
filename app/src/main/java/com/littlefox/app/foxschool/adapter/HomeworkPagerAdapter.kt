@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.littlefox.app.foxschool.fragment.HomeworkCalendarFragment
-import com.littlefox.app.foxschool.fragment.HomeworkListFragment
+import com.littlefox.app.foxschool.fragment.StudentHomeworkListFragment
 import com.littlefox.app.foxschool.fragment.HomeworkCommentFragment
 import java.util.ArrayList
 
@@ -24,7 +24,7 @@ class HomeworkPagerAdapter : FragmentStatePagerAdapter
     fun setFragment()
     {
         mHomeworkFragmentList!!.add(HomeworkCalendarFragment())
-        mHomeworkFragmentList!!.add(HomeworkListFragment())
+        mHomeworkFragmentList!!.add(StudentHomeworkListFragment())
         mHomeworkFragmentList!!.add(HomeworkCommentFragment())
         notifyDataSetChanged()
     }
