@@ -16,10 +16,7 @@ import com.littlefox.logmonitor.Log
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
-import java.net.ConnectException
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
+import java.net.*
 import java.security.NoSuchAlgorithmException
 import java.security.SecureRandom
 import java.security.cert.CertificateException
@@ -224,6 +221,7 @@ object NetworkUtil
         }
         catch(e : Exception)
         {
+            Log.f("e : "+ e.message);
             Log.exception(e)
             response = getNetworkErrorJson(context)
         }

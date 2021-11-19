@@ -37,21 +37,11 @@ class InitCoroutine : BaseCoroutine
             {
                 list.put("push_on", mPushStatus)
             }
-            val response = requestServerPair(mContext, Common.API_INIT, list, NetworkUtil.POST_METHOD)
+            var response = requestServerPair(mContext, Common.API_INIT, list, NetworkUtil.POST_METHOD)
             result = Gson().fromJson(response, VersionBaseObject::class.java)
             if(result.getAccessToken() != "")
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
-            }
-
-            if(result.getData().isForceProgressivePlay)
-            {
-                CommonUtils.getInstance(mContext)
-                    .setSharedPreference(Common.PARAMS_IS_FORCE_PROGRESSIVE_PLAY, true)
-            } else
-            {
-                CommonUtils.getInstance(mContext)
-                    .setSharedPreference(Common.PARAMS_IS_FORCE_PROGRESSIVE_PLAY, false)
             }
         }
         return result

@@ -31,6 +31,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
     private val mCurrentOrientation : Int
     private val mPlayInformationList : ArrayList<ContentsBaseResult>
     private lateinit var mPlayerEventListener : PlayerEventListener
+    private var isEnableOption : Boolean = false
     private var mCurrentPlayIndex = 0
 
     constructor(context : Context, orientation : Int, currentPlayIndex : Int, list : ArrayList<ContentsBaseResult>)
@@ -42,10 +43,14 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
         mCurrentPlayIndex = currentPlayIndex
     }
 
-
     fun setPlayerEventListener(listener : PlayerEventListener)
     {
         mPlayerEventListener = listener
+    }
+
+    fun setEnableOption(isEnable : Boolean)
+    {
+        isEnableOption = isEnable
     }
 
     override fun onCreateViewHolder(parent : ViewGroup, viewType : Int) : ViewHolder
@@ -94,7 +99,12 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
             {
                 holder._ItemTitleOption.visibility = View.VISIBLE
             }
-            holder._ItemTitleOption.setOnClickListener {mPlayerEventListener.onClickOption(position)}
+            holder._ItemTitleOption.setOnClickListener {
+                if(isEnableOption)
+                {
+                    mPlayerEventListener.onClickOption(position)
+                }
+            }
         }
     }
 

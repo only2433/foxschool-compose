@@ -341,10 +341,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
-//        mLoginInformationResult = Gson().fromJson(testUserInformation, LoginInformationResult::class.java)
         mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
         accessDataBase()
-        //mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, UserInformationResult::class.java) as UserInformationResult
     }
 
     private fun initPlayList(orientation : Int)
@@ -666,6 +664,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayerContractView.hideMovieLoading()
         mPlayer!!.setPlayWhenReady(true)
         enableTimer(true)
+        mPlayListAdapter.setEnableOption(true)
     }
 
     private fun setVideoCompleted()
@@ -738,6 +737,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun checkMovieTiming()
     {
+        mPlayListAdapter.setEnableOption(false)
         var isShowCoachingMark : Boolean = false
         val type : String = mPlayInformationList[mCurrentPlayMovieIndex].getType()
         mPlayerContractView.initMovieLayout()
