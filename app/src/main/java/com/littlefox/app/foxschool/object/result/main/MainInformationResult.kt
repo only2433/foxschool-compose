@@ -14,6 +14,7 @@ class MainInformationResult
     private val in_app_campaign : InAppCompaignResult? = null
     private val homework : String  = ""
     private val news : String      = ""
+    private val files : FileInformationResult? = null
 
     fun getMainStoryInformation() : MainStoryInformationResult = story!!
 
@@ -46,4 +47,6 @@ class MainInformationResult
             }
             return false
         }
+
+    fun getFileInformation() : FileInformationResult? = files
 }

@@ -247,6 +247,8 @@
     <string name="message_comment_delete_check">학습자 한마디를 삭제하시겠습니까?</string>
     <string name="message_comment_delete">학습자 한마디가 삭제되었습니다.</string>
     <string name="message_comment_teacher">숙제 등록 및 수정, 선생님 한마디는 PC에서 작성 가능 합니다.</string>
+    <string name="message_download_teacher_manual">교사 메뉴얼을 다운로드 하겠습니다.</string>
+    <string name="message_download_home_newspaper">가정 통신문을 다운로드 하겠습니다.</string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>

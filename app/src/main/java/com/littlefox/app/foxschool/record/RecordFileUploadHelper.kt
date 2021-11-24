@@ -35,8 +35,6 @@ class RecordFileUploadHelper(private val mContext : Context)
     fun setData(vararg objects : Any?) : RecordFileUploadHelper
     {
         mRecordInfoData = objects[0] as RecordInfoData
-
-
         return this
     }
 

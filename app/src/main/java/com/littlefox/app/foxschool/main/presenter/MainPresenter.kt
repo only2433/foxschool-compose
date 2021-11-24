@@ -1,8 +1,11 @@
 package com.littlefox.app.foxschool.main.presenter
 
 import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Environment
 import android.os.Message
 import android.view.Gravity
 import android.view.View
@@ -12,11 +15,13 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.exoplayer2.offline.DownloadService
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -471,6 +476,26 @@ class MainPresenter : MainContract.Presenter
         }
     }
 
+    override fun onClickMenuTeacherManual()
+    {
+        Log.f("")
+        mMainContractView.showDownloadMessage(mContext.resources.getString(R.string.message_download_teacher_manual))
+        CommonUtils.getInstance(mContext).downloadFileToExternalPublicDir(
+            mMainInformationResult.getFileInformation()!!.getTeacherManualLink(),
+            Common.FILE_TEACHER_MANUAL
+        )
+    }
+
+    override fun onClickMenuHomeNewsPaper()
+    {
+        Log.f("")
+        mMainContractView.showDownloadMessage(mContext.resources.getString(R.string.message_download_home_newspaper))
+        CommonUtils.getInstance(mContext).downloadFileToExternalPublicDir(
+            mMainInformationResult.getFileInformation()!!.getHomeNewsPaperLink(),
+            Common.FILE_HOME_NEWSPAPER
+        )
+    }
+
     override fun onClickSearch()
     {
         Log.f("")
@@ -703,15 +728,18 @@ class MainPresenter : MainContract.Presenter
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
             .setData(mCurrentDetailOptionResult.getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     private fun startEbookActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
-            .setData(mCurrentDetailOptionResult.getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

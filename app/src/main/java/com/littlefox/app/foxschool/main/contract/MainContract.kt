@@ -14,6 +14,7 @@ class MainContract
         override fun hideLoading()
         override fun showSuccessMessage(message : String)
         override fun showErrorMessage(message : String)
+        fun showDownloadMessage(message : String)
         fun settingUserInformation(loginInformationResult : LoginInformationResult?, isUpdateHomework : Boolean, isUpdateNews : Boolean)
         fun setCurrentPage(page : Int)
     }
@@ -31,6 +32,8 @@ class MainContract
         fun onClickMenuLogout()
         fun onClickMenuLearningLog()
         fun onClickMenuHomeworkManage()
+        fun onClickMenuTeacherManual()
+        fun onClickMenuHomeNewsPaper()
         fun onClickRecordHistory()
         fun onClickFoxschoolNews()
         fun onClickSearch()

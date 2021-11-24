@@ -7,7 +7,7 @@ import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 /**
  * 녹음기 Intent 용 아이템
  */
-class RecordIntentParamsObject : Parcelable
+class  RecordIntentParamsObject : Parcelable
 {
     private var id : String = ""
     private var name : String = ""

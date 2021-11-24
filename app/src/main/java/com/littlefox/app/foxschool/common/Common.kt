@@ -58,6 +58,7 @@ class Common
         const val URL_1_ON_1_ASK : String           = BASE_WEBVIEW_URL + "help/qna/list"
         const val URL_GAME_STARWORDS : String       = DEVELOP_BASE_WEBVIEW_URL + "game/starwords/"
         const val URL_GAME_CROSSWORD : String       = DEVELOP_BASE_WEBVIEW_URL + "game/crossword/"
+        const val URL_EBOOK : String                = DEVELOP_BASE_WEBVIEW_URL + "ebook/"
 
         const val URL_FOXSCHOOL_NEWS_DETAIL : String    = DEVELOP_BASE_WEBVIEW_URL + "forum/board/news/"
         const val URL_FAQ_DETAIL : String               = DEVELOP_BASE_WEBVIEW_URL + "forum/board/faq/"
@@ -110,6 +111,7 @@ class Common
         const val INTENT_ORIGIN_TRANSLATE_ID : String               = "origin_translate"
         const val INTENT_FIND_INFORMATION : String                  = "find_information"
         const val INTENT_HOMEWORK_CHECKING_DATA : String            = "homework_checking_data"
+        const val INTENT_EBOOK_DATA : String                        = "ebook_data"
 
         const val COROUTINE_CODE_INIT : String                          = "init"
         const val COROUTINE_CODE_SCHOOL_LIST : String                   = "school_list"
@@ -261,12 +263,15 @@ class Common
         const val MAXIMUM_LOG_FILE_SIZE : Long = 1024 * 1024 * 10L
 
         /** 퀴즈 종류별 코드 */
-        const val QUIZ_CODE_PICTURE = "N"
-        const val QUIZ_CODE_TEXT = "T"
-        const val QUIZ_CODE_PHONICS_SOUND_TEXT = "S"
-        const val QUIZ_CODE_SOUND_TEXT = "E"
+        const val QUIZ_CODE_PICTURE : String            = "N"
+        const val QUIZ_CODE_TEXT : String               = "T"
+        const val QUIZ_CODE_PHONICS_SOUND_TEXT : String = "S"
+        const val QUIZ_CODE_SOUND_TEXT : String         = "E"
 
-        const val PUSH_TOPIC_NAME = "allowPushNotification"
+        const val PUSH_TOPIC_NAME : String = "allowPushNotification"
+
+        const val FILE_TEACHER_MANUAL : String = "teacher_manual.pdf"
+        const val FILE_HOME_NEWSPAPER : String = "home_newspaper.hwp"
     }
 
 }

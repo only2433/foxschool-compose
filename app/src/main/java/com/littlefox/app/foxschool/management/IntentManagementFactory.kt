@@ -15,6 +15,7 @@ import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCheckingIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
@@ -317,6 +318,15 @@ class IntentManagementFactory
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_GAME_CROSSWORD_ID, `object` as String?)
+                }
+            }
+
+            ActivityMode.WEBVIEW_EBOOK ->
+            {
+                intent = Intent(mContext, WebviewEbookActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_EBOOK_DATA, `object` as WebviewIntentParamsObject?)
                 }
             }
 

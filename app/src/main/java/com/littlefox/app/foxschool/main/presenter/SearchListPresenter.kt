@@ -12,6 +12,7 @@ import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.SearchListBaseObject
@@ -382,7 +383,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -409,12 +410,13 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        // TODO : WEBVIEW_EBOOK 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
-//            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**

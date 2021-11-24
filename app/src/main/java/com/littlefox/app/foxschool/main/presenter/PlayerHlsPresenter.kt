@@ -26,6 +26,7 @@ import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
@@ -1407,9 +1408,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
-            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

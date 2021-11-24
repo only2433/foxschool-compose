@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.content.res.AssetFileDescriptor
 import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -27,6 +28,7 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.logmonitor.Log
+import java.io.IOException
 import java.util.*
 
 class AudioPlayDialog : Dialog

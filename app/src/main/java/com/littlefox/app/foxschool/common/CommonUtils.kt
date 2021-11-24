@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.Dialog
+import android.app.DownloadManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -2580,5 +2581,15 @@ class CommonUtils
             ContentType.SONG -> return sContext.resources.getDrawable(R.drawable.icon_song)
             else -> return sContext.resources.getDrawable(R.drawable.icon_story)
         }
+    }
+
+    fun downloadFileToExternalPublicDir(link : String, filename : String)
+    {
+        val request : DownloadManager.Request = DownloadManager.Request(Uri.parse(link))
+        request.allowScanningByMediaScanner()
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
+        val downloadManager : DownloadManager = sContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+        downloadManager.enqueue(request)
     }
 }

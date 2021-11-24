@@ -11,6 +11,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkCalenderBaseObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkDetailListBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
@@ -49,7 +50,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         private const val MESSAGE_LIST_SET_COMPLETE : Int   = 100
         private const val MESSAGE_PAGE_CHANGE : Int         = 101
-
         private const val REQUEST_CODE_NOTIFY : Int         = 1000
     }
 
@@ -232,7 +232,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         when(item.getHomeworkType())
         {
             HomeworkType.ANIMATION -> startPlayerActivity(content)
-            HomeworkType.EBOOK -> startEBookActivity()
+            HomeworkType.EBOOK -> startEbookActivity(item.getContentID())
             HomeworkType.QUIZ -> startQuizActivity(item.getContentID())
             HomeworkType.CROSSWORD -> startCrosswordActivity(item.getContentID())
             HomeworkType.STARWORDS -> startStarWordsActivity(item.getContentID())
@@ -261,11 +261,19 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     /**
      * eBook 학습화면으로 이동
-     * TODO 김태은 EBOOK 화면 추가 후 연결하기
      */
-    private fun startEBookActivity()
+    private fun startEbookActivity(contentID : String)
     {
         Log.f("")
+        val data : WebviewIntentParamsObject =
+            WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .startActivity()
     }
 
     /**

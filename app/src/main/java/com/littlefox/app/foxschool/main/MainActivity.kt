@@ -311,6 +311,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         )
     }
 
+    override fun showDownloadMessage(message : String)
+    {
+        CommonUtils.getInstance(this).showSnackMessage(
+            _MainContentCoordinatorLayout,
+            message,
+            resources.getColor(R.color.color_white))
+    }
+
     /**
      * 사용자 데이터 화면에 세팅
      */
@@ -693,6 +701,16 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
                     mMainPresenter.onClickMenuAppUseGuide()
+                }
+                R.id._menuTeacherManualButtonRect ->
+                {
+                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                    mMainPresenter.onClickMenuTeacherManual()
+                }
+                R.id._menuHomeNewspaperButtonRect ->
+                {
+                    _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+                    mMainPresenter.onClickMenuHomeNewsPaper()
                 }
             }
         }
