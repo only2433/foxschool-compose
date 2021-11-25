@@ -12,9 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.FirebaseApp
-import com.google.firebase.iid.FirebaseInstanceId
-import com.google.firebase.iid.InstanceIdResult
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -98,15 +97,14 @@ class IntroPresenter : IntroContract.Presenter
         mMainContractView.initFont()
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         FirebaseApp.initializeApp(mContext)
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(
-            mContext as AppCompatActivity, object : OnSuccessListener<InstanceIdResult?>
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if (it.isComplete)
             {
-                override fun onSuccess(instanceIdResult : InstanceIdResult?)
-                {
-                    Log.f("new Token : " + instanceIdResult?.getToken())
-                    CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, instanceIdResult!!.getToken())
-                }
-            })
+                val token = it.result.toString()
+                Log.f("new Token : " + token)
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, token)
+            }
+        }
 
         // 푸쉬 설정값 가져오기
         val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "")
