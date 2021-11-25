@@ -70,7 +70,7 @@ class VoiceRecorderHelper(private val mContext : Context)
             mMediaRecorder?.reset()
         }
         mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
+        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
         mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
         mMediaRecorder?.setAudioEncodingBitRate(DEFAULT_BIT_RATE)
         mMediaRecorder?.setAudioSamplingRate(DEFAULT_SAMPLING_RATE)

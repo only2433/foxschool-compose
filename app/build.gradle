@@ -48,14 +48,15 @@ buildscript
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.firebase:firebase-database:19.2.1'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.jakewharton:butterknife:10.2.0'
     kapt 'com.jakewharton:butterknife-compiler:10.2.0'
-    kapt "androidx.room:room-compiler:2.2.5"
+    kapt "androidx.room:room-compiler:2.3.0"
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    annotationProcessor "androidx.room:room-compiler:2.2.5"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
 
     implementation "com.andkulikov:transitionseverywhere:1.8.0"
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -69,14 +70,14 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.google.android.gms:play-services-base:17.3.0'
-    implementation 'com.google.firebase:firebase-messaging:20.2.3'
-    implementation 'com.google.firebase:firebase-core:17.4.4'
+    implementation 'com.google.android.gms:play-services-base:17.6.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.firebase:firebase-core:20.0.0'
     // Recommended: Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.0'
 
     // Add the Firebase Crashlytics SDK.
-    implementation 'com.google.firebase:firebase-crashlytics:17.1.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
 
     implementation 'com.github.only2433:LittlefoxLogMoniter:1.0.12'
     implementation 'com.github.only2433:LittlefoxSystemLibrary:2.0.11'
