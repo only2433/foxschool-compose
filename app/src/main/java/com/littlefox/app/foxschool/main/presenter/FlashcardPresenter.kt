@@ -198,14 +198,8 @@ class FlashcardPresenter : FlashcardContract.Presenter
             FlashcardStatus.BOOKMARK_INTRO ->
             {
                 mCurrentFlashcardStudyType = null
-                if(isCheckAutoPlay)
-                {
-                    setCheckAutoPlay(false)
-                }
-                if(isCheckShuffle)
-                {
-                    setCheckShuffle(false)
-                }
+                setCheckAutoPlay(false)
+                setCheckShuffle(false)
                 if(mCurrentFlashcardStatus == FlashcardStatus.BOOKMARK_INTRO)
                 {
                     mFlashcardContractView.settingBaseControlView(mCurrentFlashcardStatus)
