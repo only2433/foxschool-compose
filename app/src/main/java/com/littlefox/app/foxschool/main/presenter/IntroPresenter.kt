@@ -116,6 +116,7 @@ class IntroPresenter : IntroContract.Presenter
         }
 
 
+
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT, Common.DURATION_NORMAL)
     }
 

@@ -276,7 +276,7 @@ class Common
         const val QUIZ_CODE_PHONICS_SOUND_TEXT : String = "S"
         const val QUIZ_CODE_SOUND_TEXT : String         = "E"
 
-        const val PUSH_TOPIC_NAME : String = "allowPushNotification"
+        const val PUSH_TOPIC_NAME : String = "FOXSCHOOL"
 
         const val FILE_TEACHER_MANUAL : String = "teacher_manual.pdf"
         const val FILE_HOME_NEWSPAPER : String = "home_newspaper.hwp"

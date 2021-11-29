@@ -20,7 +20,7 @@ import com.littlefox.logmonitor.Log
 
 class LittlefoxFirebaseMessagingService : FirebaseMessagingService()
 {
-    val TAG = "LittlefoxFirebaseMessagingService"
+    val TAG = "FoxschoolFirebaseMessagingService"
     override fun onNewToken(token : String)
     {
         super.onNewToken(token)
@@ -53,8 +53,8 @@ class LittlefoxFirebaseMessagingService : FirebaseMessagingService()
 
     private fun showNotification(message : String)
     {
-        val CHANNEL_ID = "littlefox_channel_id"
-        val CHANNEL_NAME = "littlefox_channel_name"
+        val CHANNEL_ID = "foxchool_channel_id"
+        val CHANNEL_NAME = "foxchool_channel_name"
         Log.f("message : $message")
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

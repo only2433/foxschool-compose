@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
@@ -49,6 +50,7 @@ buildscript
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -71,10 +73,12 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation 'com.google.android.gms:play-services-base:17.6.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+
     implementation 'com.google.firebase:firebase-core:20.0.0'
     // Recommended: Add the Firebase SDK for Google Analytics.
-    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.0'
+
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     // Add the Firebase Crashlytics SDK.
     implementation 'com.google.firebase:firebase-crashlytics:18.2.4'
@@ -109,4 +113,3 @@ dependencies {
 repositories {
     mavenCentral()
 }
-apply plugin: 'com.google.gms.google-services'
