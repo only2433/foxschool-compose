@@ -50,8 +50,8 @@ class StudentHomeworkListFragment : Fragment()
     @BindView(R.id._homeworkSubTitle)
     lateinit var _HomeworkSubTitle : TextView
 
-    @BindView(R.id._resultCommentLayout)
-    lateinit var _ResultCommentLayout : ScalableLayout
+    @BindView(R.id._evaluationCompleteLayout)
+    lateinit var _EvaluationCompleteLayout : ScalableLayout
 
     @BindView(R.id._homeworkResultImage)
     lateinit var _HomeworkResultImage : ImageView
@@ -140,8 +140,8 @@ class StudentHomeworkListFragment : Fragment()
     private var mHomeworkFilterIndex : Int              = 0
 
     private var mOneCommentType : Int = -1              // 버튼1개 코멘트 영역 타입
-    private var mClickEnable : Boolean = false          // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
-    private var mListAnimationEffect : Boolean = true   // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
+    private var isClickEnable : Boolean = false         // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var isListAnimationEffect : Boolean = true   // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -193,7 +193,7 @@ class StudentHomeworkListFragment : Fragment()
     override fun onResume()
     {
         super.onResume()
-        mClickEnable = true
+        isClickEnable = true
     }
 
     override fun onPause()
@@ -264,14 +264,18 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun updateHomeworkListData()
     {
-        mClickEnable = false // 클릭 이벤트 막기
-        if (mListAnimationEffect == true) setContentListLoadingVisible(true) // 애니메이션 효과 켜져있을때만 컨텐츠 로딩 다이얼로그 표시
+        isClickEnable = false // 클릭 이벤트 막기
+        if (isListAnimationEffect == true)
+        {
+            // 애니메이션 효과 켜져있을때만 컨텐츠 로딩 다이얼로그 표시
+            setContentListLoadingVisible(true)
+        }
 
         setHomeworkListData()       // 숙제 리스트
         setHomeworkSubTitleText()   // 숙제 기간 텍스트 (서브타이틀)
         setCommentLayout()          // 코멘트 영역
 
-        mClickEnable = true     // 클릭 이벤트 허용3
+        isClickEnable = true                // 클릭 이벤트 허용
         setContentListLoadingVisible(false) // 컨텐츠 로딩 다이얼로그 숨김
     }
 
@@ -326,7 +330,7 @@ class StudentHomeworkListFragment : Fragment()
         if (mHomeworkItemViewAdapter == null)
         {
             // 초기 생성
-            Log.f("mHomeworkItemViewAdapter == null")
+            Log.f("mHomeworkItemViewAdapter create")
             mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext, isTeacher = false)
                 .setItemList(mHomeworkItemDetail)
                 .setHomeworkItemListener(mHomeworkItemListener)
@@ -343,8 +347,8 @@ class StudentHomeworkListFragment : Fragment()
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         _HomeworkListView.layoutManager = linearLayoutManager
 
-        Log.f("[ListView Animation] || $mListAnimationEffect")
-        if (mListAnimationEffect)
+        Log.f("[ListView Animation] || $isListAnimationEffect")
+        if (isListAnimationEffect)
         {
             val animationController = AnimationUtils.loadLayoutAnimation(mContext, R.anim.listview_layoutanimation)
             _HomeworkListView.layoutAnimation = animationController
@@ -383,8 +387,9 @@ class StudentHomeworkListFragment : Fragment()
         if (homework.isEvaluationComplete())
         {
             // 최종평가 완료
-            _ResultCommentLayout.visibility = View.VISIBLE
-            setResultCommentLayout()
+            Log.f("EvaluationCompleteLayout VISIBLE")
+            _EvaluationCompleteLayout.visibility = View.VISIBLE
+            setEvaluationCompleteLayout()
         }
 
         // [학습자/선생님 코멘트 영역 설정]
@@ -395,7 +400,7 @@ class StudentHomeworkListFragment : Fragment()
             {
                 // 학습자/선생님 코멘트 둘 다 있는 경우
                 _TwoCommentLayout.visibility = View.VISIBLE
-                setHomeworkStudentLayout()
+                setTwoCommentLayout()
             }
             else
             {
@@ -420,7 +425,7 @@ class StudentHomeworkListFragment : Fragment()
                 // 선생님 코멘트 있을 때
                 // 선생님 - 보기, 학생 - 작성 (2개)
                 _TwoCommentLayout.visibility = View.VISIBLE
-                setHomeworkStudentLayout()
+                setTwoCommentLayout()
             }
             else
             {
@@ -436,7 +441,7 @@ class StudentHomeworkListFragment : Fragment()
     /**
      * 최종 평가 영역 설정
      */
-    private fun setResultCommentLayout()
+    private fun setEvaluationCompleteLayout()
     {
         val homework = mHomeworkDetailBaseResult!!
 
@@ -474,6 +479,7 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun setOneCommentStudent()
     {
+        Log.f("Comment One - STUDENT")
         _OneCommentLayout.visibility = View.VISIBLE
         _HomeworkOneCommentTitle.text = mContext.resources.getString(R.string.text_homework_student_comment)
         _HomeworkOneCommentBg.background = mContext.resources.getDrawable(R.drawable.box_list_green)
@@ -507,6 +513,7 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun setOneCommentTeacher()
     {
+        Log.f("Comment One - TEACHER")
         _OneCommentLayout.visibility = View.VISIBLE
         _HomeworkOneCommentTitle.text = mContext.resources.getString(R.string.text_homework_teacher_comment)
         _HomeworkOneCommentBg.background = mContext.resources.getDrawable(R.drawable.box_list_yellow)
@@ -527,10 +534,10 @@ class StudentHomeworkListFragment : Fragment()
     }
 
     /**
-     * 학습자 한마디 레이아웃 설정
+     * 코멘트 2개, 학습자 한마디 레이아웃 설정
      * - 학습자 한마디 없을 때 : 작성 || 있을 때 : 보기
      */
-    private fun setHomeworkStudentLayout()
+    private fun setTwoCommentLayout()
     {
         if (mHomeworkDetailBaseResult!!.getStudentComment() == "")
         {
@@ -554,6 +561,7 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun setContentListLoadingVisible(isVisible : Boolean)
     {
+        Log.f("[LIST LOADING] : $isVisible")
         if (isVisible)
         {
             _LoadingProgressLayout.visibility = View.VISIBLE
@@ -569,16 +577,17 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun clearScreenData(allClear : Boolean)
     {
+        Log.f("")
         if (allClear)
         {
             // 화면을 완전히 떠나는 경우
             _HomeworkSubTitle.text = ""
-            mListAnimationEffect = true
+            isListAnimationEffect = true
             setContentListLoadingVisible(true)
         }
 
         // 코멘트 영역 숨기기
-        _ResultCommentLayout.visibility = View.GONE
+        _EvaluationCompleteLayout.visibility = View.GONE
         _OneCommentLayout.visibility = View.GONE
         _TwoCommentLayout.visibility = View.GONE
 
@@ -596,15 +605,16 @@ class StudentHomeworkListFragment : Fragment()
         Log.f("")
         val builder = AlertDialog.Builder(mContext)
         builder.setSingleChoiceItems(mHomeworkFilterList, mHomeworkFilterIndex, DialogInterface.OnClickListener{dialog, index ->
+            Log.f("Homework Filter Selected : ${mHomeworkFilterList!![index]} ")
             dialog.dismiss()
             mHomeworkFilterIndex = index
-            mListAnimationEffect = true
+            isListAnimationEffect = true
             setHomeworkListData()
         })
 
         val dialog : AlertDialog = builder.show()
         dialog.setOnDismissListener {
-            mClickEnable = true // 다이얼로그 닫을 때 클릭 이벤트 막는 플래그 풀어주기
+            isClickEnable = true // 다이얼로그 닫을 때 클릭 이벤트 막는 플래그 풀어주기
         }
         dialog.show()
     }
@@ -627,14 +637,15 @@ class StudentHomeworkListFragment : Fragment()
     @OnClick(R.id._homeworkInfoButton, R.id._homeworkFilterButton, R.id._homeworkOneCommentButton, R.id._homeworkStudentCommentButton, R.id._homeworkTeacherCommentButton)
     fun onClickView(view : View)
     {
-        if (mClickEnable == false) return // 중복 클릭이벤트 막기
+        if (isClickEnable == false) return // 중복 클릭이벤트 막기
 
         when(view.id)
         {
             R.id._homeworkOneCommentButton ->
             {
-                mClickEnable = false
-                mListAnimationEffect = false
+                Log.f("One Comment :: $mOneCommentType")
+                isClickEnable = false
+                isListAnimationEffect = false
 
                 if (mOneCommentType == COMMENT_ONLY_STUDENT)
                 {
@@ -647,24 +658,26 @@ class StudentHomeworkListFragment : Fragment()
             }
             R.id._homeworkStudentCommentButton ->
             {
-                mClickEnable = false
-                mListAnimationEffect = false
+                Log.f("Student Comment")
+                isClickEnable = false
+                isListAnimationEffect = false
                 mHomeworkListFragmentObserver.onClickStudentCommentButton()
             }
             R.id._homeworkTeacherCommentButton ->
             {
-                mClickEnable = false
-                mListAnimationEffect = false
+                Log.f("Teacher Comment")
+                isClickEnable = false
+                isListAnimationEffect = false
                 mHomeworkListFragmentObserver.onClickTeacherCommentButton()
             }
             R.id._homeworkInfoButton ->
             {
-                mClickEnable = false
+                isClickEnable = false
                 showHomeworkInfoDialog()
             }
             R.id._homeworkFilterButton ->
             {
-                mClickEnable = false
+                isClickEnable = false
                 showHomeworkFilterDialog()
             }
         }
@@ -677,12 +690,13 @@ class StudentHomeworkListFragment : Fragment()
     {
         override fun onItemClick(position : Int)
         {
-            if (mClickEnable)
+            Log.f("")
+            if (isClickEnable)
             {
-                mClickEnable = false
-                mListAnimationEffect = false
+                isClickEnable = false
+                isListAnimationEffect = false
                 mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemDetail[position])
-                mClickEnable = true // TODO 김태은 컨텐츠 연결 전까지 임시로 사용
+                isClickEnable = true // TODO 김태은 컨텐츠 연결 전까지 임시로 사용
             }
         }
     }
@@ -694,7 +708,7 @@ class StudentHomeworkListFragment : Fragment()
     {
         override fun onConfirmButtonClick(eventType : Int)
         {
-            mClickEnable = true
+            isClickEnable = true
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int) { }

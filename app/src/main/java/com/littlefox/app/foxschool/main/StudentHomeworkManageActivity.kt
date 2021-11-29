@@ -183,16 +183,26 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
     {
         when(position)
         {
-            Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
-            Common.PAGE_HOMEWORK_STATUS -> _TitleText.text = resources.getString(R.string.text_homework_status)
+            Common.PAGE_HOMEWORK_CALENDAR ->
+            {
+                Log.f("[StudentHomeworkPage] PAGE_HOMEWORK_CALENDAR")
+                _TitleText.text = resources.getString(R.string.text_homework_manage)
+            }
+            Common.PAGE_HOMEWORK_STATUS ->
+            {
+                Log.f("[StudentHomeworkPage] PAGE_HOMEWORK_STATUS")
+                _TitleText.text = resources.getString(R.string.text_homework_status)
+            }
             Common.PAGE_HOMEWORK_COMMENT ->
             {
                 if (commentType == HomeworkCommentType.COMMENT_STUDENT)
                 {
+                    Log.f("[StudentHomeworkPage] PAGE_COMMENT_STUDENT")
                     _TitleText.text = resources.getString(R.string.text_homework_student_comment)
                 }
                 else if (commentType == HomeworkCommentType.COMMENT_TEACHER)
                 {
+                    Log.f("[StudentHomeworkPage] PAGE_COMMENT_TEACHER")
                     _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
                 }
             }
@@ -274,7 +284,7 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
 
         override fun onPageSelected(position : Int)
         {
-            Log.f("position : $position")
+            Log.f("Homework Page Change : $position")
             mStudentHomeworkManagePresenter.onPageChanged(position)
         }
 

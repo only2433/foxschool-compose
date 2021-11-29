@@ -38,7 +38,7 @@ open class MyVocabularyResult : Parcelable
     protected constructor(`in` : Parcel)
     {
         id = `in`.readString()!!
-        contentID = `in`.readString()!!
+        contentID = `in`.readString() ?: ""
         name = `in`.readString()!!
         color = `in`.readString()!!
         words_count = `in`.readInt()

@@ -193,8 +193,13 @@ class FlashCardStudyDataFragment : Fragment()
         initView()
         initFont()
         initLoadAnimation()
-        setupObserverViewModel()
         Log.f("")
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
     }
 
     override fun onStart()
@@ -423,12 +428,12 @@ class FlashCardStudyDataFragment : Fragment()
         mFlashcardStudyFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardStudyFragmentObserver::class.java]
         mFlashcardPresenterObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardPresenterObserver::class.java]
 
-        mFlashcardPresenterObserver!!.notifyListUpdateData.observe((mContext as AppCompatActivity), { flashCardDataResults ->
+        mFlashcardPresenterObserver!!.notifyListUpdateData.observe(viewLifecycleOwner, { flashCardDataResults ->
             Log.f("Notify Data")
             setData(flashCardDataResults)
         })
 
-        mFlashcardPresenterObserver!!.initStudySettingData.observe((mContext as AppCompatActivity), { type ->
+        mFlashcardPresenterObserver!!.initStudySettingData.observe(viewLifecycleOwner, { type ->
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             Log.f("mCurrentFlashcardStudyType : $type")
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.STARTED)
@@ -445,7 +450,7 @@ class FlashCardStudyDataFragment : Fragment()
             }
         })
 
-        mFlashcardPresenterObserver!!.nextCardData.observe((mContext as AppCompatActivity), {
+        mFlashcardPresenterObserver!!.nextCardData.observe(viewLifecycleOwner, {
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED)
             {

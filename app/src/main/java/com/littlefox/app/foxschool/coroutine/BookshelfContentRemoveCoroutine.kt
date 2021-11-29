@@ -14,12 +14,12 @@ import com.littlefox.library.system.coroutine.BaseCoroutine
 import java.io.File
 import java.util.*
 
-class BookshelfContentAddCoroutine : BaseCoroutine
+class BookshelfContentRemoveCoroutine : BaseCoroutine
 {
     private var mBookshelfID = ""
     private var mSendDataList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
 
-    constructor(context : Context) : super(context, Common.COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD) {}
+    constructor(context : Context) : super(context, Common.COROUTINE_CODE_BOOKSHELF_CONTENTS_DELETE) {}
 
     override fun doInBackground() : Any?
     {
@@ -36,7 +36,7 @@ class BookshelfContentAddCoroutine : BaseCoroutine
             {
                 list.put("content_ids[$i]", mSendDataList[i].getID())
             }
-            val respose : String? = requestServerPair(mContext, Common.API_BOOKSHELF + File.separator + mBookshelfID + File.separator + "contents", list, NetworkUtil.PUT_METHOD)
+            val respose : String? = requestServerPair(mContext, Common.API_BOOKSHELF + File.separator + mBookshelfID + File.separator + "contents", list, NetworkUtil.DELETE_METHOD)
             result = Gson().fromJson(respose, BookshelfBaseObject::class.java)
 
             if(result.getAccessToken().equals("") == false)

@@ -318,7 +318,6 @@ class FlashcardPresenter : FlashcardContract.Presenter
 
     /**
      * 단어장 추가 통신 요청
-     * TODO 김태은 - 팍스스쿨 단어장 추가 통신 연결된 후 다시 확인해볼 것!
      */
     private fun requestVocabularyContentsAddAsync()
     {
@@ -1246,9 +1245,8 @@ class FlashcardPresenter : FlashcardContract.Presenter
         {
             Log.f("index : $index")
             mCurrentVocabularyAddResult = mMainInformationResult.getVocabulariesList()[index]
-            // TODO 김태은 - 팍스스쿨 단어장 추가 통신 연결된 후 다시 확인해볼 것!
-//            mFlashcardContractView.showLoading()
-//            requestVocabularyContentsAddAsync()
+            mFlashcardContractView.showLoading()
+            requestVocabularyContentsAddAsync()
         }
     }
 }

@@ -146,6 +146,11 @@ class MyInfoShowFragment : Fragment()
         Log.f("")
         initView()
         initFont()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -237,22 +242,22 @@ class MyInfoShowFragment : Fragment()
         mMyInfoPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MyInfoPresenterDataObserver::class.java)
 
         // 사용자 정보 화면에 세팅
-        mMyInfoPresenterDataObserver.setMyInfoShowFragment.observe(mContext as AppCompatActivity, { userInfo ->
+        mMyInfoPresenterDataObserver.setMyInfoShowFragment.observe(viewLifecycleOwner, { userInfo ->
             setUserInformation(userInfo)
         })
 
         // 로그인 상태 유지 스위치 상태 변경
-        mMyInfoPresenterDataObserver.changeAutoLogin.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.changeAutoLogin.observe(viewLifecycleOwner, { isEnable ->
             setSwitchAutoLogin(isEnable)
         })
 
         // 지문인증 로그인 스위치 상태 변경
-        mMyInfoPresenterDataObserver.changeBioLogin.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.changeBioLogin.observe(viewLifecycleOwner, { isEnable ->
             setSwitchBioLogin(isEnable)
         })
 
         // 알림 스위치 상태 변경
-        mMyInfoPresenterDataObserver.changePush.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.changePush.observe(viewLifecycleOwner, { isEnable ->
             setSwitchPush(isEnable)
         })
     }

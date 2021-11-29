@@ -55,15 +55,6 @@ class MainSongFragment : Fragment()
         mContext = context
     }
 
-    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-        Log.f("")
-        initView()
-        initRecyclerView()
-        setupObserverViewModel()
-    }
-
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         Log.f("")
@@ -71,6 +62,20 @@ class MainSongFragment : Fragment()
         mUnbinder = ButterKnife.bind(this, view)
         mCurrentSeriesBaseResultList = CommonUtils.getInstance(mContext).loadMainData().getMainSongInformationList()
         return view
+    }
+
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
+    {
+        super.onViewCreated(view, savedInstanceState)
+        Log.f("")
+        initView()
+        initRecyclerView()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
     }
 
     override fun onPause()
@@ -105,9 +110,10 @@ class MainSongFragment : Fragment()
     {
         mMainSongFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainSongFragmentDataObserver::class.java)
         mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-        mMainPresenterDataObserver.updateSongData.observe(mContext as AppCompatActivity,
-            Observer<Any> {
-                    mainInformationResult -> updateData(mainInformationResult as MainInformationResult)})
+
+        mMainPresenterDataObserver.updateSongData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+            updateData(mainInformationResult as MainInformationResult)
+        })
     }
 
     private fun updateData(mainInformationResult : MainInformationResult)

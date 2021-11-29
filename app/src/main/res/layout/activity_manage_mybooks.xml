@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingPrefix"
+    android:id="@+id/_mainBaseLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_ffffff"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/_titleBaseLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/topbar_common_menu"/>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scale_base_width="1080"
+            app:scale_base_height="114"
+            android:background="@color/color_edeef2">
+
+            <TextView
+                android:id="@+id/_messageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/message_maximum_bookshelf"
+                android:textColor="@color/color_444444"
+                android:gravity="center_vertical"
+                app:scale_left="42"
+                app:scale_top="0"
+                app:scale_width="1038"
+                app:scale_height="114"
+                app:scale_textsize="38"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:scale_base_width="1080"
+            app:scale_base_height="233">
+
+            <ImageView
+                android:id="@+id/_nameEditBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/text_box"
+                app:scale_left="98"
+                app:scale_top="58"
+                app:scale_width="884"
+                app:scale_height="120"/>
+
+            <EditText
+                android:id="@+id/_nameEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/message_edit_maximum_text"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:lines="1"
+                android:maxLength="15"
+                app:scale_left="128"
+                app:scale_top="58"
+                app:scale_width="702"
+                app:scale_height="120"
+                app:scale_textsize="40"
+                android:background="@null"/>
+
+            <ImageView
+                android:id="@+id/_deleteEditButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_tex_del"
+                app:scale_left="891"
+                app:scale_top="90"
+                app:scale_width="60"
+                app:scale_height="60"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1080"
+            app:scale_base_height="166">
+
+            <ImageView
+                android:id="@+id/_bookIndex0Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_01"
+                app:scale_left="113"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex0Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="138"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex1Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_02"
+                app:scale_left="265"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex1Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="290"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex2Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_03"
+                app:scale_left="417"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex2Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="442"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex3Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_04"
+                app:scale_left="569"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex3Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="594"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex4Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_05"
+                app:scale_left="721"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex4Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="746"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex5Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bookshelf_06"
+                app:scale_left="873"
+                app:scale_top="0"
+                app:scale_width="94"
+                app:scale_height="106"/>
+
+            <ImageView
+                android:id="@+id/_bookIndex5Select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_select"
+                android:visibility="gone"
+                app:scale_left="898"
+                app:scale_top="16"
+                app:scale_width="54"
+                app:scale_height="54"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+
+        <com.ssomai.android.scalablelayout.ScalableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:scale_base_width="1080"
+            app:scale_base_height="270">
+
+            <TextView
+                android:id="@+id/_saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_save"
+                android:background="@drawable/round_box_light_blue_84"
+                android:textColor="@color/color_ffffff"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
+                app:scale_left="145"
+                app:scale_top="0"
+                app:scale_width="788"
+                app:scale_height="120"
+                app:scale_textsize="42"/>
+
+            <TextView
+                android:id="@+id/_cancelActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_delete"
+                android:background="@drawable/round_box_empty_light_blue_84"
+                android:foreground="?attr/selectableItemBackground"
+                android:textColor="@color/color_29c8e6"
+                android:gravity="center"
+                app:scale_left="145"
+                app:scale_top="150"
+                app:scale_width="788"
+                app:scale_height="120"
+                app:scale_textsize="42"/>
+
+        </com.ssomai.android.scalablelayout.ScalableLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

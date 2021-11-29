@@ -26,6 +26,7 @@ class VocabularyContentsAddCoroutine : BaseCoroutine
         {
             return null
         }
+
         lateinit var result : VocabularyShelfBaseObject
         synchronized(mSync) {
             isRunning = true
@@ -35,7 +36,7 @@ class VocabularyContentsAddCoroutine : BaseCoroutine
             {
                 list.put("word_ids[$i]", mSendDataList[i].getID())
             }
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + mVocabularyID + File.separator + "words", list, NetworkUtil.POST_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF + File.separator + mVocabularyID + File.separator + "words", list, NetworkUtil.PUT_METHOD)
             result = Gson().fromJson(response, VocabularyShelfBaseObject::class.java)
             if(result.getAccessToken().equals("") == false)
             {

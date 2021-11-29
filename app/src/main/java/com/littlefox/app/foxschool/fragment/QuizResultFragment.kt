@@ -121,6 +121,12 @@ class QuizResultFragment : Fragment()
         settingResultView()
     }
 
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
+    }
+
     override fun onStart()
     {
         Log.i("")
@@ -156,15 +162,7 @@ class QuizResultFragment : Fragment()
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    private fun initView()
-    {
-        mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
-        mQuizPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizPresenterDataObserver::class.java)
-        mQuizPresenterDataObserver.resultData.observe(mContext as AppCompatActivity, {quizResultViewData ->
-            Log.f("getViewLifecycleOwner().getLifecycle().getCurrentState() : ${this.lifecycle.currentState}")
-            setResultInformation(quizResultViewData)
-        })
-    }
+    private fun initView() { }
 
     private fun initFont()
     {
@@ -176,6 +174,16 @@ class QuizResultFragment : Fragment()
         _QuizReplayButton.typeface = Font.getInstance(mContext).getRobotoBold()
     }
     /** ========== Init ========== */
+
+    private fun setupObserverViewModel()
+    {
+        mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
+        mQuizPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizPresenterDataObserver::class.java)
+        mQuizPresenterDataObserver.resultData.observe(viewLifecycleOwner, { quizResultViewData ->
+            Log.f("getViewLifecycleOwner().getLifecycle().getCurrentState() : ${this.lifecycle.currentState}")
+            setResultInformation(quizResultViewData)
+        })
+    }
 
     /** 결과 화면 위치조정 */
     private fun settingResultView()

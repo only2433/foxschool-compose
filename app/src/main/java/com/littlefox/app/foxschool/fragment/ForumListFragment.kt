@@ -89,6 +89,11 @@ class ForumListFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
         initView()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -161,23 +166,17 @@ class ForumListFragment : Fragment()
         mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
         mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
 
-        mForumPresenterObserver.setForumType.observe(mContext as AppCompatActivity, { type ->
+        mForumPresenterObserver.setForumType.observe(viewLifecycleOwner, { type ->
             mForumType = type
         })
 
-        mForumPresenterObserver.settingForumListData.observe(mContext as AppCompatActivity, Observer<Any> { newsListBaseObject ->
-            if(viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.CREATED)
-            {
-                setData(newsListBaseObject as ForumListBaseObject)
-            }
+        mForumPresenterObserver.settingForumListData.observe(viewLifecycleOwner, Observer<Any> { newsListBaseObject ->
+            setData(newsListBaseObject as ForumListBaseObject)
         })
 
         // 재조회 취소
-        mForumPresenterObserver.cancelRefreshData.observe(mContext as AppCompatActivity, Observer<Boolean?> {
-            if(viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.CREATED)
-            {
-                cancelRefreshData()
-            }
+        mForumPresenterObserver.cancelRefreshData.observe(viewLifecycleOwner, Observer<Boolean?> {
+            cancelRefreshData()
         })
     }
 

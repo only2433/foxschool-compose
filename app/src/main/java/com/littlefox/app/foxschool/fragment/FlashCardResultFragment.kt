@@ -102,6 +102,11 @@ class FlashCardResultFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initFont()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -164,7 +169,7 @@ class FlashCardResultFragment : Fragment()
         mFlashcardResultFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity)[FlashcardResultFragmentObserver::class.java]
         mFlashcardPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity)[FlashcardPresenterObserver::class.java]
 
-        mFlashcardPresenterObserver!!.settingBookmarkButtonData.observe(mContext as AppCompatActivity, {isBookmarked ->
+        mFlashcardPresenterObserver!!.settingBookmarkButtonData.observe(viewLifecycleOwner, {isBookmarked ->
             // 북마크 유/무에 따라 결과 화면 세팅
             settingResultView(isBookmarked)
         })

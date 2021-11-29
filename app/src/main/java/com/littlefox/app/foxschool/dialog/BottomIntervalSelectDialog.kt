@@ -12,7 +12,6 @@ import butterknife.ButterKnife
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.listener.IntervalSelectListener
 
@@ -21,8 +20,14 @@ class BottomIntervalSelectDialog : BottomSheetDialog
     @BindView(R.id._titleText)
     lateinit var _TitleText : TextView
 
-    @BindViews(R.id._intervalNoHaveButton, R.id._interval1SecButton, R.id._interval2SecButton, R.id._interval3SecButton, R.id._interval5SecButton, R.id._interval7SecButton, R.id._interval10SecButton, R.id._interval15SecButton, R.id._interval20SecButton, R.id._interval30SecButton)
+    @BindViews(R.id._intervalNoHaveButton, R.id._interval1SecButton, R.id._interval2SecButton, R.id._interval3SecButton, R.id._interval5SecButton,
+        R.id._interval7SecButton, R.id._interval10SecButton, R.id._interval15SecButton, R.id._interval20SecButton, R.id._interval30SecButton)
     lateinit var _IntervalIDList : List<@JvmSuppressWildcards TextView>
+
+    companion object
+    {
+        private val INTERVAL_SECONDS = intArrayOf(0, 1, 2, 3, 5, 7, 10, 15, 20, 30)
+    }
 
     private val mContext : Context
     private var mCurrentIntervalSecond : Int = 0
@@ -37,7 +42,7 @@ class BottomIntervalSelectDialog : BottomSheetDialog
         mCurrentIntervalSecond = currentIntervalSecond
     }
 
-    protected override fun onCreate(savedInstanceState : Bundle)
+    protected override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(mContext).checkTablet)
@@ -104,10 +109,5 @@ class BottomIntervalSelectDialog : BottomSheetDialog
                 _IntervalIDList[i].setTextColor(mContext.resources.getColor(R.color.color_b9b9b9))
             }
         }
-    }
-
-    companion object
-    {
-        private val INTERVAL_SECONDS = intArrayOf(0, 1, 2, 3, 5, 7, 10, 15, 20, 30)
     }
 }

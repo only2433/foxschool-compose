@@ -198,8 +198,13 @@ class MyInfoChangeFragment : Fragment()
         Log.f("")
         initView()
         initFont()
-        setupObserverViewModel()
         resetEditTextBackground()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
     }
 
     override fun onStart()
@@ -285,32 +290,32 @@ class MyInfoChangeFragment : Fragment()
         mMyInfoPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MyInfoPresenterDataObserver::class.java)
 
         // 페이지 이동 이벤트
-        mMyInfoPresenterDataObserver.viewPagerChange.observe(mContext as AppCompatActivity, { position ->
+        mMyInfoPresenterDataObserver.viewPagerChange.observe(viewLifecycleOwner, { position ->
             setViewData(position)
         })
 
         // 사용자 정보 화면에 세팅
-        mMyInfoPresenterDataObserver.setMyInfoChangeFragment.observe(mContext as AppCompatActivity, { userInfo ->
+        mMyInfoPresenterDataObserver.setMyInfoChangeFragment.observe(viewLifecycleOwner, { userInfo ->
             setUserInformation(userInfo)
         })
 
         // 입력필드 오류 표시
-        mMyInfoPresenterDataObserver.setInputErrorView.observe(mContext as AppCompatActivity, { type ->
+        mMyInfoPresenterDataObserver.setInputErrorView.observe(viewLifecycleOwner, { type ->
             showInputError(type)
         })
 
         // 저장 버튼 활성 여부 [나의 정보 수정]
-        mMyInfoPresenterDataObserver.setSaveInfoButtonEnable.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.setSaveInfoButtonEnable.observe(viewLifecycleOwner, { isEnable ->
             setSaveInfoButtonEnable(isEnable)
         })
 
         // 저장 버튼 활성 여부 [비밀번호 변경]
-        mMyInfoPresenterDataObserver.setSavePasswordButtonEnable.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.setSavePasswordButtonEnable.observe(viewLifecycleOwner, { isEnable ->
             setSavePasswordButtonEnable(isEnable)
         })
 
         // 화면 초기화
-        mMyInfoPresenterDataObserver.clearMyInfoChangeFragment.observe(mContext as AppCompatActivity, { isEnable ->
+        mMyInfoPresenterDataObserver.clearMyInfoChangeFragment.observe(viewLifecycleOwner, {
             setClearData()
         })
     }
@@ -615,7 +620,6 @@ class MyInfoChangeFragment : Fragment()
             {
                 _InputPhoneEditText.text.clear()
                 if (!_InputPhoneEditText.hasFocus()) _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
-                setSaveInfoButtonEnable(false)
             }
 
             // 저장버튼 클릭 이벤트 [나의 정보 수정]

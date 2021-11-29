@@ -11,6 +11,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkCalenderBaseObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkDetailListBaseObject
 import com.littlefox.app.foxschool.`object`.result.HomeworkStatusBaseObject
@@ -77,8 +78,8 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private var mHomeworkStatusBaseResult : HomeworkStatusBaseResult? = null
     private var mHomeworkDetailBaseResult : HomeworkDetailBaseResult? = null
 
-    private var mBeforePagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR // 이전 페이지 포지션
-    private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR // 현재 보여지고있는 페이지 포지션
+    private var mBeforePagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR   // 이전 페이지 포지션
+    private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR         // 현재 보여지고있는 페이지 포지션
 
     private var mCommentType : HomeworkCommentType = HomeworkCommentType.COMMENT_STUDENT        // 코멘트 화면 타입
     private var mDetailType : HomeworkDetailType = HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL // 리스트 상세 화면 타입
@@ -173,6 +174,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
     override fun sendMessageEvent(msg : Message)
     {
+        Log.f("message : ${msg.what}")
         when(msg.what)
         {
             MESSAGE_LIST_SET_COMPLETE -> mTeacherHomeworkContractView.hideLoading()
@@ -253,6 +255,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     private fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
+        Log.f("Homework Type : ${item.getHomeworkType()}")
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
         content.setTitle(CommonUtils.getInstance(mContext).getSubStringTitleName(item.getTitle()))
@@ -261,7 +264,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         when(item.getHomeworkType())
         {
             HomeworkType.ANIMATION -> startPlayerActivity(content)
-            HomeworkType.EBOOK -> startEBookActivity()
+            HomeworkType.EBOOK -> startEBookActivity(item.getContentID())
             HomeworkType.QUIZ -> startQuizActivity(item.getContentID())
             HomeworkType.CROSSWORD -> startCrosswordActivity(item.getContentID())
             HomeworkType.STARWORDS -> startStarWordsActivity(item.getContentID())
@@ -274,6 +277,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     private fun showAudioPlayDialog(item : HomeworkDetailItemData)
     {
+        Log.f("play Record Audio")
         mAudioPlayDialog = AudioPlayDialog(mContext, item.getTitle(), item.getThumbnailUrl(), item.getMp3Path())
         mAudioPlayDialog!!.show()
     }
@@ -284,11 +288,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun startPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
-
-        val playerIntentParamsObject = PlayerIntentParamsObject(
-            arrayListOf(content),
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val playerIntentParamsObject = PlayerIntentParamsObject(arrayListOf(content), mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.PLAYER)
             .setData(playerIntentParamsObject)
@@ -301,9 +301,16 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      * eBook 학습화면으로 이동
      * TODO 김태은 EBOOK 화면 추가 후 연결하기
      */
-    private fun startEBookActivity()
+    private fun startEBookActivity(contentID : String)
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .startActivity()
     }
 
     /**
@@ -313,10 +320,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun startQuizActivity(contentID : String)
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(
-            contentID,
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val quizIntentParamsObject = QuizIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -358,11 +362,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun startRecordActivity(content : ContentsBaseResult)
     {
         Log.f("")
-
-        val recordIntentParamsObject = RecordIntentParamsObject(
-            content,
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val recordIntentParamsObject = RecordIntentParamsObject(content, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
             .setData(recordIntentParamsObject)
@@ -475,6 +475,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     {
         // 이전 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Calendar Before")
             mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
             mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
             requestClassCalendar()
@@ -482,13 +483,22 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
         // 다음 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Calendar After")
             mYear = mHomeworkCalendarBaseResult!!.getNextYear()
             mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
             requestClassCalendar()
         })
 
+        // 반 선택
+        mHomeworkCalendarFragmentObserver.onClickClassPicker.observe(mContext as AppCompatActivity, { index ->
+            Log.f("onClick ClassItem : $index")
+            mClassIndex = index
+            requestClassCalendar()
+        })
+
         // 달력 아이템 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
+            Log.f("onClick CalendarItem : $homeworkPosition")
             mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
 
             // 숙제 현황 페이지로 이동
@@ -500,18 +510,13 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         mHomeworkCalendarFragmentObserver.onCompletedCalendarSet.observe(mContext as AppCompatActivity, {
             mMainHandler!!.sendEmptyMessage(MESSAGE_LIST_SET_COMPLETE)
         })
-
-        // 반 선택
-        mHomeworkCalendarFragmentObserver.onClickClassPicker.observe(mContext as AppCompatActivity, { index ->
-            mClassIndex = index
-            requestClassCalendar()
-        })
     }
 
     private fun setupStatusFragmentListener()
     {
         // [숙제 현황 상세 보기] 클릭 이벤트
         mHomeworkStatusFragmentObserver.onClickShowDetailButton.observe(mContext as AppCompatActivity, { index ->
+            Log.f("onClick Homework Detail : $index")
             mSelectedStudentPosition = index
 
             // 숙제 현황 상세 페이지로 이동
@@ -523,6 +528,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         // [숙제 내용] 클릭 이벤트
         mHomeworkStatusFragmentObserver.onClickHomeworkContents.observe(mContext as AppCompatActivity, {
             // 숙제 내용 페이지로 이동
+            Log.f("onClick Homework Contents")
             mPagePosition = Common.PAGE_HOMEWORK_DETAIL
             mDetailType = HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL
             mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
@@ -530,6 +536,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
         // [숙제 검사] 클릭 이벤트 (1건)
         mHomeworkStatusFragmentObserver.onClickHomeworkChecking.observe(mContext as AppCompatActivity, { index ->
+            Log.f("onClick HomeworkChecking one")
             val intent = HomeworkCheckingIntentParamsObject(
                 mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
                 mClassListBaseResult!!.get(mClassIndex).getClassID(),
@@ -541,6 +548,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
         // [일괄 숙제 검사] 클릭 이벤트
         mHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking.observe(mContext as AppCompatActivity, { data ->
+            Log.f("onClick HomeworkChecking multi")
             if (data.isEmpty())
             {
                 mTeacherHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_choose_student))
@@ -563,6 +571,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     {
         // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Student Comment")
             mBeforePagePosition = mPagePosition
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
             mCommentType = HomeworkCommentType.COMMENT_STUDENT
@@ -573,6 +582,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
         // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Teacher Comment")
             mBeforePagePosition = mPagePosition
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
             mCommentType = HomeworkCommentType.COMMENT_TEACHER
@@ -586,12 +596,14 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             // 숙제내용 화면 인 경우에만 학습 가능
             if (mDetailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
             {
+                Log.f("onClick play homework")
                 onClickHomeworkItem(item)
             }
             else if (mDetailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL &&
                     item.getHomeworkType() == HomeworkType.RECORDER &&
                     item.isComplete && item.getExpired() > 0)
             {
+                Log.f("onClick play record audio")
                 // 숙제 현황 상세 보기 화면
                 // 녹음 데이터가 있는 경우
                 showAudioPlayDialog(item)

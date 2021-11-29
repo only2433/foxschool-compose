@@ -116,7 +116,7 @@ class HomeworkCalendarFragment : Fragment()
     private var mCalendarItemViewAdapter : CalendarItemViewAdapter? = null          // 숙제관리 리스트 Adapter
     private var mCalendarItemList : ArrayList<CalendarData> = ArrayList<CalendarData>()
 
-    private var mClickEnable : Boolean = false              // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var isClickEnable : Boolean = false              // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
 
     // [선생님] 학급 선택 -----------------------------
     private var mClassNameList : Array<String>? = null      // 통신에서 응답받은 학급 리스트
@@ -251,17 +251,15 @@ class HomeworkCalendarFragment : Fragment()
 
         // 달력 아이템
         mHomeworkManagePresenterObserver.setCalendarData.observe(viewLifecycleOwner, Observer {result ->
-            Log.f("[CAL_SET_OBS] || ${viewLifecycleOwner.lifecycle.currentState}")
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
-            mClickEnable = true // 클릭이벤트 허용
+            isClickEnable = true // 클릭이벤트 허용
         })
 
         // 학급 데이터
         mHomeworkManagePresenterObserver.setClassData.observe(viewLifecycleOwner, { classData ->
-            Log.f("[CAL_CLASS_OBS] || ${viewLifecycleOwner.lifecycle.currentState}")
             mClassNameList = Array<String>(classData!!.size) { index ->
                 classData[index].getClassName()
             }
@@ -281,7 +279,7 @@ class HomeworkCalendarFragment : Fragment()
         if (mCalendarItemViewAdapter == null)
         {
             // 초기생성
-            Log.f("mCalendarItemViewAdapter == null")
+            Log.f("mCalendarItemViewAdapter create")
             mCalendarItemViewAdapter = CalendarItemViewAdapter(mContext, CommonUtils.getInstance(mContext).isTeacherMode)
                 .setItemList(mCalendarItemList)
                 .setHomeworkList(mHomeworkCalendarBaseResult!!.getHomeworkDataList())
@@ -452,6 +450,7 @@ class HomeworkCalendarFragment : Fragment()
         Log.f("")
         val builder = AlertDialog.Builder(mContext)
         builder.setSingleChoiceItems(mClassNameList, mClassIndex, DialogInterface.OnClickListener {dialog, index ->
+            Log.f("Class Filter Selected : ${mClassNameList!![index]} ")
             dialog.dismiss()
             mClassIndex = index
             setClassName(mClassNameList!!.get(mClassIndex))
@@ -467,18 +466,18 @@ class HomeworkCalendarFragment : Fragment()
         R.id._calendarClassBackground, R.id._textClassName)
     fun onClickView(view : View)
     {
-        if (mClickEnable == false) return // 중복 클릭이벤트 막기
+        if (isClickEnable == false) return // 중복 클릭이벤트 막기
 
         when(view.id)
         {
             R.id._beforeButtonRect ->
             {
-                mClickEnable = false
+                isClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarBefore()
             }
             R.id._afterButtonRect ->
             {
-                mClickEnable = false
+                isClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
             }
 
@@ -497,9 +496,9 @@ class HomeworkCalendarFragment : Fragment()
     {
         override fun onItemClick(position : Int)
         {
-            if (mCalendarItemList[position].hasHomework() && mClickEnable)
+            if (mCalendarItemList[position].hasHomework() && isClickEnable)
             {
-                mClickEnable = false
+                isClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarItem(mCalendarItemList[position].getHomeworkPosition())
                 _ScrollView.scrollTo(0, 0)
             }

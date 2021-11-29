@@ -68,7 +68,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     private var mHomeworkStatusItemListAdapter : HomeworkStatusItemListAdapter? = null  // 학생 리스트 Adapter
     private var mHomeworkStatusList : ArrayList<HomeworkStatusItemData> = ArrayList()   // 리스트 아이템
 
-    private var mClickEnable : Boolean = true           // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var isClickEnable : Boolean = true          // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
     private var isAllCheck : Boolean = false            // 전체 선택
 
     private var mClassName : String = ""                // 학급명
@@ -149,10 +149,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    private fun initView()
-    {
-
-    }
+    private fun initView() { }
 
     private fun initFont()
     {
@@ -178,15 +175,14 @@ class TeacherHomeworkStatusFragment : Fragment()
             updateStatusListData()
         })
 
-        // 화면 초기화
-        mHomeworkManagePresenterObserver.clearStatusList.observe(viewLifecycleOwner, {
-            if (mHomeworkStatusBaseResult != null) clearScreenData()
-        })
-
         // 클릭 이벤트 초기화
         mHomeworkManagePresenterObserver.setClickEnable.observe(viewLifecycleOwner, {
-            mClickEnable = true
-            Log.f("ClickEnable : $mClickEnable")
+            isClickEnable = true
+        })
+
+        // 화면 초기화
+        mHomeworkManagePresenterObserver.clearStatusList.observe(viewLifecycleOwner, {
+            clearScreenData()
         })
     }
 
@@ -205,8 +201,8 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private fun updateStatusListData()
     {
-        mClickEnable = false // 클릭 이벤트 막기
-        Log.f("ClickEnable : $mClickEnable")
+        Log.f("Teacher Homework Status List update")
+        isClickEnable = false // 클릭 이벤트 막기
 
         // 전체 체크 해제
         isAllCheck = false
@@ -216,8 +212,7 @@ class TeacherHomeworkStatusFragment : Fragment()
         setHomeworkDateText()
         setClassNameText()
 
-        mClickEnable = true
-        Log.f("ClickEnable : $mClickEnable")
+        isClickEnable = true
     }
 
     /**
@@ -228,7 +223,7 @@ class TeacherHomeworkStatusFragment : Fragment()
         if (mHomeworkStatusItemListAdapter == null)
         {
             // 초기 생성
-            Log.f("mHomeworkStatusItemListAdapter == null")
+            Log.f("mHomeworkStatusItemListAdapter create")
             mHomeworkStatusItemListAdapter = HomeworkStatusItemListAdapter(mContext)
                 .setItemList(mHomeworkStatusList)
                 .setHomeworkItemListener(mHomeworkStatusItemListener)
@@ -325,7 +320,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     @OnClick(R.id._allCheckIcon, R.id._homeworkContentText, R.id._allHomeworkCheckingText)
     fun onClickView(view : View)
     {
-        if (mClickEnable == false) return // 중복 클릭이벤트 막기
+        if (isClickEnable == false) return // 중복 클릭이벤트 막기
 
         when(view.id)
         {
@@ -339,15 +334,13 @@ class TeacherHomeworkStatusFragment : Fragment()
             R.id._allHomeworkCheckingText ->
             {
                 // [일괄 숙제 검사]
-                mClickEnable = false
-                Log.f("ClickEnable : $mClickEnable")
+                isClickEnable = false
                 sendIDList()
             }
             R.id._homeworkContentText ->
             {
                 // [숙제 내용]
-                mClickEnable = false
-                Log.f("ClickEnable : $mClickEnable")
+                isClickEnable = false
                 mTeacherHomeworkStatusFragmentObserver.onClickHomeworkContents()
             }
         }
@@ -366,10 +359,9 @@ class TeacherHomeworkStatusFragment : Fragment()
         override fun onClickShowDetail(index : Int)
         {
             // [숙제 현황 상세 보기] 클릭 이벤트
-            if (mClickEnable)
+            if (isClickEnable)
             {
-                mClickEnable = false
-                Log.f("ClickEnable : $mClickEnable")
+                isClickEnable = false
                 mTeacherHomeworkStatusFragmentObserver.onClickShowDetailButton(index)
             }
         }
@@ -377,10 +369,9 @@ class TeacherHomeworkStatusFragment : Fragment()
         override fun onClickHomeworkChecking(index : Int)
         {
             // [숙제 검사] [검사 수정] 클릭 이벤트
-            if (mClickEnable)
+            if (isClickEnable)
             {
-                mClickEnable = false
-                Log.f("ClickEnable : $mClickEnable")
+                isClickEnable = false
                 mTeacherHomeworkStatusFragmentObserver.onClickHomeworkChecking(index)
             }
         }

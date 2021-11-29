@@ -79,21 +79,6 @@ class MainMyBooksFragment() : Fragment()
         mContext = context
     }
 
-    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        initFont()
-        setupObserverViewModel()
-        if(CommonUtils.getInstance(mContext).checkTablet)
-        {
-            settingBooksInformationTablet()
-        } else
-        {
-            settingBooksInformation()
-        }
-    }
-
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         val view : View
@@ -107,6 +92,26 @@ class MainMyBooksFragment() : Fragment()
         mUnbinder = ButterKnife.bind(this, view)
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         return view
+    }
+
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
+    {
+        super.onViewCreated(view, savedInstanceState)
+        initView()
+        initFont()
+        if(CommonUtils.getInstance(mContext).checkTablet)
+        {
+            settingBooksInformationTablet()
+        } else
+        {
+            settingBooksInformation()
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
     }
 
     override fun onPause()
@@ -178,10 +183,10 @@ class MainMyBooksFragment() : Fragment()
     {
         mMainMyBooksFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainMyBooksFragmentDataObserver::class.java)
         mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-        mMainPresenterDataObserver.updateMyBooksData.observe(mContext as AppCompatActivity,
-            Observer<Any> {
-                    mainInformationResult -> updateData(mainInformationResult as MainInformationResult)}
-        )
+
+        mMainPresenterDataObserver.updateMyBooksData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+            updateData(mainInformationResult as MainInformationResult)
+        })
     }
 
     private fun switchTabsAnimation(tab : BookType)

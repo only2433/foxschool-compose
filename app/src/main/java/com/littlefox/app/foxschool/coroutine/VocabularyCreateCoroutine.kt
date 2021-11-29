@@ -24,13 +24,14 @@ class VocabularyCreateCoroutine : BaseCoroutine
         {
             return null
         }
+
         lateinit var result : VocabularyShelfBaseObject
         synchronized(mSync) {
             isRunning = true
             val list = ContentValues()
             list.put("name", mBookName)
             list.put("color", CommonUtils.getInstance(mContext).getBookColorString(mSelectBookColor))
-            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF, list, NetworkUtil.POST_METHOD)
+            val response : String? = NetworkUtil.requestServerPair(mContext, Common.API_VOCABULARY_SHELF, list, NetworkUtil.PUT_METHOD)
             result = Gson().fromJson(response, VocabularyShelfBaseObject::class.java)
             if(result.getAccessToken().equals("") == false)
             {

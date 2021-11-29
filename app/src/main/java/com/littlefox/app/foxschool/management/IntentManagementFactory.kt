@@ -11,12 +11,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCheckingIntentParamsObject
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.common.Common
@@ -234,6 +236,24 @@ class IntentManagementFactory
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_VOCABULARY_DATA, `object` as MyVocabularyResult?)
+                }
+            }
+
+            ActivityMode.BOOKSHELF ->
+            {
+                intent = Intent(mContext, BookshelfActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_BOOKSHELF_DATA, `object` as MyBookshelfResult?)
+                }
+            }
+
+            ActivityMode.MANAGEMENT_MYBOOKS ->
+            {
+                intent = Intent(mContext, ManagementMyBooksActivity::class.java)
+                if(`object` != null)
+                {
+                    intent.putExtra(Common.INTENT_MANAGEMENT_MYBOOKS_DATA, `object` as ManagementBooksData?)
                 }
             }
 

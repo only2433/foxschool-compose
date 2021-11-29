@@ -112,6 +112,11 @@ class FlashCardIntroFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initFont()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -190,10 +195,10 @@ class FlashCardIntroFragment : Fragment()
     {
         mFlashcardIntroFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardIntroFragmentObserver::class.java]
         mFlashcardPresenterObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardPresenterObserver::class.java]
-        mFlashcardPresenterObserver!!.introTitleData.observe((mContext as AppCompatActivity), { flashcardDataObject ->
+        mFlashcardPresenterObserver!!.introTitleData.observe(viewLifecycleOwner, { flashcardDataObject ->
             setTitle(flashcardDataObject)
         })
-        mFlashcardPresenterObserver!!.closeHelpViewData.observe((mContext as AppCompatActivity), {
+        mFlashcardPresenterObserver!!.closeHelpViewData.observe(viewLifecycleOwner, {
             hideHelpView()
         })
     }

@@ -41,7 +41,7 @@
     <string name="text_add_vocabulary">단어장 추가</string>
     <string name="text_manage_vocabulary">단어장 관리</string>
     <string name="text_stop_play">그만듣기</string>
-    <string name="text_select_init">선택해제</string>
+    <string name="text_select_init">선택 해제</string>
     <string name="text_levels">단계별</string>
     <string name="text_categories">주제별</string>
     <string name="text_bookshelf">나의 책장</string>
@@ -201,7 +201,9 @@
     <string name="message_empty_bookshelf_contents">책장에 담겨있는 콘텐츠가 없습니다.</string>
     <string name="message_empty_vocabulary_contents">콘텐츠가 없습니다.</string>
     <string name="message_maximum_bookshelf">책장은 10개까지 생성할 수 있습니다.</string>
+    <string name="message_sorting_manage_bookshelf">책장 순서는 PC에서 변경할 수 있습니다.</string>
     <string name="message_maximum_vocabulary">단어장은 10개까지 생성할 수 있습니다.</string>
+    <string name="message_sorting_manage_vocabulary">단어장 순서는 PC에서 변경할 수 있습니다.</string>
     <string name="message_delete_vocabulary">단어장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다. \n삭제하시겠습니까?</string>
     <string name="message_delete_bookshelf">책장 삭제 시 등록된 콘텐츠가 모두 삭제됩니다.\n삭제하시겠습니까?</string>
     <string name="message_intro_foxschool">팍스스쿨 회원 전용 앱입니다.\n회원가입은 서비스 신청 후 PC웹에서 가능합니다.</string>
@@ -249,6 +251,7 @@
     <string name="message_comment_teacher">숙제 등록 및 수정, 선생님 한마디는 PC에서 작성 가능 합니다.</string>
     <string name="message_download_teacher_manual">교사 메뉴얼을 다운로드 하겠습니다.</string>
     <string name="message_download_home_newspaper">가정 통신문을 다운로드 하겠습니다.</string>
+    <string name="message_edit_maximum_text">최대 15자까지 입력 가능합니다</string>
 
     <string name="message_warning_app_server_error">서비스 접속이 원활하지 않습니다. \n현재 서비스에 접속자 수가 많거나, 오류로 인해 일시적인 장애가 발생하였습니다.\n잠시 후 다시 이용해 주시기 바랍니다.</string>
     <string name="message_warning_empty_id">아이디를 입력해 주세요.</string>
@@ -282,6 +285,8 @@
     <string name="message_warning_homework_ebook">eBook은 PC 또는 태블릿을 이용해 주세요.</string>
     <string name="message_warning_record_empty">저장된 녹음기록이 없습니다.</string>
     <string name="message_warning_choose_student">학생을 선택해 주세요.</string>
+    <string name="message_warning_empty_bookshelf_name">이름을 입력하세요.</string>
+    <string name="message_warning_add_bookshelf_maximum_15_word">입력 가능한 텍스트수가 초과되었습니다.</string>
     <string name="message_webview_connect_error">연결에 실패하였습니다.</string>
 
     <string-array name="text_list_gender">

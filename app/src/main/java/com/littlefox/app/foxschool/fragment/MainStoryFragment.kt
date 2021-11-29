@@ -112,17 +112,6 @@ class MainStoryFragment : Fragment()
         mContext = context
     }
 
-    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
-        Log.f("")
-        initView()
-        initFont()
-        setupObserverViewModel()
-        initNavigationControllView()
-        initRecyclerView()
-    }
-
     override fun onCreateView(inflater : LayoutInflater, container : ViewGroup?, savedInstanceState : Bundle?) : View?
     {
         Log.f("")
@@ -138,6 +127,22 @@ class MainStoryFragment : Fragment()
         mUnbinder = ButterKnife.bind(this, view)
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         return view
+    }
+
+    override fun onViewCreated(view : View, savedInstanceState : Bundle?)
+    {
+        super.onViewCreated(view, savedInstanceState)
+        Log.f("")
+        initView()
+        initFont()
+        initNavigationControllView()
+        initRecyclerView()
+    }
+
+    override fun onActivityCreated(savedInstanceState : Bundle?)
+    {
+        super.onActivityCreated(savedInstanceState)
+        setupObserverViewModel()
     }
 
     override fun onPause()
@@ -175,10 +180,9 @@ class MainStoryFragment : Fragment()
     {
         mMainStoryFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainStoryFragmentDataObserver::class.java)
         mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-        mMainPresenterDataObserver.updateStoryData.observe(mContext as AppCompatActivity,
-            Observer<Any> {
-                    mainInformationResult -> updateData(mainInformationResult as MainInformationResult)
-            })
+        mMainPresenterDataObserver.updateStoryData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+            updateData(mainInformationResult as MainInformationResult)
+        })
     }
 
     private fun updateData(mainInformationResult : MainInformationResult)

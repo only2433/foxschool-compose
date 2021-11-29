@@ -240,6 +240,7 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
         else
         {
             _MyInfoViewpager.currentItem = Common.PAGE_MY_INFO
+            setTitleView(Common.PAGE_MY_INFO)
         }
     }
 
@@ -260,8 +261,7 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
 
         override fun onPageSelected(position : Int)
         {
-            Log.f("position : $position")
-
+            Log.f("MyInformation Page Change : $position")
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

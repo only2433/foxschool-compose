@@ -89,7 +89,7 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
         if (mRecordHistoryListAdapter == null)
         {
             // 초기 생성
-            Log.f("mRecordHistoryListAdapter == null")
+            Log.f("mRecordHistoryListAdapter create")
             mRecordHistoryListAdapter = RecordHistoryListAdapter(mContext)
                 .setItemList(mRecordHistoryResult)
                 .setHomeworkItemListener(mRecordHistoryItemListener)

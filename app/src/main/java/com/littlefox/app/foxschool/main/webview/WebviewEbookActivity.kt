@@ -25,12 +25,16 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
+import com.ssomai.android.scalablelayout.ScalableLayout
 import java.io.File
 
 class WebviewEbookActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
+
+    @BindView(R.id._titleBaselayout)
+    lateinit var _TitleBaselayout : ScalableLayout
 
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
@@ -110,8 +114,7 @@ class WebviewEbookActivity : BaseActivity()
     /** ========== Init ========== */
     private fun initView()
     {
-        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+        settingLayoutColor()
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
     }
@@ -121,7 +124,6 @@ class WebviewEbookActivity : BaseActivity()
         _TitleText.text = resources.getString(R.string.text_ebook)
         _TitleText.typeface = Font.getInstance(this).getRobotoBold()
     }
-
 
     private fun initWebView()
     {
@@ -147,6 +149,17 @@ class WebviewEbookActivity : BaseActivity()
             BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
             Common.BRIDGE_NAME
         )
+    }
+
+    /**
+     * 상단바 색상 설정
+     */
+    private fun settingLayoutColor()
+    {
+        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
+        val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+        _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
 
     private fun showLoading()

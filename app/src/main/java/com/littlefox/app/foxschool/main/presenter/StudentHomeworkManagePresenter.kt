@@ -164,6 +164,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     override fun sendMessageEvent(msg : Message)
     {
+        Log.f("message : ${msg.what}")
         when(msg.what)
         {
             MESSAGE_LIST_SET_COMPLETE -> mStudentHomeworkContractView.hideLoading()
@@ -224,6 +225,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     private fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
+        Log.f("Homework Type : ${item.getHomeworkType()}")
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
         content.setTitle(CommonUtils.getInstance(mContext).getSubStringTitleName(item.getTitle()))
@@ -246,11 +248,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun startPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
-
-        val playerIntentParamsObject = PlayerIntentParamsObject(
-            arrayListOf(content),
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val playerIntentParamsObject = PlayerIntentParamsObject(arrayListOf(content), mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.PLAYER)
             .setData(playerIntentParamsObject)
@@ -265,9 +263,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun startEbookActivity(contentID : String)
     {
         Log.f("")
-        val data : WebviewIntentParamsObject =
-            WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
-
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(data)
@@ -283,10 +279,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun startQuizActivity(contentID : String)
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(
-            contentID,
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val quizIntentParamsObject = QuizIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -328,11 +321,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun startRecordActivity(content : ContentsBaseResult)
     {
         Log.f("")
-
-        val recordIntentParamsObject = RecordIntentParamsObject(
-            content,
-            mSelectHomeworkData!!.getHomeworkNumber())
-
+        val recordIntentParamsObject = RecordIntentParamsObject(content, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
             .setData(recordIntentParamsObject)
@@ -366,7 +355,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun requestHomeworkList()
     {
         Log.f("")
-
         // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mStudentHomeworkDetailListCoroutine = StudentHomeworkDetailListCoroutine(mContext)
@@ -426,6 +414,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         // 이전 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Calendar Before")
             mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
             mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
             requestStudentHomework()
@@ -433,6 +422,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
         // 다음 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Calendar After")
             mYear = mHomeworkCalendarBaseResult!!.getNextYear()
             mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
             requestStudentHomework()
@@ -440,6 +430,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
         // 달력 아이템 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
+            Log.f("onClick CalendarItem : $homeworkPosition")
             mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
 
             // 숙제 현황 페이지로 이동
@@ -457,6 +448,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Student Comment")
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
             mCommentType = HomeworkCommentType.COMMENT_STUDENT
             mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
@@ -466,6 +458,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
         // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
+            Log.f("onClick Teacher Comment")
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
             mCommentType = HomeworkCommentType.COMMENT_TEACHER
             mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
@@ -494,7 +487,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         })
 
         // 학습자 한마디 삭제 버튼 클릭 이벤트
-        mHomeworkCommentFragmentObserver.onClickDeleteButton.observe(mContext as AppCompatActivity, { bool ->
+        mHomeworkCommentFragmentObserver.onClickDeleteButton.observe(mContext as AppCompatActivity, {
             requestCommentDelete()
         })
     }
@@ -541,7 +534,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
                 {
-
                     mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
                     mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
                     mStudentHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))

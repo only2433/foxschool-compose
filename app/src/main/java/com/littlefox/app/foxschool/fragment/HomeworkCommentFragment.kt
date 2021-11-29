@@ -74,7 +74,7 @@ class HomeworkCommentFragment : Fragment()
     private lateinit var mHomeworkCommentFragmentObserver : HomeworkCommentFragmentObserver
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
 
-    private var mClickEnable : Boolean = false          // 중복 클릭 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var isClickEnable : Boolean = false          // 중복 클릭 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
 
     private var isCompleted : Boolean = false           // 최종평가 여부
     private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
@@ -192,7 +192,7 @@ class HomeworkCommentFragment : Fragment()
             clearScreenData() // 화면 초기화
             isCompleted = pair.second
             settingPageType(pair.first)
-            mClickEnable = true
+            isClickEnable = true
         })
     }
 
@@ -431,7 +431,14 @@ class HomeworkCommentFragment : Fragment()
     @OnClick(R.id._commentInputLayout, R.id._commentRegisterButton, R.id._commentUpdateButton, R.id._commentDeleteButton)
     fun onClickView(view : View)
     {
-        if (mClickEnable == false) return
+        if (isClickEnable == false)
+        {
+            return
+        }
+        else
+        {
+            isClickEnable = false
+        }
 
         when(view.id)
         {

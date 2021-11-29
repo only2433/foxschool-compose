@@ -96,11 +96,8 @@ class ForumWebviewFragment : Fragment()
     {
         mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
         mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
-        mForumPresenterObserver.articleIDData.observe(this, Observer<String> {articleID ->
-            if(viewLifecycleOwner.lifecycle.currentState != Lifecycle.State.CREATED)
-            {
-                setData(articleID)
-            }
+        mForumPresenterObserver.articleIDData.observe(viewLifecycleOwner, Observer<String> {articleID ->
+            setData(articleID)
         })
     }
     /** ========== Init ========== */

@@ -1,11 +1,12 @@
 package com.littlefox.app.foxschool.`object`.result
 
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyListItemDataResult
+import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
+import java.util.ArrayList
 
 class VocabularyShelfListItemBaseObject : BaseResult()
 {
-    private val data : VocabularyListItemDataResult? = null
+    private val data : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
 
-    fun getData() : VocabularyListItemDataResult? = data!!
+    fun getData() : ArrayList<VocabularyDataResult> = data
 }

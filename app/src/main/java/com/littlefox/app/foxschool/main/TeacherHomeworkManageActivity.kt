@@ -182,16 +182,26 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
     {
         when(position)
         {
-            Common.PAGE_HOMEWORK_CALENDAR -> _TitleText.text = resources.getString(R.string.text_homework_manage)
-            Common.PAGE_HOMEWORK_STATUS -> _TitleText.text = resources.getString(R.string.text_homework_status)
+            Common.PAGE_HOMEWORK_CALENDAR ->
+            {
+                Log.f("[TeacherHomeworkPage] PAGE_HOMEWORK_CALENDAR")
+                _TitleText.text = resources.getString(R.string.text_homework_manage)
+            }
+            Common.PAGE_HOMEWORK_STATUS ->
+            {
+                Log.f("[TeacherHomeworkPage] PAGE_HOMEWORK_STATUS")
+                _TitleText.text = resources.getString(R.string.text_homework_status)
+            }
             Common.PAGE_HOMEWORK_DETAIL ->
             {
                 if (detailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL)
                 {
+                    Log.f("[TeacherHomeworkPage] PAGE_TYPE_STATUS_DETAIL")
                     _TitleText.text = resources.getString(R.string.text_homework_status_detail)
                 }
                 else if (detailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
                 {
+                    Log.f("[TeacherHomeworkPage] PAGE_TYPE_HOMEWORK_DETAIL")
                     _TitleText.text = resources.getString(R.string.text_homework_contents)
                 }
             }
@@ -199,10 +209,12 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
             {
                 if (commentType == HomeworkCommentType.COMMENT_STUDENT)
                 {
+                    Log.f("[TeacherHomeworkPage] PAGE_COMMENT_STUDENT")
                     _TitleText.text = resources.getString(R.string.text_homework_student_comment)
                 }
                 else if (commentType == HomeworkCommentType.COMMENT_TEACHER)
                 {
+                    Log.f("[TeacherHomeworkPage] PAGE_COMMENT_TEACHER")
                     _TitleText.text = resources.getString(R.string.text_homework_teacher_comment)
                 }
             }
@@ -286,7 +298,7 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
 
         override fun onPageSelected(position : Int)
         {
-            Log.f("position : $position")
+            Log.f("Homework Page Change : $position")
             mHomeworkManagePresenter.onPageChanged(position)
         }
 

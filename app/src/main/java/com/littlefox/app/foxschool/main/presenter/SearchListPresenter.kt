@@ -257,7 +257,7 @@ class SearchListPresenter : SearchListContract.Presenter
         if(mSearchListItemAdapter == null)
         {
             // 초기 생성
-            Log.f("mSearchListItemAdapter == null")
+            Log.f("mSearchListItemAdapter create")
             mSearchListItemAdapter = DetailListItemAdapter(mContext)
                 .setData(mSearchItemList)
                 .setFullName()
@@ -457,12 +457,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        // TODO : WEBVIEW_GAME_CROSSWORD 화면작업 끝난 후 풀어주기
-//        IntentManagementFactory.getInstance()
-//            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-//            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-//            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-//            .startActivity()
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
+            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
     }
 
     /**
