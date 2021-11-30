@@ -190,7 +190,8 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     override fun onClickBackButton()
     {
-        Log.f("")
+        Log.f("currentPosition : "+mPagePosition)
+
         if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
         {
             mPagePosition = Common.PAGE_HOMEWORK_CALENDAR
@@ -209,7 +210,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     override fun onPageChanged(position : Int)
     {
-        Log.f("")
+        Log.f("Page Change : "+ position)
         val msg = Message.obtain()
         msg.what = MESSAGE_PAGE_CHANGE
         msg.obj = position

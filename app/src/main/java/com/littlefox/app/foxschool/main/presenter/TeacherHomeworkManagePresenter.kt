@@ -48,8 +48,8 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         private const val MESSAGE_LIST_SET_COMPLETE : Int   = 100
         private const val MESSAGE_PAGE_CHANGE : Int         = 101
 
-        private const val REQUEST_CODE_NOTIFY : Int         = 1000
-        private const val REQUEST_CODE_CHECKING : Int       = 1001
+        private const val REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL : Int = 1000
+        private const val REQUEST_CODE_NOTIFY_HOMEWORK_STATUS : Int = 1001
     }
 
     private lateinit var mContext : Context
@@ -82,7 +82,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private var mPagePosition : Int = Common.PAGE_HOMEWORK_CALENDAR         // 현재 보여지고있는 페이지 포지션
 
     private var mCommentType : HomeworkCommentType = HomeworkCommentType.COMMENT_STUDENT        // 코멘트 화면 타입
-    private var mDetailType : HomeworkDetailType = HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL // 리스트 상세 화면 타입
+    private var mDetailType : HomeworkDetailType = HomeworkDetailType.TYPE_HOMEWORK_CONTENT // 리스트 상세 화면 타입
 
     // 통신에 입력되는 년도, 월
     private var mYear : String  = ""
@@ -160,12 +160,12 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         Log.f("requestCode : $requestCode, resultCode : $resultCode")
         when(requestCode)
         {
-            REQUEST_CODE_NOTIFY ->
+            REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL ->
             {
                 mTeacherHomeworkContractView.showLoading()
                 onPageChanged(Common.PAGE_HOMEWORK_DETAIL)
             }
-            REQUEST_CODE_CHECKING ->
+            REQUEST_CODE_NOTIFY_HOMEWORK_STATUS ->
             {
                 onPageChanged(Common.PAGE_HOMEWORK_STATUS)
             }
@@ -199,11 +199,11 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
                     }
                     Common.PAGE_HOMEWORK_DETAIL ->
                     {
-                        if (mDetailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL)
+                        if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL)
                         {
                             requestStudentHomework()    // 숙제 현황 상세 보기 통신 요청
                         }
-                        else if (mDetailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+                        else if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
                         {
                             requestHomeworkDetail()   // 숙제 내용 통신 요청
                         }
@@ -218,7 +218,8 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     override fun onClickBackButton()
     {
-        Log.f("")
+        Log.f("currentPosition : "+mPagePosition)
+
         if (mPagePosition == Common.PAGE_HOMEWORK_COMMENT)
         {
             // 이전 화면에 대한 포지션을 들고있다가 세팅
@@ -237,7 +238,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     override fun onPageChanged(position : Int)
     {
-        Log.f("")
+        Log.f("Page Change : "+ position)
         val msg = Message.obtain()
         msg.what = MESSAGE_PAGE_CHANGE
         msg.obj = position
@@ -293,7 +294,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.PLAYER)
             .setData(playerIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
@@ -308,7 +309,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
@@ -323,7 +324,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
@@ -338,7 +339,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
@@ -353,7 +354,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
@@ -368,21 +369,21 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
             .setData(recordIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_DETAIL)
             .startActivity()
     }
 
     /**
      * 숙제 평가 화면으로 이동
      */
-    private fun startHomeworkCheckingActivity(intent : HomeworkCheckingIntentParamsObject)
+    private fun startHomeworkCheckingActivity(data : HomeworkCheckingIntentParamsObject)
     {
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.HOMEWORK_CHECKING)
-            .setData(intent)
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_CHECKING)
+            .setRequestCode(REQUEST_CODE_NOTIFY_HOMEWORK_STATUS)
             .startActivity()
     }
 
@@ -410,7 +411,10 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun requestClassCalendar(showLoading : Boolean = true)
     {
         Log.f("")
-        if (showLoading) mTeacherHomeworkContractView.showLoading()
+        if (showLoading)
+        {
+            mTeacherHomeworkContractView.showLoading()
+        }
         mTeacherHomeworkCalenderCoroutine = TeacherHomeworkCalenderCoroutine(mContext)
         mTeacherHomeworkCalenderCoroutine!!.setData(mClassListBaseResult!!.get(mClassIndex).getClassID().toString(), mYear, mMonth)
         mTeacherHomeworkCalenderCoroutine!!.asyncListener = mAsyncListener
@@ -454,7 +458,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun requestHomeworkDetail()
     {
         Log.f("")
-
         // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mTeacherHomeworkContentsCoroutine = TeacherHomeworkContentsCoroutine(mContext)
@@ -521,7 +524,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
             // 숙제 현황 상세 페이지로 이동
             mPagePosition = Common.PAGE_HOMEWORK_DETAIL
-            mDetailType = HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL
+            mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL
             mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
         })
 
@@ -530,39 +533,38 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             // 숙제 내용 페이지로 이동
             Log.f("onClick Homework Contents")
             mPagePosition = Common.PAGE_HOMEWORK_DETAIL
-            mDetailType = HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL
+            mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CONTENT
             mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
         })
 
         // [숙제 검사] 클릭 이벤트 (1건)
         mHomeworkStatusFragmentObserver.onClickHomeworkChecking.observe(mContext as AppCompatActivity, { index ->
             Log.f("onClick HomeworkChecking one")
-            val intent = HomeworkCheckingIntentParamsObject(
+            val data = HomeworkCheckingIntentParamsObject(
                 mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
                 mClassListBaseResult!!.get(mClassIndex).getClassID(),
                 mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!.get(index)
             )
 
-            startHomeworkCheckingActivity(intent)
+            startHomeworkCheckingActivity(data)
         })
 
         // [일괄 숙제 검사] 클릭 이벤트
-        mHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking.observe(mContext as AppCompatActivity, { data ->
+        mHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking.observe(mContext as AppCompatActivity, { IDList ->
             Log.f("onClick HomeworkChecking multi")
-            if (data.isEmpty())
+            if (IDList.isEmpty())
             {
                 mTeacherHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_choose_student))
                 mHomeworkManagePresenterObserver.setClickEnable()
             }
             else
             {
-                val intent = HomeworkCheckingIntentParamsObject(
+                val data = HomeworkCheckingIntentParamsObject(
                     mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
                     mClassListBaseResult!!.get(mClassIndex).getClassID(),
-                    data
+                    IDList
                 )
-
-                startHomeworkCheckingActivity(intent)
+                startHomeworkCheckingActivity(data)
             }
         })
     }
@@ -594,12 +596,12 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
         mHomeworkListFragmentObserver.onClickHomeworkItem.observe(mContext as AppCompatActivity, { item ->
             // 숙제내용 화면 인 경우에만 학습 가능
-            if (mDetailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+            if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
             {
                 Log.f("onClick play homework")
                 onClickHomeworkItem(item)
             }
-            else if (mDetailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL &&
+            else if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL &&
                     item.getHomeworkType() == HomeworkType.RECORDER &&
                     item.isComplete && item.getExpired() > 0)
             {

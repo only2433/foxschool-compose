@@ -92,8 +92,6 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_RECORD_HISTORY : Int            = 123
         private const val MESSAGE_APP_SERVER_ERROR : Int                = 124
 
-        private const val REQUEST_CODE_GO_LOGIN : Int                   = 1001
-        private const val REQUEST_CODE_STUDY_GUIDE : Int                = 1002
 
         private const val DIALOG_EVENT_IAC : Int                        = 10001
         private const val DIALOG_EVENT_LOGOUT : Int                     = 10002
@@ -288,22 +286,6 @@ class MainPresenter : MainContract.Presenter
     override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
     {
         Log.f("requestCode : $requestCode, resultCode : $resultCode")
-        when(requestCode)
-        {
-            REQUEST_CODE_GO_LOGIN ->
-            if(resultCode == Activity.RESULT_OK)
-            {
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
-            }
-            REQUEST_CODE_STUDY_GUIDE ->
-            if(resultCode == Common.RESULT_CODE_SERIES_LIST)
-            {
-                val message = Message.obtain()
-                message.what = MESSAGE_START_RESULT_SERIES
-                message.obj = data?.getStringExtra(Common.INTENT_RESULT_SERIES_ID)
-                mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
-            }
-        }
     }
 
     override fun sendMessageEvent(msg : Message)

@@ -14,7 +14,7 @@ class HomeworkDetailBaseResult
     private var eval : String       = ""
     private val list : ArrayList<HomeworkDetailItemData> = ArrayList()
     // 선생님용 ----------
-    private var fragmentType : HomeworkDetailType = HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL
+    private var fragmentType : HomeworkDetailType = HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL
     private var fragmentTitle : String = ""
 
     fun getStartDate() : String = start_date

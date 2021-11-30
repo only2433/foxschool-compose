@@ -86,6 +86,19 @@ class HomeworkCheckingIntentParamsObject : Parcelable
 
     fun getComment() : String = comment
 
+    fun isEvalComplete() : Boolean
+    {
+        if(eval > -1)
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
+    }
+
+
     companion object
     {
         @JvmField

@@ -5,6 +5,6 @@ package com.littlefox.app.foxschool.enumerate
  */
 enum class HomeworkDetailType
 {
-    PAGE_TYPE_STATUS_DETAIL,        // 숙제 현황 상세 보기
-    PAGE_TYPE_HOMEWORK_DETAIL       // 숙제 내용
+    TYPE_HOMEWORK_CURRENT_STATUS_DETAIL,     // 숙제 현황 상세 보기
+    TYPE_HOMEWORK_CONTENT                   // 숙제 내용
 }

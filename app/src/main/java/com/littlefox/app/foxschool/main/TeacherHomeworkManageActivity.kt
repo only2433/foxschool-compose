@@ -194,12 +194,12 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
             }
             Common.PAGE_HOMEWORK_DETAIL ->
             {
-                if (detailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL)
+                if (detailType == HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL)
                 {
                     Log.f("[TeacherHomeworkPage] PAGE_TYPE_STATUS_DETAIL")
                     _TitleText.text = resources.getString(R.string.text_homework_status_detail)
                 }
-                else if (detailType == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+                else if (detailType == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
                 {
                     Log.f("[TeacherHomeworkPage] PAGE_TYPE_HOMEWORK_DETAIL")
                     _TitleText.text = resources.getString(R.string.text_homework_contents)

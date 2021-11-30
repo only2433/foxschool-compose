@@ -104,6 +104,10 @@ class AudioPlayDialog : Dialog
         mTitle = title
         mThumbnailUrl = thumbnailUrl
         mAudioPath = audioPath
+
+        Log.f("title : "+ mTitle)
+        Log.f("thumbnail : "+ mThumbnailUrl)
+        Log.f("audio Path : "+ mAudioPath)
     }
 
     protected override fun onCreate(savedInstanceState : Bundle?)
@@ -307,7 +311,8 @@ class AudioPlayDialog : Dialog
         }
     }
 
-    private val mOnSeekBarListener : SeekBar.OnSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
+    private val mOnSeekBarListener : SeekBar.OnSeekBarChangeListener = object : SeekBar.OnSeekBarChangeListener
+    {
         override fun onProgressChanged(seekBar : SeekBar, progress : Int, fromUser : Boolean)
         {
 

@@ -50,7 +50,6 @@ class IntroPresenter : IntroContract.Presenter
     {
         private const val PERMISSION_REQUEST : Int                  = 0x01
         private const val REQUEST_CODE_LOGIN : Int                  = 1001
-        private const val REQUEST_CODE_GO_LOGIN : Int               = 1002
 
         private const val DIALOG_TYPE_SELECT_UPDATE_CONFIRM : Int   = 10001
         private const val DIALOG_TYPE_FORCE_UPDATE : Int            = 10002
@@ -192,12 +191,6 @@ class IntroPresenter : IntroContract.Presenter
                      * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
                      */
                     mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
-                }
-
-            REQUEST_CODE_GO_LOGIN ->
-                if(resultCode == Activity.RESULT_OK)
-                {
-                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
                 }
         }
     }

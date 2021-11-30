@@ -51,7 +51,7 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
     {
         Log.f("")
         mHomeworkCheckingInformation = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_HOMEWORK_CHECKING_DATA)!!
-        if (mHomeworkCheckingInformation.getEval() > -1)
+        if (mHomeworkCheckingInformation.isEvalComplete())
         {
             mHomeworkCheckingContractView.setBeforeData(
                 mHomeworkCheckingInformation.getEval(),

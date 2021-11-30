@@ -346,7 +346,7 @@ class TeacherHomeworkListFragment : Fragment()
             mHomeworkItemViewAdapter = HomeworkItemViewAdapter(mContext, isTeacher = true)
                 .setItemList(mHomeworkItemDetail)
                 .setHomeworkItemListener(mHomeworkItemListener)
-            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
             {
                 mHomeworkItemViewAdapter!!.setButtonEnable(false)
             }
@@ -359,7 +359,7 @@ class TeacherHomeworkListFragment : Fragment()
         {
             // 데이터 변경
             Log.f("mHomeworkItemViewAdapter notifyDataSetChanged")
-            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.PAGE_TYPE_HOMEWORK_DETAIL)
+            if (mHomeworkDetailBaseResult!!.getFragmentType() == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
             {
                 mHomeworkItemViewAdapter!!.setButtonEnable(false)
             }
