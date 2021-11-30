@@ -11,6 +11,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfListItemBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
@@ -303,9 +304,11 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
-            .setData(mBookItemInformationList!![mCurrentOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -329,9 +332,11 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(mBookItemInformationList!![mCurrentOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -339,9 +344,11 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-            .setData(mBookItemInformationList!![mCurrentOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

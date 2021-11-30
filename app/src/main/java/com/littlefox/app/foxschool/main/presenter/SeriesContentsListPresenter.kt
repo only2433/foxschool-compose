@@ -217,7 +217,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 }
                 initContentItemList()
             }
-            MESSAGE_START_QUIZ -> startQuizAcitiviy()
+            MESSAGE_START_QUIZ -> startQuizActivity()
             MESSAGE_START_TRANSLATE -> startOriginTranslateActivity()
             MESSAGE_START_EBOOK -> startEbookActivity()
             MESSAGE_START_VOCABULARY -> startVocabularyActivity()
@@ -407,10 +407,11 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             .startActivity();
     }
 
-    private fun startQuizAcitiviy()
+    private fun startQuizActivity()
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -444,9 +445,11 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -454,9 +457,11 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

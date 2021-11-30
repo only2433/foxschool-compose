@@ -88,6 +88,7 @@ class PlayerContract
         fun onClickCurrentMovieVocabularyButton()
         fun onClickCurrentMovieTranslateButton()
         fun onClickCurrentMovieStarwordsButton()
+        fun onClickCurrentMovieCrosswordButton()
         fun onClickCurrentMovieFlashcardButton()
         fun onNextMovieButton()
         fun onPageByPageIndex(index : Int)

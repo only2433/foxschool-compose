@@ -17,6 +17,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -28,6 +29,7 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
+import java.io.File
 
 class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
 {
@@ -40,7 +42,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
 
-    private var mCurrentContentID = ""
+    private var mWebviewIntentParamsObject : WebviewIntentParamsObject? = null
     private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mMainHandler : WeakReferenceHandler? = null
 
@@ -105,11 +107,22 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_STARWORDS_ID)!!
+        mWebviewIntentParamsObject = intent.getParcelableExtra(Common.INTENT_GAME_STARWORDS_ID)
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl("${Common.URL_GAME_STARWORDS}${mCurrentContentID}", extraHeaders)
+
+        if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
+        {
+            _WebView.loadUrl(
+                "${Common.URL_GAME_STARWORDS}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
+                extraHeaders)
+        }
+        else
+        {
+            _WebView.loadUrl(
+                "${Common.URL_GAME_STARWORDS}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+        }
         _WebView.addJavascriptInterface(
             DataInterfaceBridge(this, _MainBaseLayout, _WebView),
             Common.BRIDGE_NAME

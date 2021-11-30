@@ -444,9 +444,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -457,9 +459,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }

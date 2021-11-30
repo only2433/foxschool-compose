@@ -2315,7 +2315,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         R.id._nextButtonBoxImage, R.id._replayButtonBoxImage, R.id._paymentButtonBoxImage, R.id._playerRepeatButton, R.id._playerPortraitTitleOption,
         R.id._ebookButtonImage, R.id._quizButtonImage, R.id._vocabularyButtonImage, R.id._translateButtonImage, R.id._flashcardButtonImage, R.id._starwordsButtonImage,
         R.id._playerPageByPageButton, R.id._player1PageButton, R.id._player2PageButton, R.id._player3PageButton, R.id._player4PageButton, R.id._player5PageButton,
-        R.id._playerPrevPageButton, R.id._playerNextPageButton, R.id._playerSpeedButton, R.id._playerSpeedText, R.id._playSpeedListCloseButtonRect,
+        R.id._playerPrevPageButton, R.id._playerNextPageButton, R.id._playerSpeedButton, R.id._playerSpeedText, R.id._playSpeedListCloseButtonRect, R.id._crosswordButtonImage
     )
     fun onClickView(view : View)
     {
@@ -2403,6 +2403,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             R.id._vocabularyButtonImage -> mPlayerContractPresenter.onClickCurrentMovieVocabularyButton()
             R.id._translateButtonImage -> mPlayerContractPresenter.onClickCurrentMovieTranslateButton()
             R.id._starwordsButtonImage -> mPlayerContractPresenter.onClickCurrentMovieStarwordsButton()
+            R.id._crosswordButtonImage -> mPlayerContractPresenter.onClickCurrentMovieCrosswordButton()
             R.id._flashcardButtonImage -> mPlayerContractPresenter.onClickCurrentMovieFlashcardButton()
             R.id._player1PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
             R.id._player2PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))

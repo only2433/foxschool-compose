@@ -328,7 +328,7 @@ class IntentManagementFactory
                 intent = Intent(mContext, WebviewGameStarwordsActivity::class.java)
                 if(`object` != null)
                 {
-                    intent.putExtra(Common.INTENT_GAME_STARWORDS_ID, `object` as String?)
+                    intent.putExtra(Common.INTENT_GAME_STARWORDS_ID, `object` as WebviewIntentParamsObject?)
                 }
             }
 
@@ -337,7 +337,7 @@ class IntentManagementFactory
                 intent = Intent(mContext, WebviewGameCrosswordActivity::class.java)
                 if(`object` != null)
                 {
-                    intent.putExtra(Common.INTENT_GAME_CROSSWORD_ID, `object` as String?)
+                    intent.putExtra(Common.INTENT_GAME_CROSSWORD_ID, `object` as WebviewIntentParamsObject?)
                 }
             }
 

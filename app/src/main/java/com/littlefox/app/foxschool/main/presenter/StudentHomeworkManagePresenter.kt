@@ -274,7 +274,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     /**
      * 퀴즈 학습화면으로 이동
-     * TODO 김태은 퀴즈 API 완성된 후 확인화기
      */
     private fun startQuizActivity(contentID : String)
     {
@@ -290,15 +289,16 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     /**
      * 크로스워드 학습화면으로 이동
-     * TODO 김태은 크로스워드 API 완성된 후 확인화기
      */
     private fun startCrosswordActivity(contentID : String)
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-            .setData(contentID)
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
     }
 
@@ -308,10 +308,12 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private fun startStarWordsActivity(contentID : String)
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(contentID, mSelectHomeworkData!!.getHomeworkNumber())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(contentID)
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
     }
 

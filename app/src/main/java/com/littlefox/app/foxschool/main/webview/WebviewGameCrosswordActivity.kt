@@ -17,16 +17,17 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.webview.bridge.BaseWebviewBridge
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import java.io.File
 
 class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
 {
@@ -53,7 +54,7 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
         const val MESSAGE_GAME_LOAD_ERROR : Int = 10
     }
 
-    private var mCurrentContentID = ""
+    private var mWebviewIntentParamsObject : WebviewIntentParamsObject? = null
     private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mMainHandler : WeakReferenceHandler? = null
 
@@ -123,11 +124,21 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
     private fun initWebView()
     {
         showLoading()
-        mCurrentContentID = intent.getStringExtra(Common.INTENT_GAME_CROSSWORD_ID)!!
+        mWebviewIntentParamsObject = intent.getParcelableExtra(Common.INTENT_GAME_CROSSWORD_ID)
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl("${Common.URL_GAME_CROSSWORD}${mCurrentContentID}", extraHeaders)
+        if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
+        {
+            _WebView.loadUrl(
+                "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
+                extraHeaders)
+        }
+        else
+        {
+            _WebView.loadUrl(
+                "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+        }
 
         _WebView.addJavascriptInterface(
             DataInterfaceBridge(this, _MainBaseLayout, _WebView),

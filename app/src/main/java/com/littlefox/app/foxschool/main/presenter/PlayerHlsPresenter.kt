@@ -140,12 +140,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         private const val MESSAGE_START_EBOOK : Int                     = 107
         private const val MESSAGE_START_VOCABULARY : Int                = 108
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
-        private const val MESSAGE_START_FLASHCARD : Int                 = 110
-        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 111
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 112
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 113
-        private const val MESSAGE_REQUEST_VIDEO : Int                   = 114
-        private const val MESSAGE_CHECK_MOVIE : Int                     = 115
+        private const val MESSAGE_START_GAME_CROSSWORD : Int            = 110
+        private const val MESSAGE_START_FLASHCARD : Int                 = 111
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 112
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 113
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 114
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 115
+        private const val MESSAGE_CHECK_MOVIE : Int                     = 116
 
         private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
         private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
@@ -312,6 +313,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             MESSAGE_START_EBOOK -> startEbookActivity()
             MESSAGE_START_VOCABULARY -> startVocabularyActivity()
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
+            MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
             MESSAGE_REQUEST_CONTENTS_ADD ->
             {
@@ -1436,9 +1438,23 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startGameCrosswordActivity()
+    {
+        Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -1725,6 +1741,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("")
         mSelectItemOptionIndex = mCurrentPlayMovieIndex
         mMainHandler.sendEmptyMessage(MESSAGE_START_GAME_STARWORDS)
+    }
+
+    override fun onClickCurrentMovieCrosswordButton()
+    {
+        Log.f("")
+        mSelectItemOptionIndex = mCurrentPlayMovieIndex
+        mMainHandler.sendEmptyMessage(MESSAGE_START_GAME_CROSSWORD)
     }
 
     override fun onClickCurrentMovieFlashcardButton()

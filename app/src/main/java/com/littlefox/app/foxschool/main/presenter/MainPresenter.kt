@@ -563,8 +563,11 @@ class MainPresenter : MainContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS) //  .setData(mCurrentDetailOptionResult.getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -572,8 +575,11 @@ class MainPresenter : MainContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD) // .setData(mCurrentDetailOptionResult.getID())
+            .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
