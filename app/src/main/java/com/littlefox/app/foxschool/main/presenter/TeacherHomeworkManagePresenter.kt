@@ -182,8 +182,21 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             {
                 when(msg.obj)
                 {
-                    Common.PAGE_HOMEWORK_CALENDAR -> requestClassList()             // 클래스 리스트 통신 요청
-                    Common.PAGE_HOMEWORK_STATUS -> requestStatusList()              // 숙제 현황 통신 요청
+                    Common.PAGE_HOMEWORK_CALENDAR ->
+                    {
+                        // 화면에 표시되는 데이터 초기화
+                        mHomeworkManagePresenterObserver.clearStatusList()
+
+                        requestClassList() // 클래스 리스트 통신 요청
+                    }
+                    Common.PAGE_HOMEWORK_STATUS ->
+                    {
+                        // 숙제 리스트 초기화
+                        mHomeworkManagePresenterObserver.clearHomeworkList(true)
+
+                        mTeacherHomeworkContractView.showLoading()
+                        requestStatusList() // 숙제 현황 통신 요청
+                    }
                     Common.PAGE_HOMEWORK_DETAIL ->
                     {
                         if (mDetailType == HomeworkDetailType.PAGE_TYPE_STATUS_DETAIL)
@@ -206,29 +219,16 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     override fun onClickBackButton()
     {
         Log.f("")
-        if (mPagePosition != Common.PAGE_HOMEWORK_CALENDAR)
+        if (mPagePosition == Common.PAGE_HOMEWORK_COMMENT)
         {
-            // 화면에 표시되는 데이터 초기화
-            if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
-            {
-                mHomeworkManagePresenterObserver.clearStatusList()
-            }
-            else if (mPagePosition == Common.PAGE_HOMEWORK_DETAIL)
-            {
-                mHomeworkManagePresenterObserver.clearHomeworkList(true) // 숙제 리스트 초기화
-            }
-
-            if (mPagePosition == Common.PAGE_HOMEWORK_COMMENT)
-            {
-                // 이전 화면에 대한 포지션을 들고있다가 세팅
-                mPagePosition = mBeforePagePosition
-                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
-            }
-            else
-            {
-                mPagePosition -= 1
-                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition)
-            }
+            // 이전 화면에 대한 포지션을 들고있다가 세팅
+            mPagePosition = mBeforePagePosition
+            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
+        }
+        else
+        {
+            mPagePosition -= 1
+            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition)
         }
     }
 
@@ -423,7 +423,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun requestStatusList()
     {
         Log.f("")
-        mTeacherHomeworkContractView.showLoading()
         mTeacherHomeworkStatusCoroutine = TeacherHomeworkStatusCoroutine(mContext)
         mTeacherHomeworkStatusCoroutine!!.setData(
             mClassListBaseResult!!.get(mClassIndex).getClassID(),

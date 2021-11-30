@@ -172,7 +172,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             {
                 when(msg.obj)
                 {
-                    Common.PAGE_HOMEWORK_CALENDAR -> requestStudentHomework()   // 숙제관리(달력) 통신 요청
+                    Common.PAGE_HOMEWORK_CALENDAR ->
+                    {
+                        mHomeworkManagePresenterObserver.clearHomeworkList(true)
+                        requestStudentHomework()   // 숙제관리(달력) 통신 요청
+                    }
                     Common.PAGE_HOMEWORK_STATUS -> requestHomeworkList()        // 숙제현황(리스트) 통신 요청
                 }
             }
@@ -189,8 +193,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("")
         if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
         {
-            mHomeworkManagePresenterObserver.clearHomeworkList(true) // 숙제현황 리스트 초기화
-
             mPagePosition = Common.PAGE_HOMEWORK_CALENDAR
             mStudentHomeworkContractView.setCurrentViewPage(Common.PAGE_HOMEWORK_CALENDAR)
         }
@@ -522,11 +524,8 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
                 else if (code == Common.COROUTINE_CODE_STUDENT_HOMEWORK_DETAIL_LIST)
                 {
                     // 숙제현황 (리스트)
-                    if (mPagePosition == Common.PAGE_HOMEWORK_STATUS)
-                    {
-                        mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
-                        mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
-                    }
+                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
+                    mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
                 }
                 else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
                 {
@@ -583,6 +582,4 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
         override fun onErrorListener(code : String?, message : String?) { }
     }
-
-
 }
