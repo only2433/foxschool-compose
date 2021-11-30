@@ -43,13 +43,10 @@ class MyInformationPresenter : MyInformationContract.Presenter
 {
     companion object
     {
-        // MyInfoShow
-        private const val DIALOG_BIO_LOGIN_ON : Int     = 10001     // 지문인증 로그인 활성화 알림 다이얼로그 플래그
-        private const val DIALOG_BIO_LOGIN_OFF : Int    = 10002     // 지문인증 로그인 비활성화 알림 다이얼로그 플래그
 
         // MyInfoChange
-        private const val DIALOG_PASSWORD_CONFIRM : Int     = 10003     // 비밀번호 확인 다이얼로그 플래그
-        private const val DIALOG_PASSWORD_CONFIRM_ERR : Int = 10004     // 비밀번호 확인 오류 다이얼로그 플래그
+        private const val DIALOG_PASSWORD_CONFIRM : Int     = 10001    // 비밀번호 확인 다이얼로그 플래그
+        private const val DIALOG_PASSWORD_CONFIRM_ERR : Int = 10002     // 비밀번호 확인 오류 다이얼로그 플래그
     }
 
     private lateinit var mContext : Context
@@ -71,7 +68,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
     // MyInfo
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog // 지문인증 로그인 활성/비활성 알림 다이얼로그
     private var mCheckAutoLogin : Boolean   = false                 // 자동로그인 ON/OFF
-    private var mCheckBioLogin : Boolean    = false                 // 생체인증 로그인 ON/OFF
     private var mCheckPush : Boolean        = false                 // 푸쉬수신 ON/OFF
 
     // MyInfoChange
@@ -128,11 +124,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
         Log.f("autoLoginStatus : $autoLoginStatus")
         mCheckAutoLogin = (autoLoginStatus == "Y")
 
-        // 생체인증 로그인 설정값 가져오기
-        val bioLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_BIO_LOGIN_DATA, "N")
-        Log.f("bioLoginStatus : $bioLoginStatus")
-        mCheckBioLogin = (bioLoginStatus == "Y")
-
         // 푸쉬 설정값 가져오기
         val isPushEnable = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
         Log.f("isPushEnable : $isPushEnable")
@@ -140,7 +131,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
 
         // 플래그값에 따라 스위치 상태 세팅
         mMyInfoPresenterDataObserver.setAutoLoginSwitch(mCheckAutoLogin)
-        mMyInfoPresenterDataObserver.setBioLoginSwitch(mCheckBioLogin)
         mMyInfoPresenterDataObserver.setPushSwitch(mCheckPush)
     }
 
@@ -244,19 +234,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
                 return
             }
             else -> {}
-        }
-
-        // 지문인증 로그인 활성/비활성 알림 다이얼로그 표시
-        // 사용자가 다이얼로그에서 선택하는 값에 따라 스위치 ON/OFF 설정
-        if (mCheckBioLogin)
-        {
-            // 지문인증 ON -> OFF
-            showTemplateAlertDialog(DIALOG_BIO_LOGIN_OFF, mContext.getString(R.string.message_bio_login_off), DialogButtonType.BUTTON_2)
-        }
-        else
-        {
-            // 지문인증 OFF -> ON
-            showTemplateAlertDialog(DIALOG_BIO_LOGIN_ON, mContext.getString(R.string.message_bio_login_on), DialogButtonType.BUTTON_2)
         }
     }
 
@@ -554,11 +531,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
             onClickAutoLoginSwitch()
         })
 
-        // 생체인증 로그인 스위치 클릭 이벤트
-        mMyInfoShowFragmentDataObserver.clickBioLogin.observe(mContext as AppCompatActivity, {
-            onClickBioLoginSwitch()
-        })
-
         // 푸시알림 스위치 클릭 이벤트
         mMyInfoShowFragmentDataObserver.clickPush.observe(mContext as AppCompatActivity, {
             onClickPushSwitch()
@@ -746,53 +718,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
             }
         }
 
-        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
-        {
-            if (eventType == DIALOG_BIO_LOGIN_ON)
-            {
-                // 지문인증 활성화 알림 다이얼로그
-                when(buttonType)
-                {
-                    DialogButtonType.BUTTON_1 ->
-                    {
-                        // 지문인증 활성화 취소 (OFF)
-                        Log.f("Set bio login : OFF->OFF")
-                        mCheckBioLogin = false
-                    }
-                    DialogButtonType.BUTTON_2 ->
-                    {
-                        // 지문인증 활성화 확인 (ON)
-                        Log.f("Set bio login : OFF->ON")
-                        mCheckBioLogin = true
-                        mMyInformationContractView.showSuccessMessage(mContext.resources.getString(R.string.message_bio_login_enable))
-                    }
-                }
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_BIO_LOGIN_DATA, if(mCheckBioLogin) "Y" else "N")
-                mMyInfoPresenterDataObserver.setBioLoginSwitch(mCheckBioLogin)
-            }
-            else if (eventType == DIALOG_BIO_LOGIN_OFF)
-            {
-                // 지문인증 비활성화 알림 다이얼로그
-                when(buttonType)
-                {
-                    DialogButtonType.BUTTON_1 ->
-                    {
-                        // 지문인증 비활성화 취소 (ON)
-                        Log.f("Set bio login : ON->ON")
-                        mCheckBioLogin = true
-                    }
-                    DialogButtonType.BUTTON_2 ->
-                    {
-                        // 지문인증 비활성화 확인 (OFF)
-                        Log.f("Set bio login : ON->OFF")
-                        mCheckBioLogin = false
-                        mMyInformationContractView.showSuccessMessage(mContext.resources.getString(R.string.message_bio_login_disable))
-                    }
-                }
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_BIO_LOGIN_DATA, if(mCheckBioLogin) "Y" else "N")
-                mMyInfoPresenterDataObserver.setBioLoginSwitch(mCheckBioLogin)
-            }
-        }
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int) {}
     }
 
     /**

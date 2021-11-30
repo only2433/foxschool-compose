@@ -87,12 +87,6 @@ class MyInfoShowFragment : Fragment()
     @BindView(R.id._autoLoginText)
     lateinit var _AutoLoginText : TextView
 
-    @BindView(R.id._bioLoginText)
-    lateinit var _BioLoginText : TextView
-
-    @BindView(R.id._bioLoginInfoText)
-    lateinit var _BioLoginInfoText : TextView
-
     @BindView(R.id._pushText)
     lateinit var _PushText : TextView
 
@@ -102,8 +96,6 @@ class MyInfoShowFragment : Fragment()
     @BindView(R.id._switchAutoLogin)
     lateinit var _SwitchAutoLogin : ImageView
 
-    @BindView(R.id._switchBioLogin)
-    lateinit var _SwitchBioLogin : ImageView
 
     @BindView(R.id._switchPush)
     lateinit var _SwitchPush : ImageView
@@ -229,9 +221,7 @@ class MyInfoShowFragment : Fragment()
         // 설정 영역
         _SettingText.typeface = Font.getInstance(mContext).getRobotoMedium()
         _AutoLoginText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _BioLoginText.typeface = Font.getInstance(mContext).getRobotoMedium()
         _PushText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _BioLoginInfoText.typeface = Font.getInstance(mContext).getRobotoRegular()
         _PushInfoText.typeface = Font.getInstance(mContext).getRobotoRegular()
     }
     /** ========== Init ========== */
@@ -249,11 +239,6 @@ class MyInfoShowFragment : Fragment()
         // 로그인 상태 유지 스위치 상태 변경
         mMyInfoPresenterDataObserver.changeAutoLogin.observe(viewLifecycleOwner, { isEnable ->
             setSwitchAutoLogin(isEnable)
-        })
-
-        // 지문인증 로그인 스위치 상태 변경
-        mMyInfoPresenterDataObserver.changeBioLogin.observe(viewLifecycleOwner, { isEnable ->
-            setSwitchBioLogin(isEnable)
         })
 
         // 알림 스위치 상태 변경
@@ -297,20 +282,7 @@ class MyInfoShowFragment : Fragment()
         }
     }
 
-    /**
-     *  지문인증로그인 스위치 ON/OFF 이미지 변경
-     */
-    private fun setSwitchBioLogin(isEnable : Boolean)
-    {
-        if (isEnable)
-        {
-            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_on)
-        }
-        else
-        {
-            _SwitchBioLogin.setBackgroundResource(R.drawable.icon_switch_off)
-        }
-    }
+
 
     /**
      *  푸시알림 스위치 ON/OFF 이미지 변경
@@ -327,13 +299,12 @@ class MyInfoShowFragment : Fragment()
         }
     }
 
-    @OnClick(R.id._changeInfoButtonText, R.id._changePasswordButtonText, R.id._switchAutoLogin, R.id._switchBioLogin, R.id._switchPush)
+    @OnClick(R.id._changeInfoButtonText, R.id._changePasswordButtonText, R.id._switchAutoLogin, R.id._switchPush)
     fun onClickView(view : View)
     {
         when(view.id)
         {
             R.id._switchAutoLogin -> mMyInfoShowFragmentDataObserver.onClickAutoLoginSwitch()
-            R.id._switchBioLogin -> mMyInfoShowFragmentDataObserver.onClickBioLoginSwitch()
             R.id._switchPush -> mMyInfoShowFragmentDataObserver.onClickPushSwitch()
             R.id._changeInfoButtonText -> mMyInfoShowFragmentDataObserver.onClickInfoChange()
             R.id._changePasswordButtonText -> mMyInfoShowFragmentDataObserver.onClickPasswordChange()

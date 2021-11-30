@@ -90,7 +90,6 @@ class Common
         const val PARAMS_IS_PUSH_SEND : String                  = "is_push_send"
         const val PARAMS_IS_TEACHER_MODE : String               = "is_teacher_mode"
         const val PARAMS_CHECK_TABLET : String                  = "check_tablet"
-        const val PARAMS_IS_BIO_LOGIN_DATA : String             = "is_bio_login_data"
         const val PARAMS_CHECK_PHONE_DEVICE_RADIO : String      = "check_phone_device_radio"
         const val PARAMS_CHECK_TABLET_DEVICE_RADIO : String     = "check_tablet_device_radio"
 

@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 class MyInfoShowFragmentDataObserver : ViewModel()
 {
     var clickAutoLogin = MutableLiveData<Boolean>()
-    var clickBioLogin = MutableLiveData<Boolean>()
     var clickPush = MutableLiveData<Boolean>()
     var clickInfoChange = MutableLiveData<Boolean>()
     var clickPasswordChange = MutableLiveData<Boolean>()
@@ -14,11 +13,6 @@ class MyInfoShowFragmentDataObserver : ViewModel()
     fun onClickAutoLoginSwitch()
     {
         clickAutoLogin.value = true
-    }
-
-    fun onClickBioLoginSwitch()
-    {
-        clickBioLogin.value = true
     }
 
     fun onClickPushSwitch()

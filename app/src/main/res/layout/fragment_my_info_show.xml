@@ -303,8 +303,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            app:scale_base_height="640"
-            app:scale_base_width="1080">
+            app:scale_base_width="1080"
+            app:scale_base_height="460"
+            >
 
             <TextView
                 android:id="@+id/_settingText"
@@ -368,50 +369,6 @@
                 app:scale_top="280"
                 app:scale_width="1080" />
 
-            <TextView
-                android:id="@+id/_bioLoginText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_bio_login"
-                android:textColor="@color/color_444444"
-                app:scale_height="90"
-                app:scale_left="100"
-                app:scale_textsize="40"
-                app:scale_top="280"
-                app:scale_width="640" />
-
-            <TextView
-                android:id="@+id/_bioLoginInfoText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="@string/text_bio_login_info"
-                android:textColor="@color/color_666666"
-                app:scale_height="120"
-                app:scale_left="100"
-                app:scale_textsize="32"
-                app:scale_top="335"
-                app:scale_width="640" />
-
-            <ImageView
-                android:id="@+id/_switchBioLogin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/icon_switch_off"
-                app:scale_height="62"
-                app:scale_left="838"
-                app:scale_top="332"
-                app:scale_width="144" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/color_d2d1d1"
-                app:scale_height="2"
-                app:scale_left="0"
-                app:scale_top="460"
-                app:scale_width="1080" />
 
             <TextView
                 android:id="@+id/_pushText"
@@ -423,7 +380,7 @@
                 app:scale_height="90"
                 app:scale_left="100"
                 app:scale_textsize="40"
-                app:scale_top="460"
+                app:scale_top="280"
                 app:scale_width="640" />
 
             <TextView
@@ -436,7 +393,7 @@
                 app:scale_height="90"
                 app:scale_left="100"
                 app:scale_textsize="32"
-                app:scale_top="550"
+                app:scale_top="370"
                 app:scale_width="640" />
 
             <ImageView
@@ -446,7 +403,7 @@
                 android:background="@drawable/icon_switch_off"
                 app:scale_height="62"
                 app:scale_left="838"
-                app:scale_top="511"
+                app:scale_top="331"
                 app:scale_width="144" />
 
         </com.ssomai.android.scalablelayout.ScalableLayout>

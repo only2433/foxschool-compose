@@ -10,7 +10,6 @@ class MyInfoPresenterDataObserver : ViewModel()
 {
     var setMyInfoShowFragment = MutableLiveData<LoginInformationResult>()
     var changeAutoLogin = MutableLiveData<Boolean>()
-    var changeBioLogin = MutableLiveData<Boolean>()
     var changePush = MutableLiveData<Boolean>()
 
     var setMyInfoChangeFragment = MutableLiveData<LoginInformationResult>()
@@ -31,11 +30,6 @@ class MyInfoPresenterDataObserver : ViewModel()
     fun setAutoLoginSwitch(isEnable : Boolean)
     {
         changeAutoLogin.value = isEnable
-    }
-
-    fun setBioLoginSwitch(isEnable : Boolean)
-    {
-        changeBioLogin.value = isEnable
     }
 
     fun setPushSwitch(isEnable : Boolean)
