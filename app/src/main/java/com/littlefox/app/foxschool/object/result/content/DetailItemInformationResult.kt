@@ -8,26 +8,26 @@ class DetailItemInformationResult
     private var latest_study : String = ""
     private var list : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var children : ArrayList<SeriesInformationResult> = ArrayList<SeriesInformationResult>()
-    private var info : ArrayList<SeriesInformation> = ArrayList<SeriesInformation>()
+    private var info : SeriesInformation? = null
 
     val seriesID : String
-        get() = info[0].getID() ?: ""
+        get() = info!!.getID() ?: ""
 
     val isSingleSeries : Boolean
-        get() = info[0].isSingle ?: true
+        get() = info!!.isSingle ?: true
 
     val seriesLevel : Int
-        get() = info[0].getLevel() ?: 0
+        get() = info!!.getLevel() ?: 0
 
     val seriesARLevel : String
         get()
         {
-            if(info[0].getARLevel() == 0.0f)
+            if(info!!.getARLevel() == 0.0f)
             {
                 return "0.0"
             }
             else
-                return info[0].getARLevel().toString()
+                return info!!.getARLevel().toString()
         }
 
     val lastStudyContentID : String
@@ -39,7 +39,7 @@ class DetailItemInformationResult
     val isStillOnSeries : Boolean
         get()
         {
-            return if(list.size < info[0].getTotalCount()) true else false
+            return if(list.size < info!!.getTotalCount()) true else false
         }
 
     fun getContentsList() : ArrayList<ContentsBaseResult> = list

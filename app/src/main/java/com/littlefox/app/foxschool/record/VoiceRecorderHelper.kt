@@ -11,10 +11,10 @@ import org.mp4parser.muxer.Track
 import org.mp4parser.muxer.builder.DefaultMp4Builder
 import org.mp4parser.muxer.container.mp4.MovieCreator
 import org.mp4parser.muxer.tracks.AppendTrack
-import java.io.IOException
-import java.io.RandomAccessFile
+import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
+import kotlin.collections.ArrayList
 
 class VoiceRecorderHelper(private val mContext : Context)
 {
@@ -145,42 +145,50 @@ class VoiceRecorderHelper(private val mContext : Context)
     {
         try
         {
-            val mediaKey = "soun"
-            val listMovies : MutableList<Movie> = ArrayList()
-            for(filename in sourceFiles)
+            var sourceFileArray : ArrayList<File> = ArrayList()
+
+            for(index in sourceFiles.indices)
             {
-                listMovies.add(MovieCreator.build(filename))
+                var tempFile = File(sourceFiles.get(index))
+                sourceFileArray.add(tempFile)
             }
-            val listTracks : ArrayList<Track> = ArrayList()
-            for(movie in listMovies)
-            {
-                for(track in movie.getTracks())
-                {
-                    if(track.getHandler().equals(mediaKey))
-                    {
-                        listTracks.add(track)
+            val outputStream = FileOutputStream(targetFile, true)
+            val buffer = ByteArray(1048576)
+            var totalSize = 0L
+            for(file in sourceFileArray) {
+                totalSize += file.length()
+            }
+            var currentSize = 0
+            for(file in sourceFileArray) {
+                val inputStream = FileInputStream(file)
+                while(true){
+                    val count = inputStream.read(buffer)
+                    if(count == -1)
+                        break
+                    else {
+                        currentSize += count
+
                     }
+                    outputStream.write(buffer, 0, count)
+                    outputStream.flush()
                 }
+                inputStream.close()
             }
-            val outputMovie = Movie()
-            if(listTracks.size > 0)
-            {
-                val track : Array<Track?> = arrayOfNulls(listTracks.size)
-                outputMovie.addTrack(AppendTrack(*listTracks.toArray(track)))
-            }
-            val container : Container = DefaultMp4Builder().build(outputMovie)
-            val fileChannel : FileChannel = RandomAccessFile(String.format(targetFile!!), "rw").getChannel()
-            container.writeContainer(fileChannel)
-            fileChannel.close()
+            outputStream.flush()
+            outputStream.close()
+
             if (mVoiceRecordEventListener != null)
             {
                 mVoiceRecordEventListener.onCompleteFileMerged()
             }
+
         } catch(e : IOException)
         {
             Log.f("Error merging media files. exception: ${e.message} || $e")
         }
     }
+
+
 
     fun setVoiceRecordEventListener(voiceRecordEventListener : VoiceRecordEventListener)
     {
