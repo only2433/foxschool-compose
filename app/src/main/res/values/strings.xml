@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoxSchool</string>
+    <string name="app_name">리틀팍스 팍스스쿨</string>
 
     <string name="title_play_list_title">재생목록</string>
     <string name="title_play_speed_title">재생속도</string>
