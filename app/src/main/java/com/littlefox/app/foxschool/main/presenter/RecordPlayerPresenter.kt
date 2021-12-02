@@ -145,12 +145,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
         // TODO 김태은 파일명 추후 변경
         mFileName = CommonUtils.getInstance(mContext).getContentsName(mRecordInformation.getName(), mRecordInformation.getSubName()).replace(":","")
-        val isDirectoryMakeComplete = FileUtils.createDirectory(PATH_MP3_ROOT)
-        if(isDirectoryMakeComplete == false)
-        {
-            Log.f("파일 디렉토리 만들수 없음")
-        }
-
     }
 
     override fun resume()
@@ -309,6 +303,12 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun readyToRecord()
     {
+        val isDirectoryMakeComplete = FileUtils.createDirectory(PATH_MP3_ROOT)
+        if(isDirectoryMakeComplete == false)
+        {
+            Log.f("파일 디렉토리 만들수 없음")
+        }
+
         mVoiceRecorderHelper = VoiceRecorderHelper(mContext)
         mVoiceRecorderHelper!!.setVoiceRecordEventListener(mVoiceRecordEventListener)
     }
@@ -475,6 +475,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mRecordPlayerContractView.stopRecordingAnimation(0)
         setTimerText()
         mRecordPlayerContractView.setUploadButtonEnable(true)
+
+        deleteDirectory(PATH_MP3_ROOT)
     }
 
     /**
@@ -688,6 +690,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         {
             mRecorderStatus = RecorderStatus.RECORD_STOP
             setRecorderReset()
+            readyToRecord()
         }
     }
 
@@ -723,6 +726,9 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
+    /**
+     * 녹음기록 화면으로 이동
+     */
     private fun startRecordHistoryActivity()
     {
         Log.f("")
@@ -751,6 +757,22 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             mRecordFileUploadHelper!!.setAsyncListener(mAsyncListener)
         }
         mRecordFileUploadHelper!!.setData(data).build()
+    }
+
+    /**
+     * 폴더 삭제
+     */
+    private fun deleteDirectory(path : String)
+    {
+        val dir : File = File(path)
+        val childFileList = dir.listFiles()
+
+        if (dir.exists()) {
+            for (childFile in childFileList) {
+                childFile.delete() // 하위 파일 제거
+            }
+            dir.delete()
+        }
     }
 
     /**
@@ -799,8 +821,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     {
                         // 녹음 초기화 취소 (일시정지 상태로 전환)
                         Log.f("RecordReset Selected : NO || Recorder : PAUSE")
-                        mRecorderStatus = RecorderStatus.AUDIO_STOP
-                        setAudioPause()
+                        if (mRecorderStatus == RecorderStatus.RECORD_PAUSE)
+                        {
+                            setRecorderPause()  // 녹음상태 였을 때
+                        }
+                        else if (mRecorderStatus == RecorderStatus.AUDIO_PAUSE)
+                        {
+                            setAudioPause() // 재생상태 였을 때
+                        }
                     }
                     DialogButtonType.BUTTON_2 ->
                     {
@@ -808,6 +836,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                         Log.f("RecordReset Selected : YES || Recorder : RESET")
                         mRecorderStatus = RecorderStatus.RECORD_STOP
                         setRecorderReset()
+                        readyToRecord()
                     }
                 }
             }
@@ -829,6 +858,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                         Log.f("RecordReset Selected : YES || Recorder : RESET")
                         mRecorderStatus = RecorderStatus.RECORD_STOP
                         setRecorderReset()
+                        readyToRecord()
                     }
                 }
             }
@@ -862,6 +892,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 녹음 기록 화면으로 이동하기
+                        deleteDirectory(PATH_MP3_ROOT)
                         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_HISTORY, Common.DURATION_SHORT)
                     }
                 }

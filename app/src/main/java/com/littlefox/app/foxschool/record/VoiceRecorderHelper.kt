@@ -5,14 +5,7 @@ import android.media.MediaRecorder
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.record.listener.VoiceRecordEventListener
 import com.littlefox.logmonitor.Log
-import org.mp4parser.Container
-import org.mp4parser.muxer.Movie
-import org.mp4parser.muxer.Track
-import org.mp4parser.muxer.builder.DefaultMp4Builder
-import org.mp4parser.muxer.container.mp4.MovieCreator
-import org.mp4parser.muxer.tracks.AppendTrack
 import java.io.*
-import java.nio.channels.FileChannel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -188,8 +181,6 @@ class VoiceRecorderHelper(private val mContext : Context)
         }
     }
 
-
-
     fun setVoiceRecordEventListener(voiceRecordEventListener : VoiceRecordEventListener)
     {
         mVoiceRecordEventListener = voiceRecordEventListener
@@ -206,6 +197,7 @@ class VoiceRecorderHelper(private val mContext : Context)
             }
         }
     }
+
     private val onErrorListener : MediaRecorder.OnErrorListener = object : MediaRecorder.OnErrorListener
     {
         override fun onError(mr : MediaRecorder, what : Int, extra : Int)
