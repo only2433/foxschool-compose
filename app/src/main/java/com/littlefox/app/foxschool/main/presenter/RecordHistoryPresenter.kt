@@ -38,6 +38,8 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
 
     private var mAudioPlayDialog : AudioPlayDialog? = null
 
+    private var isExecute : Boolean = false // 다이얼로그 실행중인지 체크
+
     constructor(context : Context)
     {
         mContext = context
@@ -107,8 +109,9 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
 
     private fun onClickRecordItem(item : RecordHistoryResult)
     {
-        if (item.getExpire() > 0) // 기간만료 되지 않은 상태일 때
+        if (item.getExpire() > 0 && isExecute == false) // 기간만료 되지 않은 상태일 때
         {
+            isExecute = true
             showAudioPlayDialog(item)
         }
     }
@@ -120,6 +123,11 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     {
         mAudioPlayDialog = AudioPlayDialog(mContext, item.getTitle(), item.getThumbnailUrl(), item.getMp3Path())
         mAudioPlayDialog!!.show()
+
+        mAudioPlayDialog!!.setOnDismissListener {
+            // 다이얼로그 닫힌 후에 리스트 클릭 활성화
+            isExecute = false
+        }
     }
 
     /**

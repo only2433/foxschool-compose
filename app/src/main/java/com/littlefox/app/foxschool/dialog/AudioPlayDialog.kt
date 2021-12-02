@@ -152,6 +152,14 @@ class AudioPlayDialog : Dialog
         _SeekbarPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
     }
 
+    override fun dismiss()
+    {
+        releaseAudio()
+        enableTimer(false)
+        mDialogHandler.removeMessages(MESSAGE_UI_UPDATE)
+        super.dismiss()
+    }
+
     private fun startAudio()
     {
         Log.f("")
@@ -274,15 +282,6 @@ class AudioPlayDialog : Dialog
         }
     }
 
-    override fun onBackPressed()
-    {
-        super.onBackPressed()
-        releaseAudio()
-        enableTimer(false)
-        mDialogHandler.removeMessages(MESSAGE_UI_UPDATE)
-        dismiss()
-    }
-
     @OnClick(R.id._closeButtonRect, R.id._playButton)
     fun onClickView(view : View)
     {
@@ -290,9 +289,6 @@ class AudioPlayDialog : Dialog
         {
             R.id._closeButtonRect ->
             {
-                releaseAudio()
-                enableTimer(false)
-                mDialogHandler.removeMessages(MESSAGE_UI_UPDATE)
                 dismiss()
             }
             R.id._playButton ->
