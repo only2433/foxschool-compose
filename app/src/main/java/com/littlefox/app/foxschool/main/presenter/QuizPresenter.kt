@@ -176,10 +176,8 @@ class QuizPresenter : QuizContract.Presenter
         )
         mQuizSelectionPagerAdapter!!.addFragment(QuizStatus.INTRO)
         mQuizContractView.showPagerView(mQuizSelectionPagerAdapter)
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            mAudioAttributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build()
-        }
+        mAudioAttributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build()
+
         requestQuizInformation()
         mQuizPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizPresenterDataObserver::class.java)
         mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
@@ -618,13 +616,7 @@ class QuizPresenter : QuizContract.Presenter
         try
         {
             mQuizPassagePlayer?.setDataSource(mContext, Uri.parse(uri))
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-                mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
-            } else
-            {
-                mQuizPassagePlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            }
+            mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
             mQuizPassagePlayer?.prepareAsync()
             mQuizPassagePlayer?.setOnPreparedListener {mQuizPassagePlayer?.start()}
         } catch(e : java.lang.Exception)
@@ -655,13 +647,7 @@ class QuizPresenter : QuizContract.Presenter
                 "play Index : " + mMainExampleSoundIndex + ", url : " + uriList[mMainExampleSoundIndex] + ", size : " + uriList.size
             )
             mQuizPassagePlayer?.setDataSource(mContext, Uri.parse(uriList[mMainExampleSoundIndex]))
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
-                mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
-            } else
-            {
-                mQuizPassagePlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            }
+            mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
             mQuizPassagePlayer?.prepareAsync()
             mQuizPassagePlayer?.setOnPreparedListener {mQuizPassagePlayer!!.start()}
         } catch(e : java.lang.Exception)

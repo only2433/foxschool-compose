@@ -55,11 +55,7 @@ class WaveDrawable : Drawable, Animatable, AnimatorUpdateListener {
 
     constructor(context: Context, imgRes: Int) {
         val drawable: Drawable?
-        drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            context.getDrawable(imgRes)
-        } else {
-            context.resources.getDrawable(imgRes)
-        }
+        drawable = context.getDrawable(imgRes)
         init(drawable)
     }
 

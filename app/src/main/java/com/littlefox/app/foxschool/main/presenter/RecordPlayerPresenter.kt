@@ -6,6 +6,7 @@ import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
+import android.os.Environment
 import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -59,6 +60,9 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         private const val DIALOG_WARNING_RECORD_RESET : Int     = 10001
         private const val DIALOG_WARNING_RECORD_EXIT : Int      = 10002
         private const val DIALOG_FILE_UPLOAD_COMPLETE : Int     = 10003
+
+       // val PATH_SDCARD = Environment.getExternalStorageDirectory().absolutePath
+       // val PATH_ROOT = "$PATH_SDCARD/LittleFox/Log"
     }
 
     private lateinit var mContext : Context
@@ -141,7 +145,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 readyToRecord()
             }
         }
-
+        // PATH_MP3_ROOT = PATH_ROOT + "/mp3/";
         PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
         // TODO 김태은 파일명 추후 변경
         mFileName = CommonUtils.getInstance(mContext).getContentsName(mRecordInformation.getName(), mRecordInformation.getSubName()).replace(":","")

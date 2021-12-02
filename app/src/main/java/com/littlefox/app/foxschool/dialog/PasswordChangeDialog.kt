@@ -156,12 +156,9 @@ class PasswordChangeDialog : Dialog
     {
         super.onCreate(savedInstanceState)
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            getWindow()!!.statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
-            getWindow()!!.navigationBarColor = mContext.resources.getColor(R.color.color_00000000)
-        }
+        getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        getWindow()!!.statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
+        getWindow()!!.navigationBarColor = mContext.resources.getColor(R.color.color_00000000)
 
         val params : WindowManager.LayoutParams = getWindow()!!.attributes
         params.width = ViewGroup.LayoutParams.MATCH_PARENT

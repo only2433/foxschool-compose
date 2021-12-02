@@ -32,12 +32,6 @@ class SearchListCoroutine: BaseCoroutine
             isRunning = true
             var response: String? = ""
 
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            {
-                Log.f("")
-                mKeyword = URLEncoder.encode(mKeyword, "UTF-8")
-            }
-
             if(mSearchType != "")
             {
                 // 검색조건 : 전체

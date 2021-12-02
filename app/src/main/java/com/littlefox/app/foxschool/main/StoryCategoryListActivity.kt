@@ -184,10 +184,7 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
 
     override fun initTransition(transitionType : TransitionType)
     {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            return
-        }
+
         when(transitionType)
         {
             TransitionType.PAIR_IMAGE -> initPairTransition()
@@ -395,11 +392,6 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
 
     fun animateRevealColorFromCoordinates(viewRoot : ViewGroup, color : Int, x : Int, y : Int, duration : Long)
     {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            _BackgroundView!!.setBackgroundColor(color)
-            return
-        }
         val finalRadius = Math.hypot(viewRoot.getWidth().toDouble(), viewRoot.getHeight().toDouble()).toFloat()
         var anim : Animator? = null
         anim = ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0f, finalRadius)

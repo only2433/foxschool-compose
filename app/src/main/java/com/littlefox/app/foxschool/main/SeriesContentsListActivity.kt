@@ -329,10 +329,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun initTransition(transitionType : TransitionType)
     {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            return
-        }
+
         when(transitionType)
         {
             TransitionType.PAIR_IMAGE -> initPairTransition()
@@ -415,7 +412,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun settingBackgroundViewTablet(thumbnailUrl : String, topbarColor : String, animationType : TransitionType)
     {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && animationType == TransitionType.PAIR_IMAGE)
+        if(animationType == TransitionType.PAIR_IMAGE)
         {
             getWindow().getSharedElementEnterTransition().addListener(object : Transition.TransitionListener
                 {
@@ -899,11 +896,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     fun animateRevealColorFromCoordinates(viewRoot : ViewGroup, color : Int, x : Int, y : Int, duration : Long)
     {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-        {
-            _BackgroundView.setBackgroundColor(color)
-            return
-        }
+
         val finalRadius = Math.hypot(viewRoot.getWidth().toDouble(), viewRoot.getHeight().toDouble()).toFloat()
         var anim : Animator? = null
         anim = ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0f, finalRadius)

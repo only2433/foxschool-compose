@@ -550,6 +550,8 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
             _BottomWordsActionText.alpha = 1.0f
             _BottomIntervalText.alpha = 1.0f
             _BottomIntervalIcon.alpha = 1.0f
+            _BottomFlashCardActionIcon.alpha = 1.0f
+            _BottomFlashCardActionText.alpha = 1.0f
         }
         else
         {
@@ -559,6 +561,8 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
             _BottomWordsActionText.alpha = 0.5f
             _BottomIntervalText.alpha = 0.5f
             _BottomIntervalIcon.alpha = 0.5f
+            _BottomFlashCardActionIcon.alpha = 0.5f
+            _BottomFlashCardActionText.alpha = 0.5f
         }
         _BottomSelectText.isClickable = isEnable
         _BottomSelectIcon.isClickable = isEnable
@@ -566,6 +570,8 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         _BottomWordsActionIcon.isClickable = isEnable
         _BottomIntervalText.isClickable = isEnable
         _BottomIntervalIcon.isClickable = isEnable
+        _BottomFlashCardActionText.isClickable = isEnable
+        _BottomFlashCardActionIcon.isClickable = isEnable
         _CheckAllText.isClickable = isEnable
         _CheckAllIcon.isClickable = isEnable
         _CheckWordText.isClickable= isEnable

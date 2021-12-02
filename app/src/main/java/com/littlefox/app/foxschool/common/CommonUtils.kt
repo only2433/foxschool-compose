@@ -607,15 +607,9 @@ class CommonUtils
      * @return
      */
     val isTabletModel : Boolean
-        get() = if(Build.VERSION.SDK_INT >= 19)
+        get()
         {
-            checkTabletDeviceWithScreenSize(sContext)
-                    && checkTabletDeviceWithProperties()
-                    && checkTabletDeviceWithUserAgent(sContext)
-        }
-        else
-        {
-            checkTabletDeviceWithScreenSize(sContext)
+            return checkTabletDeviceWithScreenSize(sContext)
                     && checkTabletDeviceWithProperties()
         }
 
@@ -796,13 +790,7 @@ class CommonUtils
         {
             val stat = StatFs(Environment.getDataDirectory().path)
             val result : Long
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR2)
-            {
-                result = stat.getAvailableBlocksLong() * stat.getBlockSizeLong()
-            } else
-            {
-                result = stat.getAvailableBlocks() as Long * stat.getBlockSize() as Long
-            }
+            result = stat.getAvailableBlocksLong() * stat.getBlockSizeLong()
             return result / (1024 * 1024)
         }
 
@@ -1065,13 +1053,10 @@ class CommonUtils
 
     fun setStatusBar(color : Int)
     {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            val window = (sContext as Activity).window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color
-        }
+        val window = (sContext as Activity).window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = color
     }
 
     fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
@@ -1426,26 +1411,7 @@ class CommonUtils
             sContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display : Display = windowManager.getDefaultDisplay()
         val size = Point()
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-        {
-            display.getRealSize(size)
-        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-        {
-            try
-            {
-                size.x = (Display::class.java.getMethod("getRawWidth").invoke(display) as Int)
-                size.y = (Display::class.java.getMethod("getRawHeight").invoke(display) as Int)
-            } catch(e : IllegalAccessException)
-            {
-                Log.f("getRealScreenSize Error : " + e.message)
-            } catch(e : InvocationTargetException)
-            {
-                Log.f("getRealScreenSize Error : " + e.message)
-            } catch(e : NoSuchMethodException)
-            {
-                Log.f("getRealScreenSize Error : " + e.message)
-            }
-        }
+        display.getRealSize(size)
         return size
     }
 
@@ -1472,7 +1438,7 @@ class CommonUtils
         var text = "[${Build.BRAND}] Model: ${Build.MODEL}, OS: ${Build.VERSION.RELEASE}, Ver: ${getPackageVersionName(Common.PACKAGE_NAME)}, ID : $userID"
         if (message != null) text += "\n\n $message" // 사용자가 입력한 메세지가 있는 경우 기존 포맷 다음에 메세지 추가
 
-        if(Build.VERSION.SDK_INT >= 24)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
             i = Intent(Intent.ACTION_SEND)
             i.putExtra(Intent.EXTRA_EMAIL, arrayOf(sendUrl))
