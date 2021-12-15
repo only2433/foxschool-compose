@@ -17,6 +17,7 @@ import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.HomeworkType
+import com.littlefox.library.view.listener.OnSingleClickListner
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
@@ -136,9 +137,13 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
             holder._HomeworkUnCompleteText.visibility = View.VISIBLE
         }
 
-        holder.itemView.setOnClickListener {
-            mHomeworkItemListener?.onItemClick(position)
-        }
+        holder.itemView.setOnClickListener(object : OnSingleClickListner()
+        {
+            override fun onSingleClick(v : View?)
+            {
+                mHomeworkItemListener?.onItemClick(position)
+            }
+        })
     }
 
     inner class ViewHolder : RecyclerView.ViewHolder

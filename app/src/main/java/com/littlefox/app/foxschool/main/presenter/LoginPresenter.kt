@@ -197,15 +197,24 @@ class LoginPresenter : LoginContract.Presenter
             message.what = MESSAGE_INPUT_EMPTY_ERROR
             when
             {
-                (schoolCode == "") -> message.obj = mContext.resources.getString(R.string.message_warning_empty_school)
-                (id == "") -> message.obj = mContext.resources.getString(R.string.message_warning_empty_id)
-                (password == "") -> message.obj = mContext.resources.getString(R.string.message_warning_empty_password)
+                (schoolCode == "") ->
+                {
+                    message.obj = mContext.resources.getString(R.string.message_warning_empty_school)
+                }
+                (id == "") ->
+                {
+                    message.obj = mContext.resources.getString(R.string.message_warning_empty_id)
+                }
+                (password == "") ->
+                {
+                    message.obj = mContext.resources.getString(R.string.message_warning_empty_password)
+                }
             }
             mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
             return
         }
-        mLoginContractView.showLoading()
 
+        mLoginContractView.showLoading()
         try
         {
             mUserLoginData = UserLoginData(id, SimpleCrypto.encode(password), schoolCode)
@@ -267,11 +276,14 @@ class LoginPresenter : LoginContract.Presenter
                     val isTeacher = mUserInformationResult!!.getUserInformation().getUserType() != Common.USER_TYPE_STUDENT
                     CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_TEACHER_MODE, isTeacher)
 
-                    when
+                    // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
+                    if(mUserInformationResult!!.getChangeDate() >= 90)
                     {
-                        // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
-                        mUserInformationResult!!.getChangeDate() >= 90 -> showPasswordChangeDialog()
-                        else -> mMainHandler.sendEmptyMessage(MESSAGE_FINISH)
+                            showPasswordChangeDialog()
+                    }
+                    else
+                    {
+                        mMainHandler.sendEmptyMessage(MESSAGE_FINISH)
                     }
                 }
                 else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
@@ -314,10 +326,13 @@ class LoginPresenter : LoginContract.Presenter
                             CrashlyticsHelper.getInstance(mContext).sendCrashlytics(data)
                         }
                     }
-                    else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE && mPasswordChangeDialog!!.isShowing)
+                    else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
                     {
-                        mPasswordChangeDialog!!.hideLoading()
-                        mPasswordChangeDialog!!.showErrorMessage(result.getMessage())
+                        if(mPasswordChangeDialog?.isShowing == true)
+                        {
+                            mPasswordChangeDialog?.hideLoading()
+                            mPasswordChangeDialog?.showErrorMessage(result.getMessage())
+                        }
                     }
                 }
             }

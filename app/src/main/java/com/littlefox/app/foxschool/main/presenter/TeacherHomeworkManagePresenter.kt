@@ -555,7 +555,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             if (IDList.isEmpty())
             {
                 mTeacherHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_choose_student))
-                mHomeworkManagePresenterObserver.setClickEnable()
             }
             else
             {

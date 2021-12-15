@@ -167,10 +167,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
         super.onCreate(savedInstanceState)
-        /**
-         * 특정 사양 낮은 기기에서 메모리에 문제가 생겨서 onCreate가 되는 상황이 발생. 예외코드
-         */
-        CommonUtils.getInstance(this).initFeature()
+
+
         if(CommonUtils.getInstance(this).checkTablet)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)

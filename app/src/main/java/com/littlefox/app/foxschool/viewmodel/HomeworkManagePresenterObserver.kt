@@ -28,7 +28,7 @@ class HomeworkManagePresenterObserver : ViewModel()
 
     var setStatusListData = MutableLiveData<HomeworkStatusBaseResult>()
     var clearStatusList = MutableLiveData<Boolean>()
-    var setClickEnable = MutableLiveData<Boolean>()
+
     // ----------
 
     /**
@@ -88,10 +88,5 @@ class HomeworkManagePresenterObserver : ViewModel()
     fun clearStatusList()
     {
         clearStatusList.value = true
-    }
-
-    fun setClickEnable()
-    {
-        setClickEnable.value = true
     }
 }

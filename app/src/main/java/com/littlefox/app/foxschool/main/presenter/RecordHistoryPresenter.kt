@@ -12,7 +12,6 @@ import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.coroutine.RecordHistoryCoroutine
 import com.littlefox.app.foxschool.dialog.AudioPlayDialog
-import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.main.contract.RecordHistoryContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.library.system.async.listener.AsyncListener
@@ -29,7 +28,6 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     private lateinit var mContext : Context
     private lateinit var mRecordHistoryContractView : RecordHistoryContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
-    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     private var mRecordHistoryCoroutine : RecordHistoryCoroutine? = null
     private lateinit var mRecordHistoryResult : ArrayList<RecordHistoryResult>
@@ -79,10 +77,7 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
 
     override fun sendMessageEvent(msg : Message)
     {
-        when(msg.what)
-        {
-
-        }
+        when(msg.what) { }
     }
 
     private fun setRecordHistoryList()
@@ -107,7 +102,7 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
         }
     }
 
-    private fun onClickRecordItem(item : RecordHistoryResult)
+    private fun selectRecordItem(item : RecordHistoryResult)
     {
         if (item.getExpire() > 0 && isExecute == false) // 기간만료 되지 않은 상태일 때
         {
@@ -206,7 +201,7 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     {
         override fun onItemClick(position : Int)
         {
-            onClickRecordItem(mRecordHistoryResult[position])
+            selectRecordItem(mRecordHistoryResult[position])
         }
     }
 

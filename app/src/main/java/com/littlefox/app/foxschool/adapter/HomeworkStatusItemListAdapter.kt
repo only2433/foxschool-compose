@@ -14,6 +14,8 @@ import com.littlefox.app.foxschool.`object`.result.homework.status.HomeworkStatu
 import com.littlefox.app.foxschool.adapter.listener.HomeworkStatusItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.library.view.listener.OnSingleClickListner
+import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
@@ -27,6 +29,7 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
     private var mStatusList : ArrayList<HomeworkStatusItemData> = ArrayList<HomeworkStatusItemData>() // 숙제현황 리스트
     private var mHomeworkStatusItemListener : HomeworkStatusItemListener? = null
     private var mCheckCount : Int = 0
+
 
     constructor(context : Context)
     {
@@ -63,11 +66,13 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
         }
         return ViewHolder(view)
     }
-
+    private final lateinit var mCurrentViewHolder : ViewHolder
+    final var itemPosition : Int = 0;
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
         val item = mStatusList[position]
-
+        itemPosition = position;
+        mCurrentViewHolder = holder
         // 체크박스
         if (item.isSelected())
         {
@@ -174,16 +179,8 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
             mHomeworkStatusItemListener!!.onClickCheck(mCheckCount)
         }
 
-        holder._HomeworkDetailText.setOnClickListener {
-            // [숙제 현황 상세 보기] 클릭 이벤트
-            mHomeworkStatusItemListener!!.onClickShowDetail(position)
-        }
-
-        holder._HomeworkEvalText.setOnClickListener {
-            // [숙제 검사] [검사 수정] 클릭 이벤트
-            mHomeworkStatusItemListener!!.onClickHomeworkChecking(position)
-        }
     }
+
 
     inner class ViewHolder : RecyclerView.ViewHolder
     {
@@ -217,6 +214,9 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
         constructor(view : View) : super(view)
         {
             ButterKnife.bind(this, view)
+
+            this._HomeworkDetailText.setOnClickListener(mOnSingleClickListner)
+            this._HomeworkEvalText.setOnClickListener(mOnSingleClickListner)
             initFont()
         }
 
@@ -226,6 +226,26 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
             _HomeworkCompleteText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
             _HomeworkDetailText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
             _HomeworkEvalText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        }
+
+        private val mOnSingleClickListner : OnSingleClickListner = object : OnSingleClickListner()
+        {
+            override fun onSingleClick(v : View)
+            {
+                when(v.id)
+                {
+                    R.id._homeworkDetailText ->
+                    {
+                        // [숙제 현황 상세 보기] 클릭 이벤트
+                        mHomeworkStatusItemListener!!.onClickShowDetail(bindingAdapterPosition)
+                    }
+                    R.id._homeworkEvalText ->
+                    {
+                        // [숙제 검사] [검사 수정] 클릭 이벤트
+                        mHomeworkStatusItemListener!!.onClickHomeworkChecking(bindingAdapterPosition)
+                    }
+                }
+            }
         }
     }
 }

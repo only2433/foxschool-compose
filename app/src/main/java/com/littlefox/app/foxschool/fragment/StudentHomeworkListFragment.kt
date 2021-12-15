@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.fragment
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
@@ -142,6 +144,7 @@ class StudentHomeworkListFragment : Fragment()
     private var mOneCommentType : Int = -1              // 버튼1개 코멘트 영역 타입
     private var isClickEnable : Boolean = false         // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
     private var isListAnimationEffect : Boolean = true   // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
+    private var mLastClickTime : Long = 0L
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -264,7 +267,6 @@ class StudentHomeworkListFragment : Fragment()
      */
     private fun updateHomeworkListData()
     {
-        isClickEnable = false // 클릭 이벤트 막기
         if (isListAnimationEffect == true)
         {
             // 애니메이션 효과 켜져있을때만 컨텐츠 로딩 다이얼로그 표시
@@ -628,7 +630,6 @@ class StudentHomeworkListFragment : Fragment()
         mTemplateAlertDialog = TemplateAlertDialog(mContext)
         mTemplateAlertDialog.setMessage(message)
         mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
         mTemplateAlertDialog.setGravity(Gravity.LEFT)
         mTemplateAlertDialog.setCancelPossible(false)
         mTemplateAlertDialog.show()
@@ -637,16 +638,19 @@ class StudentHomeworkListFragment : Fragment()
     @OnClick(R.id._homeworkInfoButton, R.id._homeworkFilterButton, R.id._homeworkOneCommentButton, R.id._homeworkStudentCommentButton, R.id._homeworkTeacherCommentButton)
     fun onClickView(view : View)
     {
-        if (isClickEnable == false) return // 중복 클릭이벤트 막기
+        //중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        {
+            return
+        }
+        mLastClickTime = SystemClock.elapsedRealtime()
 
         when(view.id)
         {
             R.id._homeworkOneCommentButton ->
             {
                 Log.f("One Comment :: $mOneCommentType")
-                isClickEnable = false
                 isListAnimationEffect = false
-
                 if (mOneCommentType == COMMENT_ONLY_STUDENT)
                 {
                     mHomeworkListFragmentObserver.onClickStudentCommentButton()
@@ -659,25 +663,21 @@ class StudentHomeworkListFragment : Fragment()
             R.id._homeworkStudentCommentButton ->
             {
                 Log.f("Student Comment")
-                isClickEnable = false
                 isListAnimationEffect = false
                 mHomeworkListFragmentObserver.onClickStudentCommentButton()
             }
             R.id._homeworkTeacherCommentButton ->
             {
                 Log.f("Teacher Comment")
-                isClickEnable = false
                 isListAnimationEffect = false
                 mHomeworkListFragmentObserver.onClickTeacherCommentButton()
             }
             R.id._homeworkInfoButton ->
             {
-                isClickEnable = false
                 showHomeworkInfoDialog()
             }
             R.id._homeworkFilterButton ->
             {
-                isClickEnable = false
                 showHomeworkFilterDialog()
             }
         }
@@ -690,27 +690,8 @@ class StudentHomeworkListFragment : Fragment()
     {
         override fun onItemClick(position : Int)
         {
-            Log.f("")
-            if (isClickEnable)
-            {
-                isClickEnable = false
-                isListAnimationEffect = false
-                mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemDetail[position])
-                isClickEnable = true // TODO 김태은 컨텐츠 연결 전까지 임시로 사용
-            }
+            isListAnimationEffect = false
+            mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemDetail[position])
         }
-    }
-
-    /**
-     * 다이얼로그 Listener
-     */
-    private val mDialogListener : DialogListener = object : DialogListener
-    {
-        override fun onConfirmButtonClick(eventType : Int)
-        {
-            isClickEnable = true
-        }
-
-        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int) { }
     }
 }

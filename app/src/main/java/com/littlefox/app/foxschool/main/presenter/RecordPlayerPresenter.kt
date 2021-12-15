@@ -480,7 +480,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         setTimerText()
         mRecordPlayerContractView.setUploadButtonEnable(true)
 
-        deleteDirectory(PATH_MP3_ROOT)
+        FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
     }
 
     /**
@@ -763,21 +763,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mRecordFileUploadHelper!!.setData(data).build()
     }
 
-    /**
-     * 폴더 삭제
-     */
-    private fun deleteDirectory(path : String)
-    {
-        val dir : File = File(path)
-        val childFileList = dir.listFiles()
 
-        if (dir.exists()) {
-            for (childFile in childFileList) {
-                childFile.delete() // 하위 파일 제거
-            }
-            dir.delete()
-        }
-    }
 
     /**
      * 녹음기 이벤트 Listener
@@ -896,7 +882,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 녹음 기록 화면으로 이동하기
-                        deleteDirectory(PATH_MP3_ROOT)
+                        FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
                         mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_HISTORY, Common.DURATION_SHORT)
                     }
                 }

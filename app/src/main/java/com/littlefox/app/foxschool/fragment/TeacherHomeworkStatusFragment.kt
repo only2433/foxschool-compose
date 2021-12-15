@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkStatusBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.status.HomeworkStatusItemData
 import com.littlefox.app.foxschool.adapter.HomeworkStatusItemListAdapter
 import com.littlefox.app.foxschool.adapter.listener.HomeworkStatusItemListener
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
@@ -71,6 +73,7 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private var mClassName : String = ""                // 학급명
     private var mHomeworkDate : String = ""             // 숙제기간
+    private var mLastClickTime : Long = 0L
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -173,11 +176,6 @@ class TeacherHomeworkStatusFragment : Fragment()
             updateStatusListData()
         })
 
-        // 클릭 이벤트 초기화
-        mHomeworkManagePresenterObserver.setClickEnable.observe(viewLifecycleOwner, {
-            isClickEnable = true
-        })
-
         // 화면 초기화
         mHomeworkManagePresenterObserver.clearStatusList.observe(viewLifecycleOwner, {
             clearScreenData()
@@ -200,8 +198,6 @@ class TeacherHomeworkStatusFragment : Fragment()
     private fun updateStatusListData()
     {
         Log.f("Teacher Homework Status List update")
-        isClickEnable = false // 클릭 이벤트 막기
-
         // 전체 체크 해제
         isAllCheck = false
         setAllCheckDrawable()
@@ -318,7 +314,12 @@ class TeacherHomeworkStatusFragment : Fragment()
     @OnClick(R.id._allCheckIcon, R.id._homeworkContentText, R.id._allHomeworkCheckingText)
     fun onClickView(view : View)
     {
-        if (isClickEnable == false) return // 중복 클릭이벤트 막기
+        //중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        {
+            return
+        }
+        mLastClickTime = SystemClock.elapsedRealtime()
 
         when(view.id)
         {
@@ -332,13 +333,11 @@ class TeacherHomeworkStatusFragment : Fragment()
             R.id._allHomeworkCheckingText ->
             {
                 // [일괄 숙제 검사]
-                isClickEnable = false
                 sendIDList()
             }
             R.id._homeworkContentText ->
             {
                 // [숙제 내용]
-                isClickEnable = false
                 mTeacherHomeworkStatusFragmentObserver.onClickHomeworkContents()
             }
         }
@@ -349,29 +348,27 @@ class TeacherHomeworkStatusFragment : Fragment()
         override fun onClickCheck(count : Int)
         {
             // 리스트에서 체크된 숫자가 리스트의 갯수와 동일한 경우 전체선택 플래그 활성화
-            if (count == mHomeworkStatusList.size) isAllCheck = true
-            else isAllCheck = false
+            if (count == mHomeworkStatusList.size)
+            {
+                isAllCheck = true
+            }
+            else
+            {
+                isAllCheck = false
+            }
             setAllCheckDrawable()
         }
 
         override fun onClickShowDetail(index : Int)
         {
             // [숙제 현황 상세 보기] 클릭 이벤트
-            if (isClickEnable)
-            {
-                isClickEnable = false
-                mTeacherHomeworkStatusFragmentObserver.onClickShowDetailButton(index)
-            }
+            mTeacherHomeworkStatusFragmentObserver.onClickShowDetailButton(index)
         }
 
         override fun onClickHomeworkChecking(index : Int)
         {
             // [숙제 검사] [검사 수정] 클릭 이벤트
-            if (isClickEnable)
-            {
-                isClickEnable = false
-                mTeacherHomeworkStatusFragmentObserver.onClickHomeworkChecking(index)
-            }
+            mTeacherHomeworkStatusFragmentObserver.onClickHomeworkChecking(index)
         }
     }
 }
