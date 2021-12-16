@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/color_edeef2"
     android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:orientation="vertical"
     tools:ignore="MissingPrefix, NewApi">
 
     <com.ssomai.android.scalablelayout.ScalableLayout
@@ -33,6 +31,8 @@
         android:id="@+id/_myInfoChangeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
         app:scale_base_width="1920"
         app:scale_base_height="1066">
 
@@ -101,7 +101,7 @@
             android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="center_vertical"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:nextFocusDown="@id/_inputEmailEditText"
             android:singleLine="true"
@@ -332,6 +332,8 @@
         android:id="@+id/_passwordChangeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
         android:visibility="gone"
         app:scale_base_width="1920"
         app:scale_base_height="1066">

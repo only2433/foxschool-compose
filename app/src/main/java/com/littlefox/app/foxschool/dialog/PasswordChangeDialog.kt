@@ -141,15 +141,8 @@ class PasswordChangeDialog : Dialog
         mUserLoginData = loginData
         mUserInformationResult = loginResult
 
-        // 화면 타입 세팅
-        if (mUserInformationResult.getChangeDate() >= 180)
-        {
-            mScreenType = PasswordGuideType.CHANGE180
-        }
-        else
-        {
-            mScreenType = PasswordGuideType.CHANGE90
-        }
+        // 화면 타입 세팅 (180일 / 90일)
+        mScreenType = mUserInformationResult.getPasswordChangeType()
     }
 
     override fun onCreate(savedInstanceState : Bundle?)
@@ -377,10 +370,6 @@ class PasswordChangeDialog : Dialog
                     else
                     {
                         _InputPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
-                        checkPassword(
-                            _InputPasswordEditText.text.toString().trim(),
-                            showMessage = true
-                        )
                     }
                 }
 
@@ -433,32 +422,6 @@ class PasswordChangeDialog : Dialog
     }
 
     /**
-     * 기존 비밀번호와 일치한지 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkPassword(password : String, showMessage : Boolean = false) : Boolean
-    {
-        // 기존 비밀번호와 일치한지 체크
-        if (password != "")
-        {
-            val result = CheckUserInput.getInstance(mContext)
-                .checkPasswordData(SimpleCrypto.decode(mUserLoginData.userPassword), password)
-                .getResultValue()
-
-            if (result != CheckUserInput.INPUT_SUCCESS)
-            {
-                if (showMessage)
-                {
-                    setInputError(InputDataType.PASSWORD, mContext.resources.getString(R.string.message_warning_password_confirm))
-                }
-                return false
-            }
-            return true
-        }
-        return false
-    }
-
-    /**
      * 새 비밀번호가 유효한지 체크
      * 1. 비밀번호 규칙 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
@@ -507,7 +470,7 @@ class PasswordChangeDialog : Dialog
      */
     private fun checkAllAvailable(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
     {
-        if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
+        if (oldPassword.isEmpty())
         {
             setChangeButtonEnable(false)
             return false

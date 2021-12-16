@@ -11,7 +11,6 @@ class MyInfoChangeFragmentDataObserver : ViewModel()
     var checkInfoInputDataAvailable = MutableLiveData<MutableMap<String, String>>()
     var clickInfoChangeButton = MutableLiveData<MutableMap<String, String>>()
 
-    var checkPassword = MutableLiveData<String>()
     var checkNewPasswordAvailable = MutableLiveData<String>()
     var checkNewPasswordConfirm = MutableLiveData<MutableMap<String, String>>()
     var checkPasswordInputDataAvailable = MutableLiveData<MutableMap<String, String>>()
@@ -56,21 +55,16 @@ class MyInfoChangeFragmentDataObserver : ViewModel()
     /**
      * 비밀번호 변경 화면 데이터
      */
-    fun checkPassword(password : String)
-    {
-        checkPassword.value = password
-    }
-
     fun checkNewPasswordAvailable(password : String)
     {
         checkNewPasswordAvailable.value = password
     }
 
-    fun checkNewPasswordConfirm(oldPassword : String, newPassword : String)
+    fun checkNewPasswordConfirm(newPassword : String, confirmPassword : String)
     {
         val data : MutableMap<String, String> = HashMap()
-        data["oldPassword"] = oldPassword
         data["newPassword"] = newPassword
+        data["confirmPassword"] = confirmPassword
         checkNewPasswordConfirm.value = data
     }
 

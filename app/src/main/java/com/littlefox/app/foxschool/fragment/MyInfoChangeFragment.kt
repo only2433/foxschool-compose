@@ -467,6 +467,10 @@ class MyInfoChangeFragment : Fragment()
                 _EmailEndTitleText.visibility = View.GONE
                 _InputEmailEndEditText.isEnabled = false
                 _InputEmailEndEditText.setText(mEmailSpinnerList!![mEmailSelectIndex])
+                if (_InputEmailEditText.text.isNotEmpty())
+                {
+                    mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())
+                }
             }
             else
             {
@@ -614,7 +618,7 @@ class MyInfoChangeFragment : Fragment()
                     _InputEmailBg.setBackgroundResource(R.drawable.text_box)
                     _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                 }
-                setSaveInfoButtonEnable(false)
+                checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
             }
             R.id._inputPhoneDeleteButton ->
             {
@@ -749,7 +753,6 @@ class MyInfoChangeFragment : Fragment()
                     else
                     {
                         _InputPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangeFragmentDataObserver.checkPassword(_InputPasswordEditText.text.toString().trim())
                     }
                 }
 

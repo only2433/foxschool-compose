@@ -206,7 +206,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
         }
         else
         {
-            mBookshelfContractView.showErrorMessage(mContext.resources.getString(R.string.message_not_seleted_contents_list))
+            mBookshelfContractView.showErrorMessage(mContext.resources.getString(R.string.message_not_selected_contents_list))
         }
     }
 

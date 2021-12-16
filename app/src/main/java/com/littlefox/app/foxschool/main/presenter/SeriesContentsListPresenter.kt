@@ -278,7 +278,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         }
         else
         {
-            mStoryDetailListContractView.showErrorMessage(mContext.resources.getString(R.string.message_not_seleted_contents_list))
+            mStoryDetailListContractView.showErrorMessage(mContext.resources.getString(R.string.message_not_selected_contents_list))
         }
     }
 

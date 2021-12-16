@@ -7,13 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Message
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.RemoteMessage
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
@@ -24,10 +21,7 @@ import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.common.*
-import com.littlefox.app.foxschool.coroutine.AuthMeCoroutine
-import com.littlefox.app.foxschool.coroutine.InitCoroutine
-import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
-import com.littlefox.app.foxschool.coroutine.PasswordChangeCoroutine
+import com.littlefox.app.foxschool.coroutine.*
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
@@ -62,6 +56,7 @@ class IntroPresenter : IntroContract.Presenter
         private const val MESSAGE_START_MAIN : Int                  = 105
         private const val MESSAGE_APP_SERVER_ERROR : Int            = 106
         private const val MESSAGE_DEVELOPER_TO_EMAIL : Int          = 107
+        private const val MESSAGE_CHANGE_PASSWORD : Int             = 108
 
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
@@ -84,6 +79,8 @@ class IntroPresenter : IntroContract.Presenter
     // 비밀번호 변경 안내 관련 변수
     private var mPasswordChangeDialog : PasswordChangeDialog? = null
     private var mPasswordChangeCoroutine : PasswordChangeCoroutine? = null
+    private var mPasswordChangeNextCoroutine : PasswordChangeNextCoroutine? = null
+    private var mPasswordChangeKeepCoroutine : PasswordChangeKeepCoroutine? = null
     private var mPassword : String  = ""
     private var mNewPassword : String = ""
     private var mConfirmPassword : String = ""
@@ -290,6 +287,15 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
+    /**
+     * 바뀐 비밀번호 저장
+     */
+    private fun changeUserLoginData()
+    {
+        mUserLoginData = UserLoginData(mUserLoginData!!.userID, SimpleCrypto.encode(mNewPassword), mUserLoginData!!.userSchoolCode)
+        CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, mUserLoginData)
+    }
+
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
         Log.f("Update Pop up")
@@ -351,6 +357,27 @@ class IntroPresenter : IntroContract.Presenter
         mPasswordChangeCoroutine!!.execute()
     }
 
+    /**
+     * 비밀번호 변경하기 통신 요청 (다음에 변경)
+     */
+    private fun requestPasswordChangeNext()
+    {
+        mPasswordChangeDialog!!.showLoading()
+        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext)
+        mPasswordChangeNextCoroutine!!.asyncListener = mIntroAsyncListener
+        mPasswordChangeNextCoroutine!!.execute()
+    }
+
+    /**
+     * 비밀번호 변경하기 통신 요청 (비밀번호 유지)
+     */
+    private fun requestPasswordChangeKeep()
+    {
+        mPasswordChangeDialog!!.showLoading()
+        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext)
+        mPasswordChangeKeepCoroutine!!.asyncListener = mIntroAsyncListener
+        mPasswordChangeKeepCoroutine!!.execute()
+    }
 
     private fun startMainActivity()
     {
@@ -479,6 +506,12 @@ class IntroPresenter : IntroContract.Presenter
                 Log.f("Send to email ------- Developer")
                 CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
             }
+            MESSAGE_CHANGE_PASSWORD ->
+            {
+                mPasswordChangeDialog!!.dismiss()
+                mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+            }
         }
     }
 
@@ -519,12 +552,13 @@ class IntroPresenter : IntroContract.Presenter
                         startAPIProcess()
                     }*/
                     startAPIProcess()
-                } else if(code == Common.COROUTINE_CODE_ME)
+                }
+                else if(code == Common.COROUTINE_CODE_ME)
                 {
                     mUserInformationResult = (result as LoginBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
 
-                    if (mUserInformationResult!!.getChangeDate() >= 90)
+                    if (mUserInformationResult!!.isNeedChangePassword())
                     {
                         // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
                         mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
@@ -548,16 +582,27 @@ class IntroPresenter : IntroContract.Presenter
                 else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
                 {
                     // 비밀번호 변경 성공
-                    // 성공 메세지 표시하고 자동로그인 해제, 다시 로그인 할 수 있도록 로그인 화면으로 이동한다.
                     Log.f("Password Change Complete")
+                    changeUserLoginData()
                     mPasswordChangeDialog!!.hideLoading()
-                    mPasswordChangeDialog!!.dismiss()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
-                    isAutoLogin = false
-                    mMainContractView.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
-                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_LOGIN, Common.DURATION_SHORT)
+                    mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
                 }
-            } else
+                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT)
+                {
+                    // 다음에 변경
+                    mPasswordChangeDialog!!.hideLoading()
+                    mMainHandler.sendEmptyMessage(MESSAGE_CHANGE_PASSWORD)
+                }
+                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
+                {
+                    // 현재 비밀번호 유지
+                    mPasswordChangeDialog!!.hideLoading()
+                    mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
+                }
+            }
+            else
             {
                 Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                 if(result.isAuthenticationBroken || result.getStatus() == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
@@ -568,9 +613,14 @@ class IntroPresenter : IntroContract.Presenter
                 }
                 else
                 {
-                    if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE && mPasswordChangeDialog!!.isShowing)
+                    if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE ||
+                        code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT ||
+                        code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
                     {
-                        mPasswordChangeDialog!!.hideLoading()
+                        if (mPasswordChangeDialog!!.isShowing)
+                        {
+                            mPasswordChangeDialog!!.hideLoading()
+                        }
                         mPasswordChangeDialog!!.showErrorMessage(result.getMessage())
                     }
                     else
@@ -641,24 +691,18 @@ class IntroPresenter : IntroContract.Presenter
 
         /**
          * [다음에 변경] 버튼 클릭 이벤트
-         * TODO 김태은 추후 로직 확인 필요
          */
         override fun onClickLaterButton()
         {
-            mPasswordChangeDialog!!.dismiss()
-            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+            requestPasswordChangeNext()
         }
 
         /**
          * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
-         * TODO 김태은 추후 로직 확인 필요
          */
         override fun onClickKeepButton()
         {
-            mPasswordChangeDialog!!.dismiss()
-            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+            requestPasswordChangeKeep()
         }
     }
 }

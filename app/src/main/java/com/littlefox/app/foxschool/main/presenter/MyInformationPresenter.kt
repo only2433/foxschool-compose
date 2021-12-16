@@ -207,37 +207,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
     }
 
     /**
-     * 지문인증 로그인 스위치 클릭 이벤트
-     */
-    private fun onClickBioLoginSwitch()
-    {
-        Log.f("")
-        val bioCheck = CommonUtils.getInstance(mContext).checkCanBioLogin()
-        when(bioCheck)
-        {
-            BioCheckResultType.BIO_CANT_USE_HARDWARE ->
-            {
-                // 생체인증 사용 불가능 기기
-                mMyInformationContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_cant_use_bio))
-                return
-            }
-            BioCheckResultType.BIO_UNABLE ->
-            {
-                // 생체인증 기능 OFF 상태
-                mMyInformationContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_unable_bio))
-                return
-            }
-            BioCheckResultType.BIO_NONE ->
-            {
-                // 등록된 생체인증 정보가 없음
-                mMyInformationContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_none_bio))
-                return
-            }
-            else -> {}
-        }
-    }
-
-    /**
      * 푸시 알림 스위치 클릭 이벤트
      */
     private fun onClickPushSwitch()
@@ -346,30 +315,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
     }
 
     /**
-     * 기존 비밀번호와 일치한지 체크 (다이얼로그 표시)
-     */
-    private fun checkPasswordOnDialog(password : String)
-    {
-        // 기존 비밀번호와 일치한지 체크
-        if (mLoginData != null)
-        {
-            val result = CheckUserInput.getInstance(mContext).checkPasswordData(
-                SimpleCrypto.decode(mLoginData!!.userPassword),
-                password
-            ).getResultValue()
-
-            if (result == CheckUserInput.INPUT_SUCCESS)
-            {
-                requestMyInformationChange(password)
-            }
-            else
-            {
-                showTemplateAlertDialog(DIALOG_PASSWORD_CONFIRM_ERR, mContext.resources.getString(R.string.message_warning_password_confirm_retry), DialogButtonType.BUTTON_1)
-            }
-        }
-    }
-
-    /**
      * 비밀번호 확인 다이얼로그 표시
      */
     private fun showPasswordCheckDialog()
@@ -389,32 +334,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
      *    비밀번호 변경 화면 관련 함수 (MyPasswordChangeFragment)
      * =========================================================
      */
-    /**
-     * 기존 비밀번호와 일치한지 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkPassword(password : String, showMessage : Boolean = false) : Boolean
-    {
-        // 기존 비밀번호와 일치한지 체크
-        if (mLoginData != null)
-        {
-            val result = CheckUserInput.getInstance(mContext)
-                .checkPasswordData(SimpleCrypto.decode(mLoginData!!.userPassword), password)
-                .getResultValue()
-
-            if (result != CheckUserInput.INPUT_SUCCESS)
-            {
-                if (showMessage)
-                {
-                    mMyInfoPresenterDataObserver.setInputError(InputDataType.PASSWORD)
-                    mMyInformationContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_password_confirm))
-                }
-                return false
-            }
-            return true
-        }
-        return false
-    }
 
     /**
      * 새 비밀번호가 유효한지 체크
@@ -465,13 +384,9 @@ class MyInformationPresenter : MyInformationContract.Presenter
     /**
      * 비밀번호 변경화면 입력값 다 유효한지 체크
      */
-    private fun checkPasswordInputData(oldPassword : String, newPassword : String, confirmPassword : String) : Boolean
+    private fun checkPasswordInputData(newPassword : String, confirmPassword : String) : Boolean
     {
-        if (oldPassword.isEmpty() || (checkPassword(oldPassword) == false))
-        {
-            return false
-        }
-        else if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
+        if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
         {
             return false
         }
@@ -594,11 +509,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun setupMyPasswordChangeFragmentListener()
     {
-        // 비밀번호 기존과 동일한지 체크
-        mMyInfoChangeFragmentDataObserver.checkPassword.observe(mContext as AppCompatActivity, {password ->
-            if (password != "") checkPassword(password, true)
-        })
-
         // 새로운 비밀번호 유효성 체크
         mMyInfoChangeFragmentDataObserver.checkNewPasswordAvailable.observe(mContext as AppCompatActivity, {password ->
             checkNewPasswordAvailable(password, true)
@@ -606,17 +516,16 @@ class MyInformationPresenter : MyInformationContract.Presenter
 
         // 비밀번호 확인 유효성 체크
         mMyInfoChangeFragmentDataObserver.checkNewPasswordConfirm.observe(mContext as AppCompatActivity, {data ->
-            val password = data["oldPassword"] as String
-            val newPassword = data["newPassword"] as String
+            val password = data["newPassword"] as String
+            val newPassword = data["confirmPassword"] as String
             checkNewPasswordConfirm(password, newPassword, true)
         })
 
         // 저장버튼 활성화 가능한지 체크
         mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable.observe(mContext as AppCompatActivity, {data ->
-            val password = data["oldPassword"] as String
             val newPassword = data["newPassword"] as String
             val confirmPassword = data["confirmPassword"] as String
-            val isEnable = checkPasswordInputData(password, newPassword, confirmPassword)
+            val isEnable = checkPasswordInputData(newPassword, confirmPassword)
             mMyInfoPresenterDataObserver.setSavePasswordButtonEnable(isEnable)
         })
 
@@ -685,6 +594,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
                 {
                     if (code == Common.COROUTINE_CODE_MY_INFO_UPDATE)
                     {
+//                        showTemplateAlertDialog(DIALOG_PASSWORD_CONFIRM_ERR, mContext.resources.getString(R.string.message_warning_password_confirm_retry), DialogButtonType.BUTTON_1)
                         mMyInformationContractView.hideLoading()
                         mMyInformationContractView.showErrorMessage(result.getMessage())
                     }
@@ -740,9 +650,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
                     }
                     DialogButtonType.BUTTON_2 ->
                     {
-                        // TODO 추후 API 방식에 따라 바로 통신으로 날릴수도 있음
-                        // 입력된 비밀번호 체크
-                        checkPasswordOnDialog(mPasswordCheckDialog.getPasswordInputData())
+                        requestMyInformationChange(mPasswordCheckDialog.getPasswordInputData())
                     }
                 }
             }
