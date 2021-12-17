@@ -162,7 +162,7 @@ class InquirePresenter : InquireContract.Presenter
     {
         CommonUtils.getInstance(mContext).hideKeyboard()
         val category = getInquireType()
-        if (category == null || email == "" || text == "") // 하나라도 빈값이 있는 경우
+        if (category == null || email == "" || email.length < 2 || text == "" || text.length < 2) // 하나라도 빈값이 있거나 2글자 미만인 경우
         {
             val message = Message.obtain()
             if (category == null)
@@ -170,12 +170,12 @@ class InquirePresenter : InquireContract.Presenter
                 message.what = MESSAGE_CATEGORY_INPUT_ERROR
                 message.obj = mContext.resources.getString(R.string.message_warning_select_inquire_category)
             }
-            else if (email == "")
+            else if (email == "" || email.length < 2)
             {
                 message.what = MESSAGE_EMAIL_INPUT_ERROR
                 message.obj = mContext.resources.getString(R.string.message_warning_empty_email)
             }
-            else if (text == "")
+            else if (text == "" || text.length < 2)
             {
                 message.what = MESSAGE_MESSAGE_INPUT_ERROR
                 message.obj = mContext.resources.getString(R.string.message_warning_empty_inquire)
