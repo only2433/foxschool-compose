@@ -177,7 +177,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG -> showBottomBookAddDialog()
             MESSAGE_SET_STORY_DETAIL_LIST ->
             {
-                if(mDetailItemInformationResult.seriesID.equals("") == false
+                if(mDetailItemInformationResult.isSingleSeries == false
                     && mCurrentSeriesBaseResult.getSeriesType().equals(Common.CONTENT_TYPE_STORY))
                 {
                     mStoryDetailListContractView.showSeriesInformationView()

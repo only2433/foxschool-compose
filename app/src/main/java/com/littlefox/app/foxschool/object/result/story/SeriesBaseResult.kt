@@ -117,7 +117,7 @@ open class SeriesBaseResult : Parcelable
     val introduction : String
         get()
         {
-            if(series == null)
+            if(series == null || series?.introduction == null)
             {
                 return ""
             }
