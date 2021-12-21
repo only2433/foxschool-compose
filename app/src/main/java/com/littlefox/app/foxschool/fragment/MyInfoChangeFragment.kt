@@ -420,6 +420,90 @@ class MyInfoChangeFragment : Fragment()
         }
     }
 
+
+
+    /**
+     * 이메일 앞 뒤 조합한 결과 추출
+     */
+    private fun getEmailEditTextResult() : String
+    {
+        val emailFront = _InputEmailEditText.text.toString().trim()
+        val emailEnd = _InputEmailEndEditText.text.toString().trim()
+
+        // 이메일 앞, 뒤가 다 공백이면 빈값을 추출해준다.
+        if (emailFront == "" && emailEnd == "")
+        {
+            return ""
+        }
+        else
+        {
+            return "$emailFront@$emailEnd"
+        }
+    }
+
+    /**
+     * 이메일 주소 선택 다이얼로그 표시
+     */
+    private fun showEmailSelectDialog()
+    {
+        Log.f("")
+        val builder = AlertDialog.Builder(mContext)
+        builder.setSingleChoiceItems(mEmailSpinnerList, mEmailSelectIndex, DialogInterface.OnClickListener { dialog, index ->
+            dialog.dismiss()
+            mEmailSelectIndex = index
+
+            _InputEmailBg.setBackgroundResource(R.drawable.text_box)
+            _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
+            if (index != mEmailSpinnerList!!.size - 1)
+            {
+                // 사용자가 제공된 기본 주소 선택
+                _EmailEndTitleText.visibility = View.GONE
+                _InputEmailEndEditText.isEnabled = false
+                _InputEmailEndEditText.setText(mEmailSpinnerList!![mEmailSelectIndex])
+
+                if (_InputEmailEditText.text.isNotEmpty())
+                {
+                    mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())
+                }
+
+                checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
+            }
+            else
+            {
+                _InputEmailEndEditText.isEnabled = true
+                _InputEmailEndEditText.setText("")
+                CommonUtils.getInstance(mContext).showKeyboard(_InputEmailEndEditText)
+            }
+        })
+
+        val dialog : AlertDialog = builder.show()
+        dialog.show()
+    }
+
+    /**
+     * 입력값 유효성 체크 (전체)
+     */
+    private fun checkInputAvailable(position : Int)
+    {
+        if (position == Common.PAGE_MY_INFO_CHANGE)
+        {
+            Log.f("check Input PAGE_MY_INFO_CHANGE")
+            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(
+                name = _InputNameEditText.text.toString().trim(),
+                email = getEmailEditTextResult(),
+                phone = _InputPhoneEditText.text.toString().trim())
+        }
+        else if (position == Common.PAGE_PASSWORD_CHANGE)
+        {
+            Log.f("check Input PAGE_PASSWORD_CHANGE")
+            mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(
+                oldPassword = _InputPasswordEditText.text.toString().trim(),
+                newPassword = _InputNewPasswordEditText.text.toString().trim(),
+                confirmPassword = _InputNewPasswordConfirmEditText.text.toString().trim()
+            )
+        }
+    }
+
     /**
      * 입력필드 배경화면 초기화
      */
@@ -435,77 +519,6 @@ class MyInfoChangeFragment : Fragment()
         _InputPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
         _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
         _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.text_box)
-    }
-
-    /**
-     * 이메일 앞 뒤 조합한 결과 추출
-     */
-    private fun getEmailEditTextResult() : String
-    {
-        val emailFront = _InputEmailEditText.text.toString().trim()
-        val emailEnd = _InputEmailEndEditText.text.toString().trim()
-
-        // 이메일 앞, 뒤가 다 공백이면 빈값을 추출해준다.
-        if (emailFront == "" && emailEnd == "") return ""
-        else return "$emailFront@$emailEnd"
-    }
-
-    /**
-     * 이메일 주소 선택 다이얼로그 표시
-     */
-    private fun showEmailSelectDialog()
-    {
-        Log.f("")
-        val builder = AlertDialog.Builder(mContext)
-        builder.setSingleChoiceItems(mEmailSpinnerList, mEmailSelectIndex, DialogInterface.OnClickListener { dialog, index ->
-            dialog.dismiss()
-            mEmailSelectIndex = index
-
-            if (index != mEmailSpinnerList!!.size - 1)
-            {
-                // 사용자가 제공된 기본 주소 선택
-                _EmailEndTitleText.visibility = View.GONE
-                _InputEmailEndEditText.isEnabled = false
-                _InputEmailEndEditText.setText(mEmailSpinnerList!![mEmailSelectIndex])
-                if (_InputEmailEditText.text.isNotEmpty())
-                {
-                    mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())
-                }
-            }
-            else
-            {
-                // [직접 입력] 선택
-                _EmailEndTitleText.text = mEmailSpinnerList!![mEmailSelectIndex]
-                _EmailEndTitleText.visibility = View.VISIBLE
-                _InputEmailEndEditText.isEnabled = true
-                _InputEmailEndEditText.setText("")
-            }
-        })
-
-        val dialog : AlertDialog = builder.show()
-        dialog.show()
-    }
-
-    /**
-     * 입력값 유효성 체크 (전체)
-     */
-    private fun checkInputAvailable(position : Int)
-    {
-        if (position == Common.PAGE_MY_INFO_CHANGE)
-        {
-            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(
-                name = _InputNameEditText.text.toString().trim(),
-                email = getEmailEditTextResult(),
-                phone = _InputPhoneEditText.text.toString().trim())
-        }
-        else if (position == Common.PAGE_PASSWORD_CHANGE)
-        {
-            mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(
-                oldPassword = _InputPasswordEditText.text.toString().trim(),
-                newPassword = _InputNewPasswordEditText.text.toString().trim(),
-                confirmPassword = _InputNewPasswordConfirmEditText.text.toString().trim()
-            )
-        }
     }
 
     /**
@@ -577,6 +590,7 @@ class MyInfoChangeFragment : Fragment()
         // 배경화면 탭하면 키보드 닫기
         if (view.id == R.id._mainBaseLayout || view.id == R.id._mainBackgroundView)
         {
+
             CommonUtils.getInstance(mContext).hideKeyboard()
             _InputNameEditText.clearFocus()
             _InputEmailEditText.clearFocus()
@@ -600,13 +614,20 @@ class MyInfoChangeFragment : Fragment()
             R.id._inputPhoneBg -> CommonUtils.getInstance(mContext).showKeyboard(_InputPhoneEditText)
 
             // Email 선택 다이얼로그 표시
-            R.id._inputEmailEndSelectButton, R.id._inputEmailEndSelectButtonRect -> showEmailSelectDialog()
+            R.id._inputEmailEndSelectButton, R.id._inputEmailEndSelectButtonRect ->
+            {
+                CommonUtils.getInstance(mContext).hideKeyboard()
+                showEmailSelectDialog()
+            }
 
             // 입력필드 X버튼 (입력필드 초기화)
             R.id._inputNameDeleteButton ->
             {
                 _InputNameEditText.text.clear()
-                if (!_InputNameEditText.hasFocus()) _InputNameBg.setBackgroundResource(R.drawable.text_box)
+                if (!_InputNameEditText.hasFocus())
+                {
+                    _InputNameBg.setBackgroundResource(R.drawable.text_box)
+                }
                 setSaveInfoButtonEnable(false)
             }
             R.id._inputEmailDeleteButton ->
@@ -623,7 +644,10 @@ class MyInfoChangeFragment : Fragment()
             R.id._inputPhoneDeleteButton ->
             {
                 _InputPhoneEditText.text.clear()
-                if (!_InputPhoneEditText.hasFocus()) _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
+                if (!_InputPhoneEditText.hasFocus())
+                {
+                    _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
+                }
             }
 
             // 저장버튼 클릭 이벤트 [나의 정보 수정]
@@ -674,36 +698,36 @@ class MyInfoChangeFragment : Fragment()
                 }
 
                 // 이메일
+
                 R.id._inputEmailEditText, R.id._inputEmailEndEditText ->
                 {
+                    Log.f("id : "+ view.id +", focus : " + hasFocus)
+                    _InputEmailBg.setBackgroundResource(R.drawable.text_box)
+                    _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                     if (hasFocus)
                     {
-                        if (view.id == R.id._inputEmailEditText)
+                        if(view?.id == R.id._inputEmailEditText)
                         {
                             _EmailTitleText.visibility = View.GONE
+                            _InputEmailBg.setBackgroundResource(R.drawable.text_box_b)
                         }
-                        else if (view.id == R.id._inputEmailEndEditText)
+                        else if(view?.id == R.id._inputEmailEndEditText)
                         {
                             _EmailEndTitleText.visibility = View.GONE
+                            _InputEmailEndBg.setBackgroundResource(R.drawable.text_box_b)
                         }
-                        _InputEmailBg.setBackgroundResource(R.drawable.text_box_b)
-                        _InputEmailEndBg.setBackgroundResource(R.drawable.text_box_b)
                     }
                     else
                     {
-                        _InputEmailBg.setBackgroundResource(R.drawable.text_box)
-                        _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
 
                         if (_InputEmailEditText.text.isEmpty())
                         {
                             _EmailTitleText.visibility = View.VISIBLE
                         }
-
                         if (_InputEmailEndEditText.text.isEmpty())
                         {
                             _EmailEndTitleText.visibility = View.VISIBLE
                         }
-
                         if (_InputEmailEditText.text.isNotEmpty() && _InputEmailEndEditText.text.isNotEmpty()) // 이메일 앞, 뒤 다 입력된 상태에서만 유효성 체크
                         {
                             mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())

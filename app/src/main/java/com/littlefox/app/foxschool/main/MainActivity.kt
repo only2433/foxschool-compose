@@ -594,7 +594,8 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 image.layoutParams = params
                 image.setImageResource(TAB_IMAGE_ICONS_TABLET[i])
                 _MainTabsLayout.getTabAt(i)?.setCustomView(image)
-            } else
+            }
+            else
             {
                 val image = ImageView(this)
                 params = LinearLayout.LayoutParams(

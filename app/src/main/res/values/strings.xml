@@ -225,7 +225,7 @@
     <string name="message_bio_login_off">등록된 지문정보 로그인 인증을 해제합니다.</string>
     <string name="message_bio_login_enable">지문인증 로그인 설정을 완료했습니다.</string>
     <string name="message_bio_login_disable">지문인증 로그인이 해제되었습니다.</string>
-    <string name="message_password_check_for_change_user_info">회원정보 수정을 위해 비밀번호를 입력해 주세요.</string>
+    <string name="message_password_check_for_change_user_info">회원정보 수정을 위해 비밀번호를 \n입력해 주세요.</string>
     <string name="message_myinfo_change_complete">회원정보가 변경되었습니다.</string>
     <string name="message_password_change_complete">비밀번호가 변경되었습니다.</string>
     <string name="message_select_word_to_study">학습할 단어를 선택해 주세요.</string>
@@ -260,7 +260,7 @@
     <string name="message_warning_search_input_2_or_more">검색어를 2자 이상 입력하세요.</string>
     <string name="message_warning_input_name">이름은 한글 2-8자, 영문 4-16자까지 가능합니다.</string>
     <string name="message_warning_input_email">올바른 형식의 이메일 주소를 입력하세요.</string>
-    <string name="message_warning_input_phone">숫자만 입력해 주세요. ( - 제외)</string>
+    <string name="message_warning_input_phone">정확한 휴대폰 번호를 입력해 주세요.</string>
     <string name="message_warning_input_password">비밀번호는 4-10자의 숫자 혹은 영문으로 입력해 주세요.</string>
     <string name="message_warning_inactive_account">이용중인 사용자가 아닙니다.</string>
     <string name="message_warning_password_confirm">기존 비밀번호가 일치하지 않습니다.</string>

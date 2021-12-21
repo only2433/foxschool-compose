@@ -104,8 +104,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_app_use_guide_tablet)
-        }
-        else
+        } else
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_app_use_guide)
@@ -179,17 +178,19 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
         _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
+
     /** ========== Init end ========== */
 
     override fun setCompanyInformationLayout(result : CompanyInformationResult?)
     {
-        if (result != null)
+        if(result != null)
         {
             _KoreaCompanyInformationNameTextList[0].text = result.getCEO()
             _KoreaCompanyInformationNameTextList[1].text = result.getAddress()
             _KoreaCompanyInformationNameTextList[2].text = result.getCompanyRegistrationNumber()
             _KoreaCompanyInformationNameTextList[3].text = result.getReportCompany()
-            _KoreaCompanyInformationNameTextList[4].text = result.getElectronicPublishingCertification()
+            _KoreaCompanyInformationNameTextList[4].text =
+                result.getElectronicPublishingCertification()
             _KoreaCompanyInformationNameTextList[5].text = result.getPhoneNumber()
             _KoreaCompanyInformationNameTextList[6].text = result.getFaxNumber()
         }
@@ -197,30 +198,46 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
 
     override fun setAppVersion(result : VersionDataResult?)
     {
-        _VersionText.setSeparateText(resources.getString(R.string.text_version), " ${CommonUtils.getInstance(this).getPackageVersionName(Common.PACKAGE_NAME)}")
-            .setSeparateColor(resources.getColor(R.color.color_444444), resources.getColor(R.color.color_29c8e6))
-            .showView()
+        _VersionText.setSeparateText(
+            resources.getString(R.string.text_version),
+            " ${CommonUtils.getInstance(this).getPackageVersionName(Common.PACKAGE_NAME)}"
+        ).setSeparateColor(
+                resources.getColor(R.color.color_444444),
+                resources.getColor(R.color.color_29c8e6)
+            ).showView()
 
         if(result!!.isNeedUpdate)
         {
             _VersionUpdateButton.visibility = View.VISIBLE
-        }
-        else
+        } else
         {
             _VersionUpdateButton.visibility = View.GONE
         }
     }
 
-    override fun showLoading() { }
+    override fun showLoading()
+    {
+    }
 
-    override fun hideLoading() { }
+    override fun hideLoading()
+    {
+    }
 
-    override fun showSuccessMessage(message : String) { }
+    override fun showSuccessMessage(message : String)
+    {
+    }
 
-    override fun showErrorMessage(message : String) { }
+    override fun showErrorMessage(message : String)
+    {
+    }
 
     @Optional
-    @OnClick(R.id._closeButtonRect, R.id._termsOfServiceButton, R.id._privacyPolicyButton, R.id._versionUpdateButton)
+    @OnClick(
+        R.id._closeButtonRect,
+        R.id._termsOfServiceButton,
+        R.id._privacyPolicyButton,
+        R.id._versionUpdateButton
+    )
     fun onClickView(view : View)
     {
         when(view.id)
@@ -228,11 +245,13 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
             R.id._closeButtonRect -> super.onBackPressed()
             R.id._termsOfServiceButton -> mAppUseGuidePresenter.onClickTermsOfService()
             R.id._privacyPolicyButton -> mAppUseGuidePresenter.onClickPrivacyPolicy()
-            R.id._versionUpdateButton -> {
+            R.id._versionUpdateButton ->
+            {
                 CommonUtils.getInstance(this@AppUseGuideActivity).startLinkMove(Common.APP_LINK)
                 ActivityCompat.finishAffinity(this)
                 exitProcess(0)
             }
         }
     }
+
 }

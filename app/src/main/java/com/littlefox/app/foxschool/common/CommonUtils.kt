@@ -1829,8 +1829,10 @@ class CommonUtils
         Log.f("")
         view.requestFocus()
         val inputMethodManager = sContext.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+
     }
+
 
     fun loadMainData() : MainInformationResult
     {
