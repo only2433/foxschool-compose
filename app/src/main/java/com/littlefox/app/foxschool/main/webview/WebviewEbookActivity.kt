@@ -1,14 +1,21 @@
 package com.littlefox.app.foxschool.main.webview
 
+import android.content.Context
 import android.content.pm.ActivityInfo
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.Message
 import android.view.View
 import android.view.Window
+import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
@@ -16,6 +23,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
+import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -27,17 +35,18 @@ import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import java.io.File
+import java.util.ArrayList
 
 class WebviewEbookActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
 
-    @BindView(R.id._titleBaselayout)
-    lateinit var _TitleBaselayout : ScalableLayout
+    @BindView(R.id._webviewBaseLayout)
+    lateinit var _WebviewBaseLayout : RelativeLayout
 
-    @BindView(R.id._webview)
-    lateinit var _WebView : WebView
+    @BindView(R.id._titleLayout)
+    lateinit var _TitleLayout : ScalableLayout
 
     @BindView(R.id._titleText)
     lateinit var _TitleText : TextView
@@ -56,6 +65,9 @@ class WebviewEbookActivity : BaseActivity()
 
     private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mWebviewIntentParamsObject : WebviewIntentParamsObject? = null
+    private var mMediaPlayer : MediaPlayer? = null
+    private var mAudioAttributes : AudioAttributes? = null
+    private lateinit var _WebView : WebView
 
     /** ========== LifeCycle ========== */
     override fun onCreate(savedInstanceState : Bundle?)
@@ -67,40 +79,39 @@ class WebviewEbookActivity : BaseActivity()
         if(CommonUtils.getInstance(this).checkTablet)
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            setContentView(R.layout.activity_webview_tablet)
+            setContentView(R.layout.activity_ebook_tablet)
         }
         else
         {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
-            setContentView(R.layout.activity_webview)
+            setContentView(R.layout.activity_ebook)
         }
 
         ButterKnife.bind(this)
         initView()
         initText()
-        initWebView()
     }
 
     override fun onResume()
     {
         Log.f("")
         super.onResume()
-        _WebView.onResume()
+
+        initWebView()
     }
 
     override fun onPause()
     {
         Log.f("")
         super.onPause()
-        _WebView.onPause()
+
+        releaseWebView()
+        stopAudio()
     }
 
     override fun onDestroy()
     {
         Log.f("")
-        _WebView.loadUrl("about:blink")
-        _WebView.removeAllViews()
-        _WebView.destroy()
         super.onDestroy()
     }
 
@@ -130,6 +141,15 @@ class WebviewEbookActivity : BaseActivity()
         showLoading()
         mWebviewIntentParamsObject = intent.getParcelableExtra(Common.INTENT_EBOOK_DATA)
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
+
+        var params : RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT)
+        params.addRule(RelativeLayout.BELOW, _TitleLayout.id)
+
+        _WebView = WebView(this)
+        _WebviewBaseLayout.addView(_WebView, params)
+
         _WebView.webViewClient = DataWebViewClient()
         _WebView.settings.javaScriptEnabled = true
 
@@ -151,6 +171,64 @@ class WebviewEbookActivity : BaseActivity()
         )
     }
 
+    private fun releaseWebView()
+    {
+        _WebView.removeAllViews()
+        _WebView.destroy()
+        _WebviewBaseLayout.removeView(_WebView)
+    }
+
+    private fun startAudio(url : String)
+    {
+        Log.f("startAudio")
+        if(mMediaPlayer != null)
+        {
+            mMediaPlayer?.reset()
+        }
+        else
+        {
+            mMediaPlayer = MediaPlayer()
+        }
+        try
+        {
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                if(mAudioAttributes == null)
+                {
+                    mAudioAttributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(
+                        AudioAttributes.USAGE_MEDIA).build()
+                }
+                mMediaPlayer?.setAudioAttributes(mAudioAttributes)
+            }
+            else
+            {
+                mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            }
+            mMediaPlayer?.setDataSource(url)
+            mMediaPlayer?.prepareAsync()
+            mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
+            {
+                override fun onPrepared(mediaPlayer : MediaPlayer)
+                {
+                    mMediaPlayer?.start()
+                }
+            })
+        }
+        catch(e : Exception)
+        {
+            Log.f("Exception : " + e.message)
+        }
+    }
+
+    private fun stopAudio()
+    {
+        mMediaPlayer?.stop()
+        mMediaPlayer?.release()
+        mMediaPlayer = null
+        mAudioAttributes = null
+    }
+
     /**
      * 상단바 색상 설정
      */
@@ -159,7 +237,7 @@ class WebviewEbookActivity : BaseActivity()
         val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
         val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
-        _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
+        _TitleLayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
 
     private fun showLoading()
@@ -207,5 +285,26 @@ class WebviewEbookActivity : BaseActivity()
         }
     }
 
+    internal inner class DataInterfaceBridge : BaseWebviewBridge
+    {
+        constructor(context: Context, coordinatorLayout : CoordinatorLayout, titleView : TextView , webView : WebView)
+                : super(context, coordinatorLayout, titleView, webView)
 
+        @JavascriptInterface
+        fun onInterfacePlaySound(url : String)
+        {
+            _WebView.postDelayed({
+                startAudio(url)
+            }, Common.DURATION_SHORTER)
+        }
+
+        @JavascriptInterface
+        fun onIntefaceStopSound()
+        {
+            _WebView.postDelayed({
+                stopAudio()
+            }, Common.DURATION_SHORTER)
+        }
+
+    }
 }
