@@ -639,7 +639,7 @@ class MyInfoChangeFragment : Fragment()
                     _InputEmailBg.setBackgroundResource(R.drawable.text_box)
                     _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                 }
-                checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
+                setSaveInfoButtonEnable(false)
             }
             R.id._inputPhoneDeleteButton ->
             {
@@ -649,7 +649,6 @@ class MyInfoChangeFragment : Fragment()
                     _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
                 }
             }
-
             // 저장버튼 클릭 이벤트 [나의 정보 수정]
             R.id._saveInfoButton ->
             {
@@ -701,7 +700,6 @@ class MyInfoChangeFragment : Fragment()
 
                 R.id._inputEmailEditText, R.id._inputEmailEndEditText ->
                 {
-                    Log.f("id : "+ view.id +", focus : " + hasFocus)
                     _InputEmailBg.setBackgroundResource(R.drawable.text_box)
                     _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                     if (hasFocus)
@@ -719,7 +717,6 @@ class MyInfoChangeFragment : Fragment()
                     }
                     else
                     {
-
                         if (_InputEmailEditText.text.isEmpty())
                         {
                             _EmailTitleText.visibility = View.VISIBLE
