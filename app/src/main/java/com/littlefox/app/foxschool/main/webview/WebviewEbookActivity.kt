@@ -196,8 +196,10 @@ class WebviewEbookActivity : BaseActivity()
             {
                 if(mAudioAttributes == null)
                 {
-                    mAudioAttributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(
-                        AudioAttributes.USAGE_MEDIA).build()
+                    mAudioAttributes = AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .setUsage(AudioAttributes.USAGE_MEDIA)
+                        .build()
                 }
                 mMediaPlayer?.setAudioAttributes(mAudioAttributes)
             }

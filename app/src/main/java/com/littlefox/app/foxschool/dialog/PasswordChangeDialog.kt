@@ -30,6 +30,7 @@ import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 
@@ -149,6 +150,7 @@ class PasswordChangeDialog : Dialog
     {
         super.onCreate(savedInstanceState)
 
+
         getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow()!!.statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
         getWindow()!!.navigationBarColor = mContext.resources.getColor(R.color.color_00000000)
@@ -156,7 +158,7 @@ class PasswordChangeDialog : Dialog
         val params : WindowManager.LayoutParams = getWindow()!!.attributes
         params.width = ViewGroup.LayoutParams.MATCH_PARENT
         params.height = ViewGroup.LayoutParams.MATCH_PARENT
-        params.windowAnimations = R.style.DialogScaleAnimation
+        params.windowAnimations = R.style.DialogPushAnimation
         getWindow()!!.attributes = params
 
         initView()
