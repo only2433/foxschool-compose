@@ -178,7 +178,6 @@ class QuizPlayFragment : Fragment()
     private fun initView()
     {
         mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
-
         when(mCurrentQuestionType)
         {
             // 이미지형 퀴즈

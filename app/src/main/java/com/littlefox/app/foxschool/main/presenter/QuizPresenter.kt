@@ -701,20 +701,20 @@ class QuizPresenter : QuizContract.Presenter
         val mCorrectImageList = ArrayList<Bitmap>()
         try
         {
-            val correctBitmap =
+            var correctBitmap =
                 BitmapFactory.decodeFile(mContext.filesDir.absolutePath + File.separator + "quiz/" + mQuizInformationResult!!.getCorrectImageFileName())
             for(i in mQuizItemResultList!!.indices)
             {
-                mCorrectImageList.add(
-                    Bitmap.createBitmap(
-                        correctBitmap,
-                        0,
-                        i * QUIZ_IMAGE_HEIGHT,
-                        QUIZ_IMAGE_WIDTH,
-                        QUIZ_IMAGE_HEIGHT
-                    )
+                var itemBitmap : Bitmap = Bitmap.createBitmap(
+                    correctBitmap,
+                    0,
+                    i * QUIZ_IMAGE_HEIGHT,
+                    QUIZ_IMAGE_WIDTH,
+                    QUIZ_IMAGE_HEIGHT
                 )
+                mCorrectImageList.add(itemBitmap)
             }
+            correctBitmap.recycle()
         } catch(e : java.lang.Exception)
         {
             if(Feature.IS_ENABLE_FIREBASE_CRASHLYTICS)
@@ -757,13 +757,14 @@ class QuizPresenter : QuizContract.Presenter
         {
             try
             {
-                val incorrectBitmap =
+                var incorrectBitmap =
                     BitmapFactory.decodeFile(mContext.filesDir.absolutePath + File.separator + "quiz/" + mQuizInformationResult!!.getInCorrectImageFileName())
-                var incorrectPieceBitmap : Bitmap? = null
+
                 for(i in 0 until maxQuestionCount)
                 {
                     correctQuestionIndex = mQuizItemResultList!![i].getCorrectIndex()
-                    incorrectPieceBitmap = Bitmap.createBitmap(
+
+                    var incorrectPieceBitmap : Bitmap = Bitmap.createBitmap(
                         incorrectBitmap,
                         0,
                         correctQuestionIndex * QUIZ_IMAGE_HEIGHT,
@@ -783,9 +784,10 @@ class QuizPresenter : QuizContract.Presenter
                     mPictureQuizList.add(mQuizPictureData)
                     Log.f("Position : " + i + "CorrectIndex : " + correctQuestionIndex + ", randImageIndex : " + randImageIndex)
                     Log.f("title : " + mQuizItemResultList!![i].getTitle())
+
                 }
                 incorrectBitmap.recycle()
-                incorrectPieceBitmap!!.recycle()
+
             } catch(e : java.lang.Exception)
             {
                 if(Feature.IS_ENABLE_FIREBASE_CRASHLYTICS)
