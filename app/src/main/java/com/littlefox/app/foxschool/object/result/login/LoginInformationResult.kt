@@ -4,11 +4,10 @@ import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 
 class LoginInformationResult
 {
-    private var change_date : Int = 0
+    private var change_90 : String = ""
+    private var change_180 : String = ""
     private var user : UserInfoSectionResult? = null
     private var school : UserSchoolSectionResult? = null
-
-    fun getChangeDate() : Int = change_date
 
     fun getUserInformation() : UserInfoSectionResult = user!!
 
@@ -19,7 +18,14 @@ class LoginInformationResult
      */
     fun isNeedChangePassword() : Boolean
     {
-        return change_date >= 90
+        if (change_90 == "Y" || change_180 == "Y")
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
     }
 
     /**
@@ -27,7 +33,7 @@ class LoginInformationResult
      */
     fun getPasswordChangeType() : PasswordGuideType
     {
-        if (change_date >= 180)
+        if (change_180 == "Y")
         {
             return PasswordGuideType.CHANGE180
         }
