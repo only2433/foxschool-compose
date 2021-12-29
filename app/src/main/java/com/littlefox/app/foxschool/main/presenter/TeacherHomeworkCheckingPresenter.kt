@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Message
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCheckingIntentParamsObject
@@ -145,10 +146,18 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
             }
             else
             {
-                if (result.isAuthenticationBroken)
+                if (result.isDuplicateLogin)
+                {
+                    // 중복 로그인 재시작
+                    (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                    IntentManagementFactory.getInstance().initAutoIntroSequence()
+                }
+                else if (result.isAuthenticationBroken)
                 {
                     Log.f("== isAuthenticationBroken ==")
                     (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                     IntentManagementFactory.getInstance().initScene()
                 }
                 else

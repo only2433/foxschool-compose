@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Message
 import android.provider.Settings
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -705,6 +706,7 @@ class SearchListPresenter : SearchListContract.Presenter
                 {
                     Log.f("== isAuthenticationBroken ==")
                     (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                     IntentManagementFactory.getInstance().initScene()
                 }
                 else
