@@ -121,16 +121,30 @@
             app:scale_top="270"
             app:scale_width="94" />
 
+        <com.littlefox.library.view.dialog.ProgressWheel
+            android:id="@+id/_progressWheelView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:matProg_barColor="@color/color_ffffff"
+            app:matProg_progressIndeterminate="true"
+            app:scale_left="480"
+            app:scale_top="350"
+            app:scale_width="120"
+            app:scale_height="120" />
+
         <ImageView
             android:id="@+id/_playButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_audio_play"
+            android:visibility="gone"
             android:scaleType="fitXY"
             app:scale_left="480"
             app:scale_top="350"
             app:scale_width="120"
             app:scale_height="120"/>
+
+
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
 </RelativeLayout>

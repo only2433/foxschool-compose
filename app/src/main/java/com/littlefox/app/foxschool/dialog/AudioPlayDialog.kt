@@ -13,6 +13,7 @@ import android.os.Handler
 import android.os.Message
 import android.view.*
 
+
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
@@ -27,6 +28,7 @@ import com.littlefox.app.foxschool.`object`.result.introduceSeries.IntroduceSeri
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.library.view.dialog.ProgressWheel
 import com.littlefox.logmonitor.Log
 import java.io.IOException
 import java.util.*
@@ -80,9 +82,11 @@ class AudioPlayDialog : Dialog
     @BindView(R.id._playerRemainPlayTime)
     lateinit var _PlayerRemainPlayTime : TextView
 
+    @BindView(R.id._progressWheelView)
+    lateinit var _ProgressWheelView : ProgressWheel
+
     @BindView(R.id._playButton)
     lateinit var _PlayButton : ImageView
-
 
     private val mContext : Context
     private var mMediaPlayer : MediaPlayer? = null
@@ -192,6 +196,8 @@ class AudioPlayDialog : Dialog
                     Log.f("")
                     isPrepareComplete = true
                     setRemainDuration()
+                    _ProgressWheelView.visibility = View.GONE
+                    _PlayButton.visibility = View.VISIBLE
                     enableTimer(isStart = true)
                     mMediaPlayer?.start()
                 }
