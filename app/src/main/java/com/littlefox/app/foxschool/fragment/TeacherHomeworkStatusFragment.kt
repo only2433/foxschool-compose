@@ -68,12 +68,12 @@ class TeacherHomeworkStatusFragment : Fragment()
     private var mHomeworkStatusItemListAdapter : HomeworkStatusItemListAdapter? = null  // 학생 리스트 Adapter
     private var mHomeworkStatusList : ArrayList<HomeworkStatusItemData> = ArrayList()   // 리스트 아이템
 
-    private var isClickEnable : Boolean = true          // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var mLastClickTime : Long = 0L              // 중복클릭 방지용
+
     private var isAllCheck : Boolean = false            // 전체 선택
 
     private var mClassName : String = ""                // 학급명
     private var mHomeworkDate : String = ""             // 숙제기간
-    private var mLastClickTime : Long = 0L
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -205,8 +205,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         setStudentListView()
         setHomeworkDateText()
         setClassNameText()
-
-        isClickEnable = true
     }
 
     /**

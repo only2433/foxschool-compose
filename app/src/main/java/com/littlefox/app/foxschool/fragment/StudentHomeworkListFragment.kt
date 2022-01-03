@@ -31,7 +31,6 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
-import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.viewmodel.HomeworkListFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
@@ -141,10 +140,10 @@ class StudentHomeworkListFragment : Fragment()
     private var mHomeworkFilterList : Array<String>?    = null
     private var mHomeworkFilterIndex : Int              = 0
 
+    private var mLastClickTime : Long = 0L              // 중복클릭 방지용
+
     private var mOneCommentType : Int = -1              // 버튼1개 코멘트 영역 타입
-    private var isClickEnable : Boolean = false         // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
-    private var isListAnimationEffect : Boolean = true   // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
-    private var mLastClickTime : Long = 0L
+    private var isListAnimationEffect : Boolean = true  // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -196,7 +195,6 @@ class StudentHomeworkListFragment : Fragment()
     override fun onResume()
     {
         super.onResume()
-        isClickEnable = true
     }
 
     override fun onPause()
@@ -277,7 +275,6 @@ class StudentHomeworkListFragment : Fragment()
         setHomeworkSubTitleText()   // 숙제 기간 텍스트 (서브타이틀)
         setCommentLayout()          // 코멘트 영역
 
-        isClickEnable = true                // 클릭 이벤트 허용
         setContentListLoadingVisible(false) // 컨텐츠 로딩 다이얼로그 숨김
     }
 
@@ -615,9 +612,6 @@ class StudentHomeworkListFragment : Fragment()
         })
 
         val dialog : AlertDialog = builder.show()
-        dialog.setOnDismissListener {
-            isClickEnable = true // 다이얼로그 닫을 때 클릭 이벤트 막는 플래그 풀어주기
-        }
         dialog.show()
     }
 

@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
@@ -74,7 +76,7 @@ class HomeworkCommentFragment : Fragment()
     private lateinit var mHomeworkCommentFragmentObserver : HomeworkCommentFragmentObserver
     private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
 
-    private var isClickEnable : Boolean = false          // 중복 클릭 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
     private var isCompleted : Boolean = false           // 최종평가 여부
     private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
@@ -192,7 +194,6 @@ class HomeworkCommentFragment : Fragment()
             clearScreenData() // 화면 초기화
             isCompleted = pair.second
             settingPageType(pair.first)
-            isClickEnable = true
         })
     }
 
@@ -431,14 +432,12 @@ class HomeworkCommentFragment : Fragment()
     @OnClick(R.id._commentInputLayout, R.id._commentRegisterButton, R.id._commentUpdateButton, R.id._commentDeleteButton)
     fun onClickView(view : View)
     {
-        if (isClickEnable == false)
+        //중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
         {
             return
         }
-        else
-        {
-            isClickEnable = false
-        }
+        mLastClickTime = SystemClock.elapsedRealtime()
 
         when(view.id)
         {

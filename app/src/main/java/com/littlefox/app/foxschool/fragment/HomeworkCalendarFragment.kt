@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.fragment
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
@@ -116,7 +118,7 @@ class HomeworkCalendarFragment : Fragment()
     private var mCalendarItemViewAdapter : CalendarItemViewAdapter? = null          // 숙제관리 리스트 Adapter
     private var mCalendarItemList : ArrayList<CalendarData> = ArrayList<CalendarData>()
 
-    private var isClickEnable : Boolean = false              // 데이터 세팅 전 이벤트 막기 위한 플래그 || 디폴트 : 이벤트 막기
+    private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
     // [선생님] 학급 선택 -----------------------------
     private var mClassNameList : Array<String>? = null      // 통신에서 응답받은 학급 리스트
@@ -255,7 +257,6 @@ class HomeworkCalendarFragment : Fragment()
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
-            isClickEnable = true // 클릭이벤트 허용
         })
 
         // 학급 데이터
@@ -466,18 +467,21 @@ class HomeworkCalendarFragment : Fragment()
         R.id._calendarClassBackground, R.id._textClassName)
     fun onClickView(view : View)
     {
-        if (isClickEnable == false) return // 중복 클릭이벤트 막기
+        //중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        {
+            return
+        }
+        mLastClickTime = SystemClock.elapsedRealtime()
 
         when(view.id)
         {
             R.id._beforeButtonRect ->
             {
-                isClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarBefore()
             }
             R.id._afterButtonRect ->
             {
-                isClickEnable = false
                 mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
             }
 
@@ -496,9 +500,14 @@ class HomeworkCalendarFragment : Fragment()
     {
         override fun onItemClick(position : Int)
         {
-            if (mCalendarItemList[position].hasHomework() && isClickEnable)
+            if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
             {
-                isClickEnable = false
+                return
+            }
+
+            if (mCalendarItemList[position].hasHomework())
+            {
+                mLastClickTime = SystemClock.elapsedRealtime()
                 mHomeworkCalendarFragmentObserver.onClickCalendarItem(mCalendarItemList[position].getHomeworkPosition())
                 _ScrollView.scrollTo(0, 0)
             }

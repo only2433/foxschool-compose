@@ -58,7 +58,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
         super.onCreate(savedInstanceState)
         Log.f("")
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         setContentView(R.layout.activity_webview_starwords)
         ButterKnife.bind(this)
         mMainHandler = WeakReferenceHandler(this)
