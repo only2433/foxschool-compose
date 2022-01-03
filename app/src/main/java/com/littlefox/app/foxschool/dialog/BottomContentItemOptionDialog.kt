@@ -192,7 +192,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(CommonUtils.getInstance(mContext).checkTablet)
+            if(CommonUtils.getInstance(mContext).checkTablet || Feature.IS_SUPPORT_EBOOK_PHONE)
             {
                 if(mContentsInformationResult.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
                 {

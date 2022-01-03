@@ -48,10 +48,15 @@ object Feature {
      */
     var IS_SUPPORT_LITTLEFOX_CLASS : Boolean  = true
 
-
+    /**
+     * 이북 폰 지원 여부
+     */
+    var IS_SUPPORT_EBOOK_PHONE : Boolean  = false
 
     /**
      * 앱 사용자의 타입
      */
     var CURRENT_USER_TYPE : UserType = UserType.STUDENT
+
+    
 }

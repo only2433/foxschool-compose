@@ -908,7 +908,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 || CommonUtils.getInstance(mContext).checkTablet == false
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
         {
-            isEbookAvailable = false
+            if(Feature.IS_SUPPORT_EBOOK_PHONE == false)
+            {
+                isEbookAvailable = false
+            }
         }
         if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
         {
@@ -1881,6 +1884,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         override fun onClickEbook()
         {
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_EBOOK, Common.DURATION_SHORT)
         }
 
         override fun onClickGameStarwords()
@@ -1891,6 +1896,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
         override fun onClickGameCrossword()
         {
+            Log.f("")
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_CROSSWORD, Common.DURATION_SHORT)
         }
 
         override fun onClickFlashCard()
