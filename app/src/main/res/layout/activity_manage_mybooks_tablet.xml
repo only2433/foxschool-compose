@@ -253,9 +253,9 @@
                 android:textColor="@color/color_ffffff"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
-                app:scale_left="585"
+                app:scale_left="583"
                 app:scale_top="0"
-                app:scale_width="750"
+                app:scale_width="748"
                 app:scale_height="84"
                 app:scale_textsize="30"/>
 
@@ -268,9 +268,9 @@
                 android:foreground="?attr/selectableItemBackground"
                 android:textColor="@color/color_29c8e6"
                 android:gravity="center"
-                app:scale_left="585"
+                app:scale_left="583"
                 app:scale_top="104"
-                app:scale_width="750"
+                app:scale_width="748"
                 app:scale_height="84"
                 app:scale_textsize="30"/>
 
