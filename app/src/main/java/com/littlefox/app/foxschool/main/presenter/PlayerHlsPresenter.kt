@@ -904,39 +904,57 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             isNextMovieHave = true
         }
-        if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
-                || CommonUtils.getInstance(mContext).checkTablet == false
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+
+
+        if(mPlayerIntentParamsObject.getHomeworkNumber() != 0)
         {
-            if(Feature.IS_SUPPORT_EBOOK_PHONE == false)
-            {
-                isEbookAvailable = false
-            }
-        }
-        if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
+            isEbookAvailable = false
             isQuizAvailable = false
-        }
-        if(data.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
             isVocabularyAvailable = false
-        }
-        if(data.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
             isFlashcardAvailable = false
-        }
-        if(data.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
             isStarwordsAvailable = false
-        }
-        if(data.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
             isCrosswordAvailable = false
-        }
-        if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
-        {
             isTranslateAvailable = false
         }
+        else
+        {
+            if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
+                || CommonUtils.getInstance(mContext).checkTablet == false
+                || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            {
+                if(Feature.IS_SUPPORT_EBOOK_PHONE == false)
+                {
+                    isEbookAvailable = false
+                }
+            }
+
+            if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isQuizAvailable = false
+            }
+            if(data.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isVocabularyAvailable = false
+            }
+            if(data.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isFlashcardAvailable = false
+            }
+            if(data.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isStarwordsAvailable = false
+            }
+            if(data.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isCrosswordAvailable = false
+            }
+            if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            {
+                isTranslateAvailable = false
+            }
+        }
+
+
         if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable())
         {
             mPlayerContractView.disablePortraitOptionButton()

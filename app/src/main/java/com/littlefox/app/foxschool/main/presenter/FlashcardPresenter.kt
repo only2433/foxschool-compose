@@ -1178,6 +1178,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
                         message.arg1 = Activity.RESULT_CANCELED
                         mMainHandler!!.sendMessageDelayed(message, Common.DURATION_SHORT)
                     }
+                    else if(code == Common.COROUTINE_CODE_FLASHCARD_SAVE)
+                    {
+                        Log.f("SAVE FLASHCARD FAIL")
+                        mFlashcardContractView.hideLoading()
+                    }
                 }
             }
         }

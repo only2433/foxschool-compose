@@ -53,10 +53,7 @@ object Feature {
      */
     var IS_SUPPORT_EBOOK_PHONE : Boolean  = false
 
-    /**
-     * 앱 사용자의 타입
-     */
-    var CURRENT_USER_TYPE : UserType = UserType.STUDENT
+
 
     
 }
