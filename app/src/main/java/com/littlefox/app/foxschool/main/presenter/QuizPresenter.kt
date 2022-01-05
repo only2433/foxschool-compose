@@ -402,6 +402,9 @@ class QuizPresenter : QuizContract.Presenter
         if(mCurrentQuizPageIndex == -1)
         {
             mQuizContractView.hideTaskBoxLayout() // 상단 영역 숨김 (타이머, 정답수)
+            // 마지막 페이지
+            releaseMediaPlay()
+            releaseEffectPlay()
             return
         }
         else

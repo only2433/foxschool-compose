@@ -166,7 +166,7 @@ class WebviewEbookActivity : BaseActivity()
         }
 
         _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
+            DataInterfaceBridge(this, _MainBaseLayout, _TitleText, _WebView),
             Common.BRIDGE_NAME
         )
     }
@@ -301,7 +301,7 @@ class WebviewEbookActivity : BaseActivity()
         }
 
         @JavascriptInterface
-        fun onIntefaceStopSound()
+        fun onInterfaceStopSound()
         {
             _WebView.postDelayed({
                 stopAudio()
