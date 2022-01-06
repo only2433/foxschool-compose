@@ -3,8 +3,10 @@ package com.littlefox.app.foxschool.main.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Message
 import android.os.Parcelable
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
@@ -49,6 +51,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     companion object
     {
         private const val DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS : Int      = 10001
+        private const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int       = 10002
 
         private const val REQUEST_CODE_UPDATE_BOOKSHELF : Int               = 1001
 
@@ -70,7 +73,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private lateinit var mContext : Context
     private lateinit var mBookshelfContractView : BookshelfContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
-    private var mTemplateAlertDialog : TemplateAlertDialog? = null
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     private var mCurrentMyBookshelfResult : MyBookshelfResult? = null
     private var mBookItemInformationList : ArrayList<ContentsBaseResult>? = null
@@ -419,11 +422,26 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun showBookshelfContentsDeleteDialog()
     {
         mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog!!.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_bookshelf))
-        mTemplateAlertDialog!!.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog!!.setDialogEventType(DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
-        mTemplateAlertDialog!!.setDialogListener(mDialogListener)
-        mTemplateAlertDialog!!.show()
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_bookshelf))
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setDialogEventType(DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
+    }
+
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
+        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /**
@@ -592,7 +610,14 @@ class BookshelfPresenter : BookshelfContract.Presenter
         override fun onClickRecordPlayer()
         {
             Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+            if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+            {
+                showChangeRecordPermissionDialog()
+            }
+            else
+            {
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+            }
         }
 
         override fun onErrorMessage(message : String)
@@ -611,10 +636,34 @@ class BookshelfPresenter : BookshelfContract.Presenter
             Log.f("event type : $eventType, buttonType : $buttonType")
             if(eventType == DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
             {
-                if(buttonType == DialogButtonType.BUTTON_2)
+                when(buttonType)
                 {
-                    mBookshelfContractView.showLoading()
-                    requestBookshelfRemoveAsync()
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        mBookshelfContractView.showLoading()
+                        requestBookshelfRemoveAsync()
+                    }
+                }
+            }
+            else if(eventType == DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            {
+                when(buttonType)
+                {
+                    DialogButtonType.BUTTON_1 ->
+                    {
+                        // [취소] 컨텐츠 사용 불가 메세지 표시
+                        mBookshelfContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                    }
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        // [권한 변경하기] 앱 정보 화면으로 이동
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", mContext.packageName, null)
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mContext.startActivity(intent)
+                    }
                 }
             }
         }

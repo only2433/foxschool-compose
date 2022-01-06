@@ -2,7 +2,9 @@ package com.littlefox.app.foxschool.main.presenter
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Message
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -27,6 +29,8 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.coroutine.*
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.StudentHomeworkContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -90,6 +94,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     private var mStudentComment : String = ""
 
     private var mSelectHomeworkData : HomeworkCalendarItemData? = null // 선택한 숙제 아이템
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     constructor(context : Context)
     {
@@ -241,7 +246,17 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             HomeworkType.QUIZ -> startQuizActivity(item.getContentID())
             HomeworkType.CROSSWORD -> startCrosswordActivity(item.getContentID())
             HomeworkType.STARWORDS -> startStarWordsActivity(item.getContentID())
-            HomeworkType.RECORDER -> startRecordActivity(content)
+            HomeworkType.RECORDER ->
+            {
+                if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+                {
+                    showChangeRecordPermissionDialog()
+                }
+                else
+                {
+                    startRecordPlayerActivity(content)
+                }
+            }
         }
     }
 
@@ -323,7 +338,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     /**
      * 녹음기 화면으로 이동
      */
-    private fun startRecordActivity(content : ContentsBaseResult)
+    private fun startRecordPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
         val recordIntentParamsObject = RecordIntentParamsObject(content, mSelectHomeworkData!!.getHomeworkNumber())
@@ -333,6 +348,20 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .setRequestCode(REQUEST_CODE_NOTIFY)
             .startActivity()
+    }
+
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     /**
@@ -590,5 +619,32 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         override fun onRunningAdvanceInformation(code : String?, `object` : Any?) { }
 
         override fun onErrorListener(code : String?, message : String?) { }
+    }
+
+    private val mPermissionDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(messageType : Int) {}
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
+        {
+            when(buttonType)
+            {
+                DialogButtonType.BUTTON_1 ->
+                {
+                    // [취소] 컨텐츠 사용 불가 메세지 표시
+                    mStudentHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                }
+                DialogButtonType.BUTTON_2 ->
+                {
+                    // [권한 변경하기] 앱 정보 화면으로 이동
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", mContext.packageName, null)
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                }
+            }
+        }
     }
 }

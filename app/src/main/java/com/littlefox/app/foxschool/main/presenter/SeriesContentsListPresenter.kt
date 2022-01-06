@@ -799,27 +799,27 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 
     private val mPermissionDialogListener : DialogListener = object : DialogListener
     {
-        override fun onConfirmButtonClick(messageType : Int)
-        {
-        }
+        override fun onConfirmButtonClick(messageType : Int) {}
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
         {
-            Log.f("messageType : $messageType, buttonType : $buttonType")
-            if(buttonType == DialogButtonType.BUTTON_1)
+            when(buttonType)
             {
-                // [취소] 컨텐츠 사용 불가 메세지 표시
-                mStoryDetailListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
-            }
-            else if(buttonType == DialogButtonType.BUTTON_2)
-            {
-                // [권한 변경하기] 앱 정보 화면으로 이동
-                val intent = Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.fromParts("package", mContext.packageName, null)
-                )
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                mContext.startActivity(intent)
+                DialogButtonType.BUTTON_1 ->
+                {
+                    // [취소] 컨텐츠 사용 불가 메세지 표시
+                    mStoryDetailListContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                }
+                DialogButtonType.BUTTON_2 ->
+                {
+                    // [권한 변경하기] 앱 정보 화면으로 이동
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", mContext.packageName, null)
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                }
             }
         }
     }

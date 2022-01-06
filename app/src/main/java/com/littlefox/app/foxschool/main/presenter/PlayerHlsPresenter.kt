@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Message
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.exoplayer2.*
@@ -26,6 +27,7 @@ import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
@@ -142,14 +144,16 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
         private const val MESSAGE_START_GAME_CROSSWORD : Int            = 110
         private const val MESSAGE_START_FLASHCARD : Int                 = 111
-        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 112
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 113
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 114
-        private const val MESSAGE_REQUEST_VIDEO : Int                   = 115
-        private const val MESSAGE_CHECK_MOVIE : Int                     = 116
+        private const val MESSAGE_START_RECORD_PLAYER : Int             = 112
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 113
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 114
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 115
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 116
+        private const val MESSAGE_CHECK_MOVIE : Int                     = 117
 
-        private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int     = 10001
-        private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int   = 10002
+        private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int         = 10001
+        private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int       = 10002
+        private const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int   = 10003
 
         private val PLAY_SPEED_LIST = floatArrayOf(0.7f, 0.85f, 1.0f, 1.15f, 1.3f)
         private const val DEFAULT_SPEED_INDEX : Int         = 2
@@ -203,6 +207,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     protected var mJob: Job? = null;
     private lateinit var mLoginInformationResult : LoginInformationResult
     private lateinit var _PlayerView : PlayerView
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     constructor(context : Context, videoView : PlayerView, orientation : Int)
     {
@@ -315,6 +320,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             MESSAGE_START_GAME_STARWORDS -> startGameStarwordsActivity()
             MESSAGE_START_GAME_CROSSWORD -> startGameCrosswordActivity()
             MESSAGE_START_FLASHCARD -> startFlashcardActivity()
+            MESSAGE_START_RECORD_PLAYER -> startRecordPlayerActivity()
             MESSAGE_REQUEST_CONTENTS_ADD ->
             {
                 mPlayerContractView.showLoading()
@@ -977,22 +983,37 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
-        val dialog = TemplateAlertDialog(mContext)
-        dialog.setMessage(message)
-        dialog.setDialogEventType(type)
-        dialog.setButtonType(buttonType)
-        dialog.setDialogListener(mDialogListener)
-        dialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(message)
+        mTemplateAlertDialog.setDialogEventType(type)
+        mTemplateAlertDialog.setButtonType(buttonType)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     private fun showTemplateAlertDialog(type : Int, firstButtonText : String, secondButtonText : String, message : String)
     {
-        val dialog = TemplateAlertDialog(mContext)
-        dialog.setMessage(message)
-        dialog.setDialogEventType(type)
-        dialog.setButtonText(firstButtonText, secondButtonText)
-        dialog.setDialogListener(mDialogListener)
-        dialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(message)
+        mTemplateAlertDialog.setDialogEventType(type)
+        mTemplateAlertDialog.setButtonText(firstButtonText, secondButtonText)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
+    }
+
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
+        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     private fun showBottomItemOptionDialog(result : ContentsBaseResult)
@@ -1498,6 +1519,21 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     }
 
     /**
+     * 녹음기 화면으로 이동
+     */
+    private fun startRecordPlayerActivity()
+    {
+        Log.f("")
+        val recordIntentParamsObject = RecordIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex])
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.RECORD_PLAYER)
+            .setData(recordIntentParamsObject)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    /**
      * 컨텐츠의 책장 리스트에서 나의단어장으로 컨텐츠를 추가해서 갱신할때 사용하는 메소드 ( 추가됨으로써 서버쪽의 해당 책장의 정보를 갱신하기 위해 사용 )
      * 예) 책장 ID , 컨텐츠의 개수, 책장 컬러 등등
      * @param result 서버쪽에서 받은 결과 책장 정보
@@ -1924,7 +1960,18 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
         }
 
-        override fun onClickRecordPlayer() { }
+        override fun onClickRecordPlayer()
+        {
+            Log.f("")
+            if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+            {
+                showChangeRecordPermissionDialog()
+            }
+            else
+            {
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+            }
+        }
 
         override fun onErrorMessage(message : String)
         {
@@ -1973,11 +2020,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         override fun onConfirmButtonClick(messageType : Int) {}
 
-        override fun onChoiceButtonClick(messageButtonType : DialogButtonType, messageType : Int)
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
         {
             if(messageType == DIALOG_TYPE_WARNING_WATCH_MOVIE)
             {
-                when(messageButtonType)
+                when(buttonType)
                 {
                     DialogButtonType.BUTTON_1 ->
                     {
@@ -1995,7 +2042,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
             else if(messageType == DIALOG_TYPE_WARNING_API_EXCEPTION)
             {
-                when(messageButtonType)
+                when(buttonType)
                 {
                     DialogButtonType.BUTTON_1 ->
                     {
@@ -2008,6 +2055,27 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     {
                         Log.f("Auth Content data error end")
                         (mContext as PlayerHlsActivity).finish()
+                    }
+                }
+            }
+            else if(messageType == DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            {
+                when(buttonType)
+                {
+                    DialogButtonType.BUTTON_1 ->
+                    {
+                        // [취소] 컨텐츠 사용 불가 메세지 표시
+                        mPlayerContractView.showErrorMessage(mContext.getString(R.string.message_warning_record_permission))
+                    }
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        // [권한 변경하기] 앱 정보 화면으로 이동
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", mContext.packageName, null)
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mContext.startActivity(intent)
                     }
                 }
             }

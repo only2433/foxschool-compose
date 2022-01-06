@@ -172,9 +172,7 @@
     <string name="text_homework_eval_e1">잘했어요</string>
     <string name="text_homework_eval_e2">좀 더 노력해요</string>
     <string name="text_homework_comment_option">선택사항(50자 이내)</string>
-
     <string name="text_comment_to_teacher">선생님께 하고 싶은 이야기가 있을 때 작성해 주세요. (200자 이내)</string>
-
     <string name="text_record_remain_date">일 남음</string>
     <string name="text_record_expired">기간 만료</string>
 
