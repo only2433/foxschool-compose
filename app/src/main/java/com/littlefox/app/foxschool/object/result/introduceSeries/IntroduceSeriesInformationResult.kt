@@ -8,7 +8,7 @@ class IntroduceSeriesInformationResult
     private var name : String = ""
     private var level : Int = -1
     private var introduction : String = ""
-    private var current_count : Int = -1
+    private var contents_count : Int = -1
     private var total_count : Int = -1
     private var categories : String = ""
     private var is_single : String = ""
@@ -26,7 +26,7 @@ class IntroduceSeriesInformationResult
 
     fun getIntroduction() : String = introduction
 
-    fun getCurrentReleaseCount() : Int = current_count
+    fun getSchoolContentsCount() : Int = contents_count
 
     fun getTotalCount() : Int = total_count
 

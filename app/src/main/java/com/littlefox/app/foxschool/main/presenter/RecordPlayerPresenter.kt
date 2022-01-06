@@ -213,6 +213,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             }
             MESSAGE_RECORD_UPLOAD_SUCCESS ->
             {
+                mRecordingPathList.clear()
                 showFileUploadCompleteDialog()
                 mRecordPlayerContractView.setUploadButtonEnable(false)
             }

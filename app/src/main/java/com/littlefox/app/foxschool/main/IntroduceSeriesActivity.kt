@@ -336,11 +336,11 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
         var textData = ""
         if(result.isSingleSeries)
         {
-            textData = String.format(resources.getString(R.string.text_count_stories, java.lang.String.valueOf(result.getCurrentReleaseCount())) + categoryData)
+            textData = String.format(resources.getString(R.string.text_count_stories, java.lang.String.valueOf(result.getSchoolContentsCount())) + categoryData)
         }
         else
         {
-            textData = String.format(resources.getString(R.string.text_count_series_stories, java.lang.String.valueOf(result.getCurrentReleaseCount())) + categoryData)
+            textData = String.format(resources.getString(R.string.text_count_series_stories, java.lang.String.valueOf(result.getSchoolContentsCount())) + categoryData)
         }
         val informationTextData = "$levelData | $textData"
         // ===== 키워드 데이터 조합 =====

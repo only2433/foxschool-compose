@@ -130,7 +130,7 @@ class IntroduceSeriesTabletDialog : Dialog
         {
             _IntroduceInformationText.setText(
                 String.format(mContext.getString(R.string.text_count_level), result.getLevel())
-                        + " | " + String.format(mContext.getString(R.string.text_count_stories, result.getCurrentReleaseCount().toString())
+                        + " | " + String.format(mContext.getString(R.string.text_count_stories, result.getSchoolContentsCount().toString())
                         + categoryData
                 )
             )
@@ -139,7 +139,7 @@ class IntroduceSeriesTabletDialog : Dialog
         {
             _IntroduceInformationText.setText(
                 String.format(mContext.getString(R.string.text_count_level), result.getLevel())
-                        + " | " + String.format(mContext.getString(R.string.text_count_series_stories, result.getCurrentReleaseCount().toString())
+                        + " | " + String.format(mContext.getString(R.string.text_count_series_stories, result.getSchoolContentsCount().toString())
                         + categoryData
                 )
             )

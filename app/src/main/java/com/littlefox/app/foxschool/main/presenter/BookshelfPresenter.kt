@@ -274,9 +274,10 @@ class BookshelfPresenter : BookshelfContract.Presenter
         mCurrentPlayIndex = index
         val sendItemList = ArrayList<ContentsBaseResult>()
         sendItemList.add(mBookItemInformationList!![mCurrentPlayIndex])
+        val playerParamsObject = PlayerIntentParamsObject(sendItemList)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.PLAYER)
-            .setData(sendItemList)
+            .setData(playerParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
