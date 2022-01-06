@@ -1,16 +1,19 @@
 package com.littlefox.app.foxschool.main.webview
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Message
 import android.view.View
 import android.view.Window
+import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -56,6 +59,7 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
     companion object
     {
         const val MESSAGE_SET_TITLE : Int = 10
+        const val MESSAGE_PAGE_LOAD_ERROR : Int = 11
     }
     private var mCurrentURL : String = ""
     private var mLoadingDialog : MaterialLoadingDialog? = null
@@ -139,7 +143,7 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
         _WebView.settings.javaScriptEnabled = true
         _WebView.loadUrl(Common.URL_LEARNING_LOG, extraHeaders)
         _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
+            DataInterfaceBridge(this, _MainBaseLayout, _TitleText, _WebView),
             Common.BRIDGE_NAME
         )
     }
@@ -199,6 +203,13 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
         when(message!!.what)
         {
             MESSAGE_SET_TITLE -> _TitleText.text = message.obj.toString()
+            MESSAGE_PAGE_LOAD_ERROR ->
+            {
+                finish()
+                Toast.makeText(WebviewLearningLogActivity@this,
+                    resources.getString(R.string.message_webview_connect_error),
+                    Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -236,8 +247,6 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
 
         override fun onPageFinished(view : WebView, url : String)
         {
-            hideLoading()
-
             Log.f("url : $url")
             mCurrentURL = url
 
@@ -251,6 +260,22 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
             }
 
             super.onPageFinished(view, url)
+        }
+    }
+
+    internal inner class DataInterfaceBridge : BaseWebviewBridge
+    {
+        constructor(context: Context, coordinatorLayout : CoordinatorLayout, titleText : TextView, webView : WebView)
+                : super(context, coordinatorLayout, titleText, webView)
+
+        @JavascriptInterface
+        fun onInterfaceGameLoadComplete()
+        {
+            _WebView.postDelayed({
+                Log.f("----- Page Load Complete -----")
+                hideLoading()
+                mMainHandler!!.removeMessages(WebviewLearningLogActivity.MESSAGE_PAGE_LOAD_ERROR)
+            }, Common.DURATION_SHORTER)
         }
     }
 }
