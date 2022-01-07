@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Message
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
@@ -47,6 +49,7 @@ class IntroPresenter : IntroContract.Presenter
 
         private const val DIALOG_TYPE_SELECT_UPDATE_CONFIRM : Int   = 10001
         private const val DIALOG_TYPE_FORCE_UPDATE : Int            = 10002
+        private const val DIALOG_TYPE_WARNING_FILE_PERMISSION       = 10003
 
         private const val MESSAGE_INIT : Int                        = 100
         private const val MESSAGE_REQUEST_AUTO_LOGIN : Int          = 101
@@ -84,6 +87,8 @@ class IntroPresenter : IntroContract.Presenter
     private var mPassword : String  = ""
     private var mNewPassword : String = ""
     private var mConfirmPassword : String = ""
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+    private var isRequestPermission : Boolean = false
 
     constructor(context : Context)
     {
@@ -111,8 +116,6 @@ class IntroPresenter : IntroContract.Presenter
             CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_PUSH_SEND, "Y")
         }
 
-
-
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT, Common.DURATION_NORMAL)
     }
 
@@ -135,33 +138,26 @@ class IntroPresenter : IntroContract.Presenter
         mPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         mPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         mPermissionList.add(Manifest.permission.RECORD_AUDIO)
+
         checkUserStatus()
         val autoLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
-        Log.f("autoLoginStatus : $autoLoginStatus")
+
         isAutoLogin = if(autoLoginStatus == "Y") true else false
         isDisposableLogin = CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, DataType.TYPE_BOOLEAN) as Boolean
         Log.f("isAutoLogin : $isAutoLogin, isDisposableLogin : $isDisposableLogin")
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            if(CommonUtils.getInstance(mContext).getUnAuthorizePermissionList(mPermissionList).size > 0)
-            {
-                Log.f("")
-                CommonUtils.getInstance(mContext).requestPermission(mPermissionList, PERMISSION_REQUEST)
-            }
-            else
-            {
-                executeSequence()
-            }
-        }
-        else
-        {
-            executeSequence()
-        }
+
+        checkPermission()
     }
 
     override fun resume()
     {
         Log.f("")
+
+        if(isRequestPermission)
+        {
+            isRequestPermission = false
+            checkPermission()
+        }
     }
 
     override fun pause()
@@ -206,6 +202,19 @@ class IntroPresenter : IntroContract.Presenter
         else
         {
             Feature.IS_FREE_USER = false
+        }
+    }
+
+    private fun checkPermission()
+    {
+        if(CommonUtils.getInstance(mContext).getUnAuthorizePermissionList(mPermissionList).size > 0)
+        {
+            Log.f("")
+            CommonUtils.getInstance(mContext).requestPermission(mPermissionList, PERMISSION_REQUEST)
+        }
+        else
+        {
+            executeSequence()
         }
     }
 
@@ -299,12 +308,12 @@ class IntroPresenter : IntroContract.Presenter
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
         Log.f("Update Pop up")
-        val dialog = TemplateAlertDialog(mContext)
-        dialog.setMessage(message)
-        dialog.setDialogEventType(type)
-        dialog.setButtonType(buttonType)
-        dialog.setDialogListener(mDialogListener)
-        dialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(message)
+        mTemplateAlertDialog.setDialogEventType(type)
+        mTemplateAlertDialog.setButtonType(buttonType)
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     private fun showPasswordChangeDialog()
@@ -314,6 +323,21 @@ class IntroPresenter : IntroContract.Presenter
         mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
         mPasswordChangeDialog?.setCancelable(false)
         mPasswordChangeDialog?.show()
+    }
+
+    /**
+     * 파일 권한 허용 요청 다이얼로그
+     * - 로그 파일 저장을 위해
+     */
+    private fun showChangeFilePermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext)
+        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_warning_storage_permission))
+        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_FILE_PERMISSION)
+        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
+        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+        mTemplateAlertDialog.setDialogListener(mDialogListener)
+        mTemplateAlertDialog.show()
     }
 
     private fun requestInitAsync()
@@ -458,7 +482,7 @@ class IntroPresenter : IntroContract.Presenter
 
                 if(isAllCheckSuccess == false)
                 {
-                    (mContext as AppCompatActivity).finish()
+                    showChangeFilePermissionDialog()
                 }
                 else
                 {
@@ -659,14 +683,42 @@ class IntroPresenter : IntroContract.Presenter
             Log.f("messageType : $messageType, buttonType : $buttonType")
             if(messageType == DIALOG_TYPE_SELECT_UPDATE_CONFIRM)
             {
-                if(buttonType == DialogButtonType.BUTTON_1)
+                when(buttonType)
                 {
-                    startAPIProcess()
+                    DialogButtonType.BUTTON_1 ->
+                    {
+                        startAPIProcess()
+                    }
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        (mContext as AppCompatActivity).finish()
+                        CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
+                    }
                 }
-                else if(buttonType == DialogButtonType.BUTTON_2)
+
+            }
+            else if(messageType == DIALOG_TYPE_WARNING_FILE_PERMISSION)
+            {
+                when(buttonType)
                 {
-                    (mContext as AppCompatActivity).finish()
-                    CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
+                    DialogButtonType.BUTTON_1 ->
+                    {
+                        // [취소] 컨텐츠 사용 불가 메세지 표시
+                       // mMainContractView.showErrorMessage(mContext.getString(R.string.message_warning_storage_permission))
+                        Toast.makeText(mContext, mContext.getString(R.string.message_warning_storage_permission), Toast.LENGTH_LONG).show()
+                        (mContext as AppCompatActivity).finish()
+                    }
+                    DialogButtonType.BUTTON_2 ->
+                    {
+                        // [권한 변경하기] 앱 정보 화면으로 이동
+                        isRequestPermission = true
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", mContext.packageName, null)
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mContext.startActivity(intent)
+                    }
                 }
             }
         }
