@@ -67,12 +67,14 @@ class IntroPresenter : IntroContract.Presenter
     private lateinit var mContext : Context
     private lateinit var mMainContractView : IntroContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
+
+    private var mInitCoroutine : InitCoroutine? = null
     private var mAuthMeCoroutine : AuthMeCoroutine? = null
     private var mMainInformationCoroutine : MainInformationCoroutine? = null
 
     private lateinit var mPermissionList : ArrayList<String>
     private var mCurrentIntroProcess : IntroProcess = IntroProcess.NONE
-    private var mInitCoroutine : InitCoroutine? = null
+
     private var isAutoLogin : Boolean           = false
     private var isDisposableLogin : Boolean     = false
 
@@ -430,6 +432,8 @@ class IntroPresenter : IntroContract.Presenter
     private fun release()
     {
         Log.f("")
+        mInitCoroutine?.cancel()
+        mInitCoroutine = null
         mAuthMeCoroutine?.cancel()
         mAuthMeCoroutine = null
         mMainInformationCoroutine?.cancel()

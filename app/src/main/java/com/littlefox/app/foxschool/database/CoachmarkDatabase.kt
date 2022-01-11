@@ -14,6 +14,7 @@ abstract class CoachmarkDatabase : RoomDatabase()
     {
         private var sInstance : CoachmarkDatabase? = null;
 
+        @Synchronized
         fun getInstance(context : Context) : CoachmarkDatabase?
         {
             if(sInstance == null)
