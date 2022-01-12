@@ -457,7 +457,8 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                 }
                 false
             }
-        } else
+        }
+        else
         {
             true
         }

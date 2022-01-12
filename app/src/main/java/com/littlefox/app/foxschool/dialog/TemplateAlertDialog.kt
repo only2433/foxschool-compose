@@ -162,17 +162,20 @@ class TemplateAlertDialog
             // [비밀번호 확인 다이얼로그] 뷰 세팅
             // TODO : 비밀번호 입력 다이얼로그 디자인이 나오면 픽셀값 확인 필요합니다.
             val coordinatorLayout = CoordinatorLayout(mContext)
-            val layoutParams = CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            val height = if(CommonUtils.getInstance(mContext).checkTablet) 70 else 100
+            val viewHeight = if(CommonUtils.getInstance(mContext).checkTablet) 70 else 100
+            val viewLayoutParams = CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                marginStart = CommonUtils.getInstance(mContext).getPixel(50)
+                marginEnd = CommonUtils.getInstance(mContext).getPixel(50)
+            }
 
-            layoutParams.marginStart = CommonUtils.getInstance(mContext).getPixel(50)
-            layoutParams.marginEnd = CommonUtils.getInstance(mContext).getPixel(50)
-            _EditText = EditText(mContext)
-            _EditText!!.layoutParams = layoutParams
-            _EditText!!.inputType = TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD
-            _EditText!!.height = CommonUtils.getInstance(mContext).getPixel(height)
-            _EditText!!.setPadding(CommonUtils.getInstance(mContext).getPixel(30), 0, CommonUtils.getInstance(mContext).getPixel(30), 0)
-            _EditText!!.setBackgroundResource(R.drawable.text_box)
+            _EditText = EditText(mContext).apply {
+                layoutParams = viewLayoutParams
+                inputType = TYPE_CLASS_TEXT or TYPE_TEXT_VARIATION_PASSWORD
+                height = CommonUtils.getInstance(mContext).getPixel(viewHeight)
+                setPadding(CommonUtils.getInstance(mContext).getPixel(30), 0, CommonUtils.getInstance(mContext).getPixel(30), 0)
+                setBackgroundResource(R.drawable.text_box)
+            }
+
             coordinatorLayout.addView(_EditText)
             mAlertDialogBuilder.setView(coordinatorLayout)
         }

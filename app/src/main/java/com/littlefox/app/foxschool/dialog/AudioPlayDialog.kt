@@ -118,11 +118,12 @@ class AudioPlayDialog : Dialog
     {
         super.onCreate(savedInstanceState)
 
-        var params : WindowManager.LayoutParams = getWindow()!!.attributes
-        params.width = CommonUtils.getInstance(mContext).getPixel(DIALOG_WIDTH)
-        params.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        params.gravity = Gravity.CENTER
-        params.windowAnimations = R.style.DialogScaleAnimation
+        var params : WindowManager.LayoutParams = getWindow()!!.attributes.apply {
+            width = CommonUtils.getInstance(mContext).getPixel(DIALOG_WIDTH)
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            gravity = Gravity.CENTER
+            windowAnimations = R.style.DialogScaleAnimation
+        }
         getWindow()!!.attributes = params
         getWindow()!!.decorView.setBackgroundColor(Color.TRANSPARENT)
 
@@ -150,10 +151,12 @@ class AudioPlayDialog : Dialog
 
     private fun initSeekbar()
     {
-        _SeekbarPlayBar.thumbOffset = CommonUtils.getInstance(mContext).getPixel(0)
-        _SeekbarPlayBar.progress = 0
-        _SeekbarPlayBar.secondaryProgress = 0
-        _SeekbarPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
+        _SeekbarPlayBar.run {
+            thumbOffset = CommonUtils.getInstance(mContext).getPixel(0)
+            progress = 0
+            secondaryProgress = 0
+            setOnSeekBarChangeListener(mOnSeekBarListener)
+        }
     }
 
     override fun dismiss()

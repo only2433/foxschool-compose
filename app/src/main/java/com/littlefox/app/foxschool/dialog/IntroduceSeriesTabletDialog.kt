@@ -84,10 +84,11 @@ class IntroduceSeriesTabletDialog : Dialog
         setContentView(R.layout.activity_introduce_series)
         ButterKnife.bind(this)
         mContext = context
-        val params : WindowManager.LayoutParams = WindowManager.LayoutParams()
-        params.copyFrom(window!!.attributes)
-        params.width = CommonUtils.getInstance(mContext).getPixel(DIALOG_WIDTH)
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT
+        val params : WindowManager.LayoutParams = WindowManager.LayoutParams().apply {
+            copyFrom(window!!.attributes)
+            width = CommonUtils.getInstance(mContext).getPixel(DIALOG_WIDTH)
+            height = WindowManager.LayoutParams.WRAP_CONTENT
+        }
         window!!.attributes = params
         initView()
         showIntroduceSeriesView(result)
@@ -191,11 +192,12 @@ class IntroduceSeriesTabletDialog : Dialog
             thumbnail.scaleType = ImageView.ScaleType.FIT_XY
             Glide.with(mContext).load(characterList[i].getImage())
                 .transition(DrawableTransitionOptions.withCrossFade()).into(thumbnail)
-            val titleView = TextView(mContext)
-            titleView.setGravity(Gravity.CENTER)
-            titleView.setTextColor(mContext.resources.getColor(R.color.color_444444))
-            titleView.setTypeface(Font.getInstance(mContext).getRobotoBold())
-            titleView.setText(characterList[i].getName())
+            val titleView = TextView(mContext).apply {
+                setGravity(Gravity.CENTER)
+                setTextColor(mContext.resources.getColor(R.color.color_444444))
+                setTypeface(Font.getInstance(mContext).getRobotoBold())
+                setText(characterList[i].getName())
+            }
             currentColumnIndex = i / MAX_ROW_COUNT
             currentRowIndex = i % MAX_ROW_COUNT
             Log.i("currentColumnIndex : $currentColumnIndex, currentRowIndex : $currentRowIndex")
@@ -308,17 +310,19 @@ class IntroduceSeriesTabletDialog : Dialog
         {
             return
         }
-        val titleView = TextView(mContext)
-        titleView.setTextColor(mContext.resources.getColor(R.color.color_23a3e5))
-        titleView.setText(title)
-        titleView.setGravity(Gravity.CENTER_VERTICAL)
-        titleView.setPadding(
-            CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING),
-            0,
-            0,
-            0
-        )
-        titleView.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        val titleView = TextView(mContext).apply {
+            setTextColor(mContext.resources.getColor(R.color.color_23a3e5))
+            setText(title)
+            setGravity(Gravity.CENTER_VERTICAL)
+            setPadding(
+                CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING),
+                0,
+                0,
+                0
+            )
+            setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        }
+
         contentsLayout.addView(
             titleView,
             LAYOUT_CONTENTS_VIEW_MARGIN_LEFT.toFloat(),

@@ -151,16 +151,19 @@ class PasswordChangeDialog : Dialog
         super.onCreate(savedInstanceState)
 
 
-        getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        getWindow()!!.statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
-        getWindow()!!.navigationBarColor = mContext.resources.getColor(R.color.color_00000000)
+        getWindow()!!.run {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
+            navigationBarColor = mContext.resources.getColor(R.color.color_00000000)
+        }
 
-        val params : WindowManager.LayoutParams = getWindow()!!.attributes
-        params.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params.height = ViewGroup.LayoutParams.MATCH_PARENT
-        params.windowAnimations = R.style.DialogPushAnimation
+        val params : WindowManager.LayoutParams = getWindow()!!.attributes.apply {
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            height = ViewGroup.LayoutParams.MATCH_PARENT
+            windowAnimations = R.style.DialogPushAnimation
+        }
+
         getWindow()!!.attributes = params
-
         initView()
         initFont()
     }
