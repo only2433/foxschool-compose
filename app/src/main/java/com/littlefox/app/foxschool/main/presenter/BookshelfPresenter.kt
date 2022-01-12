@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.BookshelfListItemBaseObject
@@ -288,9 +289,10 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("")
+        val quizIntentParamsObject = QuizIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
-            .setData(mBookItemInformationList!![mCurrentOptionIndex].getID())
+            .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -308,8 +310,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
-
+        val data  = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(data)
