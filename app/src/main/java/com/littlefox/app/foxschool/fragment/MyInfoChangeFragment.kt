@@ -5,6 +5,8 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.`object`.data.myinfo.MyInformationData
+import com.littlefox.app.foxschool.`object`.data.myinfo.MyPasswordData
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -140,6 +144,9 @@ class MyInfoChangeFragment : Fragment()
     companion object
     {
         private const val MESSAGE_DATA_CHECK_ERROR : Int = 100 // 입력값 유효성 오류
+
+        private const val PHONE_EDIT_LENGTH             = 11    // 전화번호 입력시 최대 자릿수
+        private const val PHONE_EDIT_LENGTH_WITH_HYPHEN = 13    // 전화번호 하이픈 추가된 최대 자릿수
     }
 
     private lateinit var mContext : Context
@@ -150,6 +157,9 @@ class MyInfoChangeFragment : Fragment()
     // 이메일 주소 선택 다이얼로그 데이터
     private var mEmailSpinnerList : Array<String>? = null
     private var mEmailSelectIndex : Int = -1
+
+    private var mMyInformationData : MyInformationData = MyInformationData()
+    private var mMyPasswordData : MyPasswordData = MyPasswordData()
 
     var mErrorViewHandler : Handler = object : Handler()
     {
@@ -299,19 +309,14 @@ class MyInfoChangeFragment : Fragment()
             setUserInformation(userInfo)
         })
 
-        // 입력필드 오류 표시
-        mMyInfoPresenterDataObserver.setInputErrorView.observe(viewLifecycleOwner, { type ->
+        // 입력필드 유효성 체크 성공
+        mMyInfoPresenterDataObserver.onInputDataSuccess.observe(viewLifecycleOwner, { type ->
+            showInputSuccess(type)
+        })
+
+        // 입력필드 유효성 체크 오류
+        mMyInfoPresenterDataObserver.onInputDataError.observe(viewLifecycleOwner, { type ->
             showInputError(type)
-        })
-
-        // 저장 버튼 활성 여부 [나의 정보 수정]
-        mMyInfoPresenterDataObserver.setSaveInfoButtonEnable.observe(viewLifecycleOwner, { isEnable ->
-            setSaveInfoButtonEnable(isEnable)
-        })
-
-        // 저장 버튼 활성 여부 [비밀번호 변경]
-        mMyInfoPresenterDataObserver.setSavePasswordButtonEnable.observe(viewLifecycleOwner, { isEnable ->
-            setSavePasswordButtonEnable(isEnable)
         })
 
         // 화면 초기화
@@ -326,9 +331,17 @@ class MyInfoChangeFragment : Fragment()
     private fun setClearData()
     {
         CommonUtils.getInstance(mContext).hideKeyboard()
+
+        mMyInformationData.clearData()
+        _InputNameEditText.setText("")
+        _InputEmailEditText.setText("")
+        _InputPhoneEditText.setText("")
+
+        mMyPasswordData.clearData()
         _InputPasswordEditText.setText("")
         _InputNewPasswordEditText.setText("")
         _InputNewPasswordConfirmEditText.setText("")
+
         resetEditTextBackground()
         setSaveInfoButtonEnable(false)
         setSavePasswordButtonEnable(false)
@@ -359,8 +372,16 @@ class MyInfoChangeFragment : Fragment()
      */
     private fun setUserInformation(userInformation : LoginInformationResult)
     {
+        // 기존 데이터 입력
+        mMyInformationData = MyInformationData(userInformation.getUserInformation())
+
         _IdText.text = userInformation.getUserInformation().getLoginID()
         _InputNameEditText.setText(userInformation.getUserInformation().getName())
+        if (userInformation.getUserInformation().getPhone() != "")
+        {
+            _InputPhoneEditText.filters = arrayOf<InputFilter>(LengthFilter(PHONE_EDIT_LENGTH_WITH_HYPHEN))
+            _InputPhoneEditText.setText(userInformation.getUserInformation().getPhone())
+        }
 
         // 이메일 데이터 있는 경우
         val emailFull = userInformation.getUserInformation().getEmail()
@@ -405,22 +426,7 @@ class MyInfoChangeFragment : Fragment()
             _InputEmailEndEditText.isEnabled = false
             mEmailSelectIndex = -1
         }
-
-        // 휴대폰 번호 있는 경우 하이픈 제거
-        var phone = userInformation.getUserInformation().getPhone()
-        if (phone.indexOf("-") != -1)
-        {
-            phone = phone.replace("-", "")
-            _InputPhoneEditText.setText(phone)
-        }
-        else
-        {
-            // 초기화
-            _InputPhoneEditText.setText("")
-        }
     }
-
-
 
     /**
      * 이메일 앞 뒤 조합한 결과 추출
@@ -463,10 +469,9 @@ class MyInfoChangeFragment : Fragment()
 
                 if (_InputEmailEditText.text.isNotEmpty())
                 {
-                    mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())
+                    mMyInformationData.setEmail(getEmailEditTextResult())
+                    mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
                 }
-
-                checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
             }
             else
             {
@@ -488,19 +493,26 @@ class MyInfoChangeFragment : Fragment()
         if (position == Common.PAGE_MY_INFO_CHANGE)
         {
             Log.f("check Input PAGE_MY_INFO_CHANGE")
-            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(
-                name = _InputNameEditText.text.toString().trim(),
-                email = getEmailEditTextResult(),
-                phone = _InputPhoneEditText.text.toString().trim())
+            if (mMyInformationData.isCompleteInformationData())
+            {
+                setSaveInfoButtonEnable(true)
+            }
+            else
+            {
+                setSaveInfoButtonEnable(false)
+            }
         }
         else if (position == Common.PAGE_PASSWORD_CHANGE)
         {
             Log.f("check Input PAGE_PASSWORD_CHANGE")
-            mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(
-                oldPassword = _InputPasswordEditText.text.toString().trim(),
-                newPassword = _InputNewPasswordEditText.text.toString().trim(),
-                confirmPassword = _InputNewPasswordConfirmEditText.text.toString().trim()
-            )
+            if (mMyPasswordData.isCompletePasswordData())
+            {
+                setSavePasswordButtonEnable(true)
+            }
+            else
+            {
+                setSavePasswordButtonEnable(false)
+            }
         }
     }
 
@@ -509,6 +521,10 @@ class MyInfoChangeFragment : Fragment()
      */
     private fun resetEditTextBackground()
     {
+        // [입력필드 힌트]
+        _EmailTitleText.visibility = View.VISIBLE
+        _EmailEndTitleText.visibility = View.VISIBLE
+
         // [나의 정보 수정]
         _InputNameBg.setBackgroundResource(R.drawable.text_box)
         _InputEmailBg.setBackgroundResource(R.drawable.text_box)
@@ -522,25 +538,80 @@ class MyInfoChangeFragment : Fragment()
     }
 
     /**
+     * 입력값 유효할 때
+     */
+    private fun showInputSuccess(type : InputDataType)
+    {
+        when(type)
+        {
+            InputDataType.NAME -> _InputNameBg.setBackgroundResource(R.drawable.text_box)
+            InputDataType.EMAIL ->
+            {
+                _InputEmailBg.setBackgroundResource(R.drawable.text_box)
+                _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
+            }
+            InputDataType.PHONE ->
+            {
+                _InputPhoneEditText.filters = arrayOf<InputFilter>(LengthFilter(PHONE_EDIT_LENGTH_WITH_HYPHEN))
+                _InputPhoneEditText.setText(mMyInformationData.getPhone())
+                _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
+            }
+            InputDataType.NEW_PASSWORD -> _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
+            InputDataType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.text_box)
+        }
+
+        if (type == InputDataType.NAME || type == InputDataType.EMAIL || type == InputDataType.PHONE)
+        {
+            checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
+        }
+        else if (type == InputDataType.NEW_PASSWORD || type == InputDataType.NEW_PASSWORD_CONFIRM)
+        {
+            checkInputAvailable(Common.PAGE_PASSWORD_CHANGE)
+        }
+    }
+
+    /**
      * 입력값 에러 표시
      */
     private fun showInputError(type : InputDataType)
     {
+        mErrorViewHandler.sendEmptyMessage(MESSAGE_DATA_CHECK_ERROR)
+
         when(type)
         {
-            InputDataType.NAME -> _InputNameBg.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.NAME ->
+            {
+                _InputNameBg.setBackgroundResource(R.drawable.box_list_error)
+            }
             InputDataType.EMAIL ->
             {
                 _InputEmailBg.setBackgroundResource(R.drawable.box_list_error)
                 _InputEmailEndBg.setBackgroundResource(R.drawable.box_list_error)
             }
-            InputDataType.PHONE -> _InputPhoneBg.setBackgroundResource(R.drawable.box_list_error)
-            InputDataType.PASSWORD -> _InputPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
-            InputDataType.NEW_PASSWORD -> _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
-            InputDataType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            InputDataType.PHONE ->
+            {
+                _InputPhoneBg.setBackgroundResource(R.drawable.box_list_error)
+            }
+            InputDataType.NEW_PASSWORD ->
+            {
+                mMyPasswordData.setNewPassword("")
+                _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            }
+            InputDataType.NEW_PASSWORD_CONFIRM ->
+            {
+                _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
+            }
         }
 
-        mErrorViewHandler.sendEmptyMessageDelayed(MESSAGE_DATA_CHECK_ERROR, Common.DURATION_NORMAL)
+        // 에러니까 버튼은 무조건 비활성화
+        if (type == InputDataType.NAME || type == InputDataType.EMAIL || type == InputDataType.PHONE)
+        {
+            setSaveInfoButtonEnable(false)
+        }
+        else if (type == InputDataType.NEW_PASSWORD || type == InputDataType.NEW_PASSWORD_CONFIRM)
+        {
+            setSavePasswordButtonEnable(false)
+        }
     }
 
     /**
@@ -590,7 +661,6 @@ class MyInfoChangeFragment : Fragment()
         // 배경화면 탭하면 키보드 닫기
         if (view.id == R.id._mainBaseLayout || view.id == R.id._mainBackgroundView)
         {
-
             CommonUtils.getInstance(mContext).hideKeyboard()
             _InputNameEditText.clearFocus()
             _InputEmailEditText.clearFocus()
@@ -623,52 +693,49 @@ class MyInfoChangeFragment : Fragment()
             // 입력필드 X버튼 (입력필드 초기화)
             R.id._inputNameDeleteButton ->
             {
+                mMyInformationData.setName("")
                 _InputNameEditText.text.clear()
                 if (!_InputNameEditText.hasFocus())
                 {
                     _InputNameBg.setBackgroundResource(R.drawable.text_box)
                 }
-                setSaveInfoButtonEnable(false)
+                mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
             }
             R.id._inputEmailDeleteButton ->
             {
-                _EmailTitleText.visibility = View.VISIBLE
+                mMyInformationData.setEmail("")
                 _InputEmailEditText.text.clear()
                 if (!_InputEmailEditText.hasFocus())
                 {
+                    _EmailTitleText.visibility = View.VISIBLE
                     _InputEmailBg.setBackgroundResource(R.drawable.text_box)
                     _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                 }
-                setSaveInfoButtonEnable(false)
+                mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
             }
             R.id._inputPhoneDeleteButton ->
             {
+                mMyInformationData.setPhone("")
                 _InputPhoneEditText.text.clear()
                 if (!_InputPhoneEditText.hasFocus())
                 {
                     _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
                 }
+                mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
             }
+
             // 저장버튼 클릭 이벤트 [나의 정보 수정]
             R.id._saveInfoButton ->
             {
                 CommonUtils.getInstance(mContext).hideKeyboard()
-                mMyInfoChangeFragmentDataObserver.onClickInfoChangeButton(
-                    name = _InputNameEditText.text.toString().trim(),
-                    email = getEmailEditTextResult(),
-                    phone = _InputPhoneEditText.text.toString().trim()
-                )
+                mMyInfoChangeFragmentDataObserver.onClickInfoChangeButton(mMyInformationData)
             }
 
             // 저장버튼 클릭 이벤트 [비밀번호 변경]
             R.id._savePasswordButton ->
             {
                 CommonUtils.getInstance(mContext).hideKeyboard()
-                mMyInfoChangeFragmentDataObserver.onClickPasswordChangeButton(
-                    oldPassword = _InputPasswordEditText.text.toString().trim(),
-                    newPassword = _InputNewPasswordEditText.text.toString().trim(),
-                    confirmPassword = _InputNewPasswordConfirmEditText.text.toString().trim()
-                )
+                mMyInfoChangeFragmentDataObserver.onClickPasswordChangeButton(mMyPasswordData)
             }
         }
     }
@@ -687,23 +754,29 @@ class MyInfoChangeFragment : Fragment()
                 {
                     if (hasFocus)
                     {
+                        mMyInformationData.setName("")
                         _InputNameBg.setBackgroundResource(R.drawable.text_box_b)
                     }
                     else
                     {
                         _InputNameBg.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangeFragmentDataObserver.checkNameAvailable(_InputNameEditText.text.toString().trim())
+                        if (_InputNameEditText.text.isNotEmpty())
+                        {
+                            // 입력된 값이 있는 경우에만 유효성 체크를 진행한다.
+                            mMyInformationData.setName(_InputNameEditText.text.toString().trim())
+                            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
+                        }
                     }
                 }
 
                 // 이메일
-
                 R.id._inputEmailEditText, R.id._inputEmailEndEditText ->
                 {
                     _InputEmailBg.setBackgroundResource(R.drawable.text_box)
                     _InputEmailEndBg.setBackgroundResource(R.drawable.text_box)
                     if (hasFocus)
                     {
+                        mMyInformationData.setEmail("")
                         if(view?.id == R.id._inputEmailEditText)
                         {
                             _EmailTitleText.visibility = View.GONE
@@ -720,14 +793,18 @@ class MyInfoChangeFragment : Fragment()
                         if (_InputEmailEditText.text.isEmpty())
                         {
                             _EmailTitleText.visibility = View.VISIBLE
+                            setSaveInfoButtonEnable(false)
                         }
                         if (_InputEmailEndEditText.text.isEmpty())
                         {
                             _EmailEndTitleText.visibility = View.VISIBLE
+                            setSaveInfoButtonEnable(false)
                         }
-                        if (_InputEmailEditText.text.isNotEmpty() && _InputEmailEndEditText.text.isNotEmpty()) // 이메일 앞, 뒤 다 입력된 상태에서만 유효성 체크
+                        if (_InputEmailEditText.text.isNotEmpty() && _InputEmailEndEditText.text.isNotEmpty())
                         {
-                            mMyInfoChangeFragmentDataObserver.checkEmailAvailable(getEmailEditTextResult())
+                            // 이메일 앞, 뒤 다 입력된 상태에서만 유효성 체크를 진행한다.
+                            mMyInformationData.setEmail(getEmailEditTextResult())
+                            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
                         }
                     }
                 }
@@ -737,20 +814,26 @@ class MyInfoChangeFragment : Fragment()
                 {
                     if (hasFocus)
                     {
+                        mMyInformationData.setPhone("")
+                        if (_InputPhoneEditText.text.isNotEmpty())
+                        {
+                            _InputPhoneEditText.setText(_InputPhoneEditText.text.toString().replace("-", ""))
+                        }
+                        _InputPhoneEditText.filters = arrayOf<InputFilter>(LengthFilter(PHONE_EDIT_LENGTH))
                         _InputPhoneBg.setBackgroundResource(R.drawable.text_box_b)
                     }
                     else
                     {
                         _InputPhoneBg.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangeFragmentDataObserver.checkPhoneAvailable(_InputPhoneEditText.text.toString().trim())
+                        if (_InputPhoneEditText.text.isNotEmpty())
+                        {
+                            // 입력된 값이 있는 경우에만 유효성 체크를 진행한다.
+                            mMyInformationData.setPhone(_InputPhoneEditText.text.toString())
+                            mMyInformationData.addPhoneHyphen(mContext)
+                            mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
+                        }
                     }
                 }
-            }
-
-            // 포커싱 해제시에만 전체 유효성 체크
-            if (hasFocus == false)
-            {
-                checkInputAvailable(Common.PAGE_MY_INFO_CHANGE)
             }
         }
     }
@@ -774,6 +857,16 @@ class MyInfoChangeFragment : Fragment()
                     else
                     {
                         _InputPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
+                        if (_InputPasswordEditText.text.toString() == "")
+                        {
+                            mMyPasswordData.setPassword("")
+                            setSavePasswordButtonEnable(false)
+                        }
+                        else
+                        {
+                            mMyPasswordData.setPassword(_InputPasswordEditText.text.toString().trim())
+                            mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(mMyPasswordData)
+                        }
                     }
                 }
 
@@ -787,8 +880,16 @@ class MyInfoChangeFragment : Fragment()
                     else
                     {
                         _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangeFragmentDataObserver.checkNewPasswordAvailable(_InputNewPasswordEditText.text.toString().trim())
-
+                        if (_InputNewPasswordEditText.text.toString() == "")
+                        {
+                            mMyPasswordData.setNewPassword("")
+                            setSavePasswordButtonEnable(false)
+                        }
+                        else
+                        {
+                            mMyPasswordData.setNewPassword(_InputNewPasswordEditText.text.toString().trim())
+                            mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(mMyPasswordData)
+                        }
                     }
                 }
 
@@ -802,18 +903,10 @@ class MyInfoChangeFragment : Fragment()
                     else
                     {
                         _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.text_box)
-                        mMyInfoChangeFragmentDataObserver.checkNewPasswordConfirm(
-                            _InputNewPasswordEditText.text.toString().trim(),
-                            _InputNewPasswordConfirmEditText.text.toString().trim()
-                        )
+                        mMyPasswordData.setNewPasswordConfirm(_InputNewPasswordConfirmEditText.text.toString().trim())
+                        mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable(mMyPasswordData)
                     }
                 }
-            }
-
-            // 포커싱 해제시에만 유효성 체크
-            if (hasFocus == false)
-            {
-                checkInputAvailable(Common.PAGE_PASSWORD_CHANGE)
             }
         }
     }

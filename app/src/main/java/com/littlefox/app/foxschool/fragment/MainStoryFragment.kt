@@ -451,7 +451,7 @@ class MainStoryFragment : Fragment()
                 if(newState == RecyclerView.SCROLL_STATE_DRAGGING)
                 {
                     mCurrentScrollState = mNewScrollState
-                    showNavigationController()
+//                    showNavigationController()
                 } else if(newState == RecyclerView.SCROLL_STATE_IDLE)
                 {
                     if(mCurrentScrollState != RecyclerView.SCROLL_STATE_DRAGGING)
