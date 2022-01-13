@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
+import com.littlefox.app.foxschool.`object`.data.myinfo.MyInformationData
+import com.littlefox.app.foxschool.`object`.data.myinfo.MyPasswordData
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
@@ -22,7 +24,6 @@ import com.littlefox.app.foxschool.coroutine.PasswordChangeCoroutine
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enc.SimpleCrypto
-import com.littlefox.app.foxschool.enumerate.BioCheckResultType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.MyInformationContract
@@ -31,8 +32,6 @@ import com.littlefox.app.foxschool.viewmodel.MyInfoChangeFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoShowFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoPresenterDataObserver
 import com.littlefox.library.system.async.listener.AsyncListener
-import com.littlefox.library.system.handler.WeakReferenceHandler
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import java.util.ArrayList
 
@@ -234,85 +233,54 @@ class MyInformationPresenter : MyInformationContract.Presenter
      *      나의 정보 수정 화면 관련 함수 (MyInfoChangeFragment)
      * =========================================================
      */
-    /**
-     * 이름 입력값 유효성 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkNameAvailable(name : String, showMessage : Boolean = false) : Boolean
-    {
-        val nameResult = CheckUserInput.getInstance(mContext).checkNameData(name).getResultValue()
-        if(nameResult == CheckUserInput.WARNING_NAME_WRONG_INPUT)
-        {
-            if (showMessage)
-            {
-                mMyInfoPresenterDataObserver.setInputError(CheckUserInput().getErrorTypeFromResult(nameResult))
-                mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(nameResult))
-            }
-            return false
-        }
-        return true
-    }
 
     /**
-     * 이메일 입력값 유효성 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
+     * 나의 정보 수정 입력값 유효한지 체크
      */
-    private fun checkEmailAvailable(email : String, showMessage : Boolean = false) : Boolean
+    private fun checkAllInformationData(informationData : MyInformationData, isRequest : Boolean = false)
     {
-        val emailResult = CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
-        if(emailResult == CheckUserInput.WARNING_EMAIL_WRONG_INPUT)
-        {
-            if (showMessage)
-            {
-                mMyInfoPresenterDataObserver.setInputError(CheckUserInput().getErrorTypeFromResult(emailResult))
-                mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(emailResult))
-            }
-            return false
-        }
-        return true
-    }
+        Log.f("")
+        var result = 0
 
-    /**
-     * 전화번호 입력값 유효성 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkPhoneAvailable(phone : String, showMessage : Boolean = false) : Boolean
-    {
-        val data = CommonUtils.getInstance(mContext).getReplaceBothEndTrim(phone)
-        val convertData = CommonUtils.getInstance(mContext).getPhoneTypeNumber(data)
-        val phoneResult = CheckUserInput.getInstance(mContext).checkPhoneData(convertData).getResultValue()
+        // 이름 체크
+        if (informationData.getName() != "")
+        {
+            result = CheckUserInput.getInstance(mContext).checkNameData(informationData.getName()).getResultValue()
+        }
 
-        if(phoneResult == CheckUserInput.WARNING_PHONE_WRONG_INPUT)
+        // 이메일 체크
+        if (result == CheckUserInput.INPUT_SUCCESS && informationData.getEmail() != "")
         {
-            if (showMessage)
-            {
-                mMyInfoPresenterDataObserver.setInputError(CheckUserInput().getErrorTypeFromResult(phoneResult))
-                mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(phoneResult))
-            }
-            return false
+            result = CheckUserInput.getInstance(mContext).checkEmailData(informationData.getEmail()).getResultValue()
         }
-        return true
-    }
 
-    /**
-     * 입력값 유효한지 체크
-     * 이메일, 전화번호는 선택사항이기 때문에 입력된 경우에만 유효성을 체크한다.
-     */
-    private fun checkInfoInputData(name : String, email : String, phone : String) : Boolean
-    {
-        if (name.isEmpty() || (checkNameAvailable(name) == false))
+        // 전화번호 체크
+        if (result == CheckUserInput.INPUT_SUCCESS && informationData.getPhone() != "")
         {
-            return false
+            result = CheckUserInput.getInstance(mContext).checkPhoneData(informationData.getPhone()).getResultValue()
         }
-        else if (email.isNotEmpty() && (checkEmailAvailable(email) == false))
+
+        if (result == CheckUserInput.INPUT_SUCCESS)
         {
-            return false
+            mMyInfoPresenterDataObserver.onInputDataSuccess(InputDataType.NAME)
+            mMyInfoPresenterDataObserver.onInputDataSuccess(InputDataType.EMAIL)
+            mMyInfoPresenterDataObserver.onInputDataSuccess(InputDataType.PHONE)
         }
-        else if (phone.isNotEmpty() && (checkPhoneAvailable(phone) == false))
+        else
         {
-            return false
+            mMyInfoPresenterDataObserver.onInputDataError(CheckUserInput().getErrorTypeFromResult(result))
+            mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(result))
+            return
         }
-        return true
+
+        // 통신요청 전 비밀번호 확인
+        if (isRequest)
+        {
+            mName = informationData.getName()
+            mEmail = informationData.getEmail()
+            mPhone = informationData.getPhone()
+            showPasswordCheckDialog()
+        }
     }
 
     /**
@@ -335,67 +303,47 @@ class MyInformationPresenter : MyInformationContract.Presenter
      *    비밀번호 변경 화면 관련 함수 (MyPasswordChangeFragment)
      * =========================================================
      */
-
-    /**
-     * 새 비밀번호가 유효한지 체크
-     * 1. 비밀번호 규칙 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkNewPasswordAvailable(newPassword : String, showMessage : Boolean = false) : Boolean
+    private fun checkPasswordInputData(passwordData : MyPasswordData, isRequest : Boolean = false)
     {
-        val result = CheckUserInput.getInstance(mContext).checkPasswordData(newPassword).getResultValue()
+        Log.f("")
+        var result = 0
 
-        if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
+        if (passwordData.getNewPassword() != "" && passwordData.getNewPasswordConfirm() == "")
         {
-            if (showMessage)
+            result = CheckUserInput.getInstance(mContext).checkPasswordData(passwordData.getNewPassword()).getResultValue()
+        }
+        else if (passwordData.getNewPassword() != "" && passwordData.getNewPasswordConfirm() != "")
+        {
+            result = CheckUserInput.getInstance(mContext).checkPasswordData(passwordData.getNewPassword(), passwordData.getNewPasswordConfirm()).getResultValue()
+        }
+
+        if (result == CheckUserInput.INPUT_SUCCESS)
+        {
+            mMyInfoPresenterDataObserver.onInputDataSuccess(InputDataType.NEW_PASSWORD)
+            mMyInfoPresenterDataObserver.onInputDataSuccess(InputDataType.NEW_PASSWORD_CONFIRM)
+        }
+        else
+        {
+            if (result == CheckUserInput.WARNING_PASSWORD_WRONG_INPUT)
             {
-                mMyInfoPresenterDataObserver.setInputError(InputDataType.NEW_PASSWORD)
-                mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(result))
+                mMyInfoPresenterDataObserver.onInputDataError(InputDataType.NEW_PASSWORD)
             }
-            return false
-        }
-        return true
-    }
-
-    /**
-     * 새 비밀번호가 유효한지 체크
-     * 1. 새 비밀번호 확인 입력 체크
-     * 2. 새 비밀번호 확인과 일치한지 체크
-     * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
-     */
-    private fun checkNewPasswordConfirm(newPassword : String, newPasswordConfirm : String, showMessage : Boolean = false) : Boolean
-    {
-        val result = CheckUserInput.getInstance(mContext)
-            .checkPasswordData(newPassword, newPasswordConfirm)
-            .getResultValue()
-
-        if (result == CheckUserInput.WARNING_PASSWORD_NOT_INPUT_CONFIRM ||
-            result == CheckUserInput.WARNING_PASSWORD_NOT_EQUAL_CONFIRM)
-        {
-            if (showMessage)
+            else
             {
-                mMyInfoPresenterDataObserver.setInputError(CheckUserInput().getErrorTypeFromResult(result))
-                mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(result))
+                mMyInfoPresenterDataObserver.onInputDataError(CheckUserInput().getErrorTypeFromResult(result))
             }
-            return false
+            mMyInformationContractView.showErrorMessage(CheckUserInput().getErrorMessage(result))
+            return
         }
-        return true
-    }
 
-    /**
-     * 비밀번호 변경화면 입력값 다 유효한지 체크
-     */
-    private fun checkPasswordInputData(newPassword : String, confirmPassword : String) : Boolean
-    {
-        if (newPassword.isEmpty() || (checkNewPasswordAvailable(newPassword) == false))
+        // 비밀번호 변경 통신요청
+        if (isRequest)
         {
-            return false
+            mPassword = passwordData.getPassword()
+            mNewPassword = passwordData.getNewPassword()
+            mConfirmPassword = passwordData.getNewPasswordConfirm()
+            requestPasswordChange()
         }
-        else if (confirmPassword.isEmpty() || (checkNewPasswordConfirm(newPassword, confirmPassword) == false))
-        {
-            return false
-        }
-        return true
     }
     /** ========================================================= */
 
@@ -455,6 +403,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
         // 정보 수정 버튼 클릭 이벤트
         mMyInfoShowFragmentDataObserver.clickInfoChange.observe(mContext as AppCompatActivity, {
             Log.f("나의 정보 수정 화면으로 이동")
+            mMyInfoPresenterDataObserver.setMyInfoChangeFragment(mLoginInformation!!) // 데이터 초기화
             mMyInfoPresenterDataObserver.setViewPagerChange(Common.PAGE_MY_INFO_CHANGE)
             mMyInformationContractView.setCurrentViewPage(Common.PAGE_MY_INFO_CHANGE)
         })
@@ -472,36 +421,14 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun setupMyInfoChangeFragmentListener()
     {
-        // 이름 유효성 체크
-        mMyInfoChangeFragmentDataObserver.checkNameAvailable.observe(mContext as AppCompatActivity, {name ->
-            checkNameAvailable(name, true)
-        })
-
-        // 이메일 유효성 체크
-        mMyInfoChangeFragmentDataObserver.checkEmailAvailable.observe(mContext as AppCompatActivity, {email ->
-            checkEmailAvailable(email, true)
-        })
-
-        // 휴대폰 번호 유효성 체크
-        mMyInfoChangeFragmentDataObserver.checkPhoneAvailable.observe(mContext as AppCompatActivity, {phone ->
-            checkPhoneAvailable(phone, true)
-        })
-
-        // 저장버튼 활성화 가능한지 체크
+        // 전체 입력데이터 체크
         mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable.observe(mContext as AppCompatActivity, {data ->
-            val name = data["name"] as String
-            val email = data["email"] as String
-            val phone = data["phone"] as String
-            val isEnable = checkInfoInputData(name, email, phone)
-            mMyInfoPresenterDataObserver.setSaveInfoButtonEnable(isEnable)
+            checkAllInformationData(data)
         })
 
         // 저장버튼 클릭 이벤트
-        mMyInfoChangeFragmentDataObserver.clickInfoChangeButton.observe(mContext as AppCompatActivity, {data ->
-            mName = data["name"] as String
-            mEmail = data["email"] as String
-            mPhone = data["phone"] as String
-            showPasswordCheckDialog()
+        mMyInfoChangeFragmentDataObserver.clickInfoChangeButton.observe(mContext as AppCompatActivity, {inputData ->
+            checkAllInformationData(inputData, true)
         })
     }
 
@@ -510,32 +437,18 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun setupMyPasswordChangeFragmentListener()
     {
-        // 새로운 비밀번호 유효성 체크
-        mMyInfoChangeFragmentDataObserver.checkNewPasswordAvailable.observe(mContext as AppCompatActivity, {password ->
-            checkNewPasswordAvailable(password, true)
-        })
-
-        // 비밀번호 확인 유효성 체크
-        mMyInfoChangeFragmentDataObserver.checkNewPasswordConfirm.observe(mContext as AppCompatActivity, {data ->
-            val password = data["newPassword"] as String
-            val newPassword = data["confirmPassword"] as String
-            checkNewPasswordConfirm(password, newPassword, true)
-        })
-
-        // 저장버튼 활성화 가능한지 체크
+        // 입력데이터 체크
         mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable.observe(mContext as AppCompatActivity, {data ->
-            val newPassword = data["newPassword"] as String
-            val confirmPassword = data["confirmPassword"] as String
-            val isEnable = checkPasswordInputData(newPassword, confirmPassword)
-            mMyInfoPresenterDataObserver.setSavePasswordButtonEnable(isEnable)
+            if (data.getNewPassword() != "")
+            {
+                // 신규 비밀번호 입력했을 때 유효성 체크
+                checkPasswordInputData(data)
+            }
         })
 
         // 저장버튼 클릭 이벤트
         mMyInfoChangeFragmentDataObserver.clickPasswordChangeButton.observe(mContext as AppCompatActivity, {data ->
-            mPassword = data["oldPassword"] as String
-            mNewPassword = data["newPassword"] as String
-            mConfirmPassword = data["confirmPassword"] as String
-            requestPasswordChange()
+            checkPasswordInputData(data, true)
         })
     }
 

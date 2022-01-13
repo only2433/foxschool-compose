@@ -308,7 +308,7 @@ class HomeworkCommentFragment : Fragment()
     private fun setCommentCountText()
     {
         // 바이트 사이즈 구하기 위해 코멘트 바이트로 변경
-        val inputByte = (_CommentEditText.text.toString()).toByteArray(charset("EUC-KR"))
+        val inputByte = (_CommentEditText.text.toString()).toByteArray(charset("ms949"))
         val text = "${inputByte.size}/400 byte"
         _CommentInputCountText.text = text
     }
@@ -467,7 +467,7 @@ class HomeworkCommentFragment : Fragment()
                 setRegisterButtonEnable(false)
             }
 
-            val byte = (text.toString()).toByteArray(charset("EUC-KR"))
+            val byte = (text.toString()).toByteArray(charset("ms949"))
             if (byte.size > 400)
             {
                 // 400바이트 이상 입력한 경우 텍스트 자르기

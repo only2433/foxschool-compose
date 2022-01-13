@@ -13,11 +13,11 @@ class MyInfoPresenterDataObserver : ViewModel()
     var changePush = MutableLiveData<Boolean>()
 
     var setMyInfoChangeFragment = MutableLiveData<LoginInformationResult>()
-    var setInputErrorView = MutableLiveData<InputDataType>()
-    var setSaveInfoButtonEnable = MutableLiveData<Boolean>()
-    var setSavePasswordButtonEnable = MutableLiveData<Boolean>()
     var clearMyInfoChangeFragment = MutableLiveData<Boolean>()
     var viewPagerChange = MutableLiveData<Int>()
+
+    var onInputDataSuccess = MutableLiveData<InputDataType>()
+    var onInputDataError = MutableLiveData<InputDataType>()
 
     /**
      * 나의 정보 화면으로 전달하는 데이터
@@ -45,21 +45,6 @@ class MyInfoPresenterDataObserver : ViewModel()
         setMyInfoChangeFragment.value = userInformation
     }
 
-    fun setInputError(type : InputDataType)
-    {
-        setInputErrorView.value = type
-    }
-
-    fun setSaveInfoButtonEnable(isEnable : Boolean)
-    {
-        setSaveInfoButtonEnable.value = isEnable
-    }
-
-    fun setSavePasswordButtonEnable(isEnable : Boolean)
-    {
-        setSavePasswordButtonEnable.value = isEnable
-    }
-
     fun clearMyInfoChangeFragment()
     {
         clearMyInfoChangeFragment.value = true
@@ -68,5 +53,15 @@ class MyInfoPresenterDataObserver : ViewModel()
     fun setViewPagerChange(position : Int)
     {
         viewPagerChange.value = position
+    }
+
+    fun onInputDataSuccess(inputDataType : InputDataType)
+    {
+        onInputDataSuccess.value = inputDataType
+    }
+
+    fun onInputDataError(inputDataType : InputDataType)
+    {
+        onInputDataError.value = inputDataType
     }
 }
