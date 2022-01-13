@@ -44,7 +44,6 @@ class MyInformationPresenter : MyInformationContract.Presenter
 {
     companion object
     {
-
         // MyInfoChange
         private const val DIALOG_PASSWORD_CONFIRM : Int     = 10001    // 비밀번호 확인 다이얼로그 플래그
         private const val DIALOG_PASSWORD_CONFIRM_ERR : Int = 10002     // 비밀번호 확인 오류 다이얼로그 플래그
@@ -158,9 +157,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
 
     override fun sendMessageEvent(msg : Message)
     {
-        when(msg.what)
-        {
-        }
+        when(msg.what) { }
     }
 
     /**
@@ -182,12 +179,14 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun showTemplateAlertDialog(type : Int, message : String, buttonType : DialogButtonType)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setDialogEventType(type)
-        mTemplateAlertDialog.setButtonType(buttonType)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(type)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     /**
@@ -320,13 +319,15 @@ class MyInformationPresenter : MyInformationContract.Presenter
      */
     private fun showPasswordCheckDialog()
     {
-        mPasswordCheckDialog = TemplateAlertDialog(mContext)
-        mPasswordCheckDialog.setMessage(mContext.resources.getString(R.string.message_password_check_for_change_user_info))
-        mPasswordCheckDialog.setPasswordConfirmView(true)
-        mPasswordCheckDialog.setDialogEventType(DIALOG_PASSWORD_CONFIRM)
-        mPasswordCheckDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mPasswordCheckDialog.setDialogListener(mPasswordCheckDialogListener)
-        mPasswordCheckDialog.show()
+        mPasswordCheckDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_password_check_for_change_user_info))
+            setPasswordConfirmView(true)
+            setDialogEventType(DIALOG_PASSWORD_CONFIRM)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mPasswordCheckDialogListener)
+            show()
+        }
+
     }
     /** ========================================================= */
 
@@ -412,10 +413,12 @@ class MyInformationPresenter : MyInformationContract.Presenter
     {
         val phone = CommonUtils.getInstance(mContext).getPhoneTypeNumber(mPhone) // 전화번호 하이픈 추가
         mMyInformationContractView.showLoading()
-        mMyInfoUpdateCoroutine = MyInfoUpdateCoroutine(mContext)
-        mMyInfoUpdateCoroutine!!.setData(mName, mEmail, phone, password)
-        mMyInfoUpdateCoroutine!!.asyncListener = mAsyncListener
-        mMyInfoUpdateCoroutine!!.execute()
+        mMyInfoUpdateCoroutine = MyInfoUpdateCoroutine(mContext).apply {
+            setData(mName, mEmail, phone, password)
+            asyncListener = mAsyncListener
+            execute()
+        }
+
     }
 
     /**
@@ -424,10 +427,12 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private fun requestPasswordChange()
     {
         mMyInformationContractView.showLoading()
-        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext)
-        mPasswordChangeCoroutine!!.setData(mPassword, mNewPassword, mConfirmPassword)
-        mPasswordChangeCoroutine!!.asyncListener = mAsyncListener
-        mPasswordChangeCoroutine!!.execute()
+        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext).apply {
+            setData(mPassword, mNewPassword, mConfirmPassword)
+            asyncListener = mAsyncListener
+            execute()
+        }
+
     }
     /** ========================================================= */
 

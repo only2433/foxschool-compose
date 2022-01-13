@@ -26,6 +26,15 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 
 class TemplateAlertDialog
 {
+    companion object
+    {
+        /** 다이얼로그 이벤트를 굳이 받지않아도 되는 경우 사용  */
+        const val DIALOG_EVENT_DEFAULT : Int    = 0
+        const val MODE_TEXT : Int               = 0
+        const val MODE_TITLE_HAVE_TEXT : Int    = 1
+        const val TEXT_SIZE : Int               = 36
+    }
+
     private var mContext : Context
     protected var isCancelable : Boolean = true
     protected var isPasswordConfirm : Boolean = false // 비밀번호 확인 다이얼로그 플래그
@@ -44,10 +53,11 @@ class TemplateAlertDialog
     private var _EditText : EditText? = null
     private var mGravityValue = -1
 
-
     constructor(context : Context)
     {
         mContext = context
+        mTitle = ""
+        mMessage = ""
     }
 
     /**
@@ -241,20 +251,5 @@ class TemplateAlertDialog
             messageText!!.setGravity(Gravity.CENTER)
         }
         dialog.show()
-    }
-
-    companion object
-    {
-        /** 다이얼로그 이벤트를 굳이 받지않아도 되는 경우 사용  */
-        const val DIALOG_EVENT_DEFAULT : Int    = 0
-        const val MODE_TEXT : Int               = 0
-        const val MODE_TITLE_HAVE_TEXT : Int    = 1
-        const val TEXT_SIZE : Int               = 36
-    }
-
-    init
-    {
-        mTitle = ""
-        mMessage = ""
     }
 }

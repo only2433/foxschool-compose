@@ -186,15 +186,20 @@ class FlashCardResultFragment : Fragment()
         {
             if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
             {
-                _ContentLayout.moveChildView(_ReplayButton, 715f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 803f, 810f)
-                _ContentLayout.moveChildView(_ReplayText, 865f, 762f)
+                _ContentLayout.run {
+                    moveChildView(_ReplayButton, 715f, 762f)
+                    moveChildView(_ReplayIcon, 803f, 810f)
+                    moveChildView(_ReplayText, 865f, 762f)
+                }
             }
             else
             {
-                _ContentLayout.moveChildView(_ReplayButton, 474f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 562f, 820f)
-                _ContentLayout.moveChildView(_ReplayText, 624f, 762f)
+                _ContentLayout.run {
+                    moveChildView(_ReplayButton, 474f, 762f)
+                    moveChildView(_ReplayIcon, 562f, 820f)
+                    moveChildView(_ReplayText, 624f, 762f)
+                }
+
             }
             _BookmarkButton.visibility = View.VISIBLE
             _BookmarkIcon.visibility = View.VISIBLE
@@ -204,15 +209,20 @@ class FlashCardResultFragment : Fragment()
         {
             if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
             {
-                _ContentLayout.moveChildView(_ReplayButton, 973f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 1061f, 810f)
-                _ContentLayout.moveChildView(_ReplayText, 1123f, 762f)
+                _ContentLayout.run {
+                    moveChildView(_ReplayButton, 973f, 762f)
+                    moveChildView(_ReplayIcon, 1061f, 810f)
+                    moveChildView(_ReplayText, 1123f, 762f)
+                }
+
             }
             else
             {
-                _ContentLayout.moveChildView(_ReplayButton, 732f, 762f)
-                _ContentLayout.moveChildView(_ReplayIcon, 820f, 820f)
-                _ContentLayout.moveChildView(_ReplayText, 882f, 762f)
+                _ContentLayout.run {
+                    moveChildView(_ReplayButton, 732f, 762f)
+                    moveChildView(_ReplayIcon, 820f, 820f)
+                    moveChildView(_ReplayText, 882f, 762f)
+                }
             }
             _BookmarkButton.visibility = View.GONE
             _BookmarkIcon.visibility = View.GONE

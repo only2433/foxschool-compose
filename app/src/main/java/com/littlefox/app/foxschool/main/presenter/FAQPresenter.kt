@@ -49,10 +49,11 @@ class FAQPresenter : ForumContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mForumContractView = mContext as ForumContract.View
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mForumContractView.initView()
-        mForumContractView.initFont()
+        mForumContractView = (mContext as ForumContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("onCreate")
         init()
     }

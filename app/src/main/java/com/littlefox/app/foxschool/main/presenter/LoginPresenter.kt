@@ -63,11 +63,11 @@ class LoginPresenter : LoginContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mLoginContractView = mContext as LoginContract.View
-        mLoginContractView.initView()
-        mLoginContractView.initFont()
+        mLoginContractView = (mContext as LoginContract.View).apply {
+            initView()
+            initFont()
+        }
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
-
         requestSchoolList()
     }
 
@@ -183,10 +183,11 @@ class LoginPresenter : LoginContract.Presenter
     private fun showPasswordChangeDialog()
     {
         Log.f("")
-        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!)
-        mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
-        mPasswordChangeDialog?.setCancelable(false)
-        mPasswordChangeDialog?.show()
+        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!).apply {
+            setPasswordChangeListener(mPasswordChangeDialogListener)
+            setCancelable(false)
+            show()
+        }
     }
 
     /**
@@ -194,9 +195,10 @@ class LoginPresenter : LoginContract.Presenter
      */
     private fun requestSchoolList()
     {
-        mSchoolListCoroutine = SchoolListCoroutine(mContext)
-        mSchoolListCoroutine!!.asyncListener = mAsyncListener
-        mSchoolListCoroutine!!.execute()
+        mSchoolListCoroutine = SchoolListCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -238,10 +240,11 @@ class LoginPresenter : LoginContract.Presenter
             Log.f("errorMessage : " + e.message)
         }
 
-        mLoginCoroutine = LoginCoroutine(mContext)
-        mLoginCoroutine!!.setData(id, password, schoolCode)
-        mLoginCoroutine!!.asyncListener = mAsyncListener
-        mLoginCoroutine!!.execute()
+        mLoginCoroutine = LoginCoroutine(mContext).apply {
+            setData(id, password, schoolCode)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -250,10 +253,11 @@ class LoginPresenter : LoginContract.Presenter
     private fun requestPasswordChange()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext)
-        mPasswordChangeCoroutine!!.setData(mPassword, mNewPassword, mConfirmPassword)
-        mPasswordChangeCoroutine!!.asyncListener = mAsyncListener
-        mPasswordChangeCoroutine!!.execute()
+        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext).apply {
+            setData(mPassword, mNewPassword, mConfirmPassword)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -262,9 +266,10 @@ class LoginPresenter : LoginContract.Presenter
     private fun requestPasswordChangeNext()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext)
-        mPasswordChangeNextCoroutine!!.asyncListener = mAsyncListener
-        mPasswordChangeNextCoroutine!!.execute()
+        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -273,9 +278,10 @@ class LoginPresenter : LoginContract.Presenter
     private fun requestPasswordChangeKeep()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext)
-        mPasswordChangeKeepCoroutine!!.asyncListener = mAsyncListener
-        mPasswordChangeKeepCoroutine!!.execute()
+        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -410,7 +416,6 @@ class LoginPresenter : LoginContract.Presenter
             mPassword = oldPassword
             mNewPassword = newPassword
             mConfirmPassword = confirmPassword
-
             requestPasswordChange()
         }
 

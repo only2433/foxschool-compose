@@ -183,15 +183,14 @@ class InquirePresenter : InquireContract.Presenter
             mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
             return
         }
-
         mInquireContractView.showLoading()
 
         mInquireData = InquireData(category, text, email)
-
-        mInquireCoroutine = InquireCoroutine(mContext)
-        mInquireCoroutine!!.setData(mInquireData)
-        mInquireCoroutine!!.asyncListener = mAsyncListener
-        mInquireCoroutine!!.execute()
+        mInquireCoroutine = InquireCoroutine(mContext).apply {
+            setData(mInquireData)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**

@@ -126,7 +126,6 @@ class QuizPresenter : QuizContract.Presenter
 
     private var mQuizIntentParamsObject : QuizIntentParamsObject? = null
 
-
     private var mQuizPlayingCount : Int     = -1
     private var mCorrectAnswerCount : Int   = 0
 
@@ -140,9 +139,7 @@ class QuizPresenter : QuizContract.Presenter
      * 퀴즈 제한시간
      */
     private var mQuizLimitTime : Int = 0
-
     private var mAudioAttributes : AudioAttributes? = null
-
     private var mMainExampleSoundIndex : Int = 0
 
     /** 퀴즈 타이머 */
@@ -158,9 +155,10 @@ class QuizPresenter : QuizContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mQuizContractView = mContext as QuizContract.View
-        mQuizContractView.initView()
-        mQuizContractView.initFont()
+        mQuizContractView = (mContext as QuizContract.View).apply {
+            initView()
+            initFont()
+        }
 
         Log.f("onCreate")
         init()
@@ -320,10 +318,11 @@ class QuizPresenter : QuizContract.Presenter
     private fun requestQuizInformation()
     {
         Log.f("mContentID : $mQuizIntentParamsObject!!.getContentID()")
-        mQuizInformationRequestCoroutine = QuizInformationRequestCoroutine(mContext)
-        mQuizInformationRequestCoroutine?.setData(mQuizIntentParamsObject!!.getContentID())
-        mQuizInformationRequestCoroutine?.asyncListener = mQuizRequestListener
-        mQuizInformationRequestCoroutine?.execute()
+        mQuizInformationRequestCoroutine = QuizInformationRequestCoroutine(mContext).apply {
+            setData(mQuizIntentParamsObject!!.getContentID())
+            asyncListener = mQuizRequestListener
+            execute()
+        }
     }
 
     /**
@@ -342,10 +341,11 @@ class QuizPresenter : QuizContract.Presenter
             Log.f("InCorrect URL : " + mQuizInformationResult!!.getInCorrectImageUrl())
         }
         Log.f("Correct URL : " + mQuizInformationResult!!.getCorrectImageUrl())
-        mFileDownloadCoroutine = FileDownloadCoroutine(mContext)
-        mFileDownloadCoroutine?.setData(downloadUrlList, fileSavePathList)
-        mFileDownloadCoroutine?.asyncListener = mFileDownloadListener
-        mFileDownloadCoroutine?.execute()
+        mFileDownloadCoroutine = FileDownloadCoroutine(mContext).apply {
+            setData(downloadUrlList, fileSavePathList)
+            asyncListener = mFileDownloadListener
+            execute()
+        }
     }
 
     /**
@@ -354,10 +354,11 @@ class QuizPresenter : QuizContract.Presenter
     private fun requestQuizSaveRecord()
     {
         mQuizContractView.showLoading()
-        mQuizSaveRecordCoroutine = QuizSaveRecordCoroutine(mContext)
-        mQuizSaveRecordCoroutine?.setData(mQuizRequestObject, mQuizIntentParamsObject!!.getHomeworkNumber())
-        mQuizSaveRecordCoroutine?.asyncListener = mQuizRequestListener
-        mQuizSaveRecordCoroutine?.execute()
+        mQuizSaveRecordCoroutine = QuizSaveRecordCoroutine(mContext).apply {
+            setData(mQuizRequestObject, mQuizIntentParamsObject!!.getHomeworkNumber())
+            asyncListener = mQuizRequestListener
+            execute()
+        }
     }
     /** ========== 통신요청 end ========== */
     /**
@@ -555,12 +556,14 @@ class QuizPresenter : QuizContract.Presenter
         try
         {
             afd = mContext.assets.openFd(type)
-            mQuizEffectPlayer?.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-            afd.close()
-            mQuizEffectPlayer?.prepareAsync()
-            mQuizEffectPlayer?.setOnPreparedListener {
-                mQuizEffectPlayer?.start()
+            mQuizEffectPlayer!!.run {
+                setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                prepareAsync()
+                setOnPreparedListener {
+                    start()
+                }
             }
+            afd.close()
         } catch(e : IOException)
         {
             e.printStackTrace()
@@ -618,10 +621,15 @@ class QuizPresenter : QuizContract.Presenter
 
         try
         {
-            mQuizPassagePlayer?.setDataSource(mContext, Uri.parse(uri))
-            mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
-            mQuizPassagePlayer?.prepareAsync()
-            mQuizPassagePlayer?.setOnPreparedListener {mQuizPassagePlayer?.start()}
+            mQuizPassagePlayer!!.run {
+                setDataSource(mContext, Uri.parse(uri))
+                setAudioAttributes(mAudioAttributes)
+                prepareAsync()
+                setOnPreparedListener {
+                    start()
+                }
+            }
+
         } catch(e : java.lang.Exception)
         {
             Log.f("Exception : " + e.message)
@@ -649,11 +657,17 @@ class QuizPresenter : QuizContract.Presenter
             Log.f(
                 "play Index : " + mMainExampleSoundIndex + ", url : " + uriList[mMainExampleSoundIndex] + ", size : " + uriList.size
             )
-            mQuizPassagePlayer?.setDataSource(mContext, Uri.parse(uriList[mMainExampleSoundIndex]))
-            mQuizPassagePlayer?.setAudioAttributes(mAudioAttributes)
-            mQuizPassagePlayer?.prepareAsync()
-            mQuizPassagePlayer?.setOnPreparedListener {mQuizPassagePlayer!!.start()}
-        } catch(e : java.lang.Exception)
+            mQuizPassagePlayer!!.run {
+                setDataSource(mContext, Uri.parse(uriList[mMainExampleSoundIndex]))
+                setAudioAttributes(mAudioAttributes)
+                prepareAsync()
+                setOnPreparedListener {
+                    start()
+                }
+            }
+
+        }
+        catch(e : java.lang.Exception)
         {
             Log.f("Exception : " + e.message)
             e.printStackTrace()
@@ -896,11 +910,12 @@ class QuizPresenter : QuizContract.Presenter
      */
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
-        val dialog = TemplateAlertDialog(mContext)
-        dialog.setMessage(message)
-        dialog.setDialogEventType(type)
-        dialog.setButtonType(buttonType)
-        dialog.show()
+        TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(type)
+            setButtonType(buttonType)
+            show()
+        }
     }
 
     /**

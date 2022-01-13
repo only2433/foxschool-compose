@@ -245,13 +245,15 @@ class IntroduceSeriesTabletDialog : Dialog
     {
         val titleLayout = ScalableLayout(mContext)
         titleLayout.setScaleSize(Common.TARGET_PHONE_DISPLAY_WIDTH, LAYOUT_TITLE_VIEW_HEIGHT.toFloat())
-        val titleText = TextView(mContext)
-        titleText.setPadding(CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
-        titleText.setGravity(Gravity.CENTER_VERTICAL)
-        titleText.setBackground(mContext.resources.getDrawable(R.drawable.info_box_b))
-        titleText.setText("Creators")
-        titleText.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
-        titleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        val titleText = TextView(mContext).apply {
+            setPadding(CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
+            setGravity(Gravity.CENTER_VERTICAL)
+            setBackground(mContext.resources.getDrawable(R.drawable.info_box_b))
+            setText("Creators")
+            setTextColor(mContext.resources.getColor(R.color.color_ffffff))
+            setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        }
+
         titleLayout.addView(
             titleText,
             LAYOUT_CONTENTS_VIEW_MARGIN_LEFT.toFloat(),

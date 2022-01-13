@@ -243,9 +243,12 @@ class FlashCardStudyDataFragment : Fragment()
             && CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
         {
             _TopTermsLayout.setScaleSize(1920f, 300f)
-            _StudyControllerLayout.setScaleSize(1920f, 730f)
-            _StudyControllerLayout.moveChildView(_PrevButton, 120f, 624f)
-            _StudyControllerLayout.moveChildView(_NextButton, 1746f, 624f)
+            _StudyControllerLayout.run {
+                setScaleSize(1920f, 730f)
+                moveChildView(_PrevButton, 120f, 624f)
+                moveChildView(_NextButton, 1746f, 624f)
+            }
+
         }
         initCardLayout()
     }

@@ -272,9 +272,10 @@ class QuizPlayFragment : Fragment()
             exampleBaseLayout.tag = i
 
             // 체크박스
-            val checkImage = ImageView(mContext)
-            checkImage.tag = TEXT_TAG_CHECK
-            checkImage.setImageResource(R.drawable.icon_check_off)
+            val checkImage = ImageView(mContext).apply {
+                tag = TEXT_TAG_CHECK
+                setImageResource(R.drawable.icon_check_off)
+            }
             exampleBaseLayout.addView(checkImage, 119f, 30f, 50f, 50f)
 
             // 인덱스
@@ -283,11 +284,12 @@ class QuizPlayFragment : Fragment()
             exampleBaseLayout.addView(indexImage, 203f, 30f, 50f, 50f)
 
             // 텍스트
-            val examText = TextView(mContext)
-            examText.typeface = Font.getInstance(mContext).getRobotoRegular()
-            examText.text = mQuizTextData.getExampleList()[i]!!.getExampleText()
-            examText.setTextColor(mContext.resources.getColor(R.color.color_444444))
-            examText.gravity = Gravity.CENTER_VERTICAL
+            val examText = TextView(mContext).apply {
+                typeface = Font.getInstance(mContext).getRobotoRegular()
+                text = mQuizTextData.getExampleList()[i]!!.getExampleText()
+                setTextColor(mContext.resources.getColor(R.color.color_444444))
+                gravity = Gravity.CENTER_VERTICAL
+            }
             exampleBaseLayout.addView(examText, 270f, 0f, 1400f, 110f)
             exampleBaseLayout.setScale_TextSize(examText, 40f)
 

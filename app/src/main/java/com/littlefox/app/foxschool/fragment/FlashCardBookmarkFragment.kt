@@ -171,9 +171,12 @@ class FlashCardBookmarkFragment : Fragment()
         if(CommonUtils.getInstance(mContext).checkTablet
             && CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
         {
-            _BookmarkItemLayout.setScaleSize(1920f, 810f)
-            _BookmarkItemLayout.moveChildView(_BookmarkBgImage, 59f, 0f, 1802f, 810f)
-            _BookmarkItemLayout.moveChildView(_BookmarkItemListView, 79f, 20f, 1762f, 790f)
+            _BookmarkItemLayout.run {
+                setScaleSize(1920f, 810f)
+                moveChildView(_BookmarkBgImage, 59f, 0f, 1802f, 810f)
+                moveChildView(_BookmarkItemListView, 79f, 20f, 1762f, 790f)
+            }
+
         }
 
         val viewInformationList = HashMap<Int, String>()

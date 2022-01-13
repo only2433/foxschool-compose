@@ -38,11 +38,11 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
         Log.f("SeriesID : $mSeriesID")
 
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
-        mIntroduceSeriesContractView = mContext as IntroduceSeriesContract.View
-        mIntroduceSeriesContractView.initView()
-        mIntroduceSeriesContractView.initFont()
-        mIntroduceSeriesContractView.showLoading()
-
+        mIntroduceSeriesContractView = (mContext as IntroduceSeriesContract.View).apply {
+            initView()
+            initFont()
+            showLoading()
+        }
         Log.f("onCreate")
         requestIntroduceSeriesInformation()
     }
@@ -80,10 +80,11 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
      */
     private fun requestIntroduceSeriesInformation()
     {
-        mIntroduceSeriesCoroutine = IntroduceSeriesCoroutine(mContext)
-        mIntroduceSeriesCoroutine?.setData(mSeriesID)
-        mIntroduceSeriesCoroutine?.asyncListener = mAsyncListener
-        mIntroduceSeriesCoroutine?.execute()
+        mIntroduceSeriesCoroutine = IntroduceSeriesCoroutine(mContext).apply {
+            setData(mSeriesID)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -101,9 +102,10 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
             {
                 if(code == Common.COROUTINE_CODE_INTRODUCE_SERIES)
                 {
-                    val message = Message.obtain()
-                    message.what = MESSAGE_INTRODUCE_SERIES_INFORMATION_REQUEST_COMPLETE
-                    message.obj = (`object` as IntroduceSeriesBaseObject).getData()
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_INTRODUCE_SERIES_INFORMATION_REQUEST_COMPLETE
+                        obj = (`object` as IntroduceSeriesBaseObject).getData()
+                    }
                     mMainHandler.sendMessage(message)
                 }
             }

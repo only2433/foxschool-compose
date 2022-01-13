@@ -1707,9 +1707,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             mCurrentPageIndex = pageIndex
             val pageFirstNumber = getFirstIndexOfCurrentPageLine(mCurrentPageIndex) + 1
-            mPlayerContractView.settingCurrentPageLine(pageFirstNumber, mPageByPageDataList.size)
-            mPlayerContractView.activatePageView(true)
-            mPlayerContractView.enableCurrentPage(mCurrentPageIndex + 1)
+            mPlayerContractView.run {
+                settingCurrentPageLine(pageFirstNumber, mPageByPageDataList.size)
+                mPlayerContractView.activatePageView(true)
+                mPlayerContractView.enableCurrentPage(mCurrentPageIndex + 1)
+            }
+
         }
         else
         {
@@ -1841,11 +1844,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     val myBookshelfResult : MyBookshelfResult = (`object` as BookshelfBaseObject).getData()
                     updateBookshelfData(myBookshelfResult)
 
-                    val messsage = Message.obtain()
-                    messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                    messsage.obj = mContext!!.resources.getString(R.string.message_success_save_contents_in_bookshelf)
-                    messsage.arg1 = Activity.RESULT_OK
-                    mMainHandler.sendMessageDelayed(messsage, Common.DURATION_NORMAL)
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_CONTENTS_ADD
+                        obj = mContext!!.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                        arg1 = Activity.RESULT_OK
+                    }
+                    mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                     resumePlayer()
                 }
             }
@@ -1890,10 +1894,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                     {
                         Log.f("FAIL ASYNC_CODE_BOOKSHELF_CONTENTS_ADD")
                         mPlayerContractView.hideLoading()
-                        val messsage = Message.obtain()
-                        messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                        messsage.obj = result.getMessage()
-                        messsage.arg1 = Activity.RESULT_CANCELED
+                        val messsage = Message.obtain().apply {
+                            what = MESSAGE_COMPLETE_CONTENTS_ADD
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
+
                         mMainHandler.sendMessageDelayed(messsage, Common.DURATION_SHORT)
                     }
                 }
@@ -2081,7 +2087,4 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
         }
     }
-
-
-
 }

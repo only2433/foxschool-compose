@@ -92,7 +92,6 @@ class MainPresenter : MainContract.Presenter
         private const val MESSAGE_START_RECORD_HISTORY : Int            = 123
         private const val MESSAGE_APP_SERVER_ERROR : Int                = 124
 
-
         private const val DIALOG_EVENT_IAC : Int                        = 10001
         private const val DIALOG_EVENT_LOGOUT : Int                     = 10002
         private const val DIALOG_EVENT_APP_END : Int                    = 10003
@@ -124,10 +123,11 @@ class MainPresenter : MainContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mMainContractView = mContext as MainContract.View
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mMainContractView.initView()
-        mMainContractView.initFont()
+        mMainContractView = (mContext as MainContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("onCreate")
         init()
     }
@@ -603,13 +603,14 @@ class MainPresenter : MainContract.Presenter
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setDialogEventType(eventType)
-        mTemplateAlertDialog.setButtonType(buttonType)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.setGravity(Gravity.LEFT)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(eventType)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            setGravity(Gravity.LEFT)
+            show()
+        }
     }
 
     private fun startSelectSeriesActivity(seriesID : String)
@@ -790,46 +791,52 @@ class MainPresenter : MainContract.Presenter
 
     private fun showBottomBookAddDialog()
     {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog.setCancelable(true)
-        mBottomBookAddDialog.setBookshelfData(mMainInformationResult.getBookShelvesList())
-        mBottomBookAddDialog.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog.show()
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
+            setCancelable(true)
+            setBookshelfData(mMainInformationResult.getBookShelvesList())
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
+
     }
 
     private fun showIACInformationDialog(result : InAppCompaignResult)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setTitle(result.getTitle())
-        mTemplateAlertDialog.setMessage(result.getContent())
-        if(result.isButton1Use == false)
-        {
-            mTemplateAlertDialog.setButtonText(result.getButton2Text())
-        } else
-        {
-            mTemplateAlertDialog.setButtonText(result.getButton1Text(), result.getButton2Text())
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setTitle(result.getTitle())
+            setMessage(result.getContent())
+            if(result.isButton1Use == false)
+            {
+                setButtonText(result.getButton2Text())
+            } else
+            {
+                setButtonText(result.getButton1Text(), result.getButton2Text())
+            }
+            setDialogEventType(DIALOG_EVENT_IAC)
+            setDialogListener(mDialogListener)
+            show()
         }
-        mTemplateAlertDialog.setDialogEventType(DIALOG_EVENT_IAC)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+
     }
 
     private fun requestBookshelfContentsAddAsync(data : ArrayList<ContentsBaseResult?>)
     {
         Log.f("")
-        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext)
-        mBookshelfContentAddCoroutine?.setData(mCurrentBookshelfAddResult?.getID(), data)
-        mBookshelfContentAddCoroutine?.asyncListener = mAsyncListener
-        mBookshelfContentAddCoroutine?.execute()
+        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext).apply {
+            setData(mCurrentBookshelfAddResult?.getID(), data)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
 
     private fun requestMainInformationAsync()
     {
         Log.f("")
-        mMainInformationCoroutine = MainInformationCoroutine(mContext)
-        mMainInformationCoroutine?.asyncListener = mAsyncListener
-        mMainInformationCoroutine?.execute()
+        mMainInformationCoroutine = MainInformationCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun updateBookshelfData(result : MyBookshelfResult)
@@ -1030,10 +1037,11 @@ class MainPresenter : MainContract.Presenter
                     val myBookshelfResult : MyBookshelfResult = (`object` as BookshelfBaseObject).getData()
                     updateBookshelfData(myBookshelfResult)
                     updateFragment()
-                    val messsage = Message.obtain()
-                    messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                    messsage.obj = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
-                    messsage.arg1 = Activity.RESULT_OK
+                    val messsage = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_CONTENTS_ADD
+                        obj = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                        arg1 = Activity.RESULT_OK
+                    }
                     mMainHandler.sendMessageDelayed(messsage, Common.DURATION_NORMAL)
                 }
                 else if(code == Common.COROUTINE_CODE_ME)
@@ -1067,17 +1075,20 @@ class MainPresenter : MainContract.Presenter
                     mMainContractView.hideLoading()
                     if(code == Common.COROUTINE_CODE_BOOKSHELF_CONTENTS_ADD)
                     {
-                        val messsage = Message.obtain()
-                        messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                        messsage.obj = result.getMessage()
-                        messsage.arg1 = Activity.RESULT_CANCELED
-                        mMainHandler.sendMessageDelayed(messsage, Common.DURATION_SHORT)
-                    } else if(code == Common.COROUTINE_CODE_MAIN)
+                        val message = Message.obtain().apply {
+                            what = MESSAGE_COMPLETE_CONTENTS_ADD
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
+                        mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
+                    }
+                    else if(code == Common.COROUTINE_CODE_MAIN)
                     {
                         Log.f("MAIN ERROR")
                         (mContext as AppCompatActivity).finish()
                         Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                    } else
+                    }
+                    else
                     {
                         mMainContractView.showErrorMessage(result.getMessage())
                     }

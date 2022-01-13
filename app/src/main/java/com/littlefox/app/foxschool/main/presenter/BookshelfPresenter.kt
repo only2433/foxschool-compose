@@ -94,12 +94,12 @@ class BookshelfPresenter : BookshelfContract.Presenter
         mCurrentMyBookshelfResult = (mContext as AppCompatActivity).intent.getParcelableExtra<Parcelable>(Common.INTENT_BOOKSHELF_DATA) as MyBookshelfResult
         Log.f("ID : ${mCurrentMyBookshelfResult?.getID()}, Name : ${mCurrentMyBookshelfResult?.getName()}, Color : ${ mCurrentMyBookshelfResult?.getColor()}")
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mBookshelfContractView = mContext as BookshelfContract.View
-        mBookshelfContractView.initView()
-        mBookshelfContractView.initFont()
-        mBookshelfContractView.setTitle(mCurrentMyBookshelfResult?.getName())
-        mBookshelfContractView.showContentListLoading()
-
+        mBookshelfContractView = (mContext as BookshelfContract.View).apply {
+            initView()
+            initFont()
+            setTitle(mCurrentMyBookshelfResult?.getName())
+            showContentListLoading()
+        }
         Log.f("onCreate")
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_BOOKSHELF_DETAIL_LIST, Common.DURATION_LONG)
     }
@@ -117,7 +117,6 @@ class BookshelfPresenter : BookshelfContract.Presenter
     override fun destroy()
     {
         mMainHandler.removeCallbacksAndMessages(null)
-
         mBookshelfDetailListInformationCoroutine?.cancel()
         mBookshelfDetailListInformationCoroutine = null
         mBookshelfContentRemoveCoroutine?.cancel()
@@ -391,19 +390,21 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun requestBookshelfDetailInformationAsync()
     {
         Log.f("")
-        mBookshelfDetailListInformationCoroutine = BookshelfDetailListInformationCoroutine(mContext)
-        mBookshelfDetailListInformationCoroutine!!.setData(mCurrentMyBookshelfResult!!.getID())
-        mBookshelfDetailListInformationCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfDetailListInformationCoroutine!!.execute()
+        mBookshelfDetailListInformationCoroutine = BookshelfDetailListInformationCoroutine(mContext).apply {
+            setData(mCurrentMyBookshelfResult!!.getID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun requestBookshelfRemoveAsync()
     {
         Log.f("")
-        mBookshelfContentRemoveCoroutine = BookshelfContentRemoveCoroutine(mContext)
-        mBookshelfContentRemoveCoroutine!!.setData(mCurrentMyBookshelfResult!!.getID(), mSendBookshelfAddList)
-        mBookshelfContentRemoveCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfContentRemoveCoroutine!!.execute()
+        mBookshelfContentRemoveCoroutine = BookshelfContentRemoveCoroutine(mContext).apply {
+            setData(mCurrentMyBookshelfResult!!.getID(), mSendBookshelfAddList)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -422,12 +423,13 @@ class BookshelfPresenter : BookshelfContract.Presenter
 
     private fun showBookshelfContentsDeleteDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_bookshelf))
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setDialogEventType(DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_bookshelf))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogEventType(DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -436,13 +438,14 @@ class BookshelfPresenter : BookshelfContract.Presenter
      */
     private fun showChangeRecordPermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -469,10 +472,11 @@ class BookshelfPresenter : BookshelfContract.Presenter
                     mBookshelfContractView.hideLoading()
                     refreshBookshelfItemData()
                     mBookshelfContractView.hideFloatingToolbarLayout()
-                    val message = Message.obtain()
-                    message.what = MESSAGE_COMPLETE_BOOKSHELF_CONTENTS_DELETE
-                    message.obj = mContext.resources.getString(R.string.message_success_delete_contents)
-                    message.arg1 = Activity.RESULT_OK
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_BOOKSHELF_CONTENTS_DELETE
+                        obj = mContext.resources.getString(R.string.message_success_delete_contents)
+                        arg1 = Activity.RESULT_OK
+                    }
                     mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
             }
@@ -504,10 +508,11 @@ class BookshelfPresenter : BookshelfContract.Presenter
                     {
                         mBookshelfContractView.hideLoading()
                         mBookshelfContractView.hideFloatingToolbarLayout()
-                        val message = Message.obtain()
-                        message.what = MESSAGE_COMPLETE_BOOKSHELF_CONTENTS_DELETE
-                        message.obj = result.getMessage()
-                        message.arg1 = Activity.RESULT_CANCELED
+                        val message = Message.obtain().apply {
+                            what = MESSAGE_COMPLETE_BOOKSHELF_CONTENTS_DELETE
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
                         mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                     }
                 }

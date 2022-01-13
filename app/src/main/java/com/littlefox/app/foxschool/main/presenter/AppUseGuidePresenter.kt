@@ -21,10 +21,10 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mAppUseGuideContractView = mContext as AppUseGuideContract.View
-        mAppUseGuideContractView.initFont()
-        mAppUseGuideContractView.initView()
-
+        mAppUseGuideContractView = (mContext as AppUseGuideContract.View).apply {
+            initFont()
+            initView()
+        }
         Log.f("")
         init()
     }

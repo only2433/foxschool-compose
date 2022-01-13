@@ -201,7 +201,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         // 전체 체크 해제
         isAllCheck = false
         setAllCheckDrawable()
-
         setStudentListView()
         setHomeworkDateText()
         setClassNameText()

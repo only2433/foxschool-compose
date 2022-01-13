@@ -118,7 +118,6 @@ class QuizResultFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
         initView()
-        settingResultView()
     }
 
     override fun onActivityCreated(savedInstanceState : Bundle?)
@@ -183,21 +182,6 @@ class QuizResultFragment : Fragment()
             Log.f("getViewLifecycleOwner().getLifecycle().getCurrentState() : ${this.lifecycle.currentState}")
             setResultInformation(quizResultViewData)
         })
-    }
-
-    /** 결과 화면 위치조정 */
-    private fun settingResultView()
-    {
-        /*if(CommonUtils.getInstance(mContext).checkTablet == false)
-        {
-            if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.RADIO_FLIP)
-            {
-                _QuizContentsLayout.moveChildView(_QuizResultLayout, 500f, 345f, 919f, 382f);
-            }
-            val params = _QuizResultButtonLayout.layoutParams as RelativeLayout.LayoutParams
-            params.removeRule(RelativeLayout.BELOW)
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-        }*/
     }
 
     /** 결과 */

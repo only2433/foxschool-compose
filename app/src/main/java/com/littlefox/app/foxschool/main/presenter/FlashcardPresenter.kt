@@ -124,9 +124,10 @@ class FlashcardPresenter : FlashcardContract.Presenter
     {
         this.mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mFlashcardContractView = mContext as FlashcardContract.View
-        mFlashcardContractView.initView()
-        mFlashcardContractView.initFont()
+        mFlashcardContractView = (mContext as FlashcardContract.View).apply {
+            initView()
+            initFont()
+        }
         init()
     }
 
@@ -304,10 +305,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
     private fun requestVocabularyContentsListAsync()
     {
         Log.f("Vocabulary Series ID : " + mFlashcardDataObject.getContentID())
-        mVocabularyContentsListCoroutine = VocabularyContentsListCoroutine(mContext)
-        mVocabularyContentsListCoroutine!!.setData(mFlashcardDataObject.getContentID())
-        mVocabularyContentsListCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyContentsListCoroutine!!.execute()
+        mVocabularyContentsListCoroutine = VocabularyContentsListCoroutine(mContext).apply {
+            setData(mFlashcardDataObject.getContentID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -317,14 +319,15 @@ class FlashcardPresenter : FlashcardContract.Presenter
     {
         Log.f("Vocabulary Contents ID : " + mFlashcardDataObject.getContentID())
         Log.f("Vocabulary ID : " + mCurrentVocabularyAddResult?.getID())
-        mVocabularyContentsAddCoroutine = VocabularyContentsAddCoroutine(mContext)
-        mVocabularyContentsAddCoroutine!!.setData(
-            mFlashcardDataObject.getContentID(),
-            mCurrentVocabularyAddResult?.getID(),
-            getBookmarkedVocabularyItemList()
-        )
-        mVocabularyContentsAddCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyContentsAddCoroutine!!.execute()
+        mVocabularyContentsAddCoroutine = VocabularyContentsAddCoroutine(mContext).apply {
+            setData(
+                mFlashcardDataObject.getContentID(),
+                mCurrentVocabularyAddResult?.getID(),
+                getBookmarkedVocabularyItemList()
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun requestFlashcardSaveAsync()
@@ -332,10 +335,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
         Log.f("")
         mFlashcardContractView.showLoading()
 
-        mFlashcardSaveCoroutine = FlashcardSaveCoroutine(mContext)
-        mFlashcardSaveCoroutine!!.setData(mFlashcardDataObject.getContentID())
-        mFlashcardSaveCoroutine!!.asyncListener = mAsyncListener
-        mFlashcardSaveCoroutine!!.execute()
+        mFlashcardSaveCoroutine = FlashcardSaveCoroutine(mContext).apply {
+            setData(mFlashcardDataObject.getContentID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -698,11 +702,13 @@ class FlashcardPresenter : FlashcardContract.Presenter
 
         try
         {
-            mMediaPlayer!!.setDataSource(mCurrentStudyCardList?.get(0)?.getSoundURL())
-            mMediaPlayer!!.prepareAsync()
-            mMediaPlayer!!.setOnPreparedListener {
-                mFlashcardContractView.hideLoading()
-                Log.f("Init Prepare Complete")
+            mMediaPlayer!!.run {
+                setDataSource(mCurrentStudyCardList?.get(0)?.getSoundURL())
+                prepareAsync()
+                setOnPreparedListener {
+                    mFlashcardContractView.hideLoading()
+                    Log.f("Init Prepare Complete")
+                }
             }
         } catch(e : Exception) { }
     }
@@ -758,16 +764,18 @@ class FlashcardPresenter : FlashcardContract.Presenter
             Log.f("Play Word : " + item.getWordText())
             Log.f("Play URL : " + item.getSoundURL())
 
-            mMediaPlayer!!.setDataSource(item.getSoundURL())
-            mMediaPlayer!!.prepareAsync()
-            mMediaPlayer!!.setOnPreparedListener { mMediaPlayer!!.start() }
-            mMediaPlayer!!.setOnCompletionListener {
-                if(isCheckAutoPlay)
-                {
-                    mMainHandler!!.removeMessages(MESSAGE_AUTO_PLAY)
-                    mMainHandler!!.sendEmptyMessageDelayed(
-                        MESSAGE_AUTO_PLAY, (mCurrentIntervalSecond * Common.SECOND).toLong()
-                    )
+            mMediaPlayer!!.run {
+                setDataSource(item.getSoundURL())
+                prepareAsync()
+                setOnPreparedListener { mMediaPlayer!!.start() }
+                setOnCompletionListener {
+                    if(isCheckAutoPlay)
+                    {
+                        mMainHandler!!.removeMessages(MESSAGE_AUTO_PLAY)
+                        mMainHandler!!.sendEmptyMessageDelayed(
+                            MESSAGE_AUTO_PLAY, (mCurrentIntervalSecond * Common.SECOND).toLong()
+                        )
+                    }
                 }
             }
         }
@@ -798,9 +806,10 @@ class FlashcardPresenter : FlashcardContract.Presenter
      */
     private fun showBottomIntervalDialog()
     {
-        mBottomFlashcardIntervalSelectDialog = BottomFlashcardIntervalSelectDialog(mContext, mCurrentIntervalSecond)
-        mBottomFlashcardIntervalSelectDialog!!.setOnIntervalSelectListener(mIntervalSelectListener)
-        mBottomFlashcardIntervalSelectDialog!!.show()
+        mBottomFlashcardIntervalSelectDialog = BottomFlashcardIntervalSelectDialog(mContext, mCurrentIntervalSecond).apply {
+            setOnIntervalSelectListener(mIntervalSelectListener)
+            show()
+        }
     }
 
     /**
@@ -808,12 +817,13 @@ class FlashcardPresenter : FlashcardContract.Presenter
      */
     private fun showBottomVocabularyAddDialog()
     {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog!!.setCancelable(true)
-        mBottomBookAddDialog!!.setLandScapeMode()
-        mBottomBookAddDialog!!.setVocabularyData(mMainInformationResult.getVocabulariesList())
-        mBottomBookAddDialog!!.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog!!.show()
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
+            setCancelable(true)
+            setLandScapeMode()
+            setVocabularyData(mMainInformationResult.getVocabulariesList())
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
     }
 
     /**
@@ -822,11 +832,13 @@ class FlashcardPresenter : FlashcardContract.Presenter
     private fun showTemplateDialog(message : String)
     {
         Log.f("")
-        mTempleteAlertDialog = TemplateAlertDialog(mContext)
-        mTempleteAlertDialog!!.setMessage(message)
-        mTempleteAlertDialog!!.setButtonType(DialogButtonType.BUTTON_1)
-        mTempleteAlertDialog!!.setGravity(Gravity.LEFT)
-        mTempleteAlertDialog!!.show()
+        mTempleteAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setButtonType(DialogButtonType.BUTTON_1)
+            setGravity(Gravity.LEFT)
+            show()
+        }
+
     }
 
     /**
@@ -835,13 +847,14 @@ class FlashcardPresenter : FlashcardContract.Presenter
     private fun showTemplateDialog(message : String, messageType : Int)
     {
         Log.f("")
-        mTempleteAlertDialog = TemplateAlertDialog(mContext)
-        mTempleteAlertDialog!!.setMessage(message)
-        mTempleteAlertDialog!!.setDialogEventType(messageType)
-        mTempleteAlertDialog!!.setButtonType(DialogButtonType.BUTTON_2)
-        mTempleteAlertDialog!!.setGravity(Gravity.LEFT)
-        mTempleteAlertDialog!!.setDialogListener(mDialogListener)
-        mTempleteAlertDialog!!.show()
+        mTempleteAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(messageType)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setGravity(Gravity.LEFT)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -1131,10 +1144,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
                     val myVocabularyResult : MyVocabularyResult = (mObject as VocabularyShelfBaseObject).getData()
                     updateVocabularyData(myVocabularyResult)
 
-                    val message : Message = Message.obtain()
-                    message.what = MESSAGE_ALERT_TOAST
-                    message.obj = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
-                    message.arg1 = RESULT_OK
+                    val message : Message = Message.obtain().apply {
+                        what = MESSAGE_ALERT_TOAST
+                        obj = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
+                        arg1 = RESULT_OK
+                    }
                     mMainHandler!!.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
                 else if(code == Common.COROUTINE_CODE_FLASHCARD_SAVE)
@@ -1172,10 +1186,11 @@ class FlashcardPresenter : FlashcardContract.Presenter
                     {
                         Log.f("FAIL ASYNC_CODE_VOCABULARY_CONTENTS_ADD")
                         mFlashcardContractView.hideLoading()
-                        val message = Message.obtain()
-                        message.what = MESSAGE_ALERT_TOAST
-                        message.obj = result.getMessage()
-                        message.arg1 = Activity.RESULT_CANCELED
+                        val message = Message.obtain().apply {
+                            what = MESSAGE_ALERT_TOAST
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
                         mMainHandler!!.sendMessageDelayed(message, Common.DURATION_SHORT)
                     }
                     else if(code == Common.COROUTINE_CODE_FLASHCARD_SAVE)
@@ -1207,11 +1222,13 @@ class FlashcardPresenter : FlashcardContract.Presenter
         {
             when(eventType)
             {
-                DIALOG_CLOSE_APP -> if(buttonType == DialogButtonType.BUTTON_2)
+                DIALOG_CLOSE_APP ->
+                if(buttonType == DialogButtonType.BUTTON_2)
                 {
                     (mContext as AppCompatActivity).finish()
                 }
-                DIALOG_BOOKMARK_INIT -> if(buttonType == DialogButtonType.BUTTON_2)
+                DIALOG_BOOKMARK_INIT ->
+                if(buttonType == DialogButtonType.BUTTON_2)
                 {
                     clearBookmarkList()
                     isGotoIntroPage = true

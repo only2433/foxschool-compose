@@ -371,7 +371,6 @@ class StudentHomeworkListFragment : Fragment()
         {
             homeworkDate = "$startDate ~ $endDate"
         }
-
         _HomeworkSubTitle.text = homeworkDate
     }
 
@@ -495,15 +494,19 @@ class StudentHomeworkListFragment : Fragment()
         _HomeworkOneCommentButton.visibility = View.VISIBLE
         if (mHomeworkDetailBaseResult!!.getStudentComment() == "")
         {
-            _HomeworkOneCommentButton.text = resources.getString(R.string.text_homework_comment_write)
-            _HomeworkOneCommentButton.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
-            _HomeworkOneCommentButton.background = resources.getDrawable(R.drawable.round_box_green_60)
+            _HomeworkOneCommentButton.run {
+                text = resources.getString(R.string.text_homework_comment_write)
+                setTextColor(mContext.resources.getColor(R.color.color_ffffff))
+                background = resources.getDrawable(R.drawable.round_box_green_60)
+            }
         }
         else
         {
-            _HomeworkOneCommentButton.text = resources.getString(R.string.text_homework_comment_watch)
-            _HomeworkOneCommentButton.setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
-            _HomeworkOneCommentButton.background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+            _HomeworkOneCommentButton.run {
+                text = resources.getString(R.string.text_homework_comment_watch)
+                setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
+                background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+            }
         }
     }
 
@@ -526,10 +529,12 @@ class StudentHomeworkListFragment : Fragment()
             _OneCommentLayout.moveChildView(_HomeworkOneCommentIcon, 74f, 40f, 65f, 45f)
         }
 
-        _HomeworkOneCommentButton.visibility = View.VISIBLE
-        _HomeworkOneCommentButton.text = resources.getString(R.string.text_homework_comment_watch)
-        _HomeworkOneCommentButton.setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
-        _HomeworkOneCommentButton.background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+        _HomeworkOneCommentButton.run {
+            visibility = View.VISIBLE
+            text = resources.getString(R.string.text_homework_comment_watch)
+            setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
+            background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+        }
     }
 
     /**
@@ -541,16 +546,20 @@ class StudentHomeworkListFragment : Fragment()
         if (mHomeworkDetailBaseResult!!.getStudentComment() == "")
         {
             // 학습자 한마디 없을 때 -> 작성
-            _HomeworkStudentCommentButton.text = resources.getString(R.string.text_homework_comment_write)
-            _HomeworkStudentCommentButton.setTextColor(mContext.resources.getColor(R.color.color_ffffff))
-            _HomeworkStudentCommentButton.background = resources.getDrawable(R.drawable.round_box_green_60)
+            _HomeworkStudentCommentButton.run {
+                text = resources.getString(R.string.text_homework_comment_write)
+                setTextColor(mContext.resources.getColor(R.color.color_ffffff))
+                background = resources.getDrawable(R.drawable.round_box_green_60)
+            }
         }
         else
         {
             // 학습자 한마디 있을 때 -> 보기
-            _HomeworkStudentCommentButton.text = resources.getString(R.string.text_homework_comment_watch)
-            _HomeworkStudentCommentButton.setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
-            _HomeworkStudentCommentButton.background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+            _HomeworkStudentCommentButton.run {
+                text = resources.getString(R.string.text_homework_comment_watch)
+                setTextColor(mContext.resources.getColor(R.color.color_23cc8a))
+                background = resources.getDrawable(R.drawable.round_box_empty_green_60)
+            }
         }
         _HomeworkStudentCommentButton.visibility = View.VISIBLE
     }
@@ -621,12 +630,13 @@ class StudentHomeworkListFragment : Fragment()
     private fun showHomeworkInfoDialog()
     {
         val message = mContext.getString(R.string.message_warning_homework_info)
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
-        mTemplateAlertDialog.setGravity(Gravity.LEFT)
-        mTemplateAlertDialog.setCancelPossible(false)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setButtonType(DialogButtonType.BUTTON_1)
+            setGravity(Gravity.LEFT)
+            setCancelPossible(false)
+            show()
+        }
     }
 
     @OnClick(R.id._homeworkInfoButton, R.id._homeworkFilterButton, R.id._homeworkOneCommentButton, R.id._homeworkStudentCommentButton, R.id._homeworkTeacherCommentButton)

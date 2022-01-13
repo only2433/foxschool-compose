@@ -320,9 +320,11 @@ class HomeworkCommentFragment : Fragment()
      */
     private fun setTeacherCommentLayout()
     {
-        _CommentEditText.visibility = View.VISIBLE
-        _CommentEditText.setText(mComment)
-        _CommentEditText.isEnabled = false
+        _CommentEditText.run {
+            visibility = View.VISIBLE
+            setText(mComment)
+            isEnabled = false
+        }
     }
 
     /**
@@ -420,12 +422,14 @@ class HomeworkCommentFragment : Fragment()
     private fun showCommentDeleteDialog()
     {
         Log.f("")
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_comment_delete_check))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_COMMENT_DELETE)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_comment_delete_check))
+            setDialogEventType(DIALOG_COMMENT_DELETE)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     @Optional

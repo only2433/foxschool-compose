@@ -70,9 +70,10 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mManagementItemMyBooksContractView = mContext as ManagementItemMyBooksContract.View
-        mManagementItemMyBooksContractView.initView()
-        mManagementItemMyBooksContractView.initFont()
+        mManagementItemMyBooksContractView = (mContext as ManagementItemMyBooksContract.View).apply {
+            initView()
+            initFont()
+        }
 
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mManagementBooksData = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_MANAGEMENT_MYBOOKS_DATA)!!
@@ -92,7 +93,6 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
         mManagementItemMyBooksContractView.settingLayoutView(mManagementBooksData.getBooksType())
 
         Log.f("onCreate")
-
         init()
     }
 
@@ -223,10 +223,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestBookshelfCreateAsync()
     {
         Log.f("")
-        mBookshelfCreateCoroutine = BookshelfCreateCoroutine(mContext)
-        mBookshelfCreateCoroutine!!.setData(mBookName, mSelectBookColor)
-        mBookshelfCreateCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfCreateCoroutine!!.execute()
+        mBookshelfCreateCoroutine = BookshelfCreateCoroutine(mContext).apply {
+            setData(mBookName, mSelectBookColor)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -235,10 +236,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestBookshelfUpdateAsync()
     {
         Log.f("")
-        mBookshelfUpdateCoroutine = BookshelfUpdateCoroutine(mContext)
-        mBookshelfUpdateCoroutine!!.setData(mManagementBooksData.getID(), mBookName, mSelectBookColor)
-        mBookshelfUpdateCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfUpdateCoroutine!!.execute()
+        mBookshelfUpdateCoroutine = BookshelfUpdateCoroutine(mContext).apply {
+            setData(mManagementBooksData.getID(), mBookName, mSelectBookColor)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -247,10 +249,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestBookshelfDeleteAsync()
     {
         Log.f("Delete Bookshelf ID : " + mManagementBooksData.getID())
-        mBookshelfDeleteCoroutine = BookshelfDeleteCoroutine(mContext)
-        mBookshelfDeleteCoroutine!!.setData(mManagementBooksData.getID())
-        mBookshelfDeleteCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfDeleteCoroutine!!.execute()
+        mBookshelfDeleteCoroutine = BookshelfDeleteCoroutine(mContext).apply {
+            setData(mManagementBooksData.getID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -259,10 +262,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestVocabularyCreateAsync()
     {
         Log.f("")
-        mVocabularyCreateCoroutine = VocabularyCreateCoroutine(mContext)
-        mVocabularyCreateCoroutine!!.setData(mBookName, mSelectBookColor)
-        mVocabularyCreateCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyCreateCoroutine!!.execute()
+        mVocabularyCreateCoroutine = VocabularyCreateCoroutine(mContext).apply {
+            setData(mBookName, mSelectBookColor)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -271,10 +275,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestVocabularyUpdateAsync()
     {
         Log.f("")
-        mVocabularyUpdateCoroutine = VocabularyUpdateCoroutine(mContext)
-        mVocabularyUpdateCoroutine!!.setData(mManagementBooksData.getID(), mBookName, mSelectBookColor)
-        mVocabularyUpdateCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyUpdateCoroutine!!.execute()
+        mVocabularyUpdateCoroutine = VocabularyUpdateCoroutine(mContext).apply {
+            setData(mManagementBooksData.getID(), mBookName, mSelectBookColor)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -283,10 +288,11 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
     private fun requestVocabularyDeleteAsync()
     {
         Log.f("Delete Vocabulary ID : " + mManagementBooksData.getID())
-        mVocabularyDeleteCoroutine = VocabularyDeleteCoroutine(mContext)
-        mVocabularyDeleteCoroutine!!.setData(mManagementBooksData.getID())
-        mVocabularyDeleteCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyDeleteCoroutine!!.execute()
+        mVocabularyDeleteCoroutine = VocabularyDeleteCoroutine(mContext).apply {
+            setData(mManagementBooksData.getID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -351,13 +357,34 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog!!.setMessage(message)
-        mTemplateAlertDialog!!.setDialogEventType(eventType)
-        mTemplateAlertDialog!!.setButtonType(buttonType)
-        mTemplateAlertDialog!!.setDialogListener(mDialogListener)
-        mTemplateAlertDialog!!.setGravity(Gravity.LEFT)
-        mTemplateAlertDialog!!.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(eventType)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            setGravity(Gravity.LEFT)
+            show()
+        }
+    }
+
+    private fun setResultModifyName(type : MyBooksType, name : String)
+    {
+        val intent = Intent()
+        when(type)
+        {
+            MyBooksType.BOOKSHELF_MODIFY ->
+            {
+                intent.putExtra(Common.INTENT_MODIFY_BOOKSHELF_NAME, name)
+
+            }
+            MyBooksType.VOCABULARY_MODIFY ->
+            {
+                intent.putExtra(Common.INTENT_MODIFY_VOCABULARY_NAME, name)
+            }
+        }
+        (mContext as AppCompatActivity).setResult(Activity.RESULT_OK, intent)
+        (mContext as AppCompatActivity).finish()
+
     }
 
     private val mAsyncListener : AsyncListener = object : AsyncListener
@@ -388,10 +415,7 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
                     CommonUtils.getInstance(mContext).saveMainData(mMainInformationResult!!)
                     MainObserver.updatePage(Common.PAGE_MY_BOOKS)
 
-                    val intent = Intent()
-                    intent.putExtra(Common.INTENT_MODIFY_BOOKSHELF_NAME, myBookshelfResult.getName())
-                    (mContext as AppCompatActivity).setResult(Activity.RESULT_OK, intent)
-                    (mContext as AppCompatActivity).finish()
+                    setResultModifyName(MyBooksType.BOOKSHELF_MODIFY, myBookshelfResult.getName())
                 }
                 else if(code == Common.COROUTINE_CODE_BOOKSHELF_DELETE)
                 {
@@ -415,10 +439,7 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
                     CommonUtils.getInstance(mContext).saveMainData(mMainInformationResult!!)
                     MainObserver.updatePage(Common.PAGE_MY_BOOKS)
 
-                    val intent = Intent()
-                    intent.putExtra(Common.INTENT_MODIFY_VOCABULARY_NAME, myVocabularyResult.getName())
-                    (mContext as AppCompatActivity).setResult(Activity.RESULT_OK, intent)
-                    (mContext as AppCompatActivity).finish()
+                    setResultModifyName(MyBooksType.VOCABULARY_MODIFY, myVocabularyResult.getName())
                 }
                 else if(code == Common.COROUTINE_CODE_VOCABULARY_DELETE)
                 {

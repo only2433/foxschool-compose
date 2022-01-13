@@ -95,9 +95,10 @@ class IntroPresenter : IntroContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mMainContractView = mContext as IntroContract.View
-        mMainContractView.initView()
-        mMainContractView.initFont()
+        mMainContractView = (mContext as IntroContract.View).apply {
+            initView()
+            initFont()
+        }
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         FirebaseApp.initializeApp(mContext)
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
@@ -310,21 +311,23 @@ class IntroPresenter : IntroContract.Presenter
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
         Log.f("Update Pop up")
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setDialogEventType(type)
-        mTemplateAlertDialog.setButtonType(buttonType)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(type)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     private fun showPasswordChangeDialog()
     {
         Log.f("")
-        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!)
-        mPasswordChangeDialog?.setPasswordChangeListener(mPasswordChangeDialogListener)
-        mPasswordChangeDialog?.setCancelable(false)
-        mPasswordChangeDialog?.show()
+        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!).apply {
+            setPasswordChangeListener(mPasswordChangeDialogListener)
+            setCancelable(false)
+            show()
+        }
     }
 
     /**
@@ -333,13 +336,15 @@ class IntroPresenter : IntroContract.Presenter
      */
     private fun showChangeFilePermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_warning_storage_permission))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_FILE_PERMISSION)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_warning_storage_permission))
+            setDialogEventType(DIALOG_TYPE_WARNING_FILE_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     private fun requestInitAsync()
@@ -377,10 +382,12 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChange()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext)
-        mPasswordChangeCoroutine!!.setData(mPassword, mNewPassword, mConfirmPassword)
-        mPasswordChangeCoroutine!!.asyncListener = mIntroAsyncListener
-        mPasswordChangeCoroutine!!.execute()
+        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext).apply {
+            setData(mPassword, mNewPassword, mConfirmPassword)
+            asyncListener = mIntroAsyncListener
+            execute()
+        }
+
     }
 
     /**
@@ -389,9 +396,10 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeNext()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext)
-        mPasswordChangeNextCoroutine!!.asyncListener = mIntroAsyncListener
-        mPasswordChangeNextCoroutine!!.execute()
+        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext).apply {
+            asyncListener = mIntroAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -400,9 +408,10 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeKeep()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext)
-        mPasswordChangeKeepCoroutine!!.asyncListener = mIntroAsyncListener
-        mPasswordChangeKeepCoroutine!!.execute()
+        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext).apply {
+            asyncListener = mIntroAsyncListener
+            execute()
+        }
     }
 
     private fun startMainActivity()

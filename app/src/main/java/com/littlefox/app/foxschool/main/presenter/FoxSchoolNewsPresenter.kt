@@ -61,9 +61,10 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
     {
         Log.f("")
 
-        mMainFragmentSelectionPagerAdapter = MainFragmentSelectionPagerAdapter((mContext as AppCompatActivity).supportFragmentManager)
-        mMainFragmentSelectionPagerAdapter.addFragment(ForumListFragment.instance)
-        mMainFragmentSelectionPagerAdapter.addFragment(ForumWebviewFragment.instance)
+        mMainFragmentSelectionPagerAdapter = MainFragmentSelectionPagerAdapter((mContext as AppCompatActivity).supportFragmentManager).apply {
+            addFragment(ForumListFragment.instance)
+            addFragment(ForumWebviewFragment.instance)
+        }
         mForumContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
         requestNewsListAsync()
 
@@ -161,9 +162,11 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
             mMainFragmentSelectionPagerAdapter.setFragment(Common.PAGE_FORUM_WEBVIEW, ForumWebviewFragment.instance)
             mMainFragmentSelectionPagerAdapter.notifyDataSetChanged()
 
-            val message = Message.obtain()
-            message.what = MESSAGE_GO_TO_ARTICLE
-            message.obj = Common.URL_FOXSCHOOL_NEWS_DETAIL + articleID
+            val message = Message.obtain().apply {
+                what = MESSAGE_GO_TO_ARTICLE
+                obj = Common.URL_FOXSCHOOL_NEWS_DETAIL + articleID
+            }
+
             mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
         })
 
