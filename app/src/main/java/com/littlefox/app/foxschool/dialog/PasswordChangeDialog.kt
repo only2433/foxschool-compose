@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -26,7 +27,6 @@ import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
-import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
@@ -149,7 +149,6 @@ class PasswordChangeDialog : Dialog
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-
 
         getWindow()!!.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         getWindow()!!.statusBarColor = mContext.resources.getColor(R.color.color_1fb77c)
@@ -317,22 +316,46 @@ class PasswordChangeDialog : Dialog
         mInputMethodManager!!.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
+    {
+        if(ev.action == MotionEvent.ACTION_UP)
+        {
+            val view = currentFocus
+            if(view != null)
+            {
+                val consumed = super.dispatchTouchEvent(ev)
+                val viewTmp = currentFocus
+                val viewNew : View = viewTmp ?: view
+                if(viewNew == view)
+                {
+                    val rect = Rect()
+                    val coordinates = IntArray(2)
+                    view.getLocationOnScreen(coordinates)
+                    rect[coordinates[0], coordinates[1], coordinates[0] + view.width] =
+                        coordinates[1] + view.height
+                    val x = ev.x.toInt()
+                    val y = ev.y.toInt()
+                    if(rect.contains(x, y))
+                    {
+                        return consumed
+                    }
+                } else if(viewNew is EditText)
+                {
+                    Log.f("consumed : $consumed")
+                    return consumed
+                }
+                hideKeyBoard()
+                viewNew.clearFocus()
+                return consumed
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     @Optional
-    @OnClick(
-        R.id._passwordChangeLayout, R.id._90buttonLayout, R.id._180buttonLayout,
-        R.id._changeButton90, R.id._changeButton180, R.id._laterButton, R.id._keepButton
-    )
+    @OnClick(R.id._changeButton90, R.id._changeButton180, R.id._laterButton, R.id._keepButton)
     fun onClickView(view : View)
     {
-        // 바탕화면 클릭 시 EditText 포커싱 해제하고 키보드 닫기
-        if (view.id == R.id._passwordChangeLayout || view.id == R.id._90buttonLayout || view.id == R.id._180buttonLayout)
-        {
-            hideKeyBoard()
-            _InputPasswordEditText.clearFocus()
-            _InputNewPasswordEditText.clearFocus()
-            _InputNewPasswordConfirmEditText.clearFocus()
-        }
-
         when(view.id)
         {
             // 비밀번호 변경

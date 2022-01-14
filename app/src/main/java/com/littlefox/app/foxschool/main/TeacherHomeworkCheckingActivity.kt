@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.EditText
@@ -24,6 +26,7 @@ import com.littlefox.app.foxschool.main.contract.TeacherHomeworkCheckingContract
 import com.littlefox.app.foxschool.main.presenter.TeacherHomeworkCheckingPresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, TeacherHomeworkCheckingContract.View
@@ -221,8 +224,44 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         mTeacherHomeworkCheckingPresenter.sendMessageEvent(message)
     }
 
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
+    {
+        if(ev.action == MotionEvent.ACTION_UP)
+        {
+            val view = currentFocus
+            if(view != null)
+            {
+                val consumed = super.dispatchTouchEvent(ev)
+                val viewTmp = currentFocus
+                val viewNew : View = viewTmp ?: view
+                if(viewNew == view)
+                {
+                    val rect = Rect()
+                    val coordinates = IntArray(2)
+                    view.getLocationOnScreen(coordinates)
+                    rect[coordinates[0], coordinates[1], coordinates[0] + view.width] =
+                        coordinates[1] + view.height
+                    val x = ev.x.toInt()
+                    val y = ev.y.toInt()
+                    if(rect.contains(x, y))
+                    {
+                        return consumed
+                    }
+                } else if(viewNew is EditText)
+                {
+                    Log.f("consumed : $consumed")
+                    return consumed
+                }
+                CommonUtils.getInstance(this).hideKeyboard()
+                viewNew.clearFocus()
+                return consumed
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     @Optional
-    @OnClick(R.id._homeworkCheckingLayout, R.id._closeButtonRect, R.id._checkingRegisterButton, R.id._checkingCancelButton,
+    @OnClick(R.id._closeButtonRect, R.id._checkingRegisterButton, R.id._checkingCancelButton,
         R.id._homeworkEvalE0Button, R.id._homeworkEvalE1Button, R.id._homeworkEvalE2Button,
         R.id._homeworkEvalE0Image, R.id._homeworkEvalE1Image, R.id._homeworkEvalE2Image,
         R.id._homeworkEvalE0Text, R.id._homeworkEvalE1Text, R.id._homeworkEvalE2Text,)
@@ -235,8 +274,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
                 this.setResult(Activity.RESULT_CANCELED)
                 this.finish()
             }
-
-            R.id._homeworkCheckingLayout -> CommonUtils.getInstance(this).hideKeyboard()
 
             R.id._checkingRegisterButton ->
             {
