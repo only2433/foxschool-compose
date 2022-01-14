@@ -567,7 +567,7 @@ class IntroPresenter : IntroContract.Presenter
                 {
                     val versionDataResult : VersionDataResult = (result as VersionBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
-                   /* if(versionDataResult.isNeedUpdate)
+                    if(versionDataResult.isNeedUpdate)
                     {
                         if(versionDataResult.isForceUpdate())
                         {
@@ -587,7 +587,7 @@ class IntroPresenter : IntroContract.Presenter
                     } else
                     {
                         startAPIProcess()
-                    }*/
+                    }
                     startAPIProcess()
                 }
                 else if(code == Common.COROUTINE_CODE_ME)
