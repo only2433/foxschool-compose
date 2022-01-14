@@ -229,14 +229,14 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             }
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
-        {
-            mAddItemTypeList.add(ContentItemType.TRANSLATE)
-        }
-
         if(mContentsInformationResult.getServiceInformation()?.getRecorderSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.RECORDER)
+        }
+
+        if(mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        {
+            mAddItemTypeList.add(ContentItemType.TRANSLATE)
         }
 
         if(isDisableBookshelf == false)

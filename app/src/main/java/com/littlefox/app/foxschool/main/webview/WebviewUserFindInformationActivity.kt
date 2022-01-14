@@ -190,6 +190,8 @@ class WebviewUserFindInformationActivity : BaseActivity()
         {
             hideLoading()
             super.onPageFinished(view, url)
+
+            Log.f("url : "+ url)
         }
     }
 }
