@@ -2,8 +2,10 @@ package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Message
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.EditText
@@ -23,6 +25,7 @@ import com.littlefox.app.foxschool.main.contract.InquireContract
 import com.littlefox.app.foxschool.main.presenter.InquirePresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
@@ -233,12 +236,47 @@ class InquireActivity : BaseActivity(), MessageHandlerCallback, InquireContract.
         }
     }
 
-    @OnClick(R.id._1on1ContentsLayout, R.id._selectCategoryBg, R.id._selectCategoryText, R.id._registerButton, R.id._sendEmailButton, R.id._closeButtonRect)
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
+    {
+        if(ev.action == MotionEvent.ACTION_UP)
+        {
+            val view = currentFocus
+            if(view != null)
+            {
+                val consumed = super.dispatchTouchEvent(ev)
+                val viewTmp = currentFocus
+                val viewNew : View = viewTmp ?: view
+                if(viewNew == view)
+                {
+                    val rect = Rect()
+                    val coordinates = IntArray(2)
+                    view.getLocationOnScreen(coordinates)
+                    rect[coordinates[0], coordinates[1], coordinates[0] + view.width] =
+                        coordinates[1] + view.height
+                    val x = ev.x.toInt()
+                    val y = ev.y.toInt()
+                    if(rect.contains(x, y))
+                    {
+                        return consumed
+                    }
+                } else if(viewNew is EditText)
+                {
+                    Log.f("consumed : $consumed")
+                    return consumed
+                }
+                CommonUtils.getInstance(this).hideKeyboard()
+                viewNew.clearFocus()
+                return consumed
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
+    @OnClick(R.id._selectCategoryBg, R.id._selectCategoryText, R.id._registerButton, R.id._sendEmailButton, R.id._closeButtonRect)
     fun onClickView(view : View)
     {
         when(view.id)
         {
-            R.id._1on1ContentsLayout -> CommonUtils.getInstance(this).hideKeyboard()
             R.id._selectCategoryBg, R.id._selectCategoryText ->
             {
                 _SelectCategoryBg.setBackgroundResource(R.drawable.text_box)

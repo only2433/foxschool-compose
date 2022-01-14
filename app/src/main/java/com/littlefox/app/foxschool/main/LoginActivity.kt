@@ -2,12 +2,14 @@ package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -242,29 +244,48 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         mLoginPresenter.sendMessageEvent(message)
     }
 
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
+    {
+        if(ev.action == MotionEvent.ACTION_UP)
+        {
+            val view = currentFocus
+            if(view != null)
+            {
+                val consumed = super.dispatchTouchEvent(ev)
+                val viewTmp = currentFocus
+                val viewNew : View = viewTmp ?: view
+                if(viewNew == view)
+                {
+                    val rect = Rect()
+                    val coordinates = IntArray(2)
+                    view.getLocationOnScreen(coordinates)
+                    rect[coordinates[0], coordinates[1], coordinates[0] + view.width] =
+                        coordinates[1] + view.height
+                    val x = ev.x.toInt()
+                    val y = ev.y.toInt()
+                    if(rect.contains(x, y))
+                    {
+                        return consumed
+                    }
+                } else if(viewNew is EditText)
+                {
+                    Log.f("consumed : $consumed")
+                    return consumed
+                }
+                CommonUtils.getInstance(this).hideKeyboard()
+                viewNew.clearFocus()
+                return consumed
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
+
     @OnClick(
         R.id._closeButtonRect, R.id._autoLoginIcon, R.id._loginButtonText, R.id._forgetIDText,
-        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton,
-        R.id._inputLayoutBackground, R.id._contentsLayout, R.id._loginInfoLayout
+        R.id._forgetPasswordText, R.id._inputSchoolDeleteButton
     )
     fun onClickView(view : View)
     {
-        // 바탕화면 클릭 시 EditText 포커싱 해제하고 키보드 닫기
-        if (view.id == R.id._contentsLayout || view.id == R.id._inputLayoutBackground || view.id == R.id._loginInfoLayout)
-        {
-            if (_InputSchoolEditText.hasFocus())
-            {
-                // 학교 입력필드의 내용 초기화
-                _InputSchoolEditText.setText("")
-                clearSearchView()
-            }
-
-            CommonUtils.getInstance(this).hideKeyboard()
-            _InputIdEditText.clearFocus()
-            _InputPasswordEditText.clearFocus()
-            _InputSchoolEditText.clearFocus()
-        }
-
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()

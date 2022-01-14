@@ -2,10 +2,13 @@ package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Message
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -242,6 +245,42 @@ class MyInformationActivity : BaseActivity(), MessageHandlerCallback, MyInformat
             _MyInfoViewpager.currentItem = Common.PAGE_MY_INFO
             setTitleView(Common.PAGE_MY_INFO)
         }
+    }
+
+    override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
+    {
+        if(ev.action == MotionEvent.ACTION_UP)
+        {
+            val view = currentFocus
+            if(view != null)
+            {
+                val consumed = super.dispatchTouchEvent(ev)
+                val viewTmp = currentFocus
+                val viewNew : View = viewTmp ?: view
+                if(viewNew == view)
+                {
+                    val rect = Rect()
+                    val coordinates = IntArray(2)
+                    view.getLocationOnScreen(coordinates)
+                    rect[coordinates[0], coordinates[1], coordinates[0] + view.width] =
+                        coordinates[1] + view.height
+                    val x = ev.x.toInt()
+                    val y = ev.y.toInt()
+                    if(rect.contains(x, y))
+                    {
+                        return consumed
+                    }
+                } else if(viewNew is EditText)
+                {
+                    Log.f("consumed : $consumed")
+                    return consumed
+                }
+                CommonUtils.getInstance(this).hideKeyboard()
+                viewNew.clearFocus()
+                return consumed
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     @Optional

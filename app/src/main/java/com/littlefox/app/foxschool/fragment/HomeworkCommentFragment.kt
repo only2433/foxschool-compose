@@ -1,11 +1,13 @@
 package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
@@ -433,7 +435,7 @@ class HomeworkCommentFragment : Fragment()
     }
 
     @Optional
-    @OnClick(R.id._commentInputLayout, R.id._commentRegisterButton, R.id._commentUpdateButton, R.id._commentDeleteButton)
+    @OnClick(R.id._commentRegisterButton, R.id._commentUpdateButton, R.id._commentDeleteButton)
     fun onClickView(view : View)
     {
         //중복이벤트 방지
@@ -445,7 +447,6 @@ class HomeworkCommentFragment : Fragment()
 
         when(view.id)
         {
-            R.id._commentInputLayout -> CommonUtils.getInstance(mContext).hideKeyboard()
             R.id._commentRegisterButton -> mHomeworkCommentFragmentObserver.onClickRegisterButton(_CommentEditText.text.toString())
             R.id._commentUpdateButton -> mHomeworkCommentFragmentObserver.onClickUpdateButton(_CommentEditText.text.toString())
             R.id._commentDeleteButton -> showCommentDeleteDialog()

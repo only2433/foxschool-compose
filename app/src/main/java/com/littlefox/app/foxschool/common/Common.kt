@@ -65,7 +65,7 @@ class Common
         const val URL_PRIVACY : String                  = BASE_WEBVIEW_URL + "forum/privacy"
         const val URL_ORIGIN_TRANSLATE : String         = BASE_WEBVIEW_URL + "contents/originaltranslate/"
         const val URL_FIND_ID : String                  = BASE_WEBVIEW_URL + "auth/find/id"
-        const val URL_FIND_PW : String                  = BASE_WEBVIEW_URL + "auth/find/pw"
+        const val URL_FIND_PW : String                  = BASE_WEBVIEW_URL + "auth/find/password"
         const val URL_FOXSCHOOL_INTRODUCE : String      = "https://foxschool.littlefox.co.kr/home/"
 
         const val PARAMS_DISPLAY_METRICS : String               = "display_metrics"

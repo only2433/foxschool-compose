@@ -648,7 +648,7 @@ class MyInfoChangeFragment : Fragment()
 
     @Optional
     @OnClick(
-        R.id._mainBaseLayout, R.id._mainBackgroundView, R.id._saveInfoButton, R.id._savePasswordButton,
+        R.id._saveInfoButton, R.id._savePasswordButton,
         R.id._inputNameDeleteButton, R.id._inputEmailDeleteButton, R.id._inputPhoneDeleteButton,
         R.id._inputNameEditText, R.id._inputEmailEditText, R.id._inputEmailEndEditText, R.id._inputPhoneEditText,
         R.id._inputEmailEndSelectButton, R.id._inputEmailEndSelectButtonRect, R.id._emailTitleText, R.id._emailEndTitleText,
@@ -658,20 +658,6 @@ class MyInfoChangeFragment : Fragment()
     )
     fun onClickView(view : View)
     {
-        // 배경화면 탭하면 키보드 닫기
-        if (view.id == R.id._mainBaseLayout || view.id == R.id._mainBackgroundView)
-        {
-            CommonUtils.getInstance(mContext).hideKeyboard()
-            _InputNameEditText.clearFocus()
-            _InputEmailEditText.clearFocus()
-            _InputEmailEndEditText.clearFocus()
-            _InputPhoneEditText.clearFocus()
-
-            _InputPasswordEditText.clearFocus()
-            _InputNewPasswordEditText.clearFocus()
-            _InputNewPasswordConfirmEditText.clearFocus()
-        }
-
         when(view.id)
         {
             // 타이틀 클릭으로 포커싱 & 키보드 표시
