@@ -106,11 +106,12 @@ class VocabularyPresenter : VocabularyContract.Presenter
         mVocabularySelectData = VocabularySelectData()
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
         Log.f("TYPE : " + mCurrentMyVocabularyResult.getVocabularyType())
-        mVocabularyContractView = mContext as VocabularyContract.View
-        mVocabularyContractView.initView()
-        mVocabularyContractView.initFont()
-        mVocabularyContractView.setTitle(mCurrentMyVocabularyResult.getName())
-        mVocabularyContractView.setBottomWordsActionType(mCurrentMyVocabularyResult.getVocabularyType())
+        mVocabularyContractView = (mContext as VocabularyContract.View).apply {
+            initView()
+            initFont()
+            setTitle(mCurrentMyVocabularyResult.getName())
+            setBottomWordsActionType(mCurrentMyVocabularyResult.getVocabularyType())
+        }
 
         Log.f("onCreate")
         init()
@@ -372,11 +373,13 @@ class VocabularyPresenter : VocabularyContract.Presenter
         {
             Log.f("Vocabulary Sound Stop")
             mMainHandler.removeCallbacksAndMessages(null)
-            mVocabularyContractView.setBottomStopStatus()
-            mVocabularyContractView.setBottomPlayItemCount(mVocabularyItemListAdapter.selectedCount)
-            mVocabularyContractView.scrollPosition(0)
+            mVocabularyContractView.run {
+                setBottomStopStatus()
+                setBottomPlayItemCount(mVocabularyItemListAdapter.selectedCount)
+                scrollPosition(0)
+                showContentListLoading()
+            }
             mSelectedPlayItemList.clear()
-            mVocabularyContractView.showContentListLoading()
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_NOTIFY_DATA_ALL, Common.DURATION_NORMAL)
         }
     }
@@ -384,38 +387,43 @@ class VocabularyPresenter : VocabularyContract.Presenter
     private fun requestVocabularyContentsListAsync()
     {
         Log.f("Vocabulary ID : " + mCurrentMyVocabularyResult.getContentID())
-        mVocabularyContentsListCoroutine = VocabularyContentsListCoroutine(mContext)
-        mVocabularyContentsListCoroutine!!.setData(mCurrentMyVocabularyResult.getContentID())
-        mVocabularyContentsListCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyContentsListCoroutine!!.execute()
+        mVocabularyContentsListCoroutine = VocabularyContentsListCoroutine(mContext).apply {
+            setData(mCurrentMyVocabularyResult.getContentID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun requestVocabularyShelfListAsync()
     {
         Log.f("Vocabulary ID : " + mCurrentMyVocabularyResult.getID())
-        mVocabularyShelfListCoroutine = VocabularyShelfListCoroutine(mContext)
-        mVocabularyShelfListCoroutine!!.setData(mCurrentMyVocabularyResult.getID())
-        mVocabularyShelfListCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyShelfListCoroutine!!.execute()
+        mVocabularyShelfListCoroutine = VocabularyShelfListCoroutine(mContext).apply {
+            setData(mCurrentMyVocabularyResult.getID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun requestVocabularyContentsAddAsync()
     {
         Log.f("Vocabulary ID : " + mCurrentVocabularyAddResult.getID())
         Log.f("Vocabulary Contents ID : " + mCurrentMyVocabularyResult.getContentID())
-        mVocabularyContentsAddCoroutine = VocabularyContentsAddCoroutine(mContext)
-        mVocabularyContentsAddCoroutine!!.setData(mCurrentMyVocabularyResult.getContentID(), mCurrentVocabularyAddResult.getID(), mRequestItemList)
-        mVocabularyContentsAddCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyContentsAddCoroutine!!.execute()
+        mVocabularyContentsAddCoroutine = VocabularyContentsAddCoroutine(mContext).apply {
+            setData(mCurrentMyVocabularyResult.getContentID(), mCurrentVocabularyAddResult.getID(), mRequestItemList)
+            asyncListener = mAsyncListener
+            execute()
+        }
+
     }
 
     private fun requestVocabularyContentsDeleteAsync()
     {
         Log.f("Vocabulary ID : " + mCurrentMyVocabularyResult.getID())
-        mVocabularyContentsDeleteCoroutine = VocabularyContentsDeleteCoroutine(mContext)
-        mVocabularyContentsDeleteCoroutine!!.setData(mCurrentMyVocabularyResult.getID(), mRequestItemList)
-        mVocabularyContentsDeleteCoroutine!!.asyncListener = mAsyncListener
-        mVocabularyContentsDeleteCoroutine!!.execute()
+        mVocabularyContentsDeleteCoroutine = VocabularyContentsDeleteCoroutine(mContext).apply {
+            setData(mCurrentMyVocabularyResult.getID(), mRequestItemList)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun startFlashcardActivity()
@@ -546,9 +554,10 @@ class VocabularyPresenter : VocabularyContract.Presenter
     private fun initRecyclerView()
     {
         Log.f("")
-        mVocabularyItemListAdapter = VocabularyItemListAdapter(mContext)
-        mVocabularyItemListAdapter.setData(mVocabularyItemList)
-        mVocabularyItemListAdapter.setOnVocabularyListener(mVocabularyItemListener)
+        mVocabularyItemListAdapter = VocabularyItemListAdapter(mContext).apply {
+            setData(mVocabularyItemList)
+            setOnVocabularyListener(mVocabularyItemListener)
+        }
         mVocabularyContractView.showListView(mVocabularyItemListAdapter)
     }
 
@@ -611,15 +620,17 @@ class VocabularyPresenter : VocabularyContract.Presenter
             {
                 mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             }
-            mMediaPlayer?.setDataSource(playList[mCurrentPlayIndex].getSoundURL())
-            mMediaPlayer?.prepareAsync()
-            mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
-            {
-                override fun onPrepared(mediaPlayer : MediaPlayer)
+            mMediaPlayer!!.run {
+                setDataSource(playList[mCurrentPlayIndex].getSoundURL())
+                prepareAsync()
+                setOnPreparedListener(object : MediaPlayer.OnPreparedListener
                 {
-                    mMediaPlayer?.start()
-                }
-            })
+                    override fun onPrepared(mediaPlayer : MediaPlayer)
+                    {
+                        start()
+                    }
+                })
+            }
         }
         catch(e : Exception)
         {
@@ -641,29 +652,32 @@ class VocabularyPresenter : VocabularyContract.Presenter
     private fun showBottomIntervalDialog()
     {
         Log.f("")
-        mBottomIntervalSelectDialog = BottomIntervalSelectDialog(mContext, mCurrentIntervalSecond)
-        mBottomIntervalSelectDialog?.setCancelable(true)
-        mBottomIntervalSelectDialog?.setOnIntervalSelectListener(mIntervalSelectListener)
-        mBottomIntervalSelectDialog?.show()
+        mBottomIntervalSelectDialog = BottomIntervalSelectDialog(mContext, mCurrentIntervalSecond).apply {
+            setCancelable(true)
+            setOnIntervalSelectListener(mIntervalSelectListener)
+            show()
+        }
     }
 
     private fun showBottomVocabularyAddDialog()
     {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog?.setCancelable(true)
-        mBottomBookAddDialog?.setVocabularyData(mMainInformationResult.getVocabulariesList())
-        mBottomBookAddDialog?.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog?.show()
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
+            setCancelable(true)
+            setVocabularyData(mMainInformationResult.getVocabulariesList())
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
     }
 
     private fun showVocabularyContentDeleteDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog?.setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_vocabulary))
-        mTemplateAlertDialog?.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog?.setDialogEventType(DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS)
-        mTemplateAlertDialog?.setDialogListener(mDialogListener)
-        mTemplateAlertDialog?.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_question_delete_contents_in_vocabulary))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogEventType(DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -697,10 +711,11 @@ class VocabularyPresenter : VocabularyContract.Presenter
                     mVocabularyItemListAdapter.initSelectedData()
                     mVocabularyContractView.setBottomPlayItemCount(mVocabularyItemListAdapter.selectedCount)
 
-                    val message = Message.obtain()
-                    message.what = MESSAGE_COMPLETE_CONTENTS
-                    message.obj = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
-                    message.arg1 = Activity.RESULT_OK
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_CONTENTS
+                        obj = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
+                        arg1 = Activity.RESULT_OK
+                    }
                     mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
                 else if(code == Common.COROUTINE_CODE_VOCABULARY_CONTENTS_DELETE)
@@ -709,10 +724,11 @@ class VocabularyPresenter : VocabularyContract.Presenter
                     refreshVocabularyItemData()
                     mVocabularyItemListAdapter.initSelectedData()
                     mVocabularyContractView.setBottomPlayItemCount(mVocabularyItemListAdapter.selectedCount)
-                    val message = Message.obtain()
-                    message.what = MESSAGE_COMPLETE_CONTENTS
-                    message.obj = mContext.resources.getString(R.string.message_success_delete_contents)
-                    message.arg1 = Activity.RESULT_OK
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_CONTENTS
+                        obj = mContext.resources.getString(R.string.message_success_delete_contents)
+                        arg1 = Activity.RESULT_OK
+                    }
                     mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
             }
@@ -745,10 +761,11 @@ class VocabularyPresenter : VocabularyContract.Presenter
                     {
                         Log.f("FAIL ASYNC_CODE_VOCABULARY_CONTENTS_ADD")
                         mVocabularyContractView.hideLoading()
-                        val message = Message.obtain()
-                        message.what = MESSAGE_COMPLETE_CONTENTS
-                        message.obj = result.getMessage()
-                        message.arg1 = Activity.RESULT_CANCELED
+                        val message = Message.obtain().apply {
+                            what = MESSAGE_COMPLETE_CONTENTS
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
                         mMainHandler!!.sendMessageDelayed(message, Common.DURATION_SHORT)
                     }
                 }
@@ -806,9 +823,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
 
     private val mDialogListener : DialogListener = object : DialogListener
     {
-        override fun onConfirmButtonClick(eventType : Int)
-        {
-        }
+        override fun onConfirmButtonClick(eventType : Int) {}
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {

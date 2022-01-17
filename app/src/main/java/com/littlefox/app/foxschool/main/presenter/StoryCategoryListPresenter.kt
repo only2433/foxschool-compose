@@ -50,22 +50,23 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
         mContext = context
         mCurrentCategoryBaseData = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_CATEGORY_DATA)!!
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mStoryCategoryListContractView = mContext as StoryCategoryListContract.View
-        mStoryCategoryListContractView.initView()
-        mStoryCategoryListContractView.initFont()
-        mStoryCategoryListContractView.initTransition(mCurrentCategoryBaseData.getTransitionType())
-        mStoryCategoryListContractView.setStatusBar(mCurrentCategoryBaseData.statusBarColor)
-        if(CommonUtils.getInstance(mContext).checkTablet)
-        {
-            mStoryCategoryListContractView.settingTitleViewTablet(mCurrentCategoryBaseData.getSeriesName())
-            mStoryCategoryListContractView.settingBackgroundViewTablet(mCurrentCategoryBaseData.getThumbnailUrl(), mCurrentCategoryBaseData.titleColor)
-        } else
-        {
-            mStoryCategoryListContractView.settingTitleView(mCurrentCategoryBaseData.getSeriesName())
-            mStoryCategoryListContractView.settingBackgroundView(mCurrentCategoryBaseData.getThumbnailUrl(), mCurrentCategoryBaseData.titleColor)
+        mStoryCategoryListContractView = (mContext as StoryCategoryListContract.View).apply {
+            initView()
+            initFont()
+            initTransition(mCurrentCategoryBaseData.getTransitionType())
+            setStatusBar(mCurrentCategoryBaseData.statusBarColor)
+            if(CommonUtils.getInstance(mContext).checkTablet)
+            {
+                settingTitleViewTablet(mCurrentCategoryBaseData.getSeriesName())
+                settingBackgroundViewTablet(mCurrentCategoryBaseData.getThumbnailUrl(), mCurrentCategoryBaseData.titleColor)
+            } else
+            {
+                settingTitleView(mCurrentCategoryBaseData.getSeriesName())
+                settingBackgroundView(mCurrentCategoryBaseData.getThumbnailUrl(), mCurrentCategoryBaseData.titleColor)
+            }
+            Log.f("onCreate")
+            showLoading()
         }
-        Log.f("onCreate")
-        mStoryCategoryListContractView.showLoading()
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_STORY_CATEGORY_LIST, Common.DURATION_LONG)
     }
 
@@ -117,10 +118,11 @@ class StoryCategoryListPresenter : StoryCategoryListContract.Presenter
     private fun requestStoryCategoryListAsync()
     {
         Log.f("")
-        mStoryCategoryListInformationCoroutine = StoryCategoryListInformationCoroutine(mContext)
-        mStoryCategoryListInformationCoroutine!!.setData(mCurrentCategoryBaseData.getDisplayID())
-        mStoryCategoryListInformationCoroutine!!.asyncListener = mAsyncListener
-        mStoryCategoryListInformationCoroutine!!.execute()
+        mStoryCategoryListInformationCoroutine = StoryCategoryListInformationCoroutine(mContext).apply {
+            setData(mCurrentCategoryBaseData.getDisplayID())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun initSeriesItemList()

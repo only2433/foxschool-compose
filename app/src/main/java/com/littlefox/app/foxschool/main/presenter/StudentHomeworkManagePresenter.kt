@@ -100,9 +100,10 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mStudentHomeworkContractView = mContext as StudentHomeworkContract.View
-        mStudentHomeworkContractView.initView()
-        mStudentHomeworkContractView.initFont()
+        mStudentHomeworkContractView = (mContext as StudentHomeworkContract.View).apply {
+            initView()
+            initFont()
+        }
 
         Log.f("")
         init()
@@ -216,9 +217,10 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     override fun onPageChanged(position : Int)
     {
         Log.f("Page Change : "+ position)
-        val msg = Message.obtain()
-        msg.what = MESSAGE_PAGE_CHANGE
-        msg.obj = position
+        val msg = Message.obtain().apply {
+            what = MESSAGE_PAGE_CHANGE
+            obj = position
+        }
         mMainHandler!!.sendMessageDelayed(msg, DURATION_NORMAL)
     }
 
@@ -356,12 +358,13 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     private fun showChangeRecordPermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mPermissionDialogListener)
+            show()
+        }
     }
 
     /**
@@ -377,10 +380,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         Log.f("")
         mStudentHomeworkContractView.showLoading()
-        mStudentHomeworkCalenderCoroutine = StudentHomeworkCalenderCoroutine(mContext)
-        mStudentHomeworkCalenderCoroutine!!.setData(mYear, mMonth)
-        mStudentHomeworkCalenderCoroutine!!.asyncListener = mAsyncListener
-        mStudentHomeworkCalenderCoroutine!!.execute()
+        mStudentHomeworkCalenderCoroutine = StudentHomeworkCalenderCoroutine(mContext).apply {
+            setData(mYear, mMonth)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -391,10 +395,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("")
         // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mStudentHomeworkDetailListCoroutine = StudentHomeworkDetailListCoroutine(mContext)
-        mStudentHomeworkDetailListCoroutine!!.setData(mSelectHomeworkData!!.getHomeworkNumber())
-        mStudentHomeworkDetailListCoroutine!!.asyncListener = mAsyncListener
-        mStudentHomeworkDetailListCoroutine!!.execute()
+        mStudentHomeworkDetailListCoroutine = StudentHomeworkDetailListCoroutine(mContext).apply {
+            setData(mSelectHomeworkData!!.getHomeworkNumber())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -405,10 +410,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mStudentHomeworkContractView.showLoading()
-        mStudentCommentRegisterCoroutine = StudentCommentRegisterCoroutine(mContext)
-        mStudentCommentRegisterCoroutine!!.setData(mStudentComment, homework.getHomeworkNumber())
-        mStudentCommentRegisterCoroutine!!.asyncListener = mAsyncListener
-        mStudentCommentRegisterCoroutine!!.execute()
+        mStudentCommentRegisterCoroutine = StudentCommentRegisterCoroutine(mContext).apply {
+            setData(mStudentComment, homework.getHomeworkNumber())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -419,10 +425,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mStudentHomeworkContractView.showLoading()
-        mStudentCommentUpdateCoroutine = StudentCommentUpdateCoroutine(mContext)
-        mStudentCommentUpdateCoroutine!!.setData(mStudentComment, homework.getHomeworkNumber())
-        mStudentCommentUpdateCoroutine!!.asyncListener = mAsyncListener
-        mStudentCommentUpdateCoroutine!!.execute()
+        mStudentCommentUpdateCoroutine = StudentCommentUpdateCoroutine(mContext).apply {
+            setData(mStudentComment, homework.getHomeworkNumber())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -433,10 +440,11 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("")
         val homework = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mStudentHomeworkContractView.showLoading()
-        mStudentCommentDeleteCoroutine = StudentCommentDeleteCoroutine(mContext)
-        mStudentCommentDeleteCoroutine!!.setData(homework.getHomeworkNumber())
-        mStudentCommentDeleteCoroutine!!.asyncListener = mAsyncListener
-        mStudentCommentDeleteCoroutine!!.execute()
+        mStudentCommentDeleteCoroutine = StudentCommentDeleteCoroutine(mContext).apply {
+            setData(homework.getHomeworkNumber())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**

@@ -40,10 +40,10 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
-        mHomeworkCheckingContractView = mContext as TeacherHomeworkCheckingContract.View
-        mHomeworkCheckingContractView.initView()
-        mHomeworkCheckingContractView.initFont()
-
+        mHomeworkCheckingContractView = (mContext as TeacherHomeworkCheckingContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("onCreate")
         init()
     }
@@ -111,16 +111,17 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
     {
         Log.f("")
         mHomeworkCheckingContractView.showLoading()
-        mTeacherHomeworkCheckingCoroutine = TeacherHomeworkCheckingCoroutine(mContext)
-        mTeacherHomeworkCheckingCoroutine!!.setData(
+        mTeacherHomeworkCheckingCoroutine = TeacherHomeworkCheckingCoroutine(mContext).apply {
+            setData(
                 mHomeworkCheckingInformation.getHomeworkNumber(),
                 mHomeworkCheckingInformation.getClassNumber(),
                 mHomeworkCheckingInformation.getID(),
                 mEval,
                 mComment
-        )
-        mTeacherHomeworkCheckingCoroutine!!.asyncListener = mAsyncListener
-        mTeacherHomeworkCheckingCoroutine!!.execute()
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**

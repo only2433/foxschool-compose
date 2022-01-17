@@ -95,10 +95,10 @@ class SearchListPresenter : SearchListContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
-        mSearchListContractView = mContext as SearchListContract.View
-        mSearchListContractView.initView()
-        mSearchListContractView.initFont()
-
+        mSearchListContractView = (mContext as SearchListContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("onCreate")
         init()
     }
@@ -285,10 +285,11 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun requestBookshelfContentsAddAsync(data : java.util.ArrayList<ContentsBaseResult>)
     {
         Log.f("")
-        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext)
-        mBookshelfContentAddCoroutine!!.setData(mCurrentBookshelfAddResult!!.getID(), data)
-        mBookshelfContentAddCoroutine!!.asyncListener = mAsyncListener
-        mBookshelfContentAddCoroutine!!.execute()
+        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext).apply {
+            setData(mCurrentBookshelfAddResult!!.getID(), data)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -311,15 +312,17 @@ class SearchListPresenter : SearchListContract.Presenter
         Log.f("mCurrentKeyword : $mCurrentKeyword")
         Log.f("position : $mRequestPagePosition, searchType : $mCurrentSearchType")
 
-        mSearchListCoroutine = SearchListCoroutine(mContext)
-        mSearchListCoroutine?.setData(
-            mCurrentKeyword,
-            mRequestPagePosition,
-            MAX_PER_PAGE_COUNT,
-            mCurrentSearchType
-        )
-        mSearchListCoroutine?.asyncListener = mAsyncListener
-        mSearchListCoroutine?.execute()
+        mSearchListCoroutine = SearchListCoroutine(mContext).apply {
+            setData(
+                mCurrentKeyword,
+                mRequestPagePosition,
+                MAX_PER_PAGE_COUNT,
+                mCurrentSearchType
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
+
     }
 
     /**
@@ -340,11 +343,12 @@ class SearchListPresenter : SearchListContract.Presenter
      */
     private fun showBottomBookAddDialog()
     {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog.setCancelable(true)
-        mBottomBookAddDialog.setBookshelfData(mMainInformationResult.getBookShelvesList())
-        mBottomBookAddDialog.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog.show()
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
+            setCancelable(true)
+            setBookshelfData(mMainInformationResult.getBookShelvesList())
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
     }
 
     /**
@@ -353,12 +357,13 @@ class SearchListPresenter : SearchListContract.Presenter
      */
     private fun showChangeRecordPermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mPermissionDialogListener)
+            show()
+        }
     }
 
     /** ====================== StartActivity ====================== */
@@ -693,11 +698,12 @@ class SearchListPresenter : SearchListContract.Presenter
                     val myBookshelfResult : MyBookshelfResult = (`object` as BookshelfBaseObject).getData()
                     updateBookshelfData(myBookshelfResult)
 
-                    val messsage = Message.obtain()
-                    messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                    messsage.obj = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
-                    messsage.arg1 = Activity.RESULT_OK
-                    mMainHandler.sendMessageDelayed(messsage, Common.DURATION_NORMAL)
+                    val message = Message.obtain().apply {
+                        what = MESSAGE_COMPLETE_CONTENTS_ADD
+                        obj = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                        arg1 = Activity.RESULT_OK
+                    }
+                    mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
             }
             else
@@ -720,11 +726,12 @@ class SearchListPresenter : SearchListContract.Presenter
                     {
                         Log.f("FAIL ASYNC_CODE_BOOKSHELF_CONTENTS_ADD")
                         mSearchListContractView.hideLoading()
-                        val messsage = Message.obtain()
-                        messsage.what = MESSAGE_COMPLETE_CONTENTS_ADD
-                        messsage.obj = result.getMessage()
-                        messsage.arg1 = Activity.RESULT_CANCELED
-                        mMainHandler.sendMessageDelayed(messsage, Common.DURATION_SHORT)
+                        val message = Message.obtain().apply {
+                            what = MESSAGE_COMPLETE_CONTENTS_ADD
+                            obj = result.getMessage()
+                            arg1 = Activity.RESULT_CANCELED
+                        }
+                        mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
                     }
                 }
             }

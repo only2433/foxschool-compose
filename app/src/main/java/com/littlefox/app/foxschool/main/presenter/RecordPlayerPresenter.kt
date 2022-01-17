@@ -341,29 +341,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             }
 
-            /**
-            mMediaPlayer?.setDataSource("$PATH_MP3_ROOT$mFileName.mp3")
-            mMediaPlayer?.prepareAsync()
-            mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
-            {
-                override fun onPrepared(mediaPlayer : MediaPlayer)
-                {
-                    Log.f("")
-                    mRecordPlayerContractView.hideLoading()
-                    setAudioTimerText()
-                }
-            })
-            mMediaPlayer?.setOnCompletionListener(object : MediaPlayer.OnCompletionListener {
-                override fun onCompletion(mediaPlayer : MediaPlayer)
-                {
-                    Log.f("---- End ----")
-                    mRecorderStatus = RecorderStatus.AUDIO_PAUSE
-                    setAudioPause()
-                    setAudioTimerText()
-                    enableTimer(false)
-                }
-            })*/
-
             mMediaPlayer!!.let {
                 it.setDataSource("$PATH_MP3_ROOT$mFileName.mp3")
                 it.prepareAsync()
@@ -548,12 +525,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun showRecordResetDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.getString(R.string.message_record_reset))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_RECORD_RESET)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.getString(R.string.message_record_reset))
+            setDialogEventType(DIALOG_RECORD_RESET)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     /**
@@ -561,12 +540,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun showRecordResetWarningDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.getString(R.string.message_warning_record_reset))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_WARNING_RECORD_RESET)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.getString(R.string.message_warning_record_reset))
+            setDialogEventType(DIALOG_WARNING_RECORD_RESET)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     /**
@@ -574,13 +555,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun showExitScreenWarningDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.getString(R.string.message_warning_record_exit))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_WARNING_RECORD_EXIT)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.getString(R.string.text_cancel), mContext.getString(R.string.text_leave))
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.getString(R.string.message_warning_record_exit))
+            setDialogEventType(DIALOG_WARNING_RECORD_EXIT)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.getString(R.string.text_cancel), mContext.getString(R.string.text_leave))
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -588,12 +570,14 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun showFileUploadCompleteDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.getString(R.string.message_record_upload_complete))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_FILE_UPLOAD_COMPLETE)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.getString(R.string.message_record_upload_complete))
+            setDialogEventType(DIALOG_FILE_UPLOAD_COMPLETE)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
     /**
      * ===================================

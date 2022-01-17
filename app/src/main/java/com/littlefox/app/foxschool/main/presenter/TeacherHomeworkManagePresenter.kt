@@ -106,10 +106,10 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mTeacherHomeworkContractView = mContext as TeacherHomeworkContract.View
-        mTeacherHomeworkContractView.initView()
-        mTeacherHomeworkContractView.initFont()
-
+        mTeacherHomeworkContractView = (mContext as TeacherHomeworkContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("")
         init()
     }
@@ -244,9 +244,10 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     override fun onPageChanged(position : Int)
     {
         Log.f("Page Change : "+ position)
-        val msg = Message.obtain()
-        msg.what = MESSAGE_PAGE_CHANGE
-        msg.obj = position
+        val msg = Message.obtain().apply {
+            what = MESSAGE_PAGE_CHANGE
+            obj = position
+        }
         mMainHandler!!.sendMessageDelayed(msg, DURATION_NORMAL)
     }
 
@@ -408,12 +409,14 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     private fun showChangeRecordPermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mPermissionDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mPermissionDialogListener)
+            show()
+        }
+
     }
 
     /**
@@ -429,9 +432,10 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     {
         Log.f("")
         mTeacherHomeworkContractView.showLoading()
-        mTeacherClassListCoroutine = TeacherClassListCoroutine(mContext)
-        mTeacherClassListCoroutine!!.asyncListener = mAsyncListener
-        mTeacherClassListCoroutine!!.execute()
+        mTeacherClassListCoroutine = TeacherClassListCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -444,10 +448,11 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         {
             mTeacherHomeworkContractView.showLoading()
         }
-        mTeacherHomeworkCalenderCoroutine = TeacherHomeworkCalenderCoroutine(mContext)
-        mTeacherHomeworkCalenderCoroutine!!.setData(mClassListBaseResult!!.get(mClassIndex).getClassID().toString(), mYear, mMonth)
-        mTeacherHomeworkCalenderCoroutine!!.asyncListener = mAsyncListener
-        mTeacherHomeworkCalenderCoroutine!!.execute()
+        mTeacherHomeworkCalenderCoroutine = TeacherHomeworkCalenderCoroutine(mContext).apply {
+            setData(mClassListBaseResult!!.get(mClassIndex).getClassID().toString(), mYear, mMonth)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -456,13 +461,14 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun requestStatusList()
     {
         Log.f("")
-        mTeacherHomeworkStatusCoroutine = TeacherHomeworkStatusCoroutine(mContext)
-        mTeacherHomeworkStatusCoroutine!!.setData(
-            mClassListBaseResult!!.get(mClassIndex).getClassID(),
-            mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber()
-        )
-        mTeacherHomeworkStatusCoroutine!!.asyncListener = mAsyncListener
-        mTeacherHomeworkStatusCoroutine!!.execute()
+        mTeacherHomeworkStatusCoroutine = TeacherHomeworkStatusCoroutine(mContext).apply {
+            setData(
+                mClassListBaseResult!!.get(mClassIndex).getClassID(),
+                mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber()
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -471,14 +477,15 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun requestStudentHomework()
     {
         Log.f("")
-        mTeacherHomeworkDetailListCoroutine = TeacherHomeworkDetailListCoroutine(mContext)
-        mTeacherHomeworkDetailListCoroutine!!.setData(
-            mClassListBaseResult!!.get(mClassIndex).getClassID(),
-            mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
-            mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!.get(mSelectedStudentPosition).getUserID()
-        )
-        mTeacherHomeworkDetailListCoroutine!!.asyncListener = mAsyncListener
-        mTeacherHomeworkDetailListCoroutine!!.execute()
+        mTeacherHomeworkDetailListCoroutine = TeacherHomeworkDetailListCoroutine(mContext).apply {
+            setData(
+                mClassListBaseResult!!.get(mClassIndex).getClassID(),
+                mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
+                mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!.get(mSelectedStudentPosition).getUserID()
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -489,13 +496,14 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         Log.f("")
         // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
-        mTeacherHomeworkContentsCoroutine = TeacherHomeworkContentsCoroutine(mContext)
-        mTeacherHomeworkContentsCoroutine!!.setData(
-            mClassListBaseResult!!.get(mClassIndex).getClassID(),
-            mSelectHomeworkData!!.getHomeworkNumber()
-        )
-        mTeacherHomeworkContentsCoroutine!!.asyncListener = mAsyncListener
-        mTeacherHomeworkContentsCoroutine!!.execute()
+        mTeacherHomeworkContentsCoroutine = TeacherHomeworkContentsCoroutine(mContext).apply {
+            setData(
+                mClassListBaseResult!!.get(mClassIndex).getClassID(),
+                mSelectHomeworkData!!.getHomeworkNumber()
+            )
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**
@@ -684,19 +692,21 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
                 {
                     // 숙제현황 상세리스트
                     mTeacherHomeworkContractView.hideLoading()
-                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
                     val name = mHomeworkStatusBaseResult!!.getStudentStatusItemList()!![mSelectedStudentPosition].getUserName()
-                    mHomeworkDetailBaseResult!!.setFragmentTitle("$name 학생")
-                    mHomeworkDetailBaseResult!!.setFragmentType(mDetailType)
+                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData().apply {
+                        setFragmentTitle("$name 학생")
+                        setFragmentType(mDetailType)
+                    }
                     mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
                 }
                 else if (code == Common.COROUTINE_CODE_TEACHER_HOMEWORK_CONTENTS)
                 {
                     // 숙제내용 리스트
                     mTeacherHomeworkContractView.hideLoading()
-                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
-                    mHomeworkDetailBaseResult!!.setFragmentTitle(mClassListBaseResult!!.get(mClassIndex).getClassName())
-                    mHomeworkDetailBaseResult!!.setFragmentType(mDetailType)
+                    mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData().apply {
+                        setFragmentTitle(mClassListBaseResult!!.get(mClassIndex).getClassName())
+                        setFragmentType(mDetailType)
+                    }
                     mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
                 }
             }
