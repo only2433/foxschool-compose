@@ -119,9 +119,10 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mRecordPlayerContractView = mContext as RecordPlayerContract.View
-        mRecordPlayerContractView.initView()
-        mRecordPlayerContractView.initFont()
+        mRecordPlayerContractView = (mContext as RecordPlayerContract.View).apply {
+            initView()
+            initFont()
+        }
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         Log.f("onCreate")
         init()
@@ -339,6 +340,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             }
+
+            /**
             mMediaPlayer?.setDataSource("$PATH_MP3_ROOT$mFileName.mp3")
             mMediaPlayer?.prepareAsync()
             mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
@@ -359,7 +362,31 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     setAudioTimerText()
                     enableTimer(false)
                 }
-            })
+            })*/
+
+            mMediaPlayer!!.let {
+                it.setDataSource("$PATH_MP3_ROOT$mFileName.mp3")
+                it.prepareAsync()
+                it.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
+                {
+                    override fun onPrepared(mediaPlayer : MediaPlayer)
+                    {
+                        Log.f("")
+                        mRecordPlayerContractView.hideLoading()
+                        setAudioTimerText()
+                    }
+                })
+                it.setOnCompletionListener(object : MediaPlayer.OnCompletionListener {
+                    override fun onCompletion(mediaPlayer : MediaPlayer)
+                    {
+                        Log.f("---- End ----")
+                        mRecorderStatus = RecorderStatus.AUDIO_PAUSE
+                        setAudioPause()
+                        setAudioTimerText()
+                        enableTimer(false)
+                    }
+                })
+            }
 
             Log.f("Recording File Size : ${File("$PATH_MP3_ROOT$mFileName.mp3").length()}")
         } catch(e : Exception)

@@ -43,9 +43,10 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     {
         mContext = context
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
-        mRecordHistoryContractView = mContext as RecordHistoryContract.View
-        mRecordHistoryContractView.initView()
-        mRecordHistoryContractView.initFont()
+        mRecordHistoryContractView = (mContext as RecordHistoryContract.View).apply {
+            initView()
+            initFont()
+        }
 
         Log.f("")
         init()
@@ -133,9 +134,10 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
     {
         Log.f("")
         mRecordHistoryContractView.showLoading()
-        mRecordHistoryCoroutine = RecordHistoryCoroutine(mContext)
-        mRecordHistoryCoroutine!!.asyncListener = mAsyncListener
-        mRecordHistoryCoroutine!!.execute()
+        mRecordHistoryCoroutine = RecordHistoryCoroutine(mContext).apply {
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     /**

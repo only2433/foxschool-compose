@@ -215,9 +215,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         _PlayerView = videoView
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback?)
         mCurrentOrientation = orientation
-        mPlayerContractView = mContext as PlayerContract.View
-        mPlayerContractView.initView()
-        mPlayerContractView.initFont()
+        mPlayerContractView = (mContext as PlayerContract.View).apply {
+            initView()
+            initFont()
+        }
         Log.f("onCreate")
         init()
         setupPlayVideo()
@@ -279,10 +280,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     }
 
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-
-    }
+    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) {}
 
     override fun sendMessageEvent(msg : Message)
     {
@@ -652,15 +650,19 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 Log.f("init Play Payment User")
                 Log.f("Max Duration : " + mPlayer!!.getDuration())
                 Log.f("Max Progress : " + (mPlayer!!.getDuration() / Common.SECOND))
-                mPlayerContractView.setCurrentMovieTime("00:00")
-                mPlayerContractView.setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
-                mPlayerContractView.setMaxProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
-                if(isAvailableCaption)
-                {
-                    mPlayerContractView.settingCurrentPageLine(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
+
+                mPlayerContractView.run {
+                    setCurrentMovieTime("00:00")
+                    setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
+                    setMaxProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
+                    if(isAvailableCaption)
+                    {
+                        settingCurrentPageLine(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
+                    }
+                    enableCurrentPage(-1)
+                    showPaymentUserStartView()
                 }
-                mPlayerContractView.enableCurrentPage(-1)
-                mPlayerContractView.showPaymentUserStartView()
+
             }
             else if(mCurrentPlayerUserType === PlayerUserType.PREVIEW)
             {
@@ -822,10 +824,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mCurrentPageIndex = 0
         mCurrentRepeatPageIndex = -1
         mCurrentStudyLogMilliSeconds = 0f
-        mPlayerContractView.initCaptionText()
-        mPlayerContractView.setMovieTitle(title)
-        mPlayerContractView.showMovieLoading()
-        mPlayerContractView.disableSpeedButton()
+        mPlayerContractView.run {
+            initCaptionText()
+            setMovieTitle(title)
+            showMovieLoading()
+            disableSpeedButton()
+        }
         mPlayListAdapter.setCurrentPlayIndex(mCurrentPlayMovieIndex)
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_VIDEO, Common.DURATION_NORMAL)
     }
@@ -886,13 +890,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         notifyPlayItemIndex()
         settingCurrentMovieStudyOption()
-        mPlayerContractView.enablePlayMovie(true)
-        mPlayerContractView.checkSupportCaptionView(isAvailableCaption)
-        mPlayerContractView.settingPlayerOption(isCaptionEnable, isPageByPageEnable)
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
         mPlayer!!.prepare(source, true, false)
         _PlayerView.requestFocus()
-        mPlayerContractView.scrollPosition(mCurrentPlayMovieIndex)
+        mPlayerContractView.run {
+            enablePlayMovie(true)
+            checkSupportCaptionView(isAvailableCaption)
+            settingPlayerOption(isCaptionEnable, isPageByPageEnable)
+            scrollPosition(mCurrentPlayMovieIndex)
+        }
     }
 
     private fun settingCurrentMovieStudyOption()
@@ -910,7 +916,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             isNextMovieHave = true
         }
-
 
         if(mPlayerIntentParamsObject.getHomeworkNumber() != 0)
         {
@@ -983,22 +988,25 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun showTemplateAlertDialog(type : Int, buttonType : DialogButtonType, message : String)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setDialogEventType(type)
-        mTemplateAlertDialog.setButtonType(buttonType)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(type)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     private fun showTemplateAlertDialog(type : Int, firstButtonText : String, secondButtonText : String, message : String)
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(message)
-        mTemplateAlertDialog.setDialogEventType(type)
-        mTemplateAlertDialog.setButtonText(firstButtonText, secondButtonText)
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(message)
+            setDialogEventType(type)
+            setButtonText(firstButtonText, secondButtonText)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     /**
@@ -1007,13 +1015,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
      */
     private fun showChangeRecordPermissionDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext)
-        mTemplateAlertDialog.setMessage(mContext.resources.getString(R.string.message_record_permission))
-        mTemplateAlertDialog.setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_2)
-        mTemplateAlertDialog.setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-        mTemplateAlertDialog.setDialogListener(mDialogListener)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setDialogEventType(DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+
     }
 
     private fun showBottomItemOptionDialog(result : ContentsBaseResult)
@@ -1047,21 +1057,24 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun showBottomBookAddDialog()
     {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext)
-        mBottomBookAddDialog!!.setCancelable(true)
-        mBottomBookAddDialog!!.setBookshelfData(mMainInformationResult.getBookShelvesList())
-        mBottomBookAddDialog!!.setFullScreen()
-        mBottomBookAddDialog!!.setBookSelectListener(mBookAddListener)
-        mBottomBookAddDialog!!.setOnCancelListener(object : DialogInterface.OnCancelListener
-        {
-            override fun onCancel(dialog : DialogInterface)
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).let {
+            it.setCancelable(true)
+            it.setBookshelfData(mMainInformationResult.getBookShelvesList())
+            it.setFullScreen()
+            it.setBookSelectListener(mBookAddListener)
+            it.setOnCancelListener(object : DialogInterface.OnCancelListener
             {
-                Log.f("")
-                resumePlayer()
-                enableTimer(true)
-            }
-        })
-        mBottomBookAddDialog!!.show()
+                override fun onCancel(dialog : DialogInterface)
+                {
+                    Log.f("")
+                    resumePlayer()
+                    enableTimer(true)
+                }
+            })
+            it.show()
+            it
+        }
+
     }
 
     private fun enableLockCountTimer(isStart : Boolean)
@@ -1363,14 +1376,15 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         val studyLogSeconds = Math.round(mCurrentStudyLogMilliSeconds / Common.DURATION_LONG.toFloat())
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
-        mStudyLogSaveCoroutine = StudyLogSaveCoroutine(mContext)
-        mStudyLogSaveCoroutine?.setData(
-            mPlayInformationList[mCurrentSaveLogIndex].getID(),
-            autoPlay,
-            studyLogSeconds,
-            mPlayerIntentParamsObject.getHomeworkNumber())
-        mStudyLogSaveCoroutine?.asyncListener = mAsyncListener
-        mStudyLogSaveCoroutine?.execute()
+        mStudyLogSaveCoroutine = StudyLogSaveCoroutine(mContext).apply{
+            setData(
+                mPlayInformationList[mCurrentSaveLogIndex].getID(),
+                autoPlay,
+                studyLogSeconds,
+                mPlayerIntentParamsObject.getHomeworkNumber())
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun releaseStudyLogSaveAsync()
@@ -1390,20 +1404,23 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         Log.f("")
         releaseAuthContentPlay()
-        mAuthContentPlayCoroutine = AuthContentPlayCoroutine(mContext)
-        mAuthContentPlayCoroutine?.setData(mPlayInformationList[mCurrentPlayMovieIndex].getID())
-        mAuthContentPlayCoroutine?.asyncListener = mAsyncListener
-        mAuthContentPlayCoroutine?.execute()
+        mAuthContentPlayCoroutine = AuthContentPlayCoroutine(mContext).apply {
+            setData(mPlayInformationList[mCurrentPlayMovieIndex].getID())
+            asyncListener = mAsyncListener
+            execute()
+        }
+
     }
 
     private fun requestBookshelfContentsAddAsync(data : ArrayList<ContentsBaseResult>)
     {
         Log.f("")
 
-        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext)
-        mBookshelfContentAddCoroutine?.setData(mCurrentBookshelfAddResult.getID(), data)
-        mBookshelfContentAddCoroutine?.asyncListener = mAsyncListener
-        mBookshelfContentAddCoroutine?.execute()
+        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext).apply {
+            setData(mCurrentBookshelfAddResult.getID(), data)
+            asyncListener = mAsyncListener
+            execute()
+        }
     }
 
     private fun releaseAuthContentPlay()
@@ -1637,13 +1654,16 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         mCurrentRepeatPageIndex = index - 1
         mCurrentPageIndex = mCurrentRepeatPageIndex
-        mPlayerContractView.setCaptionText("")
+
         Log.f("repeatIndex : " + mCurrentRepeatPageIndex + ", startTime : " + mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toInt())
         mPlayer!!.seekTo(mPageByPageDataList[mCurrentRepeatPageIndex].getStartTime().toLong())
         mPlayer!!.setPlayWhenReady(true)
         mCurrentCaptionIndex = currentCaptionIndex
-        mPlayerContractView.enableCurrentPage(index)
-        mPlayerContractView.enablePlayMovie(true)
+        mPlayerContractView.run {
+            setCaptionText("")
+            enableCurrentPage(index)
+            enablePlayMovie(true)
+        }
     }
 
     override fun onCoachMarkNeverSeeAgain(type : String)

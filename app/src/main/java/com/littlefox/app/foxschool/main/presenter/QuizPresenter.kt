@@ -980,9 +980,10 @@ class QuizPresenter : QuizContract.Presenter
         override fun onErrorListener(code : String, msg : String)
         {
             isError = true
-            val message = Message.obtain()
-            message.what = MESSAGE_FILE_DOWNLOAD_ERROR
-            message.obj = msg
+            val message = Message.obtain().apply {
+                what = MESSAGE_FILE_DOWNLOAD_ERROR
+                obj = msg
+            }
             mMainHandler.sendMessage(message)
         }
     }
