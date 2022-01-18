@@ -104,7 +104,7 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
                     val message = Message.obtain()
                     message.what = MESSAGE_INTRODUCE_SERIES_INFORMATION_REQUEST_COMPLETE
                     message.obj = (`object` as IntroduceSeriesBaseObject).getData()
-                    mMainHandler.sendMessage(message)
+                    mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
             }
             else

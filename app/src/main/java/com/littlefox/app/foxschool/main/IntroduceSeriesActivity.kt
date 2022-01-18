@@ -380,6 +380,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             0,
             0
         )
+        _IntroductionTitleLayout.visibility = View.VISIBLE
     }
 
     /**
