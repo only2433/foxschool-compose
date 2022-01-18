@@ -15,7 +15,7 @@ class CheckUserInput
     companion object
     {
         private const val TEXT_EMAIL : String           = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
-        private const val TEXT_PASSWORD : String        = "^[a-zA-Z0-9\\``\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\[\\]\\{\\}\\;\\'\\:\\\"\\,\\.\\/\\?\\<\\>|\\\\]+$"
+        private const val TEXT_PASSWORD : String        = "^(?=.*[a-zA-Z])(?=.*[0-9]).{6,16}\$"
         private const val TEXT_CHECK_NAME : String      = "^[a-zA-Z가-힣]+$"
         private const val TEXT_CHECK_PHONE : String     = "^(01[016789]{1}|02|0[3-6]{1}[1-5]{1}|070)-?[0-9]{3,4}-?[0-9]{4}$"
 
@@ -55,14 +55,14 @@ class CheckUserInput
      */
     private fun isExceptTextHave(pattenText : String, text : String) : Boolean
     {
-        return if(Pattern.matches(pattenText, text))
+        if(Pattern.matches(pattenText, text))
         {
             Log.f("Match")
-            true
+            return true
         } else
         {
             Log.f("Not Match")
-            false
+            return false
         }
     }
 
@@ -127,12 +127,11 @@ class CheckUserInput
         {
             return this
         }
-
         if(passwordText == "")
         {
             sResultValue = WARNING_PASSWORD_NOT_INPUT
         }
-        else if(isExceptTextHave(TEXT_PASSWORD, passwordText) == false || isByteSizeFit(passwordText, 4, 10) == false)
+        else if(isExceptTextHave(TEXT_PASSWORD, passwordText) || isByteSizeFit(passwordText, 6, 16) == false)
         {
             sResultValue = WARNING_PASSWORD_WRONG_INPUT
         }
@@ -144,6 +143,8 @@ class CheckUserInput
         {
             sResultValue = WARNING_PASSWORD_NOT_EQUAL_CONFIRM
         }
+
+
         return this
     }
 
