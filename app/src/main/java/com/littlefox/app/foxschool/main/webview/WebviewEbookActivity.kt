@@ -150,25 +150,28 @@ class WebviewEbookActivity : BaseActivity()
         _WebView = WebView(this)
         _WebviewBaseLayout.addView(_WebView, params)
 
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
 
-        if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
-        {
-            _WebView.loadUrl(
-                "${Common.URL_EBOOK}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
-                extraHeaders)
-        }
-        else
-        {
-            _WebView.loadUrl(
-                "${Common.URL_EBOOK}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+            if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
+            {
+                loadUrl(
+                    "${Common.URL_EBOOK}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
+                    extraHeaders)
+            }
+            else
+            {
+                loadUrl(
+                    "${Common.URL_EBOOK}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+            }
+
+            addJavascriptInterface(
+                DataInterfaceBridge(context, _MainBaseLayout, _TitleText, _WebView),
+                Common.BRIDGE_NAME
+            )
         }
 
-        _WebView.addJavascriptInterface(
-            DataInterfaceBridge(this, _MainBaseLayout, _TitleText, _WebView),
-            Common.BRIDGE_NAME
-        )
     }
 
     private fun releaseWebView()
@@ -207,15 +210,18 @@ class WebviewEbookActivity : BaseActivity()
             {
                 mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
             }
-            mMediaPlayer?.setDataSource(url)
-            mMediaPlayer?.prepareAsync()
-            mMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
-            {
-                override fun onPrepared(mediaPlayer : MediaPlayer)
+            mMediaPlayer!!.run {
+                setDataSource(url)
+                prepareAsync()
+                setOnPreparedListener(object : MediaPlayer.OnPreparedListener
                 {
-                    mMediaPlayer?.start()
-                }
-            })
+                    override fun onPrepared(mediaPlayer : MediaPlayer)
+                    {
+                        start()
+                    }
+                })
+            }
+
         }
         catch(e : Exception)
         {

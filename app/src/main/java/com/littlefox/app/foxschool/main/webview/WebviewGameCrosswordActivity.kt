@@ -126,24 +126,28 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
         showLoading()
         mWebviewIntentParamsObject = intent.getParcelableExtra(Common.INTENT_GAME_CROSSWORD_ID)
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
-        if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
-        {
-            _WebView.loadUrl(
-                "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
-                extraHeaders)
-        }
-        else
-        {
-            _WebView.loadUrl(
-                "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
+            if(mWebviewIntentParamsObject!!.getHomeworkNumber() != 0)
+            {
+                loadUrl(
+                    "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}${File.separator}${mWebviewIntentParamsObject!!.getHomeworkNumber()}",
+                    extraHeaders)
+            }
+            else
+            {
+                loadUrl(
+                    "${Common.URL_GAME_CROSSWORD}${mWebviewIntentParamsObject!!.getContentID()}", extraHeaders)
+            }
+
+            addJavascriptInterface(
+                DataInterfaceBridge(context, _MainBaseLayout, _WebView),
+                Common.BRIDGE_NAME
+            )
         }
 
-        _WebView.addJavascriptInterface(
-            DataInterfaceBridge(this, _MainBaseLayout, _WebView),
-            Common.BRIDGE_NAME
-        )
     }
     /** ========== Init end ========== */
 

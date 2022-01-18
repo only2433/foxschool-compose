@@ -106,7 +106,7 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
                         what = MESSAGE_INTRODUCE_SERIES_INFORMATION_REQUEST_COMPLETE
                         obj = (`object` as IntroduceSeriesBaseObject).getData()
                     }
-                    mMainHandler.sendMessage(message)
+                    mMainHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
                 }
             }
             else

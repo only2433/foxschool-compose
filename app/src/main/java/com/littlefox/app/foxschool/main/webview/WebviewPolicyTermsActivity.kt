@@ -119,13 +119,16 @@ class WebviewPolicyTermsActivity : BaseActivity()
     {
         showLoading()
         val extraHeaders : Map<String, String> = CommonUtils.getInstance(this).getHeaderInformation(true)
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl(Common.URL_TERMS, extraHeaders)
-        _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
-            Common.BRIDGE_NAME
-        )
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
+            loadUrl(Common.URL_TERMS, extraHeaders)
+            addJavascriptInterface(
+                BaseWebviewBridge(context, _MainBaseLayout, _TitleText, _WebView),
+                Common.BRIDGE_NAME
+            )
+        }
+
     }
 
     /**

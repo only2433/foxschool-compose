@@ -380,6 +380,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             0,
             0
         )
+        _IntroductionTitleLayout.visibility = View.VISIBLE
     }
 
     /**
@@ -409,19 +410,14 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             LAYOUT_TITLE_VIEW_HEIGHT.toFloat()
         )
 
-        val titleText = TextView(this)
-        titleText.setPadding(
-            CommonUtils.getInstance(this).getPixel(LAYOUT_VIEW_PADDING),
-            0,
-            0,
-            0
-        )
-        titleText.gravity = Gravity.CENTER_VERTICAL
-        titleText.background = resources.getDrawable(R.drawable.info_box_b)
-        titleText.text = resources.getString(R.string.text_character)
-        titleText.setTextColor(resources.getColor(R.color.color_ffffff))
-        titleText.typeface = Font.getInstance(this).getRobotoMedium()
-
+        val titleText = TextView(this).apply {
+            setPadding(CommonUtils.getInstance(context).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
+            gravity = Gravity.CENTER_VERTICAL
+            background = resources.getDrawable(R.drawable.info_box_b)
+            text = resources.getString(R.string.text_character)
+            setTextColor(resources.getColor(R.color.color_ffffff))
+            typeface = Font.getInstance(context).getRobotoMedium()
+        }
         titleLayout.addView(
             titleText,
             LAYOUT_CONTENTS_VIEW_MARGIN_LEFT.toFloat(),
@@ -450,9 +446,10 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             mContentsBaseLayoutHeight.toFloat()
         )
 
-        val backgroundView = ImageView(this)
-        backgroundView.scaleType = ImageView.ScaleType.FIT_XY
-        backgroundView.setImageResource(R.drawable.info_box_w)
+        val backgroundView = ImageView(this).apply {
+            scaleType = ImageView.ScaleType.FIT_XY
+            setImageResource(R.drawable.info_box_w)
+        }
 
         baseCharacterLayout.addView(
             backgroundView,
@@ -475,11 +472,12 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
                 .into(thumbnail)
 
             // 이름
-            val titleView = TextView(this)
-            titleView.gravity = Gravity.CENTER
-            titleView.setTextColor(resources.getColor(R.color.color_444444))
-            titleView.typeface = Font.getInstance(this).getRobotoBold()
-            titleView.text = characterList[i].getName()
+            val titleView = TextView(this).apply {
+                gravity = Gravity.CENTER
+                setTextColor(resources.getColor(R.color.color_444444))
+                typeface = Font.getInstance(context).getRobotoBold()
+                text = characterList[i].getName()
+            }
 
             // 표시될 인덱스 계산
             currentColumnIndex = i / MAX_ROW_COUNT
@@ -545,18 +543,14 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             LAYOUT_TITLE_VIEW_HEIGHT.toFloat()
         )
 
-        val titleText = TextView(this)
-        titleText.setPadding(
-            CommonUtils.getInstance(this).getPixel(LAYOUT_VIEW_PADDING),
-            0,
-            0,
-            0
-        )
-        titleText.gravity = Gravity.CENTER_VERTICAL
-        titleText.background = resources.getDrawable(R.drawable.info_box_b)
-        titleText.text = resources.getString(R.string.text_creators)
-        titleText.setTextColor(resources.getColor(R.color.color_ffffff))
-        titleText.typeface = Font.getInstance(this).getRobotoMedium()
+        val titleText = TextView(this).apply {
+            setPadding(CommonUtils.getInstance(context).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
+            gravity = Gravity.CENTER_VERTICAL
+            background = resources.getDrawable(R.drawable.info_box_b)
+            text = resources.getString(R.string.text_creators)
+            setTextColor(resources.getColor(R.color.color_ffffff))
+            typeface = Font.getInstance(context).getRobotoMedium()
+        }
 
         titleLayout.addView(
             titleText,
@@ -630,17 +624,13 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
     private fun drawCreatorInformationView(contentsLayout : ScalableLayout, title : String, data : ArrayList<IntroduceSeriesCreatorsResult.CreatorsData>)
     {
         val TEXT_SIZE = if(CommonUtils.getInstance(this).checkTablet) 32 else 44
-        val titleView = TextView(this)
-        titleView.setTextColor(resources.getColor(R.color.color_23a3e5))
-        titleView.text = title
-        titleView.gravity = Gravity.CENTER_VERTICAL
-        titleView.setPadding(
-            CommonUtils.getInstance(this).getPixel(LAYOUT_VIEW_PADDING),
-            0,
-            0,
-            0
-        )
-        titleView.typeface = Font.getInstance(this).getRobotoMedium()
+        val titleView = TextView(this).apply {
+            setTextColor(resources.getColor(R.color.color_23a3e5))
+            text = title
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(CommonUtils.getInstance(context).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
+            typeface = Font.getInstance(context).getRobotoMedium()
+        }
 
         contentsLayout.addView(
             titleView,

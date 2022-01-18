@@ -128,13 +128,16 @@ class WebviewOriginTranslateActivity : BaseActivity(), MessageHandlerCallback
         showLoading()
         mCurrentContentID = intent.getStringExtra(Common.INTENT_ORIGIN_TRANSLATE_ID)!!
         val extraHeaders = CommonUtils.getInstance(this).getHeaderInformation(true)
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl("${Common.URL_ORIGIN_TRANSLATE}${mCurrentContentID}", extraHeaders)
-        _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _WebView),
-            Common.BRIDGE_NAME
-        )
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
+            loadUrl("${Common.URL_ORIGIN_TRANSLATE}${mCurrentContentID}", extraHeaders)
+            addJavascriptInterface(
+                BaseWebviewBridge(context, _MainBaseLayout, _WebView),
+                Common.BRIDGE_NAME
+            )
+        }
+
     }
 
     /**

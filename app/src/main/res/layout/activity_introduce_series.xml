@@ -29,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:scale_base_width="1080"
-                app:scale_base_height="775">
+                app:scale_base_height="775"
+                android:visibility="invisible">
 
                 <ImageView
                     android:id="@+id/_introductionContentsBackground"

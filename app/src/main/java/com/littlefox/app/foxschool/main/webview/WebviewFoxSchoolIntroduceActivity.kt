@@ -123,13 +123,13 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
     {
         showLoading()
         val extraHeaders : Map<String, String> = CommonUtils.getInstance(this).getHeaderInformation(false)
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
-        _WebView.loadUrl(Common.URL_FOXSCHOOL_INTRODUCE, extraHeaders)
-        _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
-            Common.BRIDGE_NAME
-        )
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
+            loadUrl(Common.URL_FOXSCHOOL_INTRODUCE, extraHeaders)
+            addJavascriptInterface(BaseWebviewBridge(context, _MainBaseLayout, _TitleText, _WebView), Common.BRIDGE_NAME)
+        }
+
     }
     /** ========== Init end ========== */
 

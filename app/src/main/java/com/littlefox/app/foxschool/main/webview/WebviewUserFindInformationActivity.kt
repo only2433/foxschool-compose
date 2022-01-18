@@ -132,20 +132,23 @@ class WebviewUserFindInformationActivity : BaseActivity()
     {
         showLoading()
         val extraHeaders : Map<String, String> = CommonUtils.getInstance(this).getHeaderInformation(false)
-        _WebView.webViewClient = DataWebViewClient()
-        _WebView.settings.javaScriptEnabled = true
-        if (mCurrentFindType == FindType.ID)
-        {
-            _WebView.loadUrl(Common.URL_FIND_ID, extraHeaders)
+        _WebView.run {
+            webViewClient = DataWebViewClient()
+            settings.javaScriptEnabled = true
+            if (mCurrentFindType == FindType.ID)
+            {
+                loadUrl(Common.URL_FIND_ID, extraHeaders)
+            }
+            else if (mCurrentFindType == FindType.PASSWORD)
+            {
+                loadUrl(Common.URL_FIND_PW, extraHeaders)
+            }
+            addJavascriptInterface(
+                BaseWebviewBridge(context, _MainBaseLayout, _TitleText, _WebView),
+                Common.BRIDGE_NAME
+            )
         }
-        else if (mCurrentFindType == FindType.PASSWORD)
-        {
-            _WebView.loadUrl(Common.URL_FIND_PW, extraHeaders)
-        }
-        _WebView.addJavascriptInterface(
-            BaseWebviewBridge(this, _MainBaseLayout, _TitleText, _WebView),
-            Common.BRIDGE_NAME
-        )
+
     }
     /** ========== Init end ========== */
 
