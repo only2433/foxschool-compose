@@ -258,7 +258,7 @@
     <string name="message_warning_input_name">이름은 한글 2-8자, 영문 4-16자까지 가능합니다.</string>
     <string name="message_warning_input_email">올바른 형식의 이메일 주소를 입력하세요.</string>
     <string name="message_warning_input_phone">정확한 휴대폰 번호를 입력해 주세요.</string>
-    <string name="message_warning_input_password">비밀번호는 4-10자의 숫자 혹은 영문으로 입력해 주세요.</string>
+    <string name="message_warning_input_password">비밀번호는 영문, 숫자를 조합하여 6-16자로 입력해 주세요.</string>
     <string name="message_warning_inactive_account">이용중인 사용자가 아닙니다.</string>
     <string name="message_warning_password_confirm">기존 비밀번호가 일치하지 않습니다.</string>
     <string name="message_warning_input_new_password_confirm">비밀번호 확인을 위해 다시 입력해 주세요.</string>
