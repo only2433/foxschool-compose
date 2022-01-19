@@ -125,7 +125,7 @@
     <string name="text_spinner_hint">선택</string>
     <string name="text_option">(선택)</string>
     <string name="text_password">비밀번호</string>
-    <string name="text_new_password">새 비밀번호 (영문, 숫자 조합 4~10자)</string>
+    <string name="text_new_password">새 비밀번호 (영문, 숫자 조합 6~16자)</string>
     <string name="text_new_password_confirm">새 비밀번호 확인</string>
     <string name="text_change_later">다음에 변경</string>
     <string name="text_keep_password"><u>현재의 비밀번호로 유지</u></string>

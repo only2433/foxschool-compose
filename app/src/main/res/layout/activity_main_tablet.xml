@@ -74,6 +74,18 @@
                 app:scale_top="0"
                 app:scale_width="120" />
 
+            <TextView
+                android:id="@+id/_topMenuSchoolName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:textColor="@color/color_ffffff"
+                app:scale_height="96"
+                app:scale_left="120"
+                app:scale_top="0"
+                app:scale_width="600"
+                app:scale_textsize="34"/>
 
             <ImageView
                 android:id="@+id/_topMenuLittlefox"
@@ -81,6 +93,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/logo_tablet"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 app:scale_height="50"
                 app:scale_left="128"
                 app:scale_top="23"

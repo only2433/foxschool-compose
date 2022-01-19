@@ -68,6 +68,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     lateinit var _TopMenuSearch : ImageView
 
     @Nullable
+    @BindView(R.id._topMenuSchoolName)
+    lateinit var _TopMenuSchoolName : TextView
+
+    @Nullable
     @BindView(R.id._mainToolBar)
     lateinit var _MainToolbar : Toolbar
 
@@ -154,6 +158,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     }
 
     private lateinit var mMainPresenter : MainPresenter
+    private lateinit var _SchoolNameText : TextView
     private lateinit var _SettingButton : ImageView
     private lateinit var _SearchButton : ImageView
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
@@ -161,6 +166,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private lateinit var mWeakReferenceHandler : WeakReferenceHandler
     private var mSelectMenuLayoutHeight = 0
     private var mCurrentUserStatusSize = 0
+    private var mLoginInformationResult : LoginInformationResult? = null
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -238,6 +244,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         _LeaningLogMenuText.typeface = Font.getInstance(this).getRobotoMedium()
         _RecordLogText.typeface = Font.getInstance(this).getRobotoMedium()
         _HomeworkManageText.typeface = Font.getInstance(this).getRobotoMedium()
+        if (CommonUtils.getInstance(this).checkTablet)
+        {
+            _TopMenuSchoolName.typeface = Font.getInstance(this).getRobotoBold()
+        }
     }
 
     override fun onBackPressed()
@@ -322,10 +332,21 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
      */
     override fun settingUserInformation(loginInformationResult : LoginInformationResult?, isUpdateHomework : Boolean, isUpdateNews : Boolean)
     {
+        mLoginInformationResult = loginInformationResult
         Log.f("isUpdateHomework : "+isUpdateHomework+", isUpdateNews : "+isUpdateNews)
         initMenuView(isUpdateHomework, isUpdateNews)
 
-        var name = loginInformationResult?.getUserInformation()?.getName()
+        settingUserLayout()
+        settingLayoutColor()
+        settingSchoolName()
+    }
+
+    /**
+     * 사용자 영역 세팅 (이름, 반)
+     */
+    private fun settingUserLayout()
+    {
+        var name = mLoginInformationResult?.getUserInformation()?.getName()
         if (CommonUtils.getInstance(this).isTeacherMode)
         {
             name += " 선생님"
@@ -333,13 +354,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         else
         {
             // 학생인 경우에만 class 데이터 존재
-            val mClass = "${loginInformationResult?.getSchoolInformation()?.getGrade()}학년 ${loginInformationResult?.getSchoolInformation()?.getClassName()}"
+            val mClass = "${mLoginInformationResult?.getSchoolInformation()?.getGrade()}학년 ${mLoginInformationResult?.getSchoolInformation()?.getClassName()}"
             _UserClassText.text = mClass
             name += " 학생"
         }
         _UserNameText.text = name
-
-        settingLayoutColor()
     }
 
     /**
@@ -361,6 +380,30 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         else
         {
             _UserInfoButtonText.setBackgroundResource(R.drawable.round_box_empty_green_60)
+        }
+    }
+
+    /**
+     * 학교명 설정
+     */
+    private fun settingSchoolName()
+    {
+        var schoolName = mLoginInformationResult!!.getSchoolInformation().getClassName()
+
+        // 학교명 16자 초과 시 말줄임표 처리
+        if (schoolName.length > 16)
+        {
+            schoolName = schoolName.substring(0, 16)
+            schoolName += "..."
+        }
+
+        if (CommonUtils.getInstance(this).checkTablet)
+        {
+            _TopMenuSchoolName.setText(schoolName)
+        }
+        else
+        {
+            _SchoolNameText.setText(schoolName)
         }
     }
 
@@ -559,11 +602,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         {
             customView = inflater.inflate(R.layout.topbar_main_menu, null)
         }
+
         _SettingButton = customView.findViewById<View>(R.id._topMenuSetting) as ImageView
         _SettingButton.setOnClickListener(View.OnClickListener { // TODO: 드로우 레이아웃을 연다.
             Log.f("")
             _MainDrawLayout.openDrawer(_NavigationBaseLayout)
         })
+        _SchoolNameText = customView.findViewById<View>(R.id._topMenuSchoolName) as TextView
+        _SchoolNameText.typeface = Font.getInstance(this).getRobotoBold()
         _SearchButton = customView.findViewById<View>(R.id._topMenuSearch) as ImageView
         _SearchButton.setOnClickListener(object : View.OnClickListener
         {
