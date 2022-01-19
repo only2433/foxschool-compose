@@ -23,6 +23,7 @@ import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.main.contract.QuizContract
 import com.littlefox.app.foxschool.main.presenter.QuizPresenter
@@ -48,6 +49,9 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     @BindView(R.id._quizTaskBoxLayout)
     lateinit var _QuizTaskBoxLayout : ScalableLayout
 
+    @BindView(R.id._quizTimerIcon)
+    lateinit var _QuizTimerIcon : ImageView
+
     @BindView(R.id._quizTaskQuestionImage)
     lateinit var _QuizQuestionImage : ImageView
 
@@ -58,7 +62,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     lateinit var _QuizTimerText : TextView
 
     @BindView(R.id._quizCountTitle)
-    lateinit var _QuizAnswerCountTitle : TextView
+    lateinit var  _QuizAnswerCountTitle : TextView
 
     @BindView(R.id._quizCountText)
     lateinit var _QuizAnswerCountText : TextView
@@ -121,7 +125,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     override fun initView()
     {
         settingLayoutColor()
-
+        settingTaskBoxLayout()
         mFixedSpeedScroller = FixedSpeedScroller(this, LinearOutSlowInInterpolator())
         mFixedSpeedScroller.duration = DURATION_NORMAL.toInt()
 
@@ -153,6 +157,21 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
         _QuizTitleLayout.setBackgroundColor(resources.getColor(backgroundColor))
+    }
+
+    private fun settingTaskBoxLayout()
+    {
+        // 22:9 or 20:9 TaskBox size 조절
+        if(CommonUtils.getInstance(this).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
+        {
+            _QuizTaskBoxLayout.setScaleSize(2402f, 120f)
+            _QuizTaskBoxLayout.moveChildView(_QuizTimerIcon, 1754f, 36f)
+            _QuizTaskBoxLayout.moveChildView(_QuizTimerTitle, 1815f, 0f)
+            _QuizTaskBoxLayout.moveChildView(_QuizTimerText, 1917f, 0f)
+            _QuizTaskBoxLayout.moveChildView(_QuizQuestionImage, 2077f, 38f)
+            _QuizTaskBoxLayout.moveChildView(_QuizAnswerCountTitle, 2140f, 0f)
+            _QuizTaskBoxLayout.moveChildView(_QuizAnswerCountText, 2252f, 0f)
+        }
     }
 
     override fun handlerMessage(message : Message)

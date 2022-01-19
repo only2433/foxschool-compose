@@ -112,7 +112,7 @@ class QuizPlayFragment : Fragment()
     {
         var view : View
 
-
+        Log.f("CommonUtils.getInstance(mContext).getPhoneDisplayRadio() : "+CommonUtils.getInstance(mContext).getPhoneDisplayRadio())
         if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
             view = inflater.inflate(R.layout.fragment_quiz_play_20_9_phone, container, false)

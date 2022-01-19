@@ -78,10 +78,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_speaker"
-            app:scale_top="170"
-            app:scale_left="80"
-            app:scale_width="60"
-            app:scale_height="60" />
+            app:scale_top="150"
+            app:scale_left="62"
+            app:scale_width="100"
+            app:scale_height="100" />
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <!-- 문제 영역 (위치잡기용) -->

@@ -84,6 +84,7 @@
                 app:scale_base_width="1920" >
 
                 <ImageView
+                    android:id="@+id/_quizTimerIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_time"
