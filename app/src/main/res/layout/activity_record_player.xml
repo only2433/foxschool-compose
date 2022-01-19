@@ -61,17 +61,17 @@
                 app:scale_width="86"
                 app:scale_height="86" />
 
-            <TextView
+            <com.littlefox.library.view.text.SeparateTextView
                 android:id="@+id/_recordTitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="top|center_horizontal"
                 android:text="The Lemonade Detectives, Trouble on the Trail 7: Narrowing Down the Suspects"
                 android:textColor="@color/color_444444"
                 app:scale_left="30"
-                app:scale_top="190"
+                app:scale_top="200"
                 app:scale_width="1020"
-                app:scale_height="150"
+                app:scale_height="200"
                 app:scale_textsize="48"/>
 
             <TextView
@@ -177,7 +177,7 @@
                 app:scale_top="1370"
                 app:scale_width="550"
                 app:scale_height="70"
-                app:scale_textsize="37"/>
+                app:scale_textsize="38"/>
 
             <com.ssomai.android.scalablelayout.ScalableLayout
                 android:id="@+id/_audioSeekerBarView"
