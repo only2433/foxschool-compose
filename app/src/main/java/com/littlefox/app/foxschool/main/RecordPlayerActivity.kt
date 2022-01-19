@@ -30,6 +30,7 @@ import com.littlefox.app.foxschool.main.presenter.RecordPlayerPresenter
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.progress.CircularProgressBar
+import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -67,7 +68,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
     lateinit var _RecordInfoButton : ImageView
 
     @BindView(R.id._recordTitleText)
-    lateinit var _RecordTitleText : TextView
+    lateinit var _RecordTitleText : SeparateTextView
 
     @BindView(R.id._recordTimerText)
     lateinit var _RecordTimerText : TextView
@@ -289,7 +290,30 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
      */
     override fun setRecordTitle(contents : RecordIntentParamsObject)
     {
-        _RecordTitleText.setText(CommonUtils.getInstance(this).getContentsName(contents.getName(), contents.getSubName()))
+        val title : String = contents.getName()
+        val subTitle : String = contents.getSubName()
+        if (subTitle == "")
+        {
+            _RecordTitleText.setText(title)
+        }
+        else
+        {
+            val fontSize : Int
+            if (CommonUtils.getInstance(this).checkTablet)
+            {
+                fontSize = 32
+            }
+            else
+            {
+                fontSize = 48
+            }
+
+            _RecordTitleText.setSeparateText(title, "\n$subTitle")
+                .setSeparateColor(resources.getColor(R.color.color_444444), resources.getColor(R.color.color_444444))
+                .setSeparateTextSize(CommonUtils.getInstance(this).getPixel(fontSize), CommonUtils.getInstance(this).getPixel(fontSize))
+                .setSeparateTextStyle((Font.getInstance(this).getRobotoBold()), (Font.getInstance(this).getRobotoRegular()))
+                .showView()
+        }
     }
 
     /**
