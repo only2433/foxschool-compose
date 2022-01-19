@@ -80,6 +80,7 @@ class CheckUserInput
             Log.f("text : $text, text.getBytes().length : ${text.toByteArray(charset("ms949")).size}")
             if(text.toByteArray().size >= start && text.toByteArray(charset("ms949")).size <= end)
             {
+
                 return true
             }
         } catch(e : UnsupportedEncodingException)
@@ -127,11 +128,12 @@ class CheckUserInput
         {
             return this
         }
+
         if(passwordText == "")
         {
             sResultValue = WARNING_PASSWORD_NOT_INPUT
         }
-        else if(isExceptTextHave(TEXT_PASSWORD, passwordText) || isByteSizeFit(passwordText, 6, 16) == false)
+        else if(isExceptTextHave(TEXT_PASSWORD, passwordText) == false || isByteSizeFit(passwordText, 6, 16) == false)
         {
             sResultValue = WARNING_PASSWORD_WRONG_INPUT
         }
