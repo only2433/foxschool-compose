@@ -348,23 +348,24 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             // 검색 결과가 있는 경우
             for(i in mSearchSchoolList.indices)
             {
-                val schoolText = TextView(this)
-                schoolText.typeface = Font.getInstance(this).getRobotoRegular()
-                schoolText.gravity = Gravity.CENTER_VERTICAL
-                schoolText.text = mSearchSchoolList[i].getSchoolName()
-                schoolText.setTextColor(resources.getColor(R.color.color_444444))
-                schoolText.setOnClickListener {
-                    // 선택한 항목으로 학교 검색 필드에 값 입력
-                    // 검색한 리스트와 뷰는 초기화
-                    CommonUtils.getInstance(this).hideKeyboard()
-                    mSelectedSchoolData = mSearchSchoolList[i]
-                    _InputSchoolEditText.setText(mSelectedSchoolData!!.getSchoolName())
-                    _InputSchoolEditText.clearFocus()
-                    mSearchSchoolList.clear() // 검색결과 리스트 초기화
-                    clearSearchView() // 검색화면(팝업)초기화
-                    setLoginButtonBackground()
+                val schoolText = TextView(this).let {
+                    it.typeface = Font.getInstance(this).getRobotoRegular()
+                    it.gravity = Gravity.CENTER_VERTICAL
+                    it.text = mSearchSchoolList[i].getSchoolName()
+                    it.setTextColor(resources.getColor(R.color.color_444444))
+                    it.setOnClickListener {
+                        // 선택한 항목으로 학교 검색 필드에 값 입력
+                        // 검색한 리스트와 뷰는 초기화
+                        CommonUtils.getInstance(this).hideKeyboard()
+                        mSelectedSchoolData = mSearchSchoolList[i]
+                        _InputSchoolEditText.setText(mSelectedSchoolData!!.getSchoolName())
+                        _InputSchoolEditText.clearFocus()
+                        mSearchSchoolList.clear() // 검색결과 리스트 초기화
+                        clearSearchView() // 검색화면(팝업)초기화
+                        setLoginButtonBackground()
+                    }
+                    it
                 }
-
                 _SearchView.addView(schoolText, mSearchTextLeft, mSearchTextHeight * i, 650f, mSearchTextHeight)
                 _SearchView.setScale_TextSize(schoolText, mSearchTextSize)
             }
@@ -381,15 +382,18 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         else if(mSearchSchoolList.isEmpty() && _InputSchoolEditText.text.isNotEmpty())
         {
             // 검색 결과가 없는 경우
-            val resultText = TextView(this)
-            resultText.typeface = Font.getInstance(this).getRobotoRegular()
-            resultText.gravity = Gravity.CENTER_VERTICAL
-            resultText.text = resources.getString(R.string.text_result_empty)
-            resultText.setTextColor(resources.getColor(R.color.color_cacaca))
+            val resultText = TextView(this).apply {
+                typeface = Font.getInstance(context).getRobotoRegular()
+                gravity = Gravity.CENTER_VERTICAL
+                text = resources.getString(R.string.text_result_empty)
+                setTextColor(resources.getColor(R.color.color_cacaca))
+            }
 
-            _SearchView.setScaleSize(mSearchLayoutWidth, mSearchTextHeight)
-            _SearchView.addView(resultText, mSearchTextLeft, 0f, 650f, mSearchTextHeight)
-            _SearchView.setScale_TextSize(resultText, mSearchTextSize)
+            _SearchView.run {
+                setScaleSize(mSearchLayoutWidth, mSearchTextHeight)
+                addView(resultText, mSearchTextLeft, 0f, 650f, mSearchTextHeight)
+                setScale_TextSize(resultText, mSearchTextSize)
+            }
 
             // 학교 검색리스트 배경 사이즈 설정
             // _InputSchoolEditBackground 높이 : 기존 입력필드 높이 + 리스트사이즈

@@ -212,9 +212,12 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     {
         setStatusBarColor()
         setIndicatorBarColor()
-        _MainDrawLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        _MainDrawLayout.isFocusableInTouchMode = false
-        _MainDrawLayout.addDrawerListener(mDrawerListener)
+        _MainDrawLayout.run {
+            setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            isFocusableInTouchMode = false
+            addDrawerListener(mDrawerListener)
+        }
+
         _NavigationBaseLayout.setOnTouchListener(object : View.OnTouchListener
         {
             override fun onTouch(v : View, event : MotionEvent) : Boolean
@@ -564,9 +567,11 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private fun settingViewPagerInformation(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
     {
         Log.f("Screen Page Count : " + mainFragmentSelectionPagerAdapter.getCount())
-        _MainViewPager.setAdapter(mainFragmentSelectionPagerAdapter)
-        _MainViewPager.setOffscreenPageLimit(mainFragmentSelectionPagerAdapter.getCount())
-        _MainViewPager.addOnPageChangeListener(mOnPageChangeListener)
+        _MainViewPager.run {
+            setAdapter(mainFragmentSelectionPagerAdapter)
+            setOffscreenPageLimit(mainFragmentSelectionPagerAdapter.getCount())
+            addOnPageChangeListener(mOnPageChangeListener)
+        }
         _MainTabsLayout.setTabGravity(TabLayout.GRAVITY_FILL)
         _MainTabsLayout.setupWithViewPager(_MainViewPager)
         settingTabsLayout(mainFragmentSelectionPagerAdapter.getCount())
@@ -702,9 +707,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             Log.f("position : $position")
         }
 
-        override fun onPageScrollStateChanged(state : Int)
-        {
-        }
+        override fun onPageScrollStateChanged(state : Int) {}
     }
 
     private val mDrawerListener : DrawerLayout.DrawerListener = object : DrawerLayout.DrawerListener

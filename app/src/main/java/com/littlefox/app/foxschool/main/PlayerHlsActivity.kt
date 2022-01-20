@@ -362,6 +362,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         mWeakReferenceHandler = WeakReferenceHandler(this)
         mPlayerContractPresenter = PlayerHlsPresenter(this, _PlayerView, mCurrentOrientation)
+
         mOrientationManager = OrientationManager.getInstance(this)
         mOrientationManager?.setOrientationChangedListener(this)
         if(CommonUtils.getInstance(this).checkTablet)
@@ -470,14 +471,20 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun initSeekbar()
     {
-        _SeekbarPlayBar.thumbOffset = CommonUtils.getInstance(this).getPixel(0)
-        _SeekbarPlayBar.progress = 0
-        _SeekbarPlayBar.secondaryProgress = 0
-        _SeekbarPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
-        _SeekbarPortraitPlayBar.thumbOffset = CommonUtils.getInstance(this).getPixel(0)
-        _SeekbarPortraitPlayBar.progress = 0
-        _SeekbarPortraitPlayBar.secondaryProgress = 0
-        _SeekbarPortraitPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
+        _SeekbarPlayBar.run {
+            thumbOffset = CommonUtils.getInstance(context).getPixel(0)
+            progress = 0
+            secondaryProgress = 0
+            setOnSeekBarChangeListener(mOnSeekBarListener)
+        }
+
+        _SeekbarPortraitPlayBar.run {
+            thumbOffset = CommonUtils.getInstance(context).getPixel(0)
+            progress = 0
+            secondaryProgress = 0
+            setOnSeekBarChangeListener(mOnSeekBarListener)
+        }
+
         if(CommonUtils.getInstance(this).checkTablet)
         {
             Log.i("")
@@ -679,11 +686,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            baseLayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
-            baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT)
-            baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
-            baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-            baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            baseLayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT).apply {
+                addRule(RelativeLayout.ALIGN_PARENT_LEFT)
+                addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
+                addRule(RelativeLayout.ALIGN_PARENT_TOP)
+                addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+            }
             _PlayerBackground.layoutParams = baseLayoutParams
             _PlayerOptionBackground.layoutParams = baseLayoutParams
 
@@ -745,21 +753,27 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             baseLayoutParams = _PlayerPlayButtonLayout.layoutParams as RelativeLayout.LayoutParams
             baseLayoutParams.removeRule(RelativeLayout.CENTER_VERTICAL)
             baseLayoutParams.topMargin = CommonUtils.getInstance(this).getPixel(239)
-            _PlayerPlayButtonLayout.layoutParams = baseLayoutParams
-            _PlayerPlayButtonLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 109f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerPrevButton, 113f, 32f, 49f, 58f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerPlayButton, 495f, 0f, 98f, 109f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerNextButton, 918f, 32f, 49f, 58f)
+
+            _PlayerPlayButtonLayout.run {
+                layoutParams = baseLayoutParams
+                setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 109f)
+                moveChildView(_PlayerPrevButton, 113f, 32f, 49f, 58f)
+                moveChildView(_PlayerPlayButton, 495f, 0f, 98f, 109f)
+                moveChildView(_PlayerNextButton, 918f, 32f, 49f, 58f)
+            }
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
             baseLayoutParams = _PlayerPlayButtonLayout.layoutParams as RelativeLayout.LayoutParams
             baseLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL)
-            _PlayerPlayButtonLayout.layoutParams = baseLayoutParams
-            _PlayerPlayButtonLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 167f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerPrevButton, 434f, 42f, 68f, 81f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerPlayButton, 885f, 0f, 147f, 167f)
-            _PlayerPlayButtonLayout.moveChildView(_PlayerNextButton, 1419f, 42f, 68f, 81f)
+
+            _PlayerPlayButtonLayout.run {
+                layoutParams = baseLayoutParams
+                setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 167f)
+                moveChildView(_PlayerPrevButton, 434f, 42f, 68f, 81f)
+                moveChildView(_PlayerPlayButton, 885f, 0f, 147f, 167f)
+                moveChildView(_PlayerNextButton, 1419f, 42f, 68f, 81f)
+            }
         }
         setPlayIconDrawable()
     }
@@ -792,18 +806,21 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun changeModeCaptionLayout()
     {
-        if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            _PlayerCaptionLayout!!.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 112f)
-            _PlayerCaptionLayout!!.moveChildView(_PlayerCaptionTitle, 0f, 0f, PORTRAIT_DISPLAY_WIDTH.toFloat(), 112f)
-            _PlayerCaptionLayout!!.setScale_TextSize(_PlayerCaptionTitle, 26f)
+        _PlayerCaptionLayout.run {
+            if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
+            {
+                setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 112f)
+                moveChildView(_PlayerCaptionTitle, 0f, 0f, PORTRAIT_DISPLAY_WIDTH.toFloat(), 112f)
+                setScale_TextSize(_PlayerCaptionTitle, 26f)
+
+            } else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
+            {
+                setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 140f)
+                moveChildView(_PlayerCaptionTitle, 0f, 0f, LANDSCAPE_DISPLAY_WIDTH.toFloat(), 140f)
+                setScale_TextSize(_PlayerCaptionTitle, 43f)
+            }
         }
-        else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            _PlayerCaptionLayout!!.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 140f)
-            _PlayerCaptionLayout!!.moveChildView(_PlayerCaptionTitle, 0f, 0f, LANDSCAPE_DISPLAY_WIDTH.toFloat(), 140f)
-            _PlayerCaptionLayout!!.setScale_TextSize(_PlayerCaptionTitle, 43f)
-        }
+
     }
 
     private fun changeModeBottomLayout()
@@ -933,12 +950,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             baseLayoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)
             baseLayoutParams.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             baseLayoutParams.addRule(RelativeLayout.BELOW, R.id._playerPortraitTitleLayout)
-            _PlayerListBaseLayout.layoutParams = baseLayoutParams
-            _PlayerListBaseLayout.setBackgroundColor(resources.getColor(R.color.color_edeef2))
-            _PlayerListBaseLayout.visibility = View.VISIBLE
-            _PlayListTitleLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 115f)
-            _PlayListTitleLayout.moveChildView(_PlayListTitleText, 40f, 0f, 500f, 115f)
-            _PlayListTitleLayout.setScale_TextSize(_PlayListTitleText, 40f)
+            _PlayerListBaseLayout.run {
+                layoutParams = baseLayoutParams
+                setBackgroundColor(resources.getColor(R.color.color_edeef2))
+                visibility = View.VISIBLE
+            }
+            _PlayListTitleLayout.run {
+                setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 115f)
+                moveChildView(_PlayListTitleText, 40f, 0f, 500f, 115f)
+                setScale_TextSize(_PlayListTitleText, 40f)
+            }
             _PlayListTitleText.setTextColor(resources.getColor(R.color.color_black))
             _PlayListCloseButton.visibility = View.GONE
             _PlayListCloseButtonRect.visibility = View.GONE
@@ -948,15 +969,19 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             baseLayoutParams = RelativeLayout.LayoutParams(CommonUtils.getInstance(this).getPixel(RIGHT_LIST_WIDTH), RelativeLayout.LayoutParams.MATCH_PARENT)
             baseLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT)
             baseLayoutParams.removeRule(RelativeLayout.BELOW)
-            _PlayerListBaseLayout.layoutParams = baseLayoutParams
-            _PlayerListBaseLayout.setBackgroundColor(resources.getColor(R.color.color_alpha_07_black))
-            _PlayerListBaseLayout.visibility = View.GONE
+            _PlayerListBaseLayout.run {
+                layoutParams = baseLayoutParams
+                setBackgroundColor(resources.getColor(R.color.color_alpha_07_black))
+                visibility = View.GONE
+            }
+            _PlayListTitleLayout.run {
+                setScaleSize(RIGHT_LIST_WIDTH.toFloat(), 120f)
+                moveChildView(_PlayListTitleText, 40f, 0f, 500f, 120f)
+                setScale_TextSize(_PlayListTitleText, 40f)
+            }
+            _PlayListTitleText.setTextColor(resources.getColor(R.color.color_white))
             _PlayerSpeedListBaseLayout.layoutParams = baseLayoutParams
             _PlayerSpeedListBaseLayout.setBackgroundColor(resources.getColor(R.color.color_alpha_07_black))
-            _PlayListTitleLayout.setScaleSize(RIGHT_LIST_WIDTH.toFloat(), 120f)
-            _PlayListTitleLayout.moveChildView(_PlayListTitleText, 40f, 0f, 500f, 120f)
-            _PlayListTitleLayout.setScale_TextSize(_PlayListTitleText, 40f)
-            _PlayListTitleText.setTextColor(resources.getColor(R.color.color_white))
             _PlayListCloseButton.visibility = View.VISIBLE
             _PlayListCloseButtonRect.visibility = View.VISIBLE
         }
@@ -1107,10 +1132,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mCurrentLayoutMode = LAYOUT_TYPE.INIT
         initLayoutSetting()
         hideMenuAndList()
-        mFadeAnimationController.promptViewStatus(_PlayerTopBaseLayout, false)
-        mFadeAnimationController.promptViewStatus(_PlayerPlayButtonLayout, false)
-        mFadeAnimationController.promptViewStatus(_PlayerPageByPageLayout, false)
-        mFadeAnimationController.promptViewStatus(_PlayerCaptionLayout, false)
+        mFadeAnimationController.run {
+            promptViewStatus(_PlayerTopBaseLayout, false)
+            promptViewStatus(_PlayerPlayButtonLayout, false)
+            promptViewStatus(_PlayerPageByPageLayout, false)
+            promptViewStatus(_PlayerCaptionLayout, false)
+        }
         _PlayerBottomBaseLayout.visibility = View.GONE
         _SeekbarPortraitPlayBar.visibility = View.INVISIBLE
         _PlayerBackground.visibility = View.VISIBLE
@@ -2040,25 +2067,27 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun setPreviewEndLayout()
     {
-        if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            _FreeUserEndLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 490f)
-            _FreeUserEndLayout.moveChildView(_PaymentMessageText, 0f, 112f, 1080f, 138f)
-            _FreeUserEndLayout.setScale_TextSize(_PaymentMessageText, 38f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonBoxImage, 288f, 290f, 497f, 148f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonIconImage, 400f, 330f, 69f, 69f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonIconText, 518f, 330f, 220f, 69f)
-            _FreeUserEndLayout.setScale_TextSize(_PaymentButtonIconText, 36f)
-        }
-        else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            _FreeUserEndLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 980f)
-            _FreeUserEndLayout.moveChildView(_PaymentMessageText, 0f, 320f, 1920f, 180f)
-            _FreeUserEndLayout.setScale_TextSize(_PaymentMessageText, 40f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonBoxImage, 710f, 530f, 497f, 148f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonIconImage, 822f, 570f, 69f, 69f)
-            _FreeUserEndLayout.moveChildView(_PaymentButtonIconText, 940f, 570f, 220f, 69f)
-            _FreeUserEndLayout.setScale_TextSize(_PaymentButtonIconText, 36f)
+        _FreeUserEndLayout.run {
+            if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
+            {
+                setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 490f)
+                moveChildView(_PaymentMessageText, 0f, 112f, 1080f, 138f)
+                setScale_TextSize(_PaymentMessageText, 38f)
+                moveChildView(_PaymentButtonBoxImage, 288f, 290f, 497f, 148f)
+                moveChildView(_PaymentButtonIconImage, 400f, 330f, 69f, 69f)
+                moveChildView(_PaymentButtonIconText, 518f, 330f, 220f, 69f)
+                setScale_TextSize(_PaymentButtonIconText, 36f)
+            }
+            else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
+            {
+                setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 980f)
+                moveChildView(_PaymentMessageText, 0f, 320f, 1920f, 180f)
+                setScale_TextSize(_PaymentMessageText, 40f)
+                moveChildView(_PaymentButtonBoxImage, 710f, 530f, 497f, 148f)
+                moveChildView(_PaymentButtonIconImage, 822f, 570f, 69f, 69f)
+                moveChildView(_PaymentButtonIconText, 940f, 570f, 220f, 69f)
+                setScale_TextSize(_PaymentButtonIconText, 36f)
+            }
         }
     }
 
@@ -2085,133 +2114,148 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             if(isNextMovieVisibleFromEndView)
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonBoxImage, 73f, 189f, 457f, 120f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconImage, 185f, 220f, 51f, 58f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconText, 273f, 214f, 200f, 69f)
                 _NextButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
-                _PaidUserEndLayout.moveChildView(_NextButtonBoxImage, 548f, 189f, 457f, 120f)
-                _PaidUserEndLayout.moveChildView(_NextButtonIconImage, 660f, 231f, 55f, 36f)
-                _PaidUserEndLayout.moveChildView(_NextButtonIconText, 748f, 214f, 200f, 69f)
+                _PaidUserEndLayout.run {
+                    moveChildView(_ReplayButtonBoxImage, 73f, 189f, 457f, 120f)
+                    moveChildView(_ReplayButtonIconImage, 185f, 220f, 51f, 58f)
+                    moveChildView(_ReplayButtonIconText, 273f, 214f, 200f, 69f)
+                    moveChildView(_NextButtonBoxImage, 548f, 189f, 457f, 120f)
+                    moveChildView(_NextButtonIconImage, 660f, 231f, 55f, 36f)
+                    moveChildView(_NextButtonIconText, 748f, 214f, 200f, 69f)
+                }
             }
             else
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonBoxImage, 312f, 189f, 457f, 120f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconImage, 424f, 220f, 51f, 58f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconText, 512f, 214f, 200f, 69f)
+                _PaidUserEndLayout.run {
+                    moveChildView(_ReplayButtonBoxImage, 312f, 189f, 457f, 120f)
+                    moveChildView(_ReplayButtonIconImage, 424f, 220f, 51f, 58f)
+                    moveChildView(_ReplayButtonIconText, 512f, 214f, 200f, 69f)
+                }
             }
-            if(views.size > 0)
-            {
-                when(views.size)
+
+            _PaidUserEndLayout.run {
+                if(views.size > 0)
                 {
-                    1 -> _PaidUserEndLayout.moveChildView(views[0], 483f, 0f, 114f, 114f)
-                    2 ->
+                    when(views.size)
                     {
-                        _PaidUserEndLayout.moveChildView(views[0], 406f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[1], 560f, 0f, 114f, 114f)
-                    }
-                    3 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 329f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[1], 483f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[2], 637f, 0f, 114f, 114f)
-                    }
-                    4 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 252f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[1], 406f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[2], 560f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[3], 714f, 0f, 114f, 114f)
-                    }
-                    5 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 175f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[1], 329f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[2], 483f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[3], 637f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[4], 791f, 0f, 114f, 114f)
-                    }
-                    6 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 134f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[1], 274f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[2], 414f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[3], 553f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[4], 693f, 0f, 114f, 114f)
-                        _PaidUserEndLayout.moveChildView(views[5], 833f, 0f, 114f, 114f)
+                        1 -> moveChildView(views[0], 483f, 0f, 114f, 114f)
+                        2 ->
+                        {
+                            moveChildView(views[0], 406f, 0f, 114f, 114f)
+                            moveChildView(views[1], 560f, 0f, 114f, 114f)
+                        }
+                        3 ->
+                        {
+                            moveChildView(views[0], 329f, 0f, 114f, 114f)
+                            moveChildView(views[1], 483f, 0f, 114f, 114f)
+                            moveChildView(views[2], 637f, 0f, 114f, 114f)
+                        }
+                        4 ->
+                        {
+                            moveChildView(views[0], 252f, 0f, 114f, 114f)
+                            moveChildView(views[1], 406f, 0f, 114f, 114f)
+                            moveChildView(views[2], 560f, 0f, 114f, 114f)
+                            moveChildView(views[3], 714f, 0f, 114f, 114f)
+                        }
+                        5 ->
+                        {
+                            moveChildView(views[0], 175f, 0f, 114f, 114f)
+                            moveChildView(views[1], 329f, 0f, 114f, 114f)
+                            moveChildView(views[2], 483f, 0f, 114f, 114f)
+                            moveChildView(views[3], 637f, 0f, 114f, 114f)
+                            moveChildView(views[4], 791f, 0f, 114f, 114f)
+                        }
+                        6 ->
+                        {
+                            moveChildView(views[0], 134f, 0f, 114f, 114f)
+                            moveChildView(views[1], 274f, 0f, 114f, 114f)
+                            moveChildView(views[2], 414f, 0f, 114f, 114f)
+                            moveChildView(views[3], 553f, 0f, 114f, 114f)
+                            moveChildView(views[4], 693f, 0f, 114f, 114f)
+                            moveChildView(views[5], 833f, 0f, 114f, 114f)
+                        }
                     }
                 }
             }
+
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
             if(isNextMovieVisibleFromEndView)
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonBoxImage, 452f, 227f, 497f, 148f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconImage, 564f, 267f, 69f, 69f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconText, 682f, 267f, 250f, 69f)
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
-                _PaidUserEndLayout.moveChildView(_NextButtonBoxImage, 972f, 227f, 497f, 148f)
-                _PaidUserEndLayout.moveChildView(_NextButtonIconImage, 1084f, 267f, 69f, 69f)
-                _PaidUserEndLayout.moveChildView(_NextButtonIconText, 1202f, 267f, 250f, 69f)
+                _PaidUserEndLayout.run {
+                    moveChildView(_ReplayButtonBoxImage, 452f, 227f, 497f, 148f)
+                    moveChildView(_ReplayButtonIconImage, 564f, 267f, 69f, 69f)
+                    moveChildView(_ReplayButtonIconText, 682f, 267f, 250f, 69f)
+                    moveChildView(_NextButtonBoxImage, 972f, 227f, 497f, 148f)
+                    moveChildView(_NextButtonIconImage, 1084f, 267f, 69f, 69f)
+                    moveChildView(_NextButtonIconText, 1202f, 267f, 250f, 69f)
+                }
+
             }
             else
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonBoxImage, 712f, 227f, 497f, 148f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconImage, 824f, 267f, 69f, 69f)
-                _PaidUserEndLayout.moveChildView(_ReplayButtonIconText, 942f, 267f, 250f, 69f)
+                _PaidUserEndLayout.run {
+                    moveChildView(_ReplayButtonBoxImage, 712f, 227f, 497f, 148f)
+                    moveChildView(_ReplayButtonIconImage, 824f, 267f, 69f, 69f)
+                    moveChildView(_ReplayButtonIconText, 942f, 267f, 250f, 69f)
+                }
             }
-            if(views.size > 0)
-            {
-                when(views.size)
+            _PaidUserEndLayout.run {
+                if(views.size > 0)
                 {
-                    1 -> _PaidUserEndLayout.moveChildView(views[0], 885f, 0f, 150f, 150f)
-                    2 ->
+                    when(views.size)
                     {
-                        _PaidUserEndLayout.moveChildView(views[0], 780f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 990f, 0f, 150f, 150f)
-                    }
-                    3 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 675f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 885f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[2], 1095f, 0f, 150f, 150f)
-                    }
-                    4 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 570f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 780f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[2], 990f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[3], 1200f, 0f, 150f, 150f)
-                    }
-                    5 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 465f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 675f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[2], 885f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[3], 1095f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[4], 1305f, 0f, 150f, 150f)
-                    }
-                    6 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 360f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 570f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[2], 780f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[3], 990f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[4], 1200f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[5], 1410f, 0f, 150f, 150f)
-                    }
-                    7 ->
-                    {
-                        _PaidUserEndLayout.moveChildView(views[0], 255f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[1], 465f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[2], 675f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[3], 885f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[4], 1095f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[5], 1305f, 0f, 150f, 150f)
-                        _PaidUserEndLayout.moveChildView(views[6], 1515f, 0f, 150f, 150f)
+                        1 -> moveChildView(views[0], 885f, 0f, 150f, 150f)
+                        2 ->
+                        {
+                            moveChildView(views[0], 780f, 0f, 150f, 150f)
+                            moveChildView(views[1], 990f, 0f, 150f, 150f)
+                        }
+                        3 ->
+                        {
+                            moveChildView(views[0], 675f, 0f, 150f, 150f)
+                            moveChildView(views[1], 885f, 0f, 150f, 150f)
+                            moveChildView(views[2], 1095f, 0f, 150f, 150f)
+                        }
+                        4 ->
+                        {
+                            moveChildView(views[0], 570f, 0f, 150f, 150f)
+                            moveChildView(views[1], 780f, 0f, 150f, 150f)
+                            moveChildView(views[2], 990f, 0f, 150f, 150f)
+                            moveChildView(views[3], 1200f, 0f, 150f, 150f)
+                        }
+                        5 ->
+                        {
+                            moveChildView(views[0], 465f, 0f, 150f, 150f)
+                            moveChildView(views[1], 675f, 0f, 150f, 150f)
+                            moveChildView(views[2], 885f, 0f, 150f, 150f)
+                            moveChildView(views[3], 1095f, 0f, 150f, 150f)
+                            moveChildView(views[4], 1305f, 0f, 150f, 150f)
+                        }
+                        6 ->
+                        {
+                            moveChildView(views[0], 360f, 0f, 150f, 150f)
+                            moveChildView(views[1], 570f, 0f, 150f, 150f)
+                            moveChildView(views[2], 780f, 0f, 150f, 150f)
+                            moveChildView(views[3], 990f, 0f, 150f, 150f)
+                            moveChildView(views[4], 1200f, 0f, 150f, 150f)
+                            moveChildView(views[5], 1410f, 0f, 150f, 150f)
+                        }
+                        7 ->
+                        {
+                            moveChildView(views[0], 255f, 0f, 150f, 150f)
+                            moveChildView(views[1], 465f, 0f, 150f, 150f)
+                            moveChildView(views[2], 675f, 0f, 150f, 150f)
+                            moveChildView(views[3], 885f, 0f, 150f, 150f)
+                            moveChildView(views[4], 1095f, 0f, 150f, 150f)
+                            moveChildView(views[5], 1305f, 0f, 150f, 150f)
+                            moveChildView(views[6], 1515f, 0f, 150f, 150f)
+                        }
                     }
                 }
             }
@@ -2537,6 +2581,4 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             }
         }
     }
-
-
 }
