@@ -7,11 +7,14 @@ class LoginInformationResult
     private var change_90 : String = ""
     private var change_180 : String = ""
     private var user : UserInfoSectionResult? = null
-    private var school : UserSchoolSectionResult? = null
+    private var school : StudentSectionResult? = null
+    private var teacher : TeacherSectionResult? = null
 
     fun getUserInformation() : UserInfoSectionResult = user!!
 
-    fun getSchoolInformation() : UserSchoolSectionResult = school!!
+    fun getSchoolInformation() : StudentSectionResult = school!!
+
+    fun getTeacherInformation() : TeacherSectionResult = teacher!!
 
     /**
      * 비밀번호 변경이 필요한지 체크
