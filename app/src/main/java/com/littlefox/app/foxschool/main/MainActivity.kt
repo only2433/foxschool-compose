@@ -391,7 +391,9 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
      */
     private fun settingSchoolName()
     {
-        var schoolName = mLoginInformationResult!!.getSchoolInformation().getClassName()
+        var schoolName = mLoginInformationResult!!.getSchoolInformation().getOrganizationName()
+        val schoolType = mLoginInformationResult!!.getSchoolInformation().getOrganizationTypeName()
+        schoolName += " $schoolType"
 
         // 학교명 16자 초과 시 말줄임표 처리
         if (schoolName.length > 16)

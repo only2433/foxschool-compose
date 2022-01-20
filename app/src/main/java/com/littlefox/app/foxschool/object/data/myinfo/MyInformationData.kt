@@ -61,11 +61,23 @@ class MyInformationData
         return this.phone
     }
 
-    fun isCompleteInformationData() : Boolean
+    fun isCompleteInformationData(isTeacher : Boolean) : Boolean
     {
+        // 선생님은 이름, 이메일, 전화번호 입력해야 활성화
+        // 학생은 이름, 이메일만 입력해도 활성화
         if (this.name.isNotEmpty() && this.email.isNotEmpty())
         {
-            return true
+            if (isTeacher)
+            {
+                if (this.phone.isNotEmpty())
+                {
+                    return true
+                }
+            }
+            else
+            {
+                return true
+            }
         }
         return false
     }
