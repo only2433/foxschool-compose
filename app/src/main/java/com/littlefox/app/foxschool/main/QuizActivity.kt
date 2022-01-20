@@ -164,13 +164,15 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         // 22:9 or 20:9 TaskBox size 조절
         if(CommonUtils.getInstance(this).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
         {
-            _QuizTaskBoxLayout.setScaleSize(2402f, 120f)
-            _QuizTaskBoxLayout.moveChildView(_QuizTimerIcon, 1754f, 36f)
-            _QuizTaskBoxLayout.moveChildView(_QuizTimerTitle, 1815f, 0f)
-            _QuizTaskBoxLayout.moveChildView(_QuizTimerText, 1917f, 0f)
-            _QuizTaskBoxLayout.moveChildView(_QuizQuestionImage, 2077f, 38f)
-            _QuizTaskBoxLayout.moveChildView(_QuizAnswerCountTitle, 2140f, 0f)
-            _QuizTaskBoxLayout.moveChildView(_QuizAnswerCountText, 2252f, 0f)
+            _QuizTaskBoxLayout.run {
+                setScaleSize(2402f, 120f)
+                moveChildView(_QuizTimerIcon, 1754f, 36f)
+                moveChildView(_QuizTimerTitle, 1815f, 0f)
+                moveChildView(_QuizTimerText, 1917f, 0f)
+                moveChildView(_QuizQuestionImage, 2077f, 38f)
+                moveChildView(_QuizAnswerCountTitle, 2140f, 0f)
+                moveChildView(_QuizAnswerCountText, 2252f, 0f)
+            }
         }
     }
 

@@ -215,16 +215,18 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
         _RecordProgressCircleImageView.visibility = View.GONE
-        if (CommonUtils.getInstance(this).checkTablet)
-        {
-            _RecordingProgressView.setProgressWidth(CommonUtils.getInstance(this).getPixel(6))
+        _RecordingProgressView.run {
+            if (CommonUtils.getInstance(context).checkTablet)
+            {
+                setProgressWidth(CommonUtils.getInstance(context).getPixel(6))
+            }
+            else
+            {
+                setProgressWidth(CommonUtils.getInstance(context).getPixel(10))
+            }
+            setProgressColor(resources.getColor(R.color.color_19a0f7))
+            useRoundedCorners(false)
         }
-        else
-        {
-            _RecordingProgressView.setProgressWidth(CommonUtils.getInstance(this).getPixel(10))
-        }
-        _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_19a0f7))
-        _RecordingProgressView.useRoundedCorners(false)
     }
 
     override fun initFont()
@@ -388,7 +390,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             {
                 // 녹음 일시정지
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
-
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_a4abb3))
                 _RecordingProgressView.cancelAnimation()
                 _RecordProgressImageView.setImageResource(R.drawable.progress_circle_off)
@@ -399,7 +400,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             {
                 // 오디오 준비 (오디오 초기상태)
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
-
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_a4abb3))
                 _RecordingProgressView.cancelAnimation()
                 _RecordingProgressView.animate().cancel()
@@ -574,10 +574,12 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 _AudioSeekerBarView.moveChildView(_AudioSeekbarPlayBar, 180f, 10f, 722f, 45f)
             }
         }
-        _AudioSeekbarPlayBar.thumbOffset = CommonUtils.getInstance(this).getPixel(0)
-        _AudioSeekbarPlayBar.progress = 0
-        _AudioSeekbarPlayBar.secondaryProgress = 0
-        _AudioSeekbarPlayBar.setOnSeekBarChangeListener(mOnSeekBarListener)
+        _AudioSeekbarPlayBar.run {
+            thumbOffset = CommonUtils.getInstance(context).getPixel(0)
+            progress = 0
+            secondaryProgress = 0
+            setOnSeekBarChangeListener(mOnSeekBarListener)
+        }
     }
 
     /**
@@ -629,9 +631,8 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
                 mFrameAnimationDrawable = null
                 _RecordingFrameImage.setVisibility(View.GONE)
             }
-        } catch(e : Exception)
-        {
         }
+        catch(e : Exception) { }
     }
 
     /**

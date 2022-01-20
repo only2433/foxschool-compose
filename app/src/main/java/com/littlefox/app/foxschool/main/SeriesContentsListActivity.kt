@@ -292,10 +292,11 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
             val LEFT_MARGIN : Int = 60
             val TOP_MARGIN : Int = 24
-            val params : LinearLayout.LayoutParams = _DetailInformationList.getLayoutParams() as LinearLayout.LayoutParams
-            params.width = CommonUtils.getInstance(this).getPixel(TABLET_LIST_WIDTH)
-            params.leftMargin = CommonUtils.getInstance(this).getPixel(LEFT_MARGIN)
-            params.topMargin = CommonUtils.getInstance(this).getPixel(TOP_MARGIN)
+            val params : LinearLayout.LayoutParams = (_DetailInformationList.getLayoutParams() as LinearLayout.LayoutParams).apply {
+                width = CommonUtils.getInstance(baseContext).getPixel(TABLET_LIST_WIDTH)
+                leftMargin = CommonUtils.getInstance(baseContext).getPixel(LEFT_MARGIN)
+                topMargin = CommonUtils.getInstance(baseContext).getPixel(TOP_MARGIN)
+            }
             _DetailInformationList.setLayoutParams(params)
 
             val PROGRESS_MARGIN_LEFT : Int
@@ -347,9 +348,11 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         val customView : View
 
         setSupportActionBar(_DetailToolbar)
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        getSupportActionBar()!!.setDisplayShowCustomEnabled(true)
-        getSupportActionBar()!!.setDisplayShowTitleEnabled(false)
+        getSupportActionBar()!!.run {
+            setDisplayShowHomeEnabled(true)
+            setDisplayShowCustomEnabled(true)
+            setDisplayShowTitleEnabled(false)
+        }
 
         customView = LayoutInflater.from(this).inflate(R.layout.topbar_detail_menu, null)
         getSupportActionBar()!!.setCustomView(customView)
@@ -405,9 +408,10 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     override fun settingTitleViewTablet(title : String)
     {
         _TitleText.setText(title)
-        _TopbarInformationView = findViewById(R.id._infoButton) as ImageView
-        _TopbarInformationView.visibility = View.INVISIBLE
-        _TopbarInformationView.setOnClickListener(mMenuItemClickListener)
+        _TopbarInformationView = (findViewById(R.id._infoButton) as ImageView).apply {
+            visibility = View.INVISIBLE
+            setOnClickListener(mMenuItemClickListener)
+        }
     }
 
     override fun settingBackgroundViewTablet(thumbnailUrl : String, topbarColor : String, animationType : TransitionType)
@@ -664,11 +668,14 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
                 {
                     arLevelDataText = "AR $arLevelData"
                 }
-                _DetailInformationText.setText(
-                    String.format(getString(R.string.text_count_level), level)
-                            + " | " + String.format(getString(R.string.text_count_series_stories), CommonUtils.getInstance(this).getDecimalNumber(count)) + " | " + arLevelDataText)
-                _DetailInformationText.setGravity(Gravity.CENTER_VERTICAL)
-                _DetailInformationText.setPadding(CommonUtils.getInstance(this).getPixel(30), 0, 0, 0)
+                _DetailInformationText.run {
+                    setText(
+                        String.format(getString(R.string.text_count_level), level)
+                                + " | " + String.format(getString(R.string.text_count_series_stories), CommonUtils.getInstance(context).getDecimalNumber(count)) + " | " + arLevelDataText)
+                    setGravity(Gravity.CENTER_VERTICAL)
+                    setPadding(CommonUtils.getInstance(context).getPixel(30), 0, 0, 0)
+                }
+
                 _DetailARHelpButton!!.visibility = View.VISIBLE
             }
         }
@@ -883,12 +890,19 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         view.alpha = 0.9f
         view.setBackgroundColor(getResources().getColor(R.color.color_000000))
 
-        val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
-        textView.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2.0f, getResources().getDisplayMetrics()), 1.0f)
-        textView.setTextColor(getResources().getColor(R.color.color_ffffff))
-        textView.setText(snackbarText)
-        textView.setTypeface(Font.getInstance(this).getRobotoRegular())
-        textView.setMaxLines(3)
+        val textView : TextView = (view.findViewById<View>(R.id.snackbar_text) as TextView).apply {
+            setLineSpacing(
+                TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    2.0f,
+                    getResources().getDisplayMetrics()
+                ), 1.0f
+            )
+            setTextColor(getResources().getColor(R.color.color_ffffff))
+            setText(snackbarText)
+            setTypeface(Font.getInstance(context).getRobotoRegular())
+            setMaxLines(3)
+        }
         val actionText : TextView = view.findViewById<View>(R.id.snackbar_action) as TextView
         actionText.setTypeface(Font.getInstance(this).getRobotoMedium())
         snackbar.show()
