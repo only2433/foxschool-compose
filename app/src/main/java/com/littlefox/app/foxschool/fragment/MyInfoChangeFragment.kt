@@ -31,6 +31,7 @@ import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.viewmodel.MyInfoChangeFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoPresenterDataObserver
+import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -98,11 +99,8 @@ class MyInfoChangeFragment : Fragment()
     @BindView(R.id._inputEmailEndSelectButtonRect)
     lateinit var _InputEmailEndSelectButtonRect : ImageView
 
-    @BindView(R.id._phoneTitleText)
-    lateinit var _PhoneTitleText : TextView
-
-    @BindView(R.id._phoneOptionTitleText)
-    lateinit var _PhoneOptionTitleText : TextView
+    @BindView(R.id._inputPhoneTitleText)
+    lateinit var _InputPhoneTitleText : SeparateTextView
 
     @BindView(R.id._inputPhoneEditText)
     lateinit var _InputPhoneEditText : EditText
@@ -267,6 +265,8 @@ class MyInfoChangeFragment : Fragment()
         _InputNewPasswordEditText.onFocusChangeListener = mEditPasswordFocusListener
         _InputNewPasswordConfirmEditText.onFocusChangeListener = mEditPasswordFocusListener
         _InputNewPasswordConfirmEditText.setOnEditorActionListener(mEditKeyActionListener)
+
+        setInputPhoneTitleText()
     }
 
     private fun initFont()
@@ -281,8 +281,6 @@ class MyInfoChangeFragment : Fragment()
         _InputNameEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
         _InputEmailEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
         _InputEmailEndEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _PhoneTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _PhoneOptionTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
         _InputPhoneEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
         _SaveInfoButton.typeface = Font.getInstance(mContext).getRobotoMedium()
 
@@ -365,6 +363,42 @@ class MyInfoChangeFragment : Fragment()
                 _PasswordChangeLayout.visibility = View.VISIBLE
             }
         }
+    }
+
+    /**
+     * 휴대폰 번호 입력필드 타이틀 설정
+     */
+    private fun setInputPhoneTitleText()
+    {
+        val textSize : Int
+        val optionTextSize : Int
+        val optionText : String
+
+        if (CommonUtils.getInstance(mContext).checkTablet)
+        {
+            textSize = 32
+            optionTextSize = 28
+        }
+        else
+        {
+            textSize = 38
+            optionTextSize = 32
+        }
+
+        if (CommonUtils.getInstance(mContext).isTeacherMode)
+        {
+            optionText = " "
+        }
+        else
+        {
+            optionText = resources.getString(R.string.text_option)
+        }
+
+        _InputPhoneTitleText.setSeparateText(resources.getString(R.string.text_mobile_number), optionText)
+            .setSeparateColor(resources.getColor(R.color.color_b7b7b7), resources.getColor(R.color.color_b7b7b7))
+            .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(textSize), CommonUtils.getInstance(mContext).getPixel(optionTextSize))
+            .setSeparateTextStyle((Font.getInstance(mContext).getRobotoRegular()), (Font.getInstance(mContext).getRobotoRegular()))
+            .showView()
     }
 
     /**
@@ -493,7 +527,8 @@ class MyInfoChangeFragment : Fragment()
         if (position == Common.PAGE_MY_INFO_CHANGE)
         {
             Log.f("check Input PAGE_MY_INFO_CHANGE")
-            if (mMyInformationData.isCompleteInformationData())
+            val isTeacher = CommonUtils.getInstance(mContext).isTeacherMode
+            if (mMyInformationData.isCompleteInformationData(isTeacher))
             {
                 setSaveInfoButtonEnable(true)
             }

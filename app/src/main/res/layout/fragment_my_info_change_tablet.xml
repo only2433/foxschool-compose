@@ -257,8 +257,8 @@
             app:scale_width="852"
             app:scale_height="90" />
 
-        <TextView
-            android:id="@+id/_phoneTitleText"
+        <com.littlefox.library.view.text.SeparateTextView
+            android:id="@+id/_inputPhoneTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -269,19 +269,6 @@
             app:scale_width="286"
             app:scale_height="90"
             app:scale_textsize="32" />
-
-        <TextView
-            android:id="@+id/_phoneOptionTitleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:text="@string/text_option"
-            android:textColor="@color/color_b7b7b7"
-            app:scale_left="720"
-            app:scale_top="386"
-            app:scale_width="100"
-            app:scale_height="90"
-            app:scale_textsize="28" />
 
         <EditText
             android:id="@+id/_inputPhoneEditText"
