@@ -558,7 +558,7 @@ class IntroPresenter : IntroContract.Presenter
                 {
                     val versionDataResult : VersionDataResult = (result as VersionBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
-                   /* if(versionDataResult.isNeedUpdate)
+                    if(versionDataResult.isNeedUpdate)
                     {
                         if(versionDataResult.isForceUpdate())
                         {
@@ -578,8 +578,7 @@ class IntroPresenter : IntroContract.Presenter
                     } else
                     {
                         startAPIProcess()
-                    }*/
-                    startAPIProcess()
+                    }
                 }
                 else if(code == Common.COROUTINE_CODE_ME)
                 {
@@ -707,8 +706,6 @@ class IntroPresenter : IntroContract.Presenter
                 {
                     DialogButtonType.BUTTON_1 ->
                     {
-                        // [취소] 컨텐츠 사용 불가 메세지 표시
-                       // mMainContractView.showErrorMessage(mContext.getString(R.string.message_warning_storage_permission))
                         Toast.makeText(mContext, mContext.getString(R.string.message_warning_storage_permission), Toast.LENGTH_LONG).show()
                         (mContext as AppCompatActivity).finish()
                     }

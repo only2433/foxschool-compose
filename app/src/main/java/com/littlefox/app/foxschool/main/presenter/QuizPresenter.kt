@@ -125,8 +125,7 @@ class QuizPresenter : QuizContract.Presenter
     )
 
     private var mQuizIntentParamsObject : QuizIntentParamsObject? = null
-
-
+    
     private var mQuizPlayingCount : Int     = -1
     private var mCorrectAnswerCount : Int   = 0
 

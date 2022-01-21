@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Message
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorLoginData
@@ -357,6 +358,11 @@ class LoginPresenter : LoginContract.Presenter
                 {
                     Log.f("== InActiveAccount ==")
                     mMainHandler.sendEmptyMessage(MESSAGE_WARNING_INACTIVE_ACCOUNT)
+                }
+                else if(result.isNetworkErrorStatus)
+                {
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                    (mContext as AppCompatActivity).finish()
                 }
                 else
                 {
