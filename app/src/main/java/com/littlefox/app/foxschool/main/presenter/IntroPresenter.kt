@@ -408,10 +408,9 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeKeep()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext).apply {
-            asyncListener = mIntroAsyncListener
-            execute()
-        }
+        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext)
+        mPasswordChangeKeepCoroutine!!.asyncListener = mIntroAsyncListener
+        mPasswordChangeKeepCoroutine!!.execute()
     }
 
     private fun startMainActivity()
@@ -588,7 +587,6 @@ class IntroPresenter : IntroContract.Presenter
                     {
                         startAPIProcess()
                     }
-                    startAPIProcess()
                 }
                 else if(code == Common.COROUTINE_CODE_ME)
                 {
