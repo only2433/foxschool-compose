@@ -84,7 +84,7 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
             .load(item.getThumbnailUrl())
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder._HomeworkThumbnailImage)
-        holder._HomeworkContentNameText.text = item.getTitle()
+        holder._HomeworkContentNameText.text = item.getFullTitle()
         holder._HomeworkContentTypeImage.background = CommonUtils.getInstance(mContext).getContentTypeImage(item.getContentType())
         holder._HomeworkTypeImage.background = CommonUtils.getInstance(mContext).getHomeworkTypeImage(item.getHomeworkType(), isButtonEnable)
 

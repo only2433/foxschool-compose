@@ -86,10 +86,13 @@ class ContentsBaseResult  : Parcelable
         this.id = id
     }
 
-    fun setTitle(pair : Pair<String, String>)
+    /**
+     * 숙제에서만 사용 (컨텐츠 이름 설정)
+     */
+    fun setTitle(title : String, subTitle : String)
     {
-        this.name = pair.first
-        this.sub_name = pair.second
+        this.name = title
+        this.sub_name = subTitle
     }
 
     fun setThumbnailUrl(url : String)

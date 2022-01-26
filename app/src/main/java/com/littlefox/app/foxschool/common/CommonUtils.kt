@@ -2158,23 +2158,6 @@ class CommonUtils
     }
 
     /**
-     * 한 문장으로 만들어진 타이틀을 분리한다.
-     */
-    fun getSubStringTitleName(fullName : String) : Pair<String, String>
-    {
-        if (fullName.indexOf(":") > 0)
-        {
-            val name : String = fullName.substring(0, fullName.indexOf(":"))
-            val subName : String = fullName.substring(fullName.indexOf(":") + 2, fullName.length)
-            return Pair<String, String>(name, subName)
-        }
-        else
-        {
-            return Pair<String, String>(fullName, "")
-        }
-    }
-
-    /**
      * 총 플레이타임의 80퍼센트를 봐야 학습 기록을 저장하기위해 총시간에서 80퍼센트를 계산
      * @param duration 학습 가능 플레이 타임
      * @return
