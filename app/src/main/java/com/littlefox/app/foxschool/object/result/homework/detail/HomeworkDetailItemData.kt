@@ -11,7 +11,8 @@ class HomeworkDetailItemData
     private var content_type : String       = ""
     private var thumbnail_url : String      = ""
     private var hw_type : String            = ""
-    private var title : String              = ""
+    private var cont_name : String          = ""
+    private var cont_sub_name : String      = ""
 
     // 선생님 데이터
     private var mp3_expired : Int           = 0
@@ -56,7 +57,26 @@ class HomeworkDetailItemData
         }
     }
 
-    fun getTitle() : String = title
+    fun getName() : String = cont_name
+
+    fun getSubName() : String = cont_sub_name
+
+    /**
+     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
+     * @return 컨텐츠 네임
+     */
+    fun getContentsName() : String
+    {
+        var result : String = ""
+        if(cont_sub_name == "")
+        {
+            result = cont_name
+        } else
+        {
+            result = "$cont_name: $cont_sub_name"
+        }
+        return result
+    }
 
     // 선생님용 ----------
     fun getExpired() : Int = mp3_expired

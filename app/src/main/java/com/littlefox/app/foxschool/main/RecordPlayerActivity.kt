@@ -233,7 +233,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
     {
         _TitleText.setTypeface(Font.getInstance(this).getRobotoBold())
         _RecordInfoText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _RecordTitleText.setTypeface(Font.getInstance(this).getRobotoRegular())
+        _RecordTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
         _RecordTimerText.setTypeface(Font.getInstance(this).getRobotoRegular())
         _RecordStartText.setTypeface(Font.getInstance(this).getRobotoRegular())
         _AudioCurrentPlayTime.setTypeface(Font.getInstance(this).getRobotoRegular())

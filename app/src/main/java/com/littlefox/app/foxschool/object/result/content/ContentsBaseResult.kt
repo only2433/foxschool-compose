@@ -86,10 +86,30 @@ class ContentsBaseResult  : Parcelable
         this.id = id
     }
 
-    fun setTitle(pair : Pair<String, String>)
+    /**
+     * 숙제에서만 사용 (컨텐츠 이름 설정)
+     */
+    fun setTitle(title : String, subTitle : String)
     {
-        this.name = pair.first
-        this.sub_name = pair.second
+        this.name = title
+        this.sub_name = subTitle
+    }
+
+    /**
+     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
+     * @return 컨텐츠 네임
+     */
+    fun getContentsName() : String
+    {
+        var result : String = ""
+        if(sub_name == "")
+        {
+            result = name
+        } else
+        {
+            result = "$name: $sub_name"
+        }
+        return result
     }
 
     fun setThumbnailUrl(url : String)
