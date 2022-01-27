@@ -57,23 +57,25 @@ class HomeworkDetailItemData
         }
     }
 
-    fun getTitle() : String = cont_name
+    fun getName() : String = cont_name
 
-    fun getSubTitle() : String = cont_sub_name
+    fun getSubName() : String = cont_sub_name
 
     /**
-     * sub name 있을 때 하나로 합쳐서 보내주기 (":" 추가)
+     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
+     * @return 컨텐츠 네임
      */
-    fun getFullTitle() : String
+    fun getContentsName() : String
     {
-        if (cont_sub_name != "")
+        var result : String = ""
+        if(cont_sub_name == "")
         {
-            return "$cont_name: $cont_sub_name"
-        }
-        else
+            result = cont_name
+        } else
         {
-            return cont_name
+            result = "$cont_name: $cont_sub_name"
         }
+        return result
     }
 
     // 선생님용 ----------

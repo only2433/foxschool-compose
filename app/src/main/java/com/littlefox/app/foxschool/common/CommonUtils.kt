@@ -2121,25 +2121,6 @@ class CommonUtils
     }
 
     /**
-     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
-     * @param name 컨텐츠 이름
-     * @param subName 컨텐츠 서브이름
-     * @return 컨텐츠 네임
-     */
-    fun getContentsName(name : String, subName : String) : String
-    {
-        var result : String = ""
-        if(subName == "")
-        {
-            result = name
-        } else
-        {
-            result = "$name: $subName"
-        }
-        return result
-    }
-
-    /**
      * 단어장은 서브네임이 있을 경우엔 서브네임을 타이틀로, 없을 경우 컨텐츠 네임으로 보여준다.
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임

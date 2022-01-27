@@ -236,7 +236,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         Log.f("Homework Type : ${item.getHomeworkType()}")
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
-        content.setTitle(item.getTitle(), item.getSubTitle())
+        content.setTitle(item.getName(), item.getSubName())
         content.setThumbnailUrl(item.getThumbnailUrl())
 
         when(item.getHomeworkType())
