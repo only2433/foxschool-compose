@@ -754,13 +754,15 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     override fun showStoryDetailListView(storyDetailItemAdapter : DetailListItemAdapter)
     {
         isListSettingComplete = true
-        _DetailInformationList.setVisibility(View.VISIBLE)
+        val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL)
-        _DetailInformationList.setLayoutManager(linearLayoutManager)
-        val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
-        _DetailInformationList.setLayoutAnimation(animationController)
-        _DetailInformationList.setAdapter(storyDetailItemAdapter)
+        _DetailInformationList.run {
+            setVisibility(View.VISIBLE)
+            setLayoutManager(linearLayoutManager)
+            setLayoutAnimation(animationController)
+            setAdapter(storyDetailItemAdapter)
+        }
     }
 
     override fun showLastWatchSeriesInformation(seriesName : String, nickName : String, position : Int, isLastMovie : Boolean)
@@ -935,11 +937,12 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     private fun showARInfomrationDialog()
     {
-        mTemplateAlertDialog = TemplateAlertDialog(this)
-        mTemplateAlertDialog.setMessage(getResources().getString(R.string.message_ar_information))
-        mTemplateAlertDialog.setButtonType(DialogButtonType.BUTTON_1)
-        mTemplateAlertDialog.setGravity(Gravity.LEFT)
-        mTemplateAlertDialog.show()
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(getResources().getString(R.string.message_ar_information))
+            setButtonType(DialogButtonType.BUTTON_1)
+            setGravity(Gravity.LEFT)
+            show()
+        }
     }
 
     @Optional
@@ -995,13 +998,16 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     private fun initSlideTransition()
     {
         Log.f("")
-        val explode = Explode()
-        explode.excludeTarget(android.R.id.statusBarBackground, true)
-        explode.duration = Common.DURATION_SHORT
-        getWindow().setEnterTransition(explode)
-        getWindow().setExitTransition(explode)
-        getWindow().setAllowEnterTransitionOverlap(true)
-        getWindow().setAllowReturnTransitionOverlap(true)
+        val explode = Explode().apply {
+            excludeTarget(android.R.id.statusBarBackground, true)
+            duration = Common.DURATION_SHORT
+        }
+        getWindow().run {
+            setEnterTransition(explode)
+            setExitTransition(explode)
+            setAllowEnterTransitionOverlap(true)
+            setAllowReturnTransitionOverlap(true)
+        }
     }
 
     private fun showTitleText()

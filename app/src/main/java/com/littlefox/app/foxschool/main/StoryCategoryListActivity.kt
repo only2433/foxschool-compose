@@ -201,9 +201,11 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
     {
         val customView : View
         setSupportActionBar(_DetailToolbar)
-        getSupportActionBar()!!.setDisplayShowHomeEnabled(true)
-        getSupportActionBar()!!.setDisplayShowCustomEnabled(true)
-        getSupportActionBar()!!.setDisplayShowTitleEnabled(false)
+        getSupportActionBar()!!.run {
+            setDisplayShowHomeEnabled(true)
+            setDisplayShowCustomEnabled(true)
+            setDisplayShowTitleEnabled(false)
+        }
 
         customView = LayoutInflater.from(this).inflate(R.layout.topbar_detail_menu, null)
         getSupportActionBar()!!.setCustomView(customView)
@@ -212,10 +214,11 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
         val menuBackIcon = customView.findViewById<View>(R.id._topMenuBack) as ImageView
         menuBackIcon.setOnClickListener {onBackPressed()}
 
-        _TopbarTitleText = customView.findViewById<View>(R.id._topMenuTitle) as TextView
-        _TopbarTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _TopbarTitleText.setText(title)
-        _TopbarTitleText.setVisibility(View.INVISIBLE)
+        _TopbarTitleText = (customView.findViewById<View>(R.id._topMenuTitle) as TextView).apply {
+            setTypeface(Font.getInstance(context).getRobotoBold())
+            setText(title)
+            setVisibility(View.INVISIBLE)
+        }
 
         val infomationImageView = customView.findViewById<View>(R.id._topMenuInfo) as ImageView
         infomationImageView.visibility = View.GONE
@@ -313,7 +316,7 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
 
     override fun showCategoryCardListView(seriesCardViewAdapter : SeriesCardViewAdapter)
     {
-        _CategoryInformationListView.setVisibility(View.VISIBLE)
+
         val gridLayoutManager = GridLayoutManager(this, COLUMN_COUNT)
         gridLayoutManager.setSpanSizeLookup(object : GridLayoutManager.SpanSizeLookup()
         {
@@ -322,13 +325,17 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
                 return 1
             }
         })
-        _CategoryInformationListView.setLayoutManager(gridLayoutManager)
-        _CategoryInformationListView.addItemDecoration(
-            GridSpacingItemDecoration(this, COLUMN_COUNT, CommonUtils.getInstance(this).getPixel(COLUMN_MARGIN))
-        )
-        val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
-        _CategoryInformationListView.setLayoutAnimation(animationController)
-        _CategoryInformationListView.setAdapter(seriesCardViewAdapter)
+        _CategoryInformationListView.let {
+            it.setVisibility(View.VISIBLE)
+            it.setLayoutManager(gridLayoutManager)
+            it.addItemDecoration(
+                GridSpacingItemDecoration(this, COLUMN_COUNT, CommonUtils.getInstance(this).getPixel(COLUMN_MARGIN))
+            )
+            val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
+            it.setLayoutAnimation(animationController)
+            it.setAdapter(seriesCardViewAdapter)
+        }
+
     }
 
     override fun showLoading()
@@ -363,13 +370,16 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
     private fun initSlideTransition()
     {
         Log.f("")
-        val explode = Explode()
-        explode.excludeTarget(android.R.id.statusBarBackground, true)
-        explode.duration = Common.DURATION_SHORT
-        getWindow().setEnterTransition(explode)
-        getWindow().setExitTransition(explode)
-        getWindow().setAllowEnterTransitionOverlap(true)
-        getWindow().setAllowReturnTransitionOverlap(true)
+        val explode = Explode().apply {
+            excludeTarget(android.R.id.statusBarBackground, true)
+            duration = Common.DURATION_SHORT
+        }
+        getWindow().run {
+            setEnterTransition(explode)
+            setExitTransition(explode)
+            setAllowEnterTransitionOverlap(true)
+            setAllowReturnTransitionOverlap(true)
+        }
     }
 
     private fun showTitleText()
@@ -390,28 +400,29 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
             .start()
     }
 
-    fun animateRevealColorFromCoordinates(viewRoot : ViewGroup, color : Int, x : Int, y : Int, duration : Long)
+    fun animateRevealColorFromCoordinates(viewRoot : ViewGroup, color : Int, x : Int, y : Int, aniDuration : Long)
     {
         val finalRadius = Math.hypot(viewRoot.getWidth().toDouble(), viewRoot.getHeight().toDouble()).toFloat()
-        var anim : Animator? = null
-        anim = ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0f, finalRadius)
         viewRoot.setBackgroundColor(color)
-        anim.duration = duration.toLong()
-        anim.interpolator = AccelerateDecelerateInterpolator()
-        anim.addListener(object : Animator.AnimatorListener
-        {
-            override fun onAnimationStart(animation : Animator) {}
-
-            override fun onAnimationEnd(animation : Animator)
+        (ViewAnimationUtils.createCircularReveal(viewRoot, x, y, 0f, finalRadius)).apply {
+            duration = aniDuration
+            interpolator = AccelerateDecelerateInterpolator()
+            addListener(object : Animator.AnimatorListener
             {
-                _BackgroundView.setBackgroundColor(color)
-            }
+                override fun onAnimationStart(animation : Animator) {}
 
-            override fun onAnimationCancel(animation : Animator) {}
+                override fun onAnimationEnd(animation : Animator)
+                {
+                    _BackgroundView.setBackgroundColor(color)
+                }
 
-            override fun onAnimationRepeat(animation : Animator) {}
-        })
-        anim.start()
+                override fun onAnimationCancel(animation : Animator) {}
+
+                override fun onAnimationRepeat(animation : Animator) {}
+            })
+            start()
+        }
+
     }
 
     private val mOffsetChangedListener : AppBarLayout.OnOffsetChangedListener = object : AppBarLayout.OnOffsetChangedListener

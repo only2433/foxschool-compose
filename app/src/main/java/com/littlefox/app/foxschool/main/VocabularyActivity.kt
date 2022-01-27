@@ -229,9 +229,10 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
-            val params : LinearLayout.LayoutParams = _WordItemList.getLayoutParams() as LinearLayout.LayoutParams
-            params.width = CommonUtils.getInstance(this).getPixel(TABLET_LIST_WIDTH)
-            params.gravity = Gravity.CENTER_HORIZONTAL
+            val params : LinearLayout.LayoutParams = (_WordItemList.getLayoutParams() as LinearLayout.LayoutParams).apply {
+                width = CommonUtils.getInstance(baseContext).getPixel(TABLET_LIST_WIDTH)
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
             _WordItemList.setLayoutParams(params)
         }
     }
@@ -279,16 +280,18 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         Log.f("")
         if(mVocabularyType === VocabularyType.VOCABULARY_CONTENTS)
         {
-            _BottomControlLayout.setScaleSize(1080f, 176f)
-            _BottomControlLayout.moveChildView(_BottomIntervalIcon, 30f, 0f, 210f, 90f)
-            _BottomControlLayout.moveChildView(_BottomIntervalText, 0f, 90f, 270f, 86f)
-            _BottomControlLayout.moveChildView(_BottomSelectIcon, 300f, 0f, 210f, 90f)
-            _BottomControlLayout.moveChildView(_BottomSelectText, 270f, 90f, 270f, 86f)
-            _BottomControlLayout.moveChildView(_BottomPlayIcon, 570f, 0f, 210f, 90f)
-            _BottomControlLayout.moveChildView(_BottomSelectCountText, 680f, 10f, 30f, 30f)
-            _BottomControlLayout.moveChildView(_BottomPlayText, 540f, 90f, 270f, 86f)
-            _BottomControlLayout.moveChildView(_BottomWordsActionIcon, 840f, 0f, 210f, 90f)
-            _BottomControlLayout.moveChildView(_BottomWordsActionText, 810f, 90f, 270f, 86f)
+            _BottomControlLayout.run {
+                setScaleSize(1080f, 176f)
+                moveChildView(_BottomIntervalIcon, 30f, 0f, 210f, 90f)
+                moveChildView(_BottomIntervalText, 0f, 90f, 270f, 86f)
+                moveChildView(_BottomSelectIcon, 300f, 0f, 210f, 90f)
+                moveChildView(_BottomSelectText, 270f, 90f, 270f, 86f)
+                moveChildView(_BottomPlayIcon, 570f, 0f, 210f, 90f)
+                moveChildView(_BottomSelectCountText, 680f, 10f, 30f, 30f)
+                moveChildView(_BottomPlayText, 540f, 90f, 270f, 86f)
+                moveChildView(_BottomWordsActionIcon, 840f, 0f, 210f, 90f)
+                moveChildView(_BottomWordsActionText, 810f, 90f, 270f, 86f)
+            }
             _BottomFlashCardActionIcon.visibility = View.GONE
             _BottomFlashCardActionText.visibility = View.GONE
         }
@@ -303,20 +306,23 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         Log.f("")
         if(mVocabularyType === VocabularyType.VOCABULARY_CONTENTS)
         {
-            _BottomControlLayout.setScaleSize(1920f, 787f)
-            _BottomControlLayout.moveChildView(_MenuBarBackground, 1495f, 193f, 138f, 594f)
-            _BottomControlLayout.moveChildView(_BottomIntervalIcon, 1495f, 200f, 138f, 94f)
-            _BottomControlLayout.moveChildView(_BottomIntervalText, 1495f, 294f, 138f, 50f)
-            _BottomControlLayout.moveChildView(_LineImage1, 1495f, 344f, 138f, 2f)
-            _BottomControlLayout.moveChildView(_BottomSelectIcon, 1495f, 346f, 138f, 94f)
-            _BottomControlLayout.moveChildView(_BottomSelectText, 1495f, 440f, 138f, 50f)
-            _BottomControlLayout.moveChildView(_LineImage2, 1495f, 490f, 138f, 2f)
-            _BottomControlLayout.moveChildView(_BottomPlayIcon, 1495f, 492f, 138f, 94f)
-            _BottomControlLayout.moveChildView(_BottomSelectCountText, 1495f, 512f, 30f, 30f)
-            _BottomControlLayout.moveChildView(_BottomPlayText, 1495f, 586f, 138f, 50f)
-            _BottomControlLayout.moveChildView(_LineImage3, 1495f, 636f, 138f, 2f)
-            _BottomControlLayout.moveChildView(_BottomWordsActionIcon, 1495f, 638f, 138f, 94f)
-            _BottomControlLayout.moveChildView(_BottomWordsActionText, 1495f, 732f, 138f, 50f)
+            _BottomControlLayout.run {
+                setScaleSize(1920f, 787f)
+                moveChildView(_MenuBarBackground, 1495f, 193f, 138f, 594f)
+                moveChildView(_BottomIntervalIcon, 1495f, 200f, 138f, 94f)
+                moveChildView(_BottomIntervalText, 1495f, 294f, 138f, 50f)
+                moveChildView(_LineImage1, 1495f, 344f, 138f, 2f)
+                moveChildView(_BottomSelectIcon, 1495f, 346f, 138f, 94f)
+                moveChildView(_BottomSelectText, 1495f, 440f, 138f, 50f)
+                moveChildView(_LineImage2, 1495f, 490f, 138f, 2f)
+                moveChildView(_BottomPlayIcon, 1495f, 492f, 138f, 94f)
+                moveChildView(_BottomSelectCountText, 1495f, 512f, 30f, 30f)
+                moveChildView(_BottomPlayText, 1495f, 586f, 138f, 50f)
+                moveChildView(_LineImage3, 1495f, 636f, 138f, 2f)
+                moveChildView(_BottomWordsActionIcon, 1495f, 638f, 138f, 94f)
+                moveChildView(_BottomWordsActionText, 1495f, 732f, 138f, 50f)
+            }
+
             _BottomFlashCardActionIcon.visibility = View.GONE
             _BottomFlashCardActionText.visibility = View.GONE
             _LineImage4.visibility = View.GONE

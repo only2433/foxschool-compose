@@ -62,25 +62,28 @@ class VoiceRecorderHelper(private val mContext : Context)
         {
             mMediaRecorder?.reset()
         }
-        mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
-        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-        mMediaRecorder?.setAudioEncodingBitRate(DEFAULT_BIT_RATE)
-        mMediaRecorder?.setAudioSamplingRate(DEFAULT_SAMPLING_RATE)
-        mMediaRecorder?.setOutputFile(fileName)
-        mMediaRecorder?.setMaxDuration(mMaxRecordDuration)
-        mMediaRecorder?.setOnInfoListener(onInfoListener)
-        mMediaRecorder?.setOnErrorListener(onErrorListener)
-        try
-        {
-            mMediaRecorder?.prepare()
+        mMediaRecorder!!.run {
+            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS)
+            setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
+            setAudioEncodingBitRate(DEFAULT_BIT_RATE)
+            setAudioSamplingRate(DEFAULT_SAMPLING_RATE)
+            setOutputFile(fileName)
+            setMaxDuration(mMaxRecordDuration)
+            setOnInfoListener(onInfoListener)
+            setOnErrorListener(onErrorListener)
+            try
+            {
+                prepare()
+            }
+            catch(e : IOException)
+            {
+                Log.f("MediaRecorder Prepare Failed")
+                mVoiceRecordEventListener.inFailure(ERROR_RECORDER_PREPARE, "MediaRecorder Prepare Failed")
+            }
+            start()
         }
-        catch(e : IOException)
-        {
-            Log.f("MediaRecorder Prepare Failed")
-            mVoiceRecordEventListener.inFailure(ERROR_RECORDER_PREPARE, "MediaRecorder Prepare Failed")
-        }
-        mMediaRecorder?.start()
+
     }
 
     fun stopRecording()

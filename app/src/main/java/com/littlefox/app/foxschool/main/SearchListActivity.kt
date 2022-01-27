@@ -151,9 +151,10 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH = 960
-            val params = _SearchSwipeRefreshLayout.layoutParams as RelativeLayout.LayoutParams
-            params.width = CommonUtils.getInstance(this).getPixel(TABLET_LIST_WIDTH)
-            params.addRule(RelativeLayout.CENTER_HORIZONTAL)
+            val params = (_SearchSwipeRefreshLayout.layoutParams as RelativeLayout.LayoutParams).apply {
+                width = CommonUtils.getInstance(baseContext).getPixel(TABLET_LIST_WIDTH)
+                addRule(RelativeLayout.CENTER_HORIZONTAL)
+            }
             _SearchSwipeRefreshLayout.layoutParams = params
         }
 
@@ -242,15 +243,16 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     /**
      * 리스트 표시 애니메이션
      */
-    override fun showSearchListView(adapter : DetailListItemAdapter)
+    override fun showSearchListView(detailListItemAdapter : DetailListItemAdapter)
     {
+        val animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        _SearchItemListView.layoutManager = linearLayoutManager
-
-        val animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
-        _SearchItemListView.layoutAnimation = animationController
-        _SearchItemListView.adapter = adapter
+        _SearchItemListView.run {
+            layoutManager = linearLayoutManager
+            layoutAnimation = animationController
+            adapter = detailListItemAdapter
+        }
     }
 
     /**
