@@ -263,7 +263,7 @@ class MyInfoShowFragment : Fragment()
             // 학생 화면 세팅
             _StudentIdText.text = userInformation.getUserInformation().getLoginID()
             _StudentNameText.text = userInformation.getUserInformation().getName()
-            _StudentClassText.text = userInformation.getSchoolInformation().getClassName()
+            _StudentClassText.text = userInformation.getSchoolInformation().getClassName(mContext)
         }
     }
 
