@@ -849,8 +849,8 @@ class MyInfoChangeFragment : Fragment()
                         if (_InputPhoneEditText.text.isNotEmpty())
                         {
                             // 입력된 값이 있는 경우에만 유효성 체크를 진행한다.
-                            mMyInformationData.setPhone(_InputPhoneEditText.text.toString())
-                            mMyInformationData.addPhoneHyphen(mContext)
+                            val phone = CommonUtils.getInstance(mContext).getPhoneTypeNumber(_InputPhoneEditText.text.toString())
+                            mMyInformationData.setPhone(phone)
                             mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable(mMyInformationData)
                         }
                     }

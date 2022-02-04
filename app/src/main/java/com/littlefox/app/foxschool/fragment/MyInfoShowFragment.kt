@@ -263,7 +263,7 @@ class MyInfoShowFragment : Fragment()
             // 학생 화면 세팅
             _StudentIdText.text = userInformation.getUserInformation().getLoginID()
             _StudentNameText.text = userInformation.getUserInformation().getName()
-            _StudentClassText.text = userInformation.getSchoolInformation().getClassName(mContext)
+            _StudentClassText.text = CommonUtils.getInstance(mContext).getClassName(userInformation.getSchoolInformation())
         }
     }
 
@@ -281,8 +281,6 @@ class MyInfoShowFragment : Fragment()
             _SwitchAutoLogin.setBackgroundResource(R.drawable.icon_switch_off)
         }
     }
-
-
 
     /**
      *  푸시알림 스위치 ON/OFF 이미지 변경

@@ -1,8 +1,5 @@
 package com.littlefox.app.foxschool.`object`.result.login
 
-import android.content.Context
-import com.littlefox.app.foxschool.R
-
 class StudentSectionResult
 {
     private var school_id : String = ""
@@ -34,26 +31,7 @@ class StudentSectionResult
 
     fun getOrganizationName() : String = name
 
-    fun getClassName(mContext : Context) : String
-    {
-        if (isHaveClass() == false)
-        {
-            // 반 배정이 되지 않은 학생 : (미배정)
-            return mContext.getString(R.string.text_student_class_unassigned)
-        }
-        else if (grade > 0)
-        {
-            // 학년 정보 있는 경우 : %d학년 %s반
-            val front = String.format(mContext.resources.getString(R.string.text_student_class_grade), grade)
-            val end = String.format(mContext.resources.getString(R.string.text_student_class_class), class_name)
-            return "$front $end"
-        }
-        else
-        {
-            // 학년 정보가 없는 유치원, 어린이집은 학년 표기 없이 반명만 노출 : %s반
-            return String.format(mContext.resources.getString(R.string.text_student_class_class), class_name)
-        }
-    }
+    fun getClassName() : String = class_name
 
     fun getOrganizationTypeName() : String = type_name
 

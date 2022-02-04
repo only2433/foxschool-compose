@@ -356,7 +356,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             name += " 학생"
 
             // 학생인 경우에만 class 데이터 존재
-            _UserClassText.text = mLoginInformationResult?.getSchoolInformation()?.getClassName(this)
+            _UserClassText.text = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
         }
         _UserNameText.text = name
     }

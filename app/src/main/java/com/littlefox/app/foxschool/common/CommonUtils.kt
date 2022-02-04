@@ -50,6 +50,7 @@ import com.littlefox.app.foxschool.BuildConfig
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.login.StudentSectionResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.enumerate.*
@@ -2523,5 +2524,26 @@ class CommonUtils
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
         val downloadManager : DownloadManager = sContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
+    }
+
+    fun getClassName(studentSectionResult : StudentSectionResult) : String
+    {
+        if (studentSectionResult.isHaveClass() == false)
+        {
+            // 반 배정이 되지 않은 학생 : (미배정)
+            return sContext.getString(R.string.text_student_class_unassigned)
+        }
+        else if (studentSectionResult.getGrade() > 0)
+        {
+            // 학년 정보 있는 경우 : %d학년 %s반
+            val front = String.format(sContext.resources.getString(R.string.text_student_class_grade), grade)
+            val end = String.format(sContext.resources.getString(R.string.text_student_class_class), class_name)
+            return "$front $end"
+        }
+        else
+        {
+            // 학년 정보가 없는 유치원, 어린이집은 학년 표기 없이 반명만 노출 : %s반
+            return String.format(sContext.resources.getString(R.string.text_student_class_class), class_name)
+        }
     }
 }
