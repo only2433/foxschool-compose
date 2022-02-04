@@ -2536,14 +2536,14 @@ class CommonUtils
         else if (studentSectionResult.getGrade() > 0)
         {
             // 학년 정보 있는 경우 : %d학년 %s반
-            val front = String.format(sContext.resources.getString(R.string.text_student_class_grade), grade)
-            val end = String.format(sContext.resources.getString(R.string.text_student_class_class), class_name)
+            val front = String.format(sContext.resources.getString(R.string.text_student_class_grade), studentSectionResult.getGrade())
+            val end = String.format(sContext.resources.getString(R.string.text_student_class_class), studentSectionResult.getClassName())
             return "$front $end"
         }
         else
         {
             // 학년 정보가 없는 유치원, 어린이집은 학년 표기 없이 반명만 노출 : %s반
-            return String.format(sContext.resources.getString(R.string.text_student_class_class), class_name)
+            return String.format(sContext.resources.getString(R.string.text_student_class_class), studentSectionResult.getClassName())
         }
     }
 }
