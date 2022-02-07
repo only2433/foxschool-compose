@@ -576,7 +576,8 @@ class IntroPresenter : IntroContract.Presenter
                                 DialogButtonType.BUTTON_1,
                                 mContext.resources.getString(R.string.message_force_update)
                             )
-                        } else
+                        }
+                        else
                         {
                             showTemplateAlertDialog(
                                 DIALOG_TYPE_SELECT_UPDATE_CONFIRM,
@@ -584,11 +585,11 @@ class IntroPresenter : IntroContract.Presenter
                                 mContext.resources.getString(R.string.message_need_update)
                             )
                         }
-                    } else
+                    }
+                    else
                     {
                         startAPIProcess()
                     }
-                    startAPIProcess()
                 }
                 else if(code == Common.COROUTINE_CODE_ME)
                 {
@@ -716,8 +717,6 @@ class IntroPresenter : IntroContract.Presenter
                 {
                     DialogButtonType.BUTTON_1 ->
                     {
-                        // [취소] 컨텐츠 사용 불가 메세지 표시
-                       // mMainContractView.showErrorMessage(mContext.getString(R.string.message_warning_storage_permission))
                         Toast.makeText(mContext, mContext.getString(R.string.message_warning_storage_permission), Toast.LENGTH_LONG).show()
                         (mContext as AppCompatActivity).finish()
                     }

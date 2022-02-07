@@ -265,7 +265,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         Log.f("Homework Type : ${item.getHomeworkType()}")
         val content = ContentsBaseResult()
         content.setID(item.getContentID())
-        content.setTitle(CommonUtils.getInstance(mContext).getSubStringTitleName(item.getTitle()))
+        content.setTitle(item.getName(), item.getSubName())
         content.setThumbnailUrl(item.getThumbnailUrl())
 
         when(item.getHomeworkType())
@@ -295,7 +295,7 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
     private fun showAudioPlayDialog(item : HomeworkDetailItemData)
     {
         Log.f("play Record Audio")
-        mAudioPlayDialog = AudioPlayDialog(mContext, item.getTitle(), item.getThumbnailUrl(), item.getMp3Path())
+        mAudioPlayDialog = AudioPlayDialog(mContext, item.getContentsName(), item.getThumbnailUrl(), item.getMp3Path())
         mAudioPlayDialog!!.show()
     }
 

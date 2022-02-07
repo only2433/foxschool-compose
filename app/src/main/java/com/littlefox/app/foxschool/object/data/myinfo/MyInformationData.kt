@@ -1,8 +1,6 @@
 package com.littlefox.app.foxschool.`object`.data.myinfo
 
-import android.content.Context
 import com.littlefox.app.foxschool.`object`.result.login.UserInfoSectionResult
-import com.littlefox.app.foxschool.common.CommonUtils
 
 /**
  * 나의정보 변경 데이터
@@ -47,18 +45,6 @@ class MyInformationData
     fun setPhone(phone : String)
     {
         this.phone = phone
-    }
-
-    fun addPhoneHyphen(mContext : Context) : String
-    {
-        this.phone = CommonUtils.getInstance(mContext).getPhoneTypeNumber(phone)
-        return this.phone
-    }
-
-    fun removePhoneHyphen() : String
-    {
-        this.phone = phone.replace("-", "")
-        return this.phone
     }
 
     fun isCompleteInformationData(isTeacher : Boolean) : Boolean

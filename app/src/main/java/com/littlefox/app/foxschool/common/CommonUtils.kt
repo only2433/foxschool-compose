@@ -50,6 +50,7 @@ import com.littlefox.app.foxschool.BuildConfig
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.login.StudentSectionResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.enumerate.*
@@ -2121,25 +2122,6 @@ class CommonUtils
     }
 
     /**
-     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
-     * @param name 컨텐츠 이름
-     * @param subName 컨텐츠 서브이름
-     * @return 컨텐츠 네임
-     */
-    fun getContentsName(name : String, subName : String) : String
-    {
-        var result : String = ""
-        if(subName == "")
-        {
-            result = name
-        } else
-        {
-            result = "$name: $subName"
-        }
-        return result
-    }
-
-    /**
      * 단어장은 서브네임이 있을 경우엔 서브네임을 타이틀로, 없을 경우 컨텐츠 네임으로 보여준다.
      * @param data 컨텐츠 데이터
      * @return 컨텐츠 네임
@@ -2155,23 +2137,6 @@ class CommonUtils
             result = data.getSubName()
         }
         return result
-    }
-
-    /**
-     * 한 문장으로 만들어진 타이틀을 분리한다.
-     */
-    fun getSubStringTitleName(fullName : String) : Pair<String, String>
-    {
-        if (fullName.indexOf(":") > 0)
-        {
-            val name : String = fullName.substring(0, fullName.indexOf(":"))
-            val subName : String = fullName.substring(fullName.indexOf(":") + 2, fullName.length)
-            return Pair<String, String>(name, subName)
-        }
-        else
-        {
-            return Pair<String, String>(fullName, "")
-        }
     }
 
     /**
@@ -2559,5 +2524,26 @@ class CommonUtils
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, filename)
         val downloadManager : DownloadManager = sContext.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         downloadManager.enqueue(request)
+    }
+
+    fun getClassName(studentSectionResult : StudentSectionResult) : String
+    {
+        if (studentSectionResult.isHaveClass() == false)
+        {
+            // 반 배정이 되지 않은 학생 : (미배정)
+            return sContext.getString(R.string.text_student_class_unassigned)
+        }
+        else if (studentSectionResult.getGrade() > 0)
+        {
+            // 학년 정보 있는 경우 : %d학년 %s반
+            val front = String.format(sContext.resources.getString(R.string.text_student_class_grade), studentSectionResult.getGrade())
+            val end = String.format(sContext.resources.getString(R.string.text_student_class_class), studentSectionResult.getClassName())
+            return "$front $end"
+        }
+        else
+        {
+            // 학년 정보가 없는 유치원, 어린이집은 학년 표기 없이 반명만 노출 : %s반
+            return String.format(sContext.resources.getString(R.string.text_student_class_class), studentSectionResult.getClassName())
+        }
     }
 }

@@ -208,6 +208,8 @@ class QuizPresenter : QuizContract.Presenter
         Log.f("")
         mQuizInformationRequestCoroutine?.cancel()
         mQuizInformationRequestCoroutine = null
+        mFileDownloadCoroutine?.cancel()
+        mFileDownloadCoroutine = null
         mMainHandler.removeCallbacksAndMessages(null)
         releaseMediaPlay()
         releaseEffectPlay()

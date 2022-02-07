@@ -356,10 +356,10 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
         else
         {
-            // 학생인 경우에만 class 데이터 존재
-            val mClass = "${mLoginInformationResult?.getSchoolInformation()?.getGrade()}학년 ${mLoginInformationResult?.getSchoolInformation()?.getClassName()}"
-            _UserClassText.text = mClass
             name += " 학생"
+
+            // 학생인 경우에만 class 데이터 존재
+            _UserClassText.text = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
         }
         _UserNameText.text = name
     }
@@ -393,6 +393,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     {
         var schoolName : String = ""
         var schoolType : String = ""
+
         if(CommonUtils.getInstance(this).isTeacherMode)
         {
             schoolName = mLoginInformationResult!!.getTeacherInformation().getOrganizationName()
@@ -403,7 +404,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             schoolName = mLoginInformationResult!!.getSchoolInformation().getOrganizationName()
             schoolType = mLoginInformationResult!!.getSchoolInformation().getOrganizationTypeName()
         }
-
 
         schoolName += " $schoolType"
 

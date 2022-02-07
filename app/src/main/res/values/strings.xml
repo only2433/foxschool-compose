@@ -130,6 +130,10 @@
     <string name="text_change_later">다음에 변경</string>
     <string name="text_keep_password"><u>현재의 비밀번호로 유지</u></string>
 
+    <string name="text_student_class_unassigned">(미배정)</string>
+    <string name="text_student_class_grade">%d학년</string>
+    <string name="text_student_class_class">%s반</string>
+
     <string name="text_item_count_question"><![CDATA[<b>%d</b>/%d]]></string>
     <string name="text_study_word"><![CDATA[<font color=\'#FFFF52\'><b>단어로</b></font> 학습하기]]></string>
     <string name="text_study_meaning"><![CDATA[<font color=\'#FFFF52\'><b>뜻으로</b></font> 학습하기]]></string>
