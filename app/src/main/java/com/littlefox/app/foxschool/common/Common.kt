@@ -279,7 +279,7 @@ class Common
         const val PUSH_TOPIC_NAME : String = "FOXSCHOOL"
 
         const val FILE_TEACHER_MANUAL : String = "teacher_manual.pdf"
-        const val FILE_HOME_NEWSPAPER : String = "home_newspaper.hwp"
+        const val FILE_HOME_NEWSPAPER : String = "school_letter.hwp"
     }
 
 }
