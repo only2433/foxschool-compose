@@ -185,7 +185,6 @@ class CommonUtils
     fun getStudyCompleteDateText(date : String) : String
     {
         val fullDate : Date = SimpleDateFormat("yyyy.MM.dd hh:mm").parse(date)
-
         if (checkTablet)
         {
             return SimpleDateFormat("yyyy.M.d a h:mm").format(fullDate)
