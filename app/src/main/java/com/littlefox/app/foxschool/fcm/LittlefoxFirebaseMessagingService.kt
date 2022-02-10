@@ -38,7 +38,6 @@ class LittlefoxFirebaseMessagingService : FirebaseMessagingService()
         Log.f("remoteMessage data : " + remoteMessage.getData())
         Log.i("From: " + remoteMessage.getFrom())
 
-
         // Check if message contains a data payload.
         if(remoteMessage.getData().size > 0)
         {
