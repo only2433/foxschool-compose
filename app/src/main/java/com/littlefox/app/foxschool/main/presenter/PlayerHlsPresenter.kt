@@ -352,6 +352,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
         accessDataBase()
+
+        // 숙제관리에서 넘어온 플레이의 경우 3점 메뉴버튼 표시하지 않도록 처리
+        if (mPlayerIntentParamsObject.getHomeworkNumber() != 0)
+        {
+            mPlayerContractView.disablePortraitOptionButton()
+            mPlayInformationList[mCurrentPlayMovieIndex].setOptionDisable(true)
+        }
     }
 
     private fun initPlayList(orientation : Int)
