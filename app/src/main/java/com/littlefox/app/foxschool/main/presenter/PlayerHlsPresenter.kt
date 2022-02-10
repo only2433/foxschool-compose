@@ -928,6 +928,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             isStarwordsAvailable = false
             isCrosswordAvailable = false
             isTranslateAvailable = false
+            isNextMovieHave = false
         }
         else
         {
