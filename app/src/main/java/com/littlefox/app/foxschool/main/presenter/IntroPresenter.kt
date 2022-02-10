@@ -575,7 +575,8 @@ class IntroPresenter : IntroContract.Presenter
                                 DialogButtonType.BUTTON_1,
                                 mContext.resources.getString(R.string.message_force_update)
                             )
-                        } else
+                        }
+                        else
                         {
                             showTemplateAlertDialog(
                                 DIALOG_TYPE_SELECT_UPDATE_CONFIRM,
@@ -583,7 +584,8 @@ class IntroPresenter : IntroContract.Presenter
                                 mContext.resources.getString(R.string.message_need_update)
                             )
                         }
-                    } else
+                    }
+                    else
                     {
                         startAPIProcess()
                     }
