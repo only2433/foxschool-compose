@@ -272,6 +272,7 @@ class CommonUtils
 
             if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_FLIP)
             {
+                Log.f("PHONE = FLIP 비율 ")
                 setSharedPreference(Common.PARAMS_CHECK_PHONE_DEVICE_RADIO, DisplayPhoneType.RADIO_FLIP.toString())
             }
             else if(currentDisplayRadio > Common.PHONE_DISPLAY_RADIO_20_9)
