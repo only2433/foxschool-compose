@@ -418,7 +418,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     override fun initView()
     {
-        initFadeControllderView()
+        initFadeControllerView()
         changeLayout()
         _PlayerTopBaseLayout!!.setOnTouchListener {v, event -> true}
         _PlayerBottomBaseLayout!!.setOnTouchListener {v, event -> true}
@@ -493,29 +493,17 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _SeekbarPortraitPlayBar.thumb = resources.getDrawable(R.drawable.seekbar_thumb)
             _SeekbarPortraitPlayBar.layoutParams = params
         }
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+
+        if(CommonUtils.getInstance(this).checkTablet)
         {
-            if(CommonUtils.getInstance(this).checkTablet)
-            {
-                _PlayerBottomBaseLayout.moveChildView(_SeekbarPlayBar, 266f, 8f, 1480f, 50f)
-                _PlayerBottomBaseLayout.moveChildView(_PlayerRemainPlayTime, 1764f, 0f, 94f, 71f)
-            }
-            else
-            {
-                _PlayerBottomBaseLayout.moveChildView(_SeekbarPlayBar, 266f, 8f, 1330f, 50f)
-                _PlayerBottomBaseLayout.moveChildView(_PlayerRemainPlayTime, 1614f, 0f, 94f, 71f)
+            _PlayerBottomBaseLayout.run{
+                moveChildView(_SeekbarPlayBar, 266f, 8f, 1230f, 62f)
+                moveChildView(_PlayerRemainPlayTime, 1514f, 0f, 94f, 71f)
+                moveChildView(_PlayerSpeedButton, 1684f, 7f, 60f, 60f)
+                moveChildView(_PlayerSpeedText, 1764f, 0f, 110f, 71f)
             }
         }
-        else
-        {
-            if(CommonUtils.getInstance(this).checkTablet)
-            {
-                _PlayerBottomBaseLayout.moveChildView(_SeekbarPlayBar, 266f, 8f, 1230f, 62f)
-                _PlayerBottomBaseLayout.moveChildView(_PlayerRemainPlayTime, 1514f, 0f, 94f, 71f)
-                _PlayerBottomBaseLayout.moveChildView(_PlayerSpeedButton, 1684f, 7f, 60f, 60f)
-                _PlayerBottomBaseLayout.moveChildView(_PlayerSpeedText, 1764f, 0f, 110f, 71f)
-            }
-        }
+
         val layerDrawable = resources.getDrawable(R.drawable.seekbar_thumb) as LayerDrawable
         val rectDrawable = layerDrawable.findDrawableByLayerId(R.id._thumbRect) as GradientDrawable
         val circleDrawable = layerDrawable.findDrawableByLayerId(R.id._thumbCircle) as GradientDrawable
@@ -523,7 +511,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         circleDrawable.setSize(CommonUtils.getInstance(this).getPixel(40), CommonUtils.getInstance(this).getPixel(40))
     }
 
-    private fun initFadeControllderView()
+    private fun initFadeControllerView()
     {
         val playListWidth : Int = CommonUtils.getInstance(this).getPixel(RIGHT_LIST_WIDTH)
         mBottomHeight = CommonUtils.getInstance(this).getPixel(BOTTOM_LAYOUT_HEIGHT)
