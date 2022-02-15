@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.main.webview
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
@@ -167,6 +168,19 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
     {
         override fun shouldOverrideUrlLoading(view : WebView, request : WebResourceRequest) : Boolean
         {
+            val url : String = request.url.toString()
+            if (url.startsWith("tel:"))
+            {
+                val intent : Intent = Intent(Intent.ACTION_DIAL, request.url)
+                startActivity(intent)
+                return true
+            }
+            else if (url.startsWith("mailto:"))
+            {
+                val intent : Intent = Intent(Intent.ACTION_SENDTO, request.url)
+                startActivity(intent)
+                return true
+            }
             return super.shouldOverrideUrlLoading(view, request)
         }
 
