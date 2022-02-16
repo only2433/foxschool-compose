@@ -392,20 +392,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     private fun settingSchoolName()
     {
         var schoolName : String = ""
-        var schoolType : String = ""
         if(CommonUtils.getInstance(this).isTeacherMode)
         {
             schoolName = mLoginInformationResult!!.getTeacherInformation().getOrganizationName()
-            schoolType = mLoginInformationResult!!.getTeacherInformation().getOrganizationTypeName()
         }
         else
         {
             schoolName = mLoginInformationResult!!.getSchoolInformation().getOrganizationName()
-            schoolType = mLoginInformationResult!!.getSchoolInformation().getOrganizationTypeName()
         }
-
-
-        schoolName += " $schoolType"
 
         // 학교명 16자 초과 시 말줄임표 처리
         if (schoolName.length > 16)
