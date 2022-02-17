@@ -28,6 +28,7 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.InputDataType
 import com.littlefox.app.foxschool.main.contract.MyInformationContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
+import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoChangeFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoShowFragmentDataObserver
 import com.littlefox.app.foxschool.viewmodel.MyInfoPresenterDataObserver
@@ -485,6 +486,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
                     // 성공 메세지 표시하고 나의 정보 화면으로 이동
                     mMyInformationContractView.showSuccessMessage(mContext.getString(R.string.message_myinfo_change_complete))
                     mMyInfoPresenterDataObserver.setMyInfoShowFragment(mLoginInformation!!)
+                    MainObserver.updateUserStatus()
                     onClickBackButton()
                 }
                 else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
