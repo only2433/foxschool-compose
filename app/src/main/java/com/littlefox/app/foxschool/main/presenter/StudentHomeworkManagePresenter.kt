@@ -565,24 +565,12 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
                     mHomeworkDetailBaseResult = (result as HomeworkDetailListBaseObject).getData()
                     mHomeworkManagePresenterObserver.updateHomeworkListData(mHomeworkDetailBaseResult!!)
                 }
-                else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER)
+                else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_REGISTER ||
+                         code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE ||
+                         code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
                 {
-                    mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mStudentHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_register))
-                }
-                else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_UPDATE)
-                {
-                    mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mStudentHomeworkContractView.showSuccessMessage(mContext.resources.getString(R.string.message_comment_update))
-                }
-                else if (code == Common.COROUTINE_CODE_STUDENT_COMMENT_DELETE)
-                {
-                    mStudentComment = ""
-                    mHomeworkManagePresenterObserver.setCommentData(mStudentComment)
-                    mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-                    mStudentHomeworkContractView.showErrorMessage(mContext.resources.getString(R.string.message_comment_delete))
+                    // 학습자 한마디 등록, 수정, 삭제 성공했을 때 이전화면으로 이동
+                    onClickBackButton()
                 }
             }
             else
