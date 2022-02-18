@@ -146,9 +146,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 readyToRecord()
             }
         }
-        // PATH_MP3_ROOT = PATH_ROOT + "/mp3/";
         PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
-        mFileName = "${mRecordInformation.getName()}${mRecordInformation.getSubName()}"
+        mFileName = mRecordInformation.getID() // 파일명 : 컨텐츠 ID
     }
 
     override fun resume()
@@ -209,7 +208,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             }
             MESSAGE_PLAY_TIME_CHECK ->
             {
-                setAudioTimerText()
+                setAudioTimerText(isEnd = false)
             }
             MESSAGE_RECORD_UPLOAD_SUCCESS ->
             {
@@ -308,6 +307,13 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun readyToRecord()
     {
+        // 기존에 사용하던 흔적이 있는 경우 사용하던 폴더 제거 후 다시 생성
+        val isDirectoryExists = File(PATH_MP3_ROOT).exists()
+        if (isDirectoryExists)
+        {
+            FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
+        }
+
         val isDirectoryMakeComplete = FileUtils.createDirectory(PATH_MP3_ROOT)
         if(isDirectoryMakeComplete == false)
         {
@@ -349,7 +355,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                     {
                         Log.f("")
                         mRecordPlayerContractView.hideLoading()
-                        setAudioTimerText()
+                        setAudioTimerText(isEnd = false)
                     }
                 })
                 it.setOnCompletionListener(object : MediaPlayer.OnCompletionListener {
@@ -358,7 +364,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                         Log.f("---- End ----")
                         mRecorderStatus = RecorderStatus.AUDIO_PAUSE
                         setAudioPause()
-                        setAudioTimerText()
+                        setAudioTimerText(isEnd = true)
                         enableTimer(false)
                     }
                 })
@@ -382,9 +388,16 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     /**
      * 화면에 오디오 재생시간 update
      */
-    private fun setAudioTimerText()
+    private fun setAudioTimerText(isEnd : Boolean)
     {
-        mRecordPlayerContractView.setAudioPlayTime(mMediaPlayer!!.currentPosition, mMediaPlayer!!.duration)
+        if (isEnd)
+        {
+            mRecordPlayerContractView.setAudioPlayTime(mMediaPlayer!!.duration, mMediaPlayer!!.duration)
+        }
+        else
+        {
+            mRecordPlayerContractView.setAudioPlayTime(mMediaPlayer!!.currentPosition, mMediaPlayer!!.duration)
+        }
     }
 
     /**
