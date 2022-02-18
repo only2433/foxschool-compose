@@ -83,9 +83,9 @@ class CheckUserInput
 
                 return true
             }
-        } catch(e : UnsupportedEncodingException)
+        }
+        catch(e : UnsupportedEncodingException)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace()
         }
         return false

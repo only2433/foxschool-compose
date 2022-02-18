@@ -180,7 +180,7 @@
         android:layout_height="wrap_content"
         android:background="@color/color_23cc8a"
         app:scale_base_width="650"
-        app:scale_base_height="222">
+        app:scale_base_height="180">
 
         <TextView
             android:id="@+id/_userNameText"
@@ -190,9 +190,9 @@
             android:text="이소유 학생"
             android:textColor="@color/color_ffffff"
             app:scale_left="46"
-            app:scale_top="14"
-            app:scale_width="300"
-            app:scale_height="76"
+            app:scale_top="15"
+            app:scale_width="500"
+            app:scale_height="49"
             app:scale_textsize="27"/>
 
         <TextView
@@ -201,10 +201,10 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="@color/color_ffffff"
-            app:scale_left="246"
-            app:scale_top="14"
-            app:scale_width="380"
-            app:scale_height="76"
+            app:scale_left="46"
+            app:scale_top="53"
+            app:scale_width="500"
+            app:scale_height="44"
             app:scale_textsize="22"/>
 
         <TextView
@@ -216,7 +216,7 @@
             android:textColor="@color/color_23cc8a"
             android:gravity="center"
             app:scale_left="46"
-            app:scale_top="90"
+            app:scale_top="97"
             app:scale_width="140"
             app:scale_height="55"
             app:scale_textsize="22"/>

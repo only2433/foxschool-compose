@@ -353,13 +353,37 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         if (CommonUtils.getInstance(this).isTeacherMode)
         {
             name += " 선생님"
+            _UserClassText.visibility = View.GONE
+
+            if(CommonUtils.getInstance(this).checkTablet)
+            {
+               _UserStatusLayout.moveChildView(_UserNameText, 46f, 27f)
+               _UserStatusLayout.moveChildView(_UserInfoButtonText, 46f, 90f)
+            }
+            else
+            {
+                _UserStatusLayout.moveChildView(_UserNameText, 80f, 50f)
+                _UserStatusLayout.moveChildView(_UserInfoButtonText, 80f, 157f)
+            }
         }
         else
         {
             name += " 학생"
 
             // 학생인 경우에만 class 데이터 존재
+            _UserClassText.visibility = View.VISIBLE
             _UserClassText.text = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
+
+            if(CommonUtils.getInstance(this).checkTablet)
+            {
+                _UserStatusLayout.moveChildView(_UserNameText, 46f, 15f)
+                _UserStatusLayout.moveChildView(_UserInfoButtonText, 46f, 97f)
+            }
+            else
+            {
+                _UserStatusLayout.moveChildView(_UserNameText, 80f, 28f)
+                _UserStatusLayout.moveChildView(_UserInfoButtonText, 80f, 172f)
+            }
         }
         _UserNameText.text = name
     }
