@@ -364,6 +364,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("orientation : $orientation")
         mPlayListAdapter = PlayerListAdapter(mContext, orientation, mCurrentPlayMovieIndex, mPlayInformationList)
         mPlayListAdapter.setPlayerEventListener(mOnItemPlayerEventListener)
+        mPlayListAdapter.setEnableOption(true)
         mPlayerContractView.initPlayListView(mPlayListAdapter, mCurrentPlayMovieIndex)
     }
 
@@ -1042,7 +1043,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 .setFullName()
                 .setFullScreen()
                 .disableBookshelf()
-                .disableGame()
                 .setItemOptionListener(mItemOptionListener)
                 .setView()
                 .setOnCancelListener(object : DialogInterface.OnCancelListener

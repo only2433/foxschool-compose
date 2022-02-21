@@ -55,7 +55,6 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     private var isFullName : Boolean = false
     private var isDeleteItemInBookshelf : Boolean  = false
     private var isDisableBookshelf : Boolean  = false
-    private var isDisableGame : Boolean  = false
     private var mIndexColor : String = ""
     private var mItemOptionListener : ItemOptionListener? = null
     private var mContentsInformationResult : ContentsBaseResult
@@ -119,12 +118,6 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     fun disableBookshelf() : BottomContentItemOptionDialog
     {
         isDisableBookshelf = true
-        return this
-    }
-
-    fun disableGame() : BottomContentItemOptionDialog
-    {
-        isDisableGame = true
         return this
     }
 
@@ -218,12 +211,12 @@ class BottomContentItemOptionDialog : BottomSheetDialog
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_SUPPORTED_PAID) && isDisableGame == false)
+            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
             {
                 mAddItemTypeList.add(ContentItemType.STARWORDS)
             }
 
-            if(mContentsInformationResult.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_SUPPORTED_PAID) && isDisableGame == false)
+            if(mContentsInformationResult.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
             {
                 mAddItemTypeList.add(ContentItemType.CROSSWORD)
             }
