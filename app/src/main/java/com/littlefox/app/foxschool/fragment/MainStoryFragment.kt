@@ -311,7 +311,10 @@ class MainStoryFragment : Fragment()
         })
         _StoryGridView.setLayoutManager(gridLayoutManager)
         _StoryGridView.addItemDecoration(
-            GridSpacingItemDecoration(mContext, COLUMN_COUNT, CommonUtils.getInstance(mContext).getPixel(COLUMN_MARGIN))
+            GridSpacingItemDecoration(mContext,
+                COLUMN_COUNT,
+                CommonUtils.getInstance(mContext).getPixel(COLUMN_MARGIN),
+                CommonUtils.getInstance(mContext).checkTablet)
         )
         _StoryGridView.setAdapter(mSeriesCardViewAdapter)
         if(Feature.IS_FREE_USER === false)

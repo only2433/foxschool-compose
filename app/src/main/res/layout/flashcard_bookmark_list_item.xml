@@ -8,6 +8,7 @@
     tools:ignore="MissingPrefix">
 
     <com.ssomai.android.scalablelayout.ScalableLayout
+        android:id="@+id/_itemLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:scale_base_width="592"
@@ -27,7 +28,7 @@
             android:id="@+id/_wordText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Happliy"
+            android:text=""
             android:textColor="@color/color_444444"
             android:gravity="center"
             app:scale_left="0"

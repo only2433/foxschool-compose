@@ -13,12 +13,14 @@ class GridSpacingItemDecoration : ItemDecoration
     private var mContext : Context
     private var spanCount : Int = 0
     private var spacing : Int = 0
+    private var isPaddingDisable : Boolean = false
 
-    constructor(context : Context, spanCount : Int, spacing : Int)
+    constructor(context : Context, spanCount : Int, spacing : Int, isPaddingDisable : Boolean)
     {
         mContext  = context;
         this.spanCount = spanCount;
         this.spacing = spacing;
+        this.isPaddingDisable = isPaddingDisable
     }
     override fun getItemOffsets(outRect : Rect, view : View, parent : RecyclerView, state : RecyclerView.State)
     {
@@ -31,7 +33,8 @@ class GridSpacingItemDecoration : ItemDecoration
             return
         }
         column = position % spanCount
-        if(CommonUtils.getInstance(mContext).checkTablet)
+
+        if(isPaddingDisable)
         {
             setLocationGridItem(outRect, column, position)
         } else

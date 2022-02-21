@@ -214,7 +214,7 @@ class FlashCardBookmarkFragment : Fragment()
         }
         _BookmarkItemListView.layoutManager = gridLayoutManager
         _BookmarkItemListView.addItemDecoration(
-            GridSpacingItemDecoration(mContext, 3, 0)
+            GridSpacingItemDecoration(mContext, 3, 0, true)
         )
         _BookmarkItemListView.adapter = mFlashcardBookmarkItemAdapter
     }

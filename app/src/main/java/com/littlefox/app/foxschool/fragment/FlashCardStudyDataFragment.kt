@@ -68,22 +68,25 @@ class FlashCardStudyDataFragment : Fragment()
     lateinit var _Item1MeaningTitleText : TextView
     lateinit var _Item1BackStatusText : TextView
     lateinit var _Item1BackBookmarkButton : ImageView
+    lateinit var _Item1BackBookmarkButtonRect : ImageView
     lateinit var _Item1BackMeaningRect : ImageView
     lateinit var _Item1FrontLayout : ScalableLayout
     lateinit var _Item1FrontStatusText : TextView
     lateinit var _Item1FrontBookmarkButton : ImageView
+    lateinit var _Item1FrontBookmarkButtonRect : ImageView
     lateinit var _Item1WordTitleText : TextView
     lateinit var _Item1WordExampleText : TextView
     lateinit var _Item1FrontWordRect : ImageView
-
     lateinit var _Item2BackLayout : ScalableLayout
     lateinit var _Item2MeaningTitleText : TextView
     lateinit var _Item2BackStatusText : TextView
     lateinit var _Item2BackBookmarkButton : ImageView
+    lateinit var _Item2BackBookmarkButtonRect : ImageView
     lateinit var _Item2BackMeaningRect : ImageView
     lateinit var _Item2FrontLayout : ScalableLayout
     lateinit var _Item2FrontStatusText : TextView
     lateinit var _Item2FrontBookmarkButton : ImageView
+    lateinit var _Item2FrontBookmarkButtonRect : ImageView
     lateinit var _Item2WordTitleText : TextView
     lateinit var _Item2WordExampleText : TextView
     lateinit var _Item2FrontWordRect : ImageView
@@ -305,8 +308,9 @@ class FlashCardStudyDataFragment : Fragment()
         _Item1WordExampleText = card1FrontView.findViewById<View>(R.id._itemWordExampleText) as TextView
         _Item1FrontWordRect = card1FrontView.findViewById<View>(R.id._itemFrontWordRect) as ImageView
         _Item1FrontBookmarkButton = card1FrontView.findViewById<View>(R.id._itemFrontBookmarkButton) as ImageView
+        _Item1FrontBookmarkButtonRect = card1FrontView.findViewById<View>(R.id._itemFrontBookmarkButtonRect) as ImageView
         _Item1FrontWordRect.setOnClickListener(mOnClickListener)
-        _Item1FrontBookmarkButton.setOnClickListener(mOnClickListener)
+        _Item1FrontBookmarkButtonRect.setOnClickListener(mOnClickListener)
 
         _Item2FrontLayout = card2FrontView.findViewById<View>(R.id._itemFrontLayout) as ScalableLayout
         _Item2FrontStatusText = card2FrontView.findViewById<View>(R.id._itemFrontStatusText) as TextView
@@ -314,8 +318,9 @@ class FlashCardStudyDataFragment : Fragment()
         _Item2WordExampleText = card2FrontView.findViewById<View>(R.id._itemWordExampleText) as TextView
         _Item2FrontWordRect = card2FrontView.findViewById<View>(R.id._itemFrontWordRect) as ImageView
         _Item2FrontBookmarkButton = card2FrontView.findViewById<View>(R.id._itemFrontBookmarkButton) as ImageView
+        _Item2FrontBookmarkButtonRect = card2FrontView.findViewById<View>(R.id._itemFrontBookmarkButtonRect) as ImageView
         _Item2FrontWordRect.setOnClickListener(mOnClickListener)
-        _Item2FrontBookmarkButton.setOnClickListener(mOnClickListener)
+        _Item2FrontBookmarkButtonRect.setOnClickListener(mOnClickListener)
 
         // 플래시카드 뒷면 세팅
         if(CommonUtils.getInstance(mContext).getPhoneDisplayRadio() != DisplayPhoneType.DEFAULT)
@@ -334,16 +339,18 @@ class FlashCardStudyDataFragment : Fragment()
         _Item1BackStatusText = card1BackView.findViewById<View>(R.id._itemBackStatusText) as TextView
         _Item1BackMeaningRect = card1BackView.findViewById<View>(R.id._itemBackMeaningRect) as ImageView
         _Item1BackBookmarkButton = card1BackView.findViewById<View>(R.id._itemBackBookmarkButton) as ImageView
+        _Item1BackBookmarkButtonRect = card1BackView.findViewById<View>(R.id._itemBackBookmarkButtonRect) as ImageView
         _Item1BackMeaningRect.setOnClickListener(mOnClickListener)
-        _Item1BackBookmarkButton.setOnClickListener(mOnClickListener)
+        _Item1BackBookmarkButtonRect.setOnClickListener(mOnClickListener)
 
         _Item2BackLayout = card2BackView.findViewById<View>(R.id._itemBackLayout) as ScalableLayout
         _Item2MeaningTitleText = card2BackView.findViewById<View>(R.id._itemMeaningTitleText) as TextView
         _Item2BackStatusText = card2BackView.findViewById<View>(R.id._itemBackStatusText) as TextView
         _Item2BackMeaningRect = card2BackView.findViewById<View>(R.id._itemBackMeaningRect) as ImageView
         _Item2BackBookmarkButton = card2BackView.findViewById<View>(R.id._itemBackBookmarkButton) as ImageView
+        _Item2BackBookmarkButtonRect = card2BackView.findViewById<View>(R.id._itemBackBookmarkButtonRect) as ImageView
         _Item2BackMeaningRect.setOnClickListener(mOnClickListener)
-        _Item2BackBookmarkButton.setOnClickListener(mOnClickListener)
+        _Item2BackBookmarkButtonRect.setOnClickListener(mOnClickListener)
 
         _Item1ContainerLayout.tag = ITEM_1_TAG
         _Item2ContainerLayout.tag = ITEM_2_TAG
@@ -890,7 +897,7 @@ class FlashCardStudyDataFragment : Fragment()
         Log.f("mDataList size : " + mDataList.size)
     }
 
-    @OnClick(R.id._flipButton, R.id._prevButton, R.id._nextButton)
+    @OnClick(R.id._flipButton, R.id._prevButtonRect, R.id._nextButtonRect)
     fun onClickView(view : View)
     {
         if(isAutoPlayStopPossible == false)
@@ -912,8 +919,8 @@ class FlashCardStudyDataFragment : Fragment()
                     flipCardInAnimation()
                 }
             }
-            R.id._prevButton -> showPrevStudyCard()
-            R.id._nextButton -> showNextStudyCard()
+            R.id._prevButtonRect -> showPrevStudyCard()
+            R.id._nextButtonRect -> showNextStudyCard()
         }
     }
 
@@ -927,8 +934,8 @@ class FlashCardStudyDataFragment : Fragment()
         mFlashcardStudyFragmentObserver!!.onActionStudyCard()
         when(v.id)
         {
-            R.id._itemFrontBookmarkButton,
-            R.id._itemBackBookmarkButton ->
+            R.id._itemFrontBookmarkButtonRect,
+            R.id._itemBackBookmarkButtonRect ->
             {
                 val isBookmarkedItem = mDataList[mCurrentCardIndex].isBookmarked()
                 mDataList[mCurrentCardIndex].enableBookmark(!isBookmarkedItem)

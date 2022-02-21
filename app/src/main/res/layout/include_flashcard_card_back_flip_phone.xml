@@ -67,10 +67,20 @@
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:src="@drawable/flashcard_bookmark_off"
-            app:scale_height="48"
             app:scale_left="1998"
             app:scale_top="35"
-            app:scale_width="48"  />
+            app:scale_width="48"
+            app:scale_height="48"/>
+
+        <ImageView
+            android:id="@+id/_itemBackBookmarkButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerInside"
+            app:scale_left="1988"
+            app:scale_top="25"
+            app:scale_width="68"
+            app:scale_height="68"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 

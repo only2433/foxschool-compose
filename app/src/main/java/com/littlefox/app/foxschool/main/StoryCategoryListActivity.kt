@@ -329,7 +329,10 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
             it.setVisibility(View.VISIBLE)
             it.setLayoutManager(gridLayoutManager)
             it.addItemDecoration(
-                GridSpacingItemDecoration(this, COLUMN_COUNT, CommonUtils.getInstance(this).getPixel(COLUMN_MARGIN))
+                GridSpacingItemDecoration(this,
+                    COLUMN_COUNT,
+                    CommonUtils.getInstance(this).getPixel(COLUMN_MARGIN),
+                    CommonUtils.getInstance(this).checkTablet)
             )
             val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
             it.setLayoutAnimation(animationController)

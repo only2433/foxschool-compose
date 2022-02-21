@@ -32,6 +32,7 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/drawable/seekbar_portrait_thumb.xml" value="0.20260416666666667" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/drawable/seekbar_thumb.xml" value="0.20260416666666667" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_ebook.xml" value="0.25625" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_flash_card.xml" value="0.315625" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_intro.xml" value="0.21014492753623187" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_intro_tablet.xml" value="0.21014492753623187" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_introduce_series.xml" value="0.3759057971014493" />
@@ -58,6 +59,7 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/drawer_main_menu.xml" value="0.2630208333333333" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/drawer_main_menu_tablet.xml" value="0.4" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/faq_list_item.xml" value="0.25885416666666666" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/flashcard_bookmark_list_item.xml" value="0.315625" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_bookmark.xml" value="0.21979166666666666" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_bookmark_20_9_phone.xml" value="0.24010416666666667" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_bookmark_flip_phone.xml" value="0.24010416666666667" />
@@ -65,8 +67,9 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_intro_flip_phone.xml" value="0.2203125" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_result_20_9_phone.xml" value="0.2203125" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_result_flip_phone.xml" value="0.2203125" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_study_data.xml" value="0.315625" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_study_data_20_9_phone.xml" value="0.2203125" />
-        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_study_data_flip_phone.xml" value="0.2203125" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_study_data_flip_phone.xml" value="0.4" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_forum_webview.xml" value="0.3451086956521739" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_calendar.xml" value="0.33" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_my_info_change.xml" value="0.234375" />
@@ -80,7 +83,10 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_quiz_result.xml" value="0.24270833333333333" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_quiz_result_20_9_phone.xml" value="0.24270833333333333" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/homework_list_item.xml" value="0.2734375" />
-        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/include_flashcard_card_back_flip_phone.xml" value="0.25833333333333336" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/include_flashcard_card_back.xml" value="0.315625" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/include_flashcard_card_back_flip_phone.xml" value="0.4" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/include_flashcard_card_front.xml" value="0.315625" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/include_flashcard_card_front_flip_phone.xml" value="0.4" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/news_list_item.xml" value="0.23143115942028986" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/topbar_common_menu.xml" value="0.18645833333333334" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/topbar_common_menu_tablet.xml" value="0.24427083333333333" />

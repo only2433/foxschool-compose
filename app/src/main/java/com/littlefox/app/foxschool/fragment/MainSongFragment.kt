@@ -151,7 +151,10 @@ class MainSongFragment : Fragment()
         })
         _SongGridView.layoutManager = gridLayoutManager
         _SongGridView.addItemDecoration(
-            GridSpacingItemDecoration(mContext, COLUMN_COUNT, CommonUtils.getInstance(mContext).getPixel(COLUMN_MARGIN))
+            GridSpacingItemDecoration(mContext,
+                COLUMN_COUNT,
+                CommonUtils.getInstance(mContext).getPixel(COLUMN_MARGIN),
+                CommonUtils.getInstance(mContext).checkTablet)
         )
         _SongGridView.adapter = mSeriesCardViewAdapter
     }

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:visibility="visible"
         app:scale_base_width="1920"
-        app:scale_base_height="540">
+        app:scale_base_height="570">
 
         <ImageView
             android:id="@+id/_prevButton"
@@ -34,6 +34,16 @@
             app:scale_height="106"/>
 
         <ImageView
+            android:id="@+id/_prevButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="105"
+            app:scale_top="419"
+            app:scale_width="84"
+            app:scale_height="136"/>
+
+        <ImageView
             android:id="@+id/_nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,6 +53,16 @@
             app:scale_top="434"
             app:scale_width="54"
             app:scale_height="106"/>
+
+        <ImageView
+            android:id="@+id/_nextButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="1731"
+            app:scale_top="419"
+            app:scale_width="84"
+            app:scale_height="136"/>
 
     </com.ssomai.android.scalablelayout.ScalableLayout>
 

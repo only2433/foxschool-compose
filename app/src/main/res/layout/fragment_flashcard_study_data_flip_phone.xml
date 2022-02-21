@@ -14,8 +14,6 @@
         app:scale_base_height="100"
         app:scale_base_width="2192"></com.ssomai.android.scalablelayout.ScalableLayout>
 
-
-
     <com.ssomai.android.scalablelayout.ScalableLayout
         android:id="@+id/_studyControllerLayout"
         android:layout_width="wrap_content"
@@ -36,6 +34,16 @@
             app:scale_height="113"/>
 
         <ImageView
+            android:id="@+id/_prevButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="179"
+            app:scale_top="378"
+            app:scale_width="89"
+            app:scale_height="143"/>
+
+        <ImageView
             android:id="@+id/_nextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +53,18 @@
             app:scale_top="393"
             app:scale_width="59"
             app:scale_height="113"/>
+
+        <ImageView
+            android:id="@+id/_nextButtonRect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            app:scale_left="2152"
+            app:scale_top="378"
+            app:scale_width="89"
+            app:scale_height="143"/>
+
+
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
