@@ -201,7 +201,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         {
             MESSAGE_RECORD_TIME_CHECK ->
             {
-                if (mRecordTotalTime > MAX_RECORDING_TIME)
+                if (mRecordTotalTime >=  MAX_RECORDING_TIME)
                 {
                     // 녹음 진행시간이 최대 녹음시간을 넘어가면 녹음 정지
                     Log.f("MESSAGE_RECORD_TIME_CHECK || recordStop")

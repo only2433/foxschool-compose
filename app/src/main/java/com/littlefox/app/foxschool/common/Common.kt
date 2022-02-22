@@ -8,8 +8,8 @@ class Common
         const val PATH_APP_ROOT : String = "/data/data/" + PACKAGE_NAME + "/files/"
         const val APP_LINK : String     = "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME
 
-        //const val BASE_URL : String                 = "https://apis.littlefox.com/"
-        const val BASE_URL : String                     = "https://apis-foxschool.littlefox.co.kr/"
+        const val TEST_URL : String                     = "https://apis-foxschool.littlefox.co.kr/"
+        const val BASE_URL : String                     = "https://foxschool-api.littlefox.co.kr/"
         const val BASE_API : String                     = BASE_URL + "api/"
 
         const val API_INIT : String                         = BASE_API + "app/version"
