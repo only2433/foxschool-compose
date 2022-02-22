@@ -63,8 +63,6 @@
             app:scale_top="378"
             app:scale_width="89"
             app:scale_height="143"/>
-
-
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout

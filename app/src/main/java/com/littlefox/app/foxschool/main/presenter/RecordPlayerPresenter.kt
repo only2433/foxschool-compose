@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main.presenter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
@@ -55,6 +56,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         private const val MESSAGE_RECORD_UPLOAD_FAIL : Int      = 104
         private const val MESSAGE_START_RECORD_HISTORY : Int    = 105
         private const val MESSAGE_RECORD_FILE_MERGED : Int      = 106
+        private const val MESSAGE_DUPLICATE_ERROR : Int         = 107
+        private const val MESSAGE_AUTH_ERROR : Int              = 108
 
         private const val DIALOG_RECORD_RESET : Int             = 10001
         private const val DIALOG_WARNING_RECORD_RESET : Int     = 10001
@@ -87,7 +90,9 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
     // 녹음 시간 타이머 관련 변수
     private var mUIUpdateTimer : Timer? = null
-    private var mTime : Long = 0 // milli second
+    private var mRecordTotalTime : Long = 0 // milli second
+    private var mRecordAddTime : Int = 0
+
 
     // 녹음파일 재생 관련 변수
     private var mMediaPlayer : MediaPlayer? = null
@@ -100,6 +105,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
     // 녹음 파일 업로드
     private var mRecordFileUploadHelper : RecordFileUploadHelper? = null
+
+    private var mCurrentRecordFileNumber : Int = 0
 
     internal inner class UITimerTask : TimerTask()
     {
@@ -131,8 +138,10 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     private fun init()
     {
         mRecordInformation = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_RECORD_PLAYER_DATA)!!
-        mRecordPlayerContractView.setRecordTitle(mRecordInformation)
+        PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
+        mFileName = mRecordInformation.getID() // 파일명 : 컨텐츠 ID
 
+        mRecordPlayerContractView.setRecordTitle(mRecordInformation)
         mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao()
         mUserInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
         mCurrentUserID = mUserInformationResult.getUserInformation().getFoxUserID()
@@ -146,8 +155,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 readyToRecord()
             }
         }
-        PATH_MP3_ROOT = mContext.cacheDir.toString() + "/mp3/"
-        mFileName = mRecordInformation.getID() // 파일명 : 컨텐츠 ID
     }
 
     override fun resume()
@@ -194,7 +201,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         {
             MESSAGE_RECORD_TIME_CHECK ->
             {
-                if (mTime > MAX_RECORDING_TIME)
+                if (mRecordTotalTime > MAX_RECORDING_TIME)
                 {
                     // 녹음 진행시간이 최대 녹음시간을 넘어가면 녹음 정지
                     Log.f("MESSAGE_RECORD_TIME_CHECK || recordStop")
@@ -203,7 +210,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 else
                 {
                     setTimerText()
-                    mTime += MILLI_SECOND
+                    mRecordTotalTime += MILLI_SECOND
                 }
             }
             MESSAGE_PLAY_TIME_CHECK ->
@@ -229,6 +236,20 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             MESSAGE_RECORD_FILE_MERGED ->
             {
                 mRecordPlayerContractView.setRecorderStatus(RecorderStatus.AUDIO_STOP)
+            }
+            MESSAGE_DUPLICATE_ERROR ->
+            {
+                // 중복 로그인 시 재시작
+                (mContext as AppCompatActivity).finish()
+                Toast.makeText(mContext, msg.obj as String, Toast.LENGTH_LONG).show()
+                IntentManagementFactory.getInstance().initAutoIntroSequence()
+            }
+            MESSAGE_AUTH_ERROR ->
+            {
+                Log.f("== isAuthenticationBroken ==")
+                (mContext as AppCompatActivity).finish()
+                Toast.makeText(mContext, msg.obj as String, Toast.LENGTH_LONG).show()
+                IntentManagementFactory.getInstance().initScene()
             }
         }
     }
@@ -311,6 +332,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         val isDirectoryExists = File(PATH_MP3_ROOT).exists()
         if (isDirectoryExists)
         {
+            Log.f("기존 파일 삭제 : " + PATH_MP3_ROOT)
             FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
         }
 
@@ -324,13 +346,51 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mVoiceRecorderHelper!!.setVoiceRecordEventListener(mVoiceRecordEventListener)
     }
 
+    private fun getRecordFileDuration(filePath : String)
+    {
+
+        mMediaPlayer = MediaPlayer()
+        try
+        {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                if(mAudioAttributes == null)
+                {
+                    mAudioAttributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).setUsage(AudioAttributes.USAGE_MEDIA).build()
+                }
+                mMediaPlayer?.setAudioAttributes(mAudioAttributes)
+            }
+            else
+            {
+                mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            }
+
+            mMediaPlayer!!.let {
+                it.setDataSource(filePath)
+                it.prepareAsync()
+                it.setOnPreparedListener(object : MediaPlayer.OnPreparedListener
+                {
+                    override fun onPrepared(mediaPlayer : MediaPlayer)
+                    {
+                        Log.f("mediaPlayer.duration : "+mediaPlayer.duration+", mRecordAddTime : "+mRecordAddTime)
+                        mRecordAddTime += mediaPlayer.duration
+                        mRecordTotalTime = mRecordAddTime.toLong()
+                        setTimerText()
+                    }
+                })
+            }
+        } catch(e : Exception)
+        {
+            Log.f("Exception : "+e)
+        }
+    }
+
     /**
      * 오디오 재생 기능 준비
      */
     private fun readyToPlay()
     {
         mMediaPlayer = MediaPlayer()
-
         try
         {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -382,7 +442,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private fun setTimerText()
     {
-        mRecordPlayerContractView.setTimerText(CommonUtils.getInstance(mContext).getMillisecondTime(mTime))
+        mRecordPlayerContractView.setTimerText(CommonUtils.getInstance(mContext).getMillisecondTime(mRecordTotalTime))
     }
 
     /**
@@ -431,13 +491,13 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         // 기존에 녹음한 파일이 있는 경우, 새로운 파일로 녹음 시작 (일시정지 한 다음 다시 녹화하는 경우)
         // 다음 파일의 최대값은 파일 총 사이즈에서 진행된 만큼 뺀 값으로 세팅
         // 리스트에 파일의 PATH를 저장 후 파일 합칠 때 사용
-        val fileNumber = mRecordingPathList.size
-        mVoiceRecorderHelper!!.startRecording((MAX_RECORDING_TIME - mTime).toInt(), PATH_MP3_ROOT + "${mFileName}_${fileNumber}.mp3")
-        mRecordingPathList.add(PATH_MP3_ROOT + "${mFileName}_${fileNumber}.mp3")
+        mCurrentRecordFileNumber = mRecordingPathList.size
+        mVoiceRecorderHelper!!.startRecording((MAX_RECORDING_TIME - mRecordTotalTime).toInt(), PATH_MP3_ROOT + "${mFileName}_${mCurrentRecordFileNumber}.mp3")
+        mRecordingPathList.add(PATH_MP3_ROOT + "${mFileName}_${mCurrentRecordFileNumber}.mp3")
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_START)
-        val percent = (mTime.toFloat() / MAX_RECORDING_TIME.toFloat()) * 100
-        mRecordPlayerContractView.startRecordingAnimation(MAX_RECORDING_TIME - mTime, percent.toInt())
+        val percent = (mRecordTotalTime.toFloat() / MAX_RECORDING_TIME.toFloat()) * 100
+        mRecordPlayerContractView.startRecordingAnimation(MAX_RECORDING_TIME - mRecordTotalTime, percent.toInt())
         enableTimer(true)
     }
 
@@ -452,7 +512,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mMainHandler.removeMessages(MESSAGE_RECORD_TIME_CHECK)
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_PAUSE)
-        val percent = (mTime.toFloat() / MAX_RECORDING_TIME.toFloat()) * 100
+        val percent = (mRecordTotalTime.toFloat() / MAX_RECORDING_TIME.toFloat()) * 100
         mRecordPlayerContractView.stopRecordingAnimation(percent.toInt())
         setTimerText()
     }
@@ -468,11 +528,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             mVoiceRecorderHelper!!.stopRecording()
             enableTimer(false)
             mMainHandler.removeMessages(MESSAGE_RECORD_TIME_CHECK)
-
             mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_MERGE)
             mRecordPlayerContractView.stopRecordingAnimation(0)
-            setTimerText()
-
             CoroutineScope(Dispatchers.IO).launch {
                 mVoiceRecorderHelper!!.mergeMediaFiles(mRecordingPathList, "$PATH_MP3_ROOT$mFileName.mp3")
                 mMainHandler.sendEmptyMessage(MESSAGE_RECORD_FILE_MERGED)
@@ -492,7 +549,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mRecordingPathList.clear()
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_STOP)
-        mTime = 0
+        mRecordTotalTime = 0
         mRecordPlayerContractView.stopRecordingAnimation(0)
         setTimerText()
         mRecordPlayerContractView.setUploadButtonEnable(true)
@@ -775,7 +832,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             filePath = PATH_MP3_ROOT,
             fileName = "$mFileName.mp3",
             contentsID = mRecordInformation.getID(),
-            recordTime = mTime.toInt(),
+            recordTime = mMediaPlayer!!.duration,
             homeworkNo = mRecordInformation.getHomeworkNumber()
         )
 
@@ -801,7 +858,10 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         override fun onRecordProgress(percent : Int) { }
 
         /** 녹음 완료 */
-        override fun onCompleteRecord() { }
+        override fun onCompleteRecord()
+        {
+            getRecordFileDuration(PATH_MP3_ROOT + "${mFileName}_${mCurrentRecordFileNumber}.mp3")
+        }
 
         /** 녹음 실패 */
         override fun inFailure(status : Int, message : String)
@@ -936,17 +996,19 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 if (result.isDuplicateLogin)
                 {
-                    // 중복 로그인 시 재시작
-                    (mContext as AppCompatActivity).finish()
-                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                    IntentManagementFactory.getInstance().initAutoIntroSequence()
+                    val message : Message = Message.obtain().apply {
+                        what = MESSAGE_DUPLICATE_ERROR
+                        obj = result.getMessage()
+                    }
+                    mMainHandler.sendMessage(message)
                 }
                 else if (result.isAuthenticationBroken)
                 {
-                    Log.f("== isAuthenticationBroken ==")
-                    (mContext as AppCompatActivity).finish()
-                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                    IntentManagementFactory.getInstance().initScene()
+                    val message : Message = Message.obtain().apply {
+                        what = MESSAGE_AUTH_ERROR
+                        obj = result.getMessage()
+                    }
+                    mMainHandler.sendMessage(message)
                 }
                 else
                 {

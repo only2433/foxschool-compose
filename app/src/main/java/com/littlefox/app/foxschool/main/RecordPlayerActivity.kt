@@ -9,6 +9,7 @@ import android.os.Handler
 import android.os.Message
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.SeekBar
@@ -166,6 +167,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
