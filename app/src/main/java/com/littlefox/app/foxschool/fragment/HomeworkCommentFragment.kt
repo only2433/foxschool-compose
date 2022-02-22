@@ -165,7 +165,6 @@ class HomeworkCommentFragment : Fragment()
                 setUpdateButtonEnable(true)
             }
         }
-        _CommentEditText.addTextChangedListener(mEditTextChangeListener)
         setRegisterButtonEnable(false)
         setUpdateButtonEnable(false)
     }
@@ -270,6 +269,7 @@ class HomeworkCommentFragment : Fragment()
      */
     private fun setStudentCommentLayout()
     {
+        _CommentEditText.addTextChangedListener(mEditTextChangeListener)
         _CommentEditText.setText(mComment)
 
         _CommentEditText.visibility = View.VISIBLE
@@ -279,7 +279,7 @@ class HomeworkCommentFragment : Fragment()
         {
             // 최종평가를 한 경우 코멘트 수정 불가
             _CommentInputCountText.visibility = View.GONE
-            _CommentEditText.isEnabled = false
+            setEditTextModifyEnable(false)
             setRegisterButtonVisible(false)
             setUpdateButtonVisible(false)
             setDeleteButtonVisible(false)
@@ -301,7 +301,7 @@ class HomeworkCommentFragment : Fragment()
             setUpdateButtonVisible(false)
             setDeleteButtonVisible(false)
         }
-        _CommentEditText.isEnabled = true
+        setEditTextModifyEnable(true)
     }
 
     /**
@@ -325,7 +325,25 @@ class HomeworkCommentFragment : Fragment()
         _CommentEditText.run {
             visibility = View.VISIBLE
             setText(mComment)
-            isEnabled = false
+        }
+        setEditTextModifyEnable(false)
+    }
+
+    /**
+     * EditText 수정 활성/비활성
+     */
+    private fun setEditTextModifyEnable(isEnable : Boolean)
+    {
+        if (isEnable)
+        {
+            _CommentEditText.setFocusableInTouchMode(true)
+        }
+        else
+        {
+            _CommentEditText.run {
+                setFocusableInTouchMode(false)
+                clearFocus()
+            }
         }
     }
 
@@ -416,6 +434,7 @@ class HomeworkCommentFragment : Fragment()
         setRegisterButtonVisible(false)
         setUpdateButtonVisible(false)
         setDeleteButtonVisible(false)
+        _CommentEditText.removeTextChangedListener(mEditTextChangeListener)
     }
 
     /**

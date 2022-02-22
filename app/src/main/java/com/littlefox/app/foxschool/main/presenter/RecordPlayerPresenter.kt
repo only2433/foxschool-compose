@@ -48,7 +48,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 {
     companion object
     {
-        private const val MAX_RECORDING_TIME : Long             = 600000 // 10분
+        private const val MAX_RECORDING_TIME : Long             = 600100 // 10분
 
         private const val MESSAGE_RECORD_TIME_CHECK : Int       = 101
         private const val MESSAGE_PLAY_TIME_CHECK : Int         = 102
@@ -550,6 +550,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
         mRecordPlayerContractView.setRecorderStatus(RecorderStatus.RECORD_STOP)
         mRecordTotalTime = 0
+        mRecordAddTime = 0
         mRecordPlayerContractView.stopRecordingAnimation(0)
         setTimerText()
         mRecordPlayerContractView.setUploadButtonEnable(true)
