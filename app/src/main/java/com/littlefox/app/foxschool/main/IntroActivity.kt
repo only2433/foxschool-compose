@@ -138,6 +138,8 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         _IntroProgressText.setTypeface(Font.getInstance(this).getRobotoBold())
         _IntroduceTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
         _LoginTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
+
+
     }
 
     override fun handlerMessage(message : Message)

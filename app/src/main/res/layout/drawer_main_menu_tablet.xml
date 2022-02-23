@@ -189,6 +189,8 @@
             android:gravity="center_vertical"
             android:text=""
             android:textColor="@color/color_ffffff"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:scale_left="46"
             app:scale_top="24"
             app:scale_width="525"

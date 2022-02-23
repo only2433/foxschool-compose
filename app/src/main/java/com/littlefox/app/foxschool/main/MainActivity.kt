@@ -363,14 +363,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             className = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
         }
 
-        // 이름 + 반 최대 글자 수 초과 시 말줄임표 처리
-        val textLength = (name + className).length
-        if (textLength > NAME_TEXT_MAX_LENGTH)
-        {
-            val overLength : Int = (textLength - NAME_TEXT_MAX_LENGTH)
-            className = className.substring(0, (className.length - overLength))
-            className += "..."
-        }
 
         // 이름/반 글자 크기
         val nameSize : Int
