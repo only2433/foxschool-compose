@@ -35,6 +35,7 @@ import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
+import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -92,10 +93,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
 
     @BindView(R.id._userNameText)
-    lateinit var _UserNameText : TextView
-
-    @BindView(R.id._userClassText)
-    lateinit var _UserClassText : TextView
+    lateinit var _UserNameText : SeparateTextView
 
     @BindView(R.id._userInfoButtonText)
     lateinit var _UserInfoButtonText : TextView
@@ -242,7 +240,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
     override fun initFont()
     {
         _UserNameText.typeface = Font.getInstance(this).getRobotoMedium()
-        _UserClassText.typeface = Font.getInstance(this).getRobotoMedium()
         _UserInfoButtonText.typeface = Font.getInstance(this).getRobotoMedium()
         _LeaningLogMenuText.typeface = Font.getInstance(this).getRobotoMedium()
         _RecordLogText.typeface = Font.getInstance(this).getRobotoMedium()
@@ -349,43 +346,51 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
      */
     private fun settingUserLayout()
     {
-        var name = mLoginInformationResult?.getUserInformation()?.getName()
+        // 최대 글자 수
+        // 폰 : 18자, 태블릿 : 23자
+        val NAME_TEXT_MAX_LENGTH : Int = if (CommonUtils.getInstance(this).checkTablet) 23 else 18
+
+        var name : String? = mLoginInformationResult?.getUserInformation()?.getName()
+        var className : String = ""
         if (CommonUtils.getInstance(this).isTeacherMode)
         {
+            // 선생님은 이름 뒤에 "선생님" 붙이고, 반은 표시하지 않는다.
             name += " 선생님"
-            _UserClassText.visibility = View.GONE
-
-            if(CommonUtils.getInstance(this).checkTablet)
-            {
-               _UserStatusLayout.moveChildView(_UserNameText, 46f, 27f)
-               _UserStatusLayout.moveChildView(_UserInfoButtonText, 46f, 90f)
-            }
-            else
-            {
-                _UserStatusLayout.moveChildView(_UserNameText, 80f, 50f)
-                _UserStatusLayout.moveChildView(_UserInfoButtonText, 80f, 157f)
-            }
         }
         else
         {
-            name += " 학생"
-
-            // 학생인 경우에만 class 데이터 존재
-            _UserClassText.visibility = View.VISIBLE
-            _UserClassText.text = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
-
-            if(CommonUtils.getInstance(this).checkTablet)
-            {
-                _UserStatusLayout.moveChildView(_UserNameText, 46f, 15f)
-                _UserStatusLayout.moveChildView(_UserInfoButtonText, 46f, 97f)
-            }
-            else
-            {
-                _UserStatusLayout.moveChildView(_UserNameText, 80f, 28f)
-                _UserStatusLayout.moveChildView(_UserInfoButtonText, 80f, 172f)
-            }
+            // 학생은 이름 뒤에 "학생"을 붙이지 않고, 반을 표시한다.
+            className = CommonUtils.getInstance(this).getClassName(mLoginInformationResult!!.getSchoolInformation())
         }
-        _UserNameText.text = name
+
+        // 이름 + 반 최대 글자 수 초과 시 말줄임표 처리
+        val textLength = (name + className).length
+        if (textLength > NAME_TEXT_MAX_LENGTH)
+        {
+            val overLength : Int = (textLength - NAME_TEXT_MAX_LENGTH)
+            className = className.substring(0, (className.length - overLength))
+            className += "..."
+        }
+
+        // 이름/반 글자 크기
+        val nameSize : Int
+        val classSize : Int
+        if (CommonUtils.getInstance(this).checkTablet)
+        {
+            nameSize = 27
+            classSize = 22
+        }
+        else
+        {
+            nameSize = 50
+            classSize = 40
+        }
+
+       _UserNameText.setSeparateText(name, " $className")
+            .setSeparateColor(resources.getColor(R.color.color_ffffff), resources.getColor(R.color.color_ffffff))
+            .setSeparateTextSize(CommonUtils.getInstance(this).getPixel(nameSize), CommonUtils.getInstance(this).getPixel(classSize))
+            .setSeparateTextStyle((Font.getInstance(this).getRobotoMedium()), (Font.getInstance(this).getRobotoMedium()))
+            .showView()
     }
 
     /**

@@ -647,8 +647,8 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             setDialogListener(mDialogListener)
             show()
         }
-
     }
+
     /**
      * ===================================
      *          onClick Events
@@ -666,7 +666,12 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
                 setRecordCoachMarkViewed(mCurrentUserID)
             }
         }
-        readyToRecord()
+
+        // 초기 상태의 경우 녹음기 준비
+        if (mRecorderStatus == RecorderStatus.RECORD_STOP)
+        {
+            readyToRecord()
+        }
     }
 
     /**

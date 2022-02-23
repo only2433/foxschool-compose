@@ -333,6 +333,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         else
         {
             _CoachmarkImage.visibility = View.VISIBLE
+            mRecordPlayerPresenter.onClickRecordPause()
         }
     }
 

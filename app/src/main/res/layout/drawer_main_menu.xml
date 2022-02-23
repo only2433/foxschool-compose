@@ -180,31 +180,18 @@
         app:scale_base_height="316"
         app:scale_base_width="930">
 
-        <TextView
+        <com.littlefox.library.view.text.SeparateTextView
             android:id="@+id/_userNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="이소유 학생"
+            android:text=""
             android:textColor="@color/color_ffffff"
             app:scale_left="80"
-            app:scale_top="28"
-            app:scale_width="700"
+            app:scale_top="40"
+            app:scale_width="807"
             app:scale_height="84"
             app:scale_textsize="50" />
-
-        <TextView
-            android:id="@+id/_userClassText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textColor="@color/color_ffffff"
-            android:text=""
-            app:scale_left="80"
-            app:scale_top="95"
-            app:scale_width="700"
-            app:scale_height="74"
-            app:scale_textsize="40"/>
 
         <TextView
             android:id="@+id/_userInfoButtonText"
@@ -215,7 +202,7 @@
             android:textColor="@color/color_23cc8a"
             android:gravity="center"
             app:scale_left="80"
-            app:scale_top="172"
+            app:scale_top="157"
             app:scale_width="247"
             app:scale_height="97"
             app:scale_textsize="40"/>
