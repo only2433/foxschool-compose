@@ -82,7 +82,6 @@ class SearchListPresenter : SearchListContract.Presenter
     private var mSearchListCoroutine : SearchListCoroutine? = null
     private var mBookshelfContentAddCoroutine : BookshelfContentAddCoroutine? = null
     private lateinit var mBottomContentItemOptionDialog : BottomContentItemOptionDialog
-    private lateinit var mDetailItemInformationResult : DetailItemInformationResult
     private lateinit var mBottomBookAddDialog : BottomBookAddDialog
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private lateinit var mMainInformationResult : MainInformationResult
@@ -593,7 +592,8 @@ class SearchListPresenter : SearchListContract.Presenter
         {
             Log.f("")
             mSendBookshelfAddList.clear()
-            mSendBookshelfAddList.add(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
+            mSendBookshelfAddList.add(mSearchItemList.get(mCurrentOptionIndex))
+            mBottomContentItemOptionDialog.dismiss()
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG, Common.DURATION_SHORT)
         }
 
