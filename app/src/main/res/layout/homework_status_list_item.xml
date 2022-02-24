@@ -41,6 +41,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/color_444444"
             android:gravity="bottom"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:scale_left="165"
             app:scale_top="0"
             app:scale_width="450"
