@@ -37,6 +37,7 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.littlefox.logmonitor.enumItem.MonitorMode
+import java.io.IOException
 
 import java.util.*
 
@@ -102,12 +103,15 @@ class IntroPresenter : IntroContract.Presenter
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         FirebaseApp.initializeApp(mContext)
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
-            if (it.isComplete)
+            try
             {
-                val token = it.result.toString()
-                Log.f("new Token : " + token)
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, token)
-            }
+                if (it.isComplete)
+                {
+                    val token = it.result.toString()
+                    Log.f("new Token : " + token)
+                    CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, token)
+                }
+            }catch(e : Exception){}
         }
 
         // 푸쉬 설정값 가져오기
@@ -424,7 +428,6 @@ class IntroPresenter : IntroContract.Presenter
         (mContext as AppCompatActivity).finish()
     }
 
-
     private fun startLoginActivity()
     {
         val isLoginFromMain = false
@@ -455,10 +458,19 @@ class IntroPresenter : IntroContract.Presenter
     override fun onClickIntroduce()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        if(NetworkUtil.isConnectNetwork(mContext))
+        {
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+        else
+        {
+            Toast.makeText(mContext, mContext.resources.getString(R.string.message_toast_network_error), Toast.LENGTH_LONG).show()
+            (mContext as AppCompatActivity).finish()
+        }
+
     }
 
     override fun onClickHomeButton()
@@ -470,7 +482,16 @@ class IntroPresenter : IntroContract.Presenter
     override fun onClickLogin()
     {
         Log.f("")
-        startLoginActivity()
+        if(NetworkUtil.isConnectNetwork(mContext))
+        {
+            startLoginActivity()
+        }
+        else
+        {
+            Toast.makeText(mContext, mContext.resources.getString(R.string.message_toast_network_error), Toast.LENGTH_LONG).show()
+            (mContext as AppCompatActivity).finish()
+        }
+
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
