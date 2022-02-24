@@ -222,7 +222,7 @@ class BottomBookAddDialog : BottomSheetDialog
             constructor(view : View) : super(view)
             {
                 ButterKnife.bind(this, view)
-                initFont()
+                _BooksTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
             }
         }
     }
