@@ -465,18 +465,20 @@ class TeacherHomeworkListFragment : Fragment()
         var comment = ""
         var evalSize = 0
         var commentSize = 0
+        var evaluationText : String = homework.getEvaluationComment().replace("\n", " ")
 
         if (CommonUtils.getInstance(mContext).checkTablet)
         {
             // 태블릿 설정
-            comment = " ${homework.getEvaluationComment()}"
+            comment = " ${evaluationText}."
             evalSize = 30
             commentSize = 30
         }
         else
         {
+
             // 스마트폰 설정
-            comment = "\n${homework.getEvaluationComment()}"
+            comment = "\n${evaluationText}"
             evalSize = 45
             commentSize = 40
         }
