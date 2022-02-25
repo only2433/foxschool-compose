@@ -1468,7 +1468,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun settingPlayerOption(isEnableCaption : Boolean, isEnablePage : Boolean)
+    override fun settingCaptionOption(isEnableCaption : Boolean, isEnablePage : Boolean)
     {
         Log.f("isEnableCaption : $isEnableCaption, isEnablePage : $isEnablePage")
         this.isEnableCaption = isEnableCaption
@@ -1606,14 +1606,24 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     override fun disablePortraitOptionButton()
     {
-        _PlayerPortraitTitleOption.visibility = View.GONE
         _PlayerPortraitTitleOption.isEnabled = false
     }
 
     override fun enablePortraitOptionButton()
     {
-        _PlayerPortraitTitleOption.visibility = View.VISIBLE
         _PlayerPortraitTitleOption.isEnabled = true
+    }
+
+    override fun availableMovieOptionButton(isAvailable : Boolean)
+    {
+        if(isAvailable)
+        {
+            _PlayerPortraitTitleOption.visibility = View.VISIBLE
+        }
+        else
+        {
+            _PlayerPortraitTitleOption.visibility = View.GONE
+        }
     }
 
     override fun showSuccessMessage(message : String)

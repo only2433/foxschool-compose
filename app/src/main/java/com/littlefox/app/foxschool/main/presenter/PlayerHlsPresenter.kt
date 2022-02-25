@@ -354,7 +354,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         // 숙제관리에서 넘어온 플레이의 경우 3점 메뉴버튼 표시하지 않도록 처리
         if (mPlayerIntentParamsObject.getHomeworkNumber() != 0)
         {
-            mPlayerContractView.disablePortraitOptionButton()
             mPlayInformationList[mCurrentPlayMovieIndex].setOptionDisable(true)
         }
     }
@@ -681,6 +680,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
         }
         mPlayerContractView.hideMovieLoading()
+        mPlayerContractView.enablePortraitOptionButton()
         mPlayer!!.setPlayWhenReady(true)
         enableTimer(true)
         mPlayListAdapter.setEnableOption(true)
@@ -837,6 +837,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             setMovieTitle(title)
             showMovieLoading()
             disableSpeedButton()
+            disablePortraitOptionButton()
         }
         mPlayListAdapter.setCurrentPlayIndex(mCurrentPlayMovieIndex)
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_VIDEO, Common.DURATION_NORMAL)
@@ -904,7 +905,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayerContractView.run {
             enablePlayMovie(true)
             checkSupportCaptionView(isAvailableCaption)
-            settingPlayerOption(isCaptionEnable, isPageByPageEnable)
+            settingCaptionOption(isCaptionEnable, isPageByPageEnable)
             scrollPosition(mCurrentPlayMovieIndex)
         }
     }
@@ -974,14 +975,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             }
         }
 
-
         if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable())
         {
-            mPlayerContractView.disablePortraitOptionButton()
+            mPlayerContractView.availableMovieOptionButton(false)
         }
         else
         {
-            mPlayerContractView.enablePortraitOptionButton()
+            mPlayerContractView.availableMovieOptionButton(true)
         }
         mPlayerContractView.settingPaymentEndView(
             isEbookAvailable = isEbookAvailable,

@@ -40,7 +40,7 @@ class PlayerContract
         fun PlayLastIndexMovie()
         fun PlayOneItemMovie()
         fun checkSupportCaptionView(isSupport : Boolean)
-        fun settingPlayerOption(isEnableCaption : Boolean, isEnablePage : Boolean)
+        fun settingCaptionOption(isEnableCaption : Boolean, isEnablePage : Boolean)
         fun enableRepeatView(isOn : Boolean)
         fun scrollPosition(position : Int)
 
@@ -64,8 +64,11 @@ class PlayerContract
         fun activatePageView(isActivate : Boolean)
         fun enableSpeedButton()
         fun disableSpeedButton()
+
         fun disablePortraitOptionButton()
         fun enablePortraitOptionButton()
+
+        fun availableMovieOptionButton(isAvailable : Boolean)
     }
 
     interface Presenter : BaseContract.Presenter
