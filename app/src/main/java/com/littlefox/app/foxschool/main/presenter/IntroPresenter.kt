@@ -292,14 +292,7 @@ class IntroPresenter : IntroContract.Presenter
         Log.f("Log file Size : $logfileSize")
         if(logfileSize > Common.MAXIMUM_LOG_FILE_SIZE || logfileSize == 0L)
         {
-            if(Feature.IS_WEBVIEW_DEBUGING)
-            {
-                Log.initWithDeleteFile(mContext, Common.LOG_FILE, MonitorMode.DEBUG_MODE)
-            }
-            else
-            {
-                Log.initWithDeleteFile(mContext, Common.LOG_FILE, MonitorMode.RELEASE_MODE)
-            }
+            Log.initWithDeleteFile(mContext, Common.LOG_FILE, MonitorMode.RELEASE_MODE)
         }
     }
 

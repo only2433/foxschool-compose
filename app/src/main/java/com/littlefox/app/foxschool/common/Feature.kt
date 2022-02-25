@@ -17,7 +17,7 @@ object Feature {
     var IS_4_3_SUPPORT_TABLET_RADIO_DISPLAY : Boolean  = false
 
 
-    var IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = false*/
+    var IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = false */
 
     /**
      * 유료사용자 인지 무료 사용자인지 구분하기 위해 사용
