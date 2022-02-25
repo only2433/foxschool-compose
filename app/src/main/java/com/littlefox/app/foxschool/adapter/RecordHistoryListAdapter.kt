@@ -83,7 +83,7 @@ class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.V
             holder._RecordPlayButton.background = mContext.resources.getDrawable(R.drawable.icon_recorder_play_on)
             holder._RecordRemainDateText.text = "${item.getExpire()}${mContext.resources.getString(R.string.text_record_remain_date)}"
         }
-        holder._RecordDateText.text = "${mContext.resources.getString(R.string.text_study_date)} ${item.getDate()}"
+        holder._RecordDateText.text = "${mContext.resources.getString(R.string.text_study_date)}: ${item.getDate()}"
 
         holder.itemView.setOnClickListener {
             mRecordItemListener?.onItemClick(position)
@@ -115,9 +115,9 @@ class RecordHistoryListAdapter : RecyclerView.Adapter<RecordHistoryListAdapter.V
 
         private fun initFont()
         {
-            _RecordContentNameText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _RecordRemainDateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
-            _RecordDateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _RecordContentNameText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _RecordRemainDateText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
+            _RecordDateText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         }
     }
 }

@@ -134,10 +134,10 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 
     override fun initFont()
     {
-        _IntroTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _IntroProgressText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _IntroduceTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
-        _LoginTextButton.setTypeface(Font.getInstance(this).getRobotoBold())
+        _IntroTitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _IntroProgressText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _IntroduceTextButton.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _LoginTextButton.setTypeface(Font.getInstance(this).getTypefaceBold())
 
 
     }

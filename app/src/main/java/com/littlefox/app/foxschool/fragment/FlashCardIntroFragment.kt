@@ -166,12 +166,12 @@ class FlashCardIntroFragment : Fragment()
 
     private fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _SubtitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StartWordMessageText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StartMeaningMessageText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StartWordButtonText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _StartMeaningButtonText.typeface = Font.getInstance(mContext).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _SubtitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StartWordMessageText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StartMeaningMessageText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StartWordButtonText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _StartMeaningButtonText.typeface = Font.getInstance(mContext).getTypefaceBold()
     }
     /** ========== Init ========== */
 

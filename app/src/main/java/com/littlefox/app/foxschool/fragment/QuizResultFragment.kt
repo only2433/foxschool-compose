@@ -165,12 +165,12 @@ class QuizResultFragment : Fragment()
 
     private fun initFont()
     {
-        _CorrectCountText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _InCorrectCountText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _QuizCorrectTitleText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _QuizInCorrectTitleText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _QuizSaveButton.typeface = Font.getInstance(mContext).getRobotoBold()
-        _QuizReplayButton.typeface = Font.getInstance(mContext).getRobotoBold()
+        _CorrectCountText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _InCorrectCountText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _QuizCorrectTitleText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _QuizInCorrectTitleText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _QuizSaveButton.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _QuizReplayButton.typeface = Font.getInstance(mContext).getTypefaceBold()
     }
     /** ========== Init ========== */
 

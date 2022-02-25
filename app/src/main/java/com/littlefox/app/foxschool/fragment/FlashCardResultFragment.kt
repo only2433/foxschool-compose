@@ -158,8 +158,8 @@ class FlashCardResultFragment : Fragment()
 
     private fun initFont()
     {
-        _ReplayText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _BookmarkText.typeface = Font.getInstance(mContext).getRobotoBold()
+        _ReplayText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _BookmarkText.typeface = Font.getInstance(mContext).getTypefaceBold()
     }
     /** ========== Init ========== */
 

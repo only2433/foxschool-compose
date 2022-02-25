@@ -154,9 +154,9 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private fun initFont()
     {
-        _AllText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _AllHomeworCheckingText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkContentText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _AllText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _AllHomeworCheckingText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkContentText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
     }
     /** ========== Init ========== */
 
@@ -191,7 +191,7 @@ class TeacherHomeworkStatusFragment : Fragment()
         _TextClassName.setSeparateText(mClassName, " $mHomeworkDate")
             .setSeparateColor(resources.getColor(R.color.color_000000), resources.getColor(R.color.color_000000))
             .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(textSize), CommonUtils.getInstance(mContext).getPixel(textSize))
-            .setSeparateTextStyle((Font.getInstance(mContext).getRobotoBold()), (Font.getInstance(mContext).getRobotoRegular()))
+            .setSeparateTextStyle((Font.getInstance(mContext).getTypefaceBold()), (Font.getInstance(mContext).getTypefaceRegular()))
             .showView()
     }
 

@@ -254,11 +254,11 @@ class MainStoryFragment : Fragment()
 
     private fun initFont()
     {
-        _LevelsTextButton.setTypeface(Font.getInstance(mContext).getRobotoBold())
-        _CategoriesTextButton.setTypeface(Font.getInstance(mContext).getRobotoBold())
+        _LevelsTextButton.setTypeface(Font.getInstance(mContext).getTypefaceBold())
+        _CategoriesTextButton.setTypeface(Font.getInstance(mContext).getTypefaceBold())
         for(i in _NavigationLevelButtonList.indices)
         {
-            _NavigationLevelButtonList[i].setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _NavigationLevelButtonList[i].setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
     }
 

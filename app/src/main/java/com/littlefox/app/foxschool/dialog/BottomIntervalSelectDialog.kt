@@ -87,10 +87,10 @@ class BottomIntervalSelectDialog : BottomSheetDialog
 
     private fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         for(i in _IntervalIDList.indices)
         {
-            _IntervalIDList[i].setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _IntervalIDList[i].setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
     }
 

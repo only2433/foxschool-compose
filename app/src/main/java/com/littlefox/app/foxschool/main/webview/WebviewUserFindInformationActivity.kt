@@ -125,7 +125,7 @@ class WebviewUserFindInformationActivity : BaseActivity()
         {
             _TitleText.text = resources.getString(R.string.text_find_passoword)
         }
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     private fun initWebView()

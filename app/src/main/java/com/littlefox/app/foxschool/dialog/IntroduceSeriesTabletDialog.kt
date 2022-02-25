@@ -146,8 +146,8 @@ class IntroduceSeriesTabletDialog : Dialog
             )
         }
         _IntroductionContentsText.setText(result.getIntroduction())
-        _IntroductionTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _IntroductionContentsText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        _IntroductionTitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _IntroductionContentsText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         _IntroductionTitleText.setPadding(CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
         _IntroductionContentsText.setPadding(
             CommonUtils.getInstance(mContext).getPixel(LAYOUT_VIEW_PADDING),
@@ -195,7 +195,7 @@ class IntroduceSeriesTabletDialog : Dialog
             val titleView = TextView(mContext).apply {
                 setGravity(Gravity.CENTER)
                 setTextColor(mContext.resources.getColor(R.color.color_444444))
-                setTypeface(Font.getInstance(mContext).getRobotoBold())
+                setTypeface(Font.getInstance(mContext).getTypefaceBold())
                 setText(characterList[i].getName())
             }
             currentColumnIndex = i / MAX_ROW_COUNT
@@ -251,7 +251,7 @@ class IntroduceSeriesTabletDialog : Dialog
             setBackground(mContext.resources.getDrawable(R.drawable.info_box_b))
             setText("Creators")
             setTextColor(mContext.resources.getColor(R.color.color_ffffff))
-            setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
 
         titleLayout.addView(
@@ -322,7 +322,7 @@ class IntroduceSeriesTabletDialog : Dialog
                 0,
                 0
             )
-            setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
 
         contentsLayout.addView(
@@ -337,7 +337,7 @@ class IntroduceSeriesTabletDialog : Dialog
         for(i in data.indices)
         {
             val castInformationTextView = SeparateTextView(mContext)
-            castInformationTextView.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            castInformationTextView.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
             castInformationTextView.setSeparateText(data[i].getName(), "     " + data[i].getPart())
                 .setSeparateColor(
                     mContext.resources.getColor(R.color.color_444444),

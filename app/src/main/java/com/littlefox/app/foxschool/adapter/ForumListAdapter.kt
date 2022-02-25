@@ -130,11 +130,11 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
 
         private fun initFont()
         {
-            _TitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _TitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
             // [팍스스쿨 소식]에서만 보이는 항목
             if (mForumType == ForumType.FOXSCHOOL_NEWS)
             {
-                _DateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+                _DateText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
             }
         }
     }

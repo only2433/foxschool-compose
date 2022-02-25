@@ -73,9 +73,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/color_444444"
             android:gravity="center"
-            app:scale_left="620"
+            app:scale_left="645"
             app:scale_top="228"
-            app:scale_width="380"
+            app:scale_width="330"
             app:scale_height="123"
             app:scale_textsize="36"/>
 

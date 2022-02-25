@@ -156,10 +156,10 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _IntroduceInformationText.typeface = Font.getInstance(this).getRobotoRegular()
-        _IntroductionTitleText.typeface = Font.getInstance(this).getRobotoMedium()
-        _IntroductionContentsText.typeface = Font.getInstance(this).getRobotoRegular()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _IntroduceInformationText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _IntroductionTitleText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _IntroductionContentsText.typeface = Font.getInstance(this).getTypefaceRegular()
     }
 
     private fun initViewSize()
@@ -328,7 +328,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
         var categoryData = ""
         if(result.getCategories() != "")
         {
-            categoryData = " | " + result.getCategories().replace("|", " | ")
+            categoryData = " | " + result.getCategories().replace("|", ", ")
         }
         Log.i("categoryData : $categoryData")
 
@@ -416,7 +416,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             background = resources.getDrawable(R.drawable.info_box_b)
             text = resources.getString(R.string.text_character)
             setTextColor(resources.getColor(R.color.color_ffffff))
-            typeface = Font.getInstance(context).getRobotoMedium()
+            typeface = Font.getInstance(context).getTypefaceMedium()
         }
         titleLayout.addView(
             titleText,
@@ -475,7 +475,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             val titleView = TextView(this).apply {
                 gravity = Gravity.CENTER
                 setTextColor(resources.getColor(R.color.color_444444))
-                typeface = Font.getInstance(context).getRobotoBold()
+                typeface = Font.getInstance(context).getTypefaceBold()
                 text = characterList[i].getName()
             }
 
@@ -549,7 +549,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             background = resources.getDrawable(R.drawable.info_box_b)
             text = resources.getString(R.string.text_creators)
             setTextColor(resources.getColor(R.color.color_ffffff))
-            typeface = Font.getInstance(context).getRobotoMedium()
+            typeface = Font.getInstance(context).getTypefaceMedium()
         }
 
         titleLayout.addView(
@@ -629,7 +629,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
             text = title
             gravity = Gravity.CENTER_VERTICAL
             setPadding(CommonUtils.getInstance(context).getPixel(LAYOUT_VIEW_PADDING), 0, 0, 0)
-            typeface = Font.getInstance(context).getRobotoMedium()
+            typeface = Font.getInstance(context).getTypefaceMedium()
         }
 
         contentsLayout.addView(
@@ -649,7 +649,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
         for(i in data.indices)
         {
             val castInformationTextView = SeparateTextView(this)
-            castInformationTextView.typeface = Font.getInstance(this).getRobotoRegular()
+            castInformationTextView.typeface = Font.getInstance(this).getTypefaceRegular()
             castInformationTextView
                 .setSeparateText(data[i].getName(), "     " + data[i].getPart())
                 .setSeparateColor(resources.getColor(R.color.color_444444), resources.getColor(R.color.color_8e8e8e))

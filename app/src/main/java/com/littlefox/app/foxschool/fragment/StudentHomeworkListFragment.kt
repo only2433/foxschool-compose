@@ -229,16 +229,16 @@ class StudentHomeworkListFragment : Fragment()
 
     private fun initFont()
     {
-        _HomeworkSubTitle.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkResultText.setTypeface(Font.getInstance(mContext).getRobotoBold())
-        _HomeworkOneCommentTitle.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkOneCommentButton.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkStudentComment.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkStudentCommentButton.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkTeacherComment.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkTeacherCommentButton.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkListText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _HomeworkFilterText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        _HomeworkSubTitle.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkResultText.setTypeface(Font.getInstance(mContext).getTypefaceBold())
+        _HomeworkOneCommentTitle.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkOneCommentButton.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkStudentComment.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkStudentCommentButton.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkTeacherComment.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkTeacherCommentButton.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkListText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _HomeworkFilterText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
     }
 
     /** ========== Init ========== */
@@ -468,7 +468,7 @@ class StudentHomeworkListFragment : Fragment()
         _HomeworkResultText.setSeparateText(evalText, comment)
             .setSeparateColor(resources.getColor(R.color.color_fa4959), resources.getColor(R.color.color_444444))
             .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(evalSize), CommonUtils.getInstance(mContext).getPixel(commentSize))
-            .setSeparateTextStyle((Font.getInstance(mContext).getRobotoBold()), (Font.getInstance(mContext).getRobotoRegular()))
+            .setSeparateTextStyle((Font.getInstance(mContext).getTypefaceBold()), (Font.getInstance(mContext).getTypefaceRegular()))
             .showView()
     }
 

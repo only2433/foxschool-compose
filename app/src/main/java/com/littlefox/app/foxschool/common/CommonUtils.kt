@@ -1131,7 +1131,7 @@ class CommonUtils
             textView.setGravity(gravity)
         }
         textView.maxLines = 3
-        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
         textView.setTextColor(color)
         snackbar.show()
     }
@@ -1161,7 +1161,7 @@ class CommonUtils
             textView.gravity = Gravity.CENTER
         }
         textView.maxLines = 3
-        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
         textView.setTextColor(color)
         snackbar.show()
     }
@@ -1199,7 +1199,7 @@ class CommonUtils
             Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
-        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
         textView.setText(spannableStringBuilder)
         snackbar.show()
     }
@@ -1238,7 +1238,7 @@ class CommonUtils
             Snackbar.make(coordinatorLayout, messageText, Snackbar.LENGTH_SHORT)
         val view : View = snackbar.getView()
         val textView : TextView = view.findViewById<View>(R.id.snackbar_text) as TextView
-        textView.typeface = Font.getInstance(sContext).getRobotoMedium()
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
         textView.setText(spannableStringBuilder)
         textView.setOnClickListener(listener)
         snackbar.show()

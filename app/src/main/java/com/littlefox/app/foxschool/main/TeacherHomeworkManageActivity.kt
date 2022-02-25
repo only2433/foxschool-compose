@@ -129,7 +129,7 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     override fun initViewPager(mHomeworkPagerAdapter : TeacherHomeworkPagerAdapter)

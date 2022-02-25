@@ -125,9 +125,9 @@ class RecordHistoryActivity : BaseActivity(), MessageHandlerCallback, RecordHist
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _RecordHistoryInfoText.typeface = Font.getInstance(this).getRobotoRegular()
-        _RecordHistoryEmptyText.typeface = Font.getInstance(this).getRobotoRegular()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _RecordHistoryInfoText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _RecordHistoryEmptyText.typeface = Font.getInstance(this).getTypefaceRegular()
     }
 
     /** Init end **/

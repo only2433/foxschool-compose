@@ -204,16 +204,16 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _InputIdEditText.typeface = Font.getInstance(this).getRobotoRegular()
-        _InputPasswordEditText.typeface = Font.getInstance(this).getRobotoRegular()
-        _InputSchoolEditText.typeface = Font.getInstance(this).getRobotoRegular()
-        _AutoLoginText.typeface = Font.getInstance(this).getRobotoRegular()
-        _LoginButtonText.typeface = Font.getInstance(this).getRobotoRegular()
-        _ForgetIDText.typeface = Font.getInstance(this).getRobotoRegular()
-        _ForgetPasswordText.typeface = Font.getInstance(this).getRobotoRegular()
-        _OnlyWebSignPossibleTitleText.typeface = Font.getInstance(this).getRobotoMedium()
-        _CustomerCenterInfoText.typeface = Font.getInstance(this).getRobotoMedium()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _InputIdEditText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _InputPasswordEditText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _InputSchoolEditText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _AutoLoginText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _LoginButtonText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _ForgetIDText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _ForgetPasswordText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _OnlyWebSignPossibleTitleText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _CustomerCenterInfoText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
     /** ========== Init end  ========== */
 
@@ -349,7 +349,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
             for(i in mSearchSchoolList.indices)
             {
                 val schoolText = TextView(this).let {
-                    it.typeface = Font.getInstance(this).getRobotoRegular()
+                    it.typeface = Font.getInstance(this).getTypefaceRegular()
                     it.gravity = Gravity.CENTER_VERTICAL
                     it.text = mSearchSchoolList[i].getSchoolName()
                     it.setTextColor(resources.getColor(R.color.color_444444))
@@ -383,7 +383,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         {
             // 검색 결과가 없는 경우
             val resultText = TextView(this).apply {
-                typeface = Font.getInstance(context).getRobotoRegular()
+                typeface = Font.getInstance(context).getTypefaceRegular()
                 gravity = Gravity.CENTER_VERTICAL
                 text = resources.getString(R.string.text_result_empty)
                 setTextColor(resources.getColor(R.color.color_cacaca))

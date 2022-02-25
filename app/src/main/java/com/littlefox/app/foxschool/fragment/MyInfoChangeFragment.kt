@@ -272,23 +272,23 @@ class MyInfoChangeFragment : Fragment()
     private fun initFont()
     {
         // [나의 정보 수정]
-        _IdTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _IdText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _NameTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _EmailTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _EmailAtText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _EmailEndTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputNameEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _InputEmailEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _InputEmailEndEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputPhoneEditText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _SaveInfoButton.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _IdTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _IdText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _NameTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _EmailTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _EmailAtText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _EmailEndTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputNameEditText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _InputEmailEditText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _InputEmailEndEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputPhoneEditText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _SaveInfoButton.typeface = Font.getInstance(mContext).getTypefaceMedium()
 
         // [비밀번호 변경]
-        _InputPasswordEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputNewPasswordEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputNewPasswordConfirmEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _SavePasswordButton.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _InputPasswordEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputNewPasswordEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputNewPasswordConfirmEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _SavePasswordButton.typeface = Font.getInstance(mContext).getTypefaceMedium()
     }
     /** ========== Init ========== */
 
@@ -397,7 +397,7 @@ class MyInfoChangeFragment : Fragment()
         _InputPhoneTitleText.setSeparateText(resources.getString(R.string.text_mobile_number), optionText)
             .setSeparateColor(resources.getColor(R.color.color_b7b7b7), resources.getColor(R.color.color_b7b7b7))
             .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(textSize), CommonUtils.getInstance(mContext).getPixel(optionTextSize))
-            .setSeparateTextStyle((Font.getInstance(mContext).getRobotoRegular()), (Font.getInstance(mContext).getRobotoRegular()))
+            .setSeparateTextStyle((Font.getInstance(mContext).getTypefaceRegular()), (Font.getInstance(mContext).getTypefaceRegular()))
             .showView()
     }
 

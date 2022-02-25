@@ -113,7 +113,7 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     override fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter?)

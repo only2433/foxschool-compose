@@ -178,15 +178,15 @@ class PasswordChangeDialog : Dialog
 
     private fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _PasswordChangeMessageTextView.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _InputPasswordEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputNewPasswordEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _InputNewPasswordConfirmEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _ChangeButton90.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _ChangeButton180.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _LaterButton.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _KeepButton.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _TitleText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _PasswordChangeMessageTextView.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _InputPasswordEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputNewPasswordEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _InputNewPasswordConfirmEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _ChangeButton90.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _ChangeButton180.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _LaterButton.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _KeepButton.typeface = Font.getInstance(mContext).getTypefaceMedium()
     }
 
     fun setPasswordChangeListener(passwordChangeListener : PasswordChangeListener?)

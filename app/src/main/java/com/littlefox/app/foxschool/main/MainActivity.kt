@@ -239,14 +239,14 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     override fun initFont()
     {
-        _UserNameText.typeface = Font.getInstance(this).getRobotoMedium()
-        _UserInfoButtonText.typeface = Font.getInstance(this).getRobotoMedium()
-        _LeaningLogMenuText.typeface = Font.getInstance(this).getRobotoMedium()
-        _RecordLogText.typeface = Font.getInstance(this).getRobotoMedium()
-        _HomeworkManageText.typeface = Font.getInstance(this).getRobotoMedium()
+        _UserNameText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _UserInfoButtonText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _LeaningLogMenuText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _RecordLogText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _HomeworkManageText.typeface = Font.getInstance(this).getTypefaceMedium()
         if (CommonUtils.getInstance(this).checkTablet)
         {
-            _TopMenuSchoolName.typeface = Font.getInstance(this).getRobotoBold()
+            _TopMenuSchoolName.typeface = Font.getInstance(this).getTypefaceBold()
         }
     }
 
@@ -381,7 +381,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
        _UserNameText.setSeparateText(name, " $className")
             .setSeparateColor(resources.getColor(R.color.color_ffffff), resources.getColor(R.color.color_ffffff))
             .setSeparateTextSize(CommonUtils.getInstance(this).getPixel(nameSize), CommonUtils.getInstance(this).getPixel(classSize))
-            .setSeparateTextStyle((Font.getInstance(this).getRobotoMedium()), (Font.getInstance(this).getRobotoMedium()))
+            .setSeparateTextStyle((Font.getInstance(this).getTypefaceMedium()), (Font.getInstance(this).getTypefaceMedium()))
             .showView()
     }
 
@@ -547,7 +547,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         for(i in MENU_TEXTVIEW_ID_LIST.indices)
         {
             val textView : TextView = addLayout.findViewById<View>(MENU_TEXTVIEW_ID_LIST[i]) as TextView
-            textView.typeface = Font.getInstance(this).getRobotoMedium()
+            textView.typeface = Font.getInstance(this).getTypefaceMedium()
             val imageView = addLayout.findViewById<View>(MENU_IMAGEVIEW_ID_LIST[i]) as ImageView
             imageView.setOnClickListener(mMenuClickListener)
 
@@ -590,7 +590,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             iconNewspaper.visibility = View.GONE
         }
 
-        _MenuLogoutText.typeface = Font.getInstance(this).getRobotoMedium()
+        _MenuLogoutText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
 
     private fun settingViewPagerInformation(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
@@ -643,7 +643,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             _MainDrawLayout.openDrawer(_NavigationBaseLayout)
         })
         _SchoolNameText = customView.findViewById<View>(R.id._topMenuSchoolName) as TextView
-        _SchoolNameText.typeface = Font.getInstance(this).getRobotoBold()
+        _SchoolNameText.typeface = Font.getInstance(this).getTypefaceBold()
         _SearchButton = customView.findViewById<View>(R.id._topMenuSearch) as ImageView
         _SearchButton.setOnClickListener(object : View.OnClickListener
         {

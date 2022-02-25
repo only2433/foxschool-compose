@@ -239,17 +239,17 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
 
     override fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _CheckAllText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _CheckWordText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _CheckMeaningText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _CheckExampleText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _BottomIntervalText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _BottomPlayText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _BottomSelectText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _BottomWordsActionText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _BottomFlashCardActionText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _BottomSelectCountText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _CheckAllText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _CheckWordText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _CheckMeaningText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _CheckExampleText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _BottomIntervalText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _BottomPlayText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _BottomSelectText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _BottomWordsActionText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _BottomFlashCardActionText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _BottomSelectCountText.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
     /**

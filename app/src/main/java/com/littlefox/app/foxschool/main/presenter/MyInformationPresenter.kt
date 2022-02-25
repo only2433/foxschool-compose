@@ -240,7 +240,7 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private fun checkAllInformationData(informationData : MyInformationData, isRequest : Boolean = false)
     {
         Log.f("")
-        var result = 0
+        var result = CheckUserInput.INPUT_SUCCESS
 
         // 이름 체크
         if (informationData.getName() != "")

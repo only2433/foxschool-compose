@@ -222,10 +222,10 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
 
         private fun initFont()
         {
-            _StudentNameText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _HomeworkCompleteText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _HomeworkDetailText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _HomeworkEvalText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _StudentNameText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _HomeworkCompleteText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _HomeworkDetailText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _HomeworkEvalText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
 
         private val mOnSingleClickListner : OnSingleClickListner = object : OnSingleClickListner()

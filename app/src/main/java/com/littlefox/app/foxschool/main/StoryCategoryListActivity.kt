@@ -215,7 +215,7 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
         menuBackIcon.setOnClickListener {onBackPressed()}
 
         _TopbarTitleText = (customView.findViewById<View>(R.id._topMenuTitle) as TextView).apply {
-            setTypeface(Font.getInstance(context).getRobotoBold())
+            setTypeface(Font.getInstance(context).getTypefaceBold())
             setText(title)
             setVisibility(View.INVISIBLE)
         }
@@ -262,7 +262,7 @@ class StoryCategoryListActivity : BaseActivity(), MessageHandlerCallback, StoryC
         }
         Log.i("leftMargin : " + collapsingToolbarLayoutParams.leftMargin + ", topMargin : " + collapsingToolbarLayoutParams.topMargin)
         _DetailInformationText.setLayoutParams(collapsingToolbarLayoutParams)
-        _DetailInformationText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _DetailInformationText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _DetailInformationText.setVisibility(View.INVISIBLE)
         val options = RequestOptions()
         options.override(Target.SIZE_ORIGINAL)

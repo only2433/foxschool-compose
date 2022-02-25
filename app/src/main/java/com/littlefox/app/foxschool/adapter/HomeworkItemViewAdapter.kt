@@ -119,7 +119,7 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
             }
 
             val date = CommonUtils.getInstance(mContext).getStudyCompleteDateText(item.getCompleteDate())
-            holder._HomeworkCompleteDateText.text = "${mContext.resources.getString(R.string.text_study_date)} : $date"
+            holder._HomeworkCompleteDateText.text = "${mContext.resources.getString(R.string.text_study_date)}: $date"
             holder._HomeworkCompleteDateText.visibility = View.VISIBLE
             holder._HomeworkCheckImage.visibility = View.VISIBLE
         }
@@ -186,10 +186,10 @@ class HomeworkItemViewAdapter : RecyclerView.Adapter<HomeworkItemViewAdapter.Vie
 
         private fun initFont()
         {
-            _HomeworkContentNameText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _HomeworkCompleteDateText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
-            _HomeworkUnCompleteText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
-            _HomeworkRecordDate.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _HomeworkContentNameText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _HomeworkCompleteDateText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
+            _HomeworkUnCompleteText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
+            _HomeworkRecordDate.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         }
     }
 }

@@ -233,13 +233,13 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
 
     override fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _RecordInfoText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _RecordTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _RecordTimerText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _RecordStartText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _AudioCurrentPlayTime.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _AudioPlayFullTime.setTypeface(Font.getInstance(this).getRobotoRegular())
+        _TitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _RecordInfoText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _RecordTitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _RecordTimerText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _RecordStartText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _AudioCurrentPlayTime.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _AudioPlayFullTime.setTypeface(Font.getInstance(this).getTypefaceRegular())
     }
 
     /**
@@ -315,7 +315,7 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             _RecordTitleText.setSeparateText(title, "\n$subTitle")
                 .setSeparateColor(resources.getColor(R.color.color_444444), resources.getColor(R.color.color_444444))
                 .setSeparateTextSize(CommonUtils.getInstance(this).getPixel(fontSize), CommonUtils.getInstance(this).getPixel(fontSize))
-                .setSeparateTextStyle((Font.getInstance(this).getRobotoBold()), (Font.getInstance(this).getRobotoRegular()))
+                .setSeparateTextStyle((Font.getInstance(this).getTypefaceBold()), (Font.getInstance(this).getTypefaceRegular()))
                 .showView()
         }
     }

@@ -383,8 +383,8 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
 
         private fun initFont()
         {
-            _ItemTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _ItemContentsText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _ItemTitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _ItemContentsText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         }
     }
 

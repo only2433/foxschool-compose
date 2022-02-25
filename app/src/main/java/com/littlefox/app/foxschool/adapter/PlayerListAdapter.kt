@@ -142,7 +142,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
 
         private fun initFont()
         {
-            _ItemTitleText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _ItemTitleText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         }
 
         constructor(view : View) : super(view)

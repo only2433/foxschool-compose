@@ -117,7 +117,7 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
     private fun initText()
     {
         _TitleText.text = resources.getString(R.string.text_foxschool_introduce)
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     private fun initWebView()

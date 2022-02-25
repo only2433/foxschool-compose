@@ -79,10 +79,10 @@ class BottomFlashcardIntervalSelectDialog : BottomSheetDialog
 
     private fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _TitleText.typeface = Font.getInstance(mContext).getTypefaceMedium()
         for(i in _IntervalIDList.indices)
         {
-            _IntervalIDList[i].typeface = Font.getInstance(mContext).getRobotoMedium()
+            _IntervalIDList[i].typeface = Font.getInstance(mContext).getTypefaceMedium()
         }
     }
 

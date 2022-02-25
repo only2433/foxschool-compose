@@ -142,17 +142,15 @@ class InquirePresenter : InquireContract.Presenter
      * 이메일 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
      */
-    override fun checkEmailAvailable(email : String)
+    private fun checkEmailAvailable(email : String) : String
     {
         val emailResult = CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
         if(emailResult == CheckUserInput.WARNING_EMAIL_NOT_INPUT ||
             emailResult == CheckUserInput.WARNING_EMAIL_WRONG_INPUT)
         {
-            val message = Message.obtain()
-            message.what = MESSAGE_EMAIL_INPUT_ERROR
-            message.obj = CheckUserInput().getErrorMessage(emailResult)
-            mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
+            return CheckUserInput().getErrorMessage(emailResult)
         }
+        return ""
     }
 
     /**
@@ -170,10 +168,17 @@ class InquirePresenter : InquireContract.Presenter
                 message.what = MESSAGE_CATEGORY_INPUT_ERROR
                 message.obj = mContext.resources.getString(R.string.message_warning_select_inquire_category)
             }
-            else if (email == "" || email.length < 2)
+            else if (email == "")
             {
+                // 이메일 빈 값
                 message.what = MESSAGE_EMAIL_INPUT_ERROR
                 message.obj = mContext.resources.getString(R.string.message_warning_empty_email)
+            }
+            else if (checkEmailAvailable(email) != "")
+            {
+                // 이메일 유효성 불일치
+                message.what = MESSAGE_EMAIL_INPUT_ERROR
+                message.obj = checkEmailAvailable(email)
             }
             else if (text == "" || text.length < 2)
             {

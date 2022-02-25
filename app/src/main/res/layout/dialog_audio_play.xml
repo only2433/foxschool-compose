@@ -89,7 +89,7 @@
             app:scale_left="57"
             app:scale_textsize="34"
             app:scale_top="270"
-            app:scale_width="94" />
+            app:scale_width="110" />
 
         <SeekBar
             android:id="@+id/_seekbarPlayBar"
@@ -116,10 +116,10 @@
             android:text="00:00"
             android:textColor="@color/color_white"
             app:scale_height="71"
-            app:scale_left="921"
+            app:scale_left="910"
             app:scale_textsize="34"
             app:scale_top="270"
-            app:scale_width="94" />
+            app:scale_width="110" />
 
         <com.littlefox.library.view.dialog.ProgressWheel
             android:id="@+id/_progressWheelView"

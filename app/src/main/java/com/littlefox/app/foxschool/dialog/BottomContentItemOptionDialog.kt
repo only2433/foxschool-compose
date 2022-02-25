@@ -177,8 +177,8 @@ class BottomContentItemOptionDialog : BottomSheetDialog
 
     private fun initFont()
     {
-        _ContentIndexText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
-        _ContentTitleText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        _ContentIndexText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
+        _ContentTitleText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
     }
 
     private fun checkContentItem()
@@ -286,7 +286,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         val iconLayout : ScalableLayout = resultView.findViewById<View>(R.id._iconLayout) as ScalableLayout
         val icon = resultView.findViewById<View>(R.id._iconImage) as ImageView
         val title : TextView = resultView.findViewById<View>(R.id._iconText) as TextView
-        title.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        title.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         when(type)
         {
             ContentItemType.EBOOK ->

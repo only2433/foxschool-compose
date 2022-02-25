@@ -171,12 +171,12 @@ class HomeworkCommentFragment : Fragment()
 
     private fun initFont()
     {
-        _CommentInputCountText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _CommentEditText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _CommentRegisterButton.typeface = Font.getInstance(mContext).getRobotoBold()
-        _CommentUpdateButton.typeface = Font.getInstance(mContext).getRobotoBold()
-        _CommentDeleteButton.typeface = Font.getInstance(mContext).getRobotoBold()
-        _CommentTeacherMessage.typeface = Font.getInstance(mContext).getRobotoRegular()
+        _CommentInputCountText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _CommentEditText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _CommentRegisterButton.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _CommentUpdateButton.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _CommentDeleteButton.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _CommentTeacherMessage.typeface = Font.getInstance(mContext).getTypefaceRegular()
     }
     /** ========== Init ========== */
 

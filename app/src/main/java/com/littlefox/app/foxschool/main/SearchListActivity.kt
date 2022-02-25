@@ -165,15 +165,15 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _SearchAllText.typeface = Font.getInstance(this).getRobotoRegular()
-        _SearchStoryText.typeface = Font.getInstance(this).getRobotoRegular()
-        _SearchSongText.typeface = Font.getInstance(this).getRobotoRegular()
-        _SearchEditText.typeface = Font.getInstance(this).getRobotoRegular()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _SearchAllText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _SearchStoryText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _SearchSongText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _SearchEditText.typeface = Font.getInstance(this).getTypefaceRegular()
 
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            _SearchConfirmTabletIcon.typeface = Font.getInstance(this).getRobotoMedium()
+            _SearchConfirmTabletIcon.typeface = Font.getInstance(this).getTypefaceMedium()
         }
     }
 

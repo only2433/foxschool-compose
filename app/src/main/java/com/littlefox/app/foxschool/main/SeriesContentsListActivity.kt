@@ -314,17 +314,17 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
 
     override fun initFont()
     {
-        _MenuSelectAllText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuSelectPlayText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuSelectCountText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuAddBookshelfText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuCancelText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _DetailInformationText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _MenuSelectAllText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuSelectPlayText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuSelectCountText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuAddBookshelfText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuCancelText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _DetailInformationText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            _TitleText.setTypeface(Font.getInstance(this).getRobotoMedium())
-            _ArDataText.setTypeface(Font.getInstance(this).getRobotoMedium())
-            _DetailInformationIntroduceText.setTypeface(Font.getInstance(this).getRobotoMedium())
+            _TitleText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+            _ArDataText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+            _DetailInformationIntroduceText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         }
     }
 
@@ -362,7 +362,7 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         menuBackIcon.setOnClickListener(mMenuItemClickListener)
 
         _TopbarTitleText = customView.findViewById<View>(R.id._topMenuTitle) as TextView
-        _TopbarTitleText.setTypeface(Font.getInstance(this).getRobotoBold())
+        _TopbarTitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
         _TopbarTitleText.setText(title)
         _TopbarTitleText.setVisibility(View.INVISIBLE)
 
@@ -902,11 +902,11 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
             )
             setTextColor(getResources().getColor(R.color.color_ffffff))
             setText(snackbarText)
-            setTypeface(Font.getInstance(context).getRobotoRegular())
+            setTypeface(Font.getInstance(context).getTypefaceRegular())
             setMaxLines(3)
         }
         val actionText : TextView = view.findViewById<View>(R.id.snackbar_action) as TextView
-        actionText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        actionText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         snackbar.show()
     }
 

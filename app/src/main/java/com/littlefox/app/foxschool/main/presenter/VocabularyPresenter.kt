@@ -476,7 +476,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
             widthSize = CommonUtils.getInstance(mContext).getPixel(364.0f)
         }
         val paint = Paint()
-        paint.typeface = Font.getInstance(mContext).getRobotoRegular()
+        paint.typeface = Font.getInstance(mContext).getTypefaceRegular()
         paint.textSize = fontSize.toFloat()
         var i = 0
         while(i < mVocabularyItemList.size)

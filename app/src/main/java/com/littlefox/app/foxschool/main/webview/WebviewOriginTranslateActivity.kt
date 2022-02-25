@@ -120,7 +120,7 @@ class WebviewOriginTranslateActivity : BaseActivity(), MessageHandlerCallback
     private fun initText()
     {
         _TitleText.text = resources.getString(R.string.text_original_translate)
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     private fun initWebView()

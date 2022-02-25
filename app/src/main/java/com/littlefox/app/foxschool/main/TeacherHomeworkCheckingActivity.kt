@@ -138,15 +138,15 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _HomeworkEvalTextList.forEach {
-            it.setTypeface(Font.getInstance(this).getRobotoMedium())
+            it.setTypeface(Font.getInstance(this).getTypefaceMedium())
         }
-        _HomeworkTeacherComment.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _CommentInputCountText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _CommentEditText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _CheckingRegisterButton.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _CheckingCancelButton.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _HomeworkTeacherComment.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _CommentInputCountText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _CommentEditText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _CheckingRegisterButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _CheckingCancelButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
     /**

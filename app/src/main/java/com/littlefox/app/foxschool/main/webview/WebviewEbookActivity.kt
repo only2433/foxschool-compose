@@ -133,7 +133,7 @@ class WebviewEbookActivity : BaseActivity()
     private fun initText()
     {
         _TitleText.text = resources.getString(R.string.text_ebook)
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
     private fun initWebView()

@@ -271,8 +271,8 @@ class CalendarItemViewAdapter : RecyclerView.Adapter<CalendarItemViewAdapter.Vie
 
         private fun initFont()
         {
-            _DateText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-            _HomeworkStateText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _DateText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+            _HomeworkStateText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
     }
 }

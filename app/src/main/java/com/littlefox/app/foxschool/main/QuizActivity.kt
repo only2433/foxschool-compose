@@ -142,11 +142,11 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
 
     override fun initFont()
     {
-        _QuizTitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _QuizTimerTitle.typeface = Font.getInstance(this).getRobotoMedium()
-        _QuizTimerText.typeface = Font.getInstance(this).getRobotoMedium()
-        _QuizAnswerCountTitle.typeface = Font.getInstance(this).getRobotoMedium()
-        _QuizAnswerCountText.typeface = Font.getInstance(this).getRobotoMedium()
+        _QuizTitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _QuizTimerTitle.typeface = Font.getInstance(this).getTypefaceMedium()
+        _QuizTimerText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _QuizAnswerCountTitle.typeface = Font.getInstance(this).getTypefaceMedium()
+        _QuizAnswerCountText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
     /** ========== Init ========== */
 

@@ -149,11 +149,11 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
 
     override fun initFont()
     {
-        _SoundOffMessageText.typeface = Font.getInstance(this).getRobotoRegular()
-        _AutoModeText.typeface = Font.getInstance(this).getRobotoRegular()
-        _AutoModeTimeText.typeface = Font.getInstance(this).getRobotoRegular()
-        _AutoModeStudyTimeText.typeface = Font.getInstance(this).getRobotoRegular()
-        _ShuffleModeText.typeface = Font.getInstance(this).getRobotoRegular()
+        _SoundOffMessageText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _AutoModeText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _AutoModeTimeText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _AutoModeStudyTimeText.typeface = Font.getInstance(this).getTypefaceRegular()
+        _ShuffleModeText.typeface = Font.getInstance(this).getTypefaceRegular()
     }
     /** ========== Init ========== */
 

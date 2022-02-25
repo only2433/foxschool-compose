@@ -170,9 +170,9 @@ class QuizPlayFragment : Fragment()
 
     private fun initFont()
     {
-        _QuestionIndexText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _QuestionTitleText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _NextPlayButton.typeface = Font.getInstance(mContext).getRobotoBold()
+        _QuestionIndexText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _QuestionTitleText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _NextPlayButton.typeface = Font.getInstance(mContext).getTypefaceBold()
     }
 
     private fun initView()
@@ -285,7 +285,7 @@ class QuizPlayFragment : Fragment()
 
             // 텍스트
             val examText = TextView(mContext).apply {
-                typeface = Font.getInstance(mContext).getRobotoRegular()
+                typeface = Font.getInstance(mContext).getTypefaceRegular()
                 text = mQuizTextData.getExampleList()[i]!!.getExampleText()
                 setTextColor(mContext.resources.getColor(R.color.color_444444))
                 gravity = Gravity.CENTER_VERTICAL

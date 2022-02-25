@@ -15,7 +15,6 @@ class InquireContract
     interface Presenter : BaseContract.Presenter
     {
         fun onShowInquireCategoryDialog()
-        fun checkEmailAvailable(email : String)
         fun onClickSendToEmail(text: String)
         fun onClickRegister(email: String, text: String)
     }

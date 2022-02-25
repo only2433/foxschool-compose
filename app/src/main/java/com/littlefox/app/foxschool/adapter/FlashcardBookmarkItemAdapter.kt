@@ -83,7 +83,7 @@ class FlashcardBookmarkItemAdapter : RecyclerView.Adapter<FlashcardBookmarkItemA
 
         private fun initFont()
         {
-            _WordText.typeface = Font.getInstance(mContext).getRobotoBold()
+            _WordText.typeface = Font.getInstance(mContext).getTypefaceBold()
         }
     }
 }

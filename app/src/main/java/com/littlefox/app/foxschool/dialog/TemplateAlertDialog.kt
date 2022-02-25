@@ -241,7 +241,7 @@ class TemplateAlertDialog
 
         val dialog = mAlertDialogBuilder.show()
         val messageText : TextView? = dialog.findViewById<View>(android.R.id.message) as TextView?
-        messageText!!.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        messageText!!.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         if(mGravityValue != -1)
         {
             messageText!!.setGravity(mGravityValue)

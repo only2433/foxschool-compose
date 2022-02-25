@@ -83,7 +83,7 @@ class PlayerSpeedListAdapter : RecyclerView.Adapter<PlayerSpeedListAdapter.ViewH
         lateinit var _SelectSpeedText : TextView
         private fun initFont()
         {
-            _SelectSpeedText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _SelectSpeedText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         }
 
         constructor(view : View) : super(view)

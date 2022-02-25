@@ -231,17 +231,17 @@ class HomeworkCalendarFragment : Fragment()
 
     private fun initFont()
     {
-        _MonthTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextSunday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextMonday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextTuesday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextWednesday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextThursday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextFriday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _TextSaturday.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _MonthTitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextSunday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextMonday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextTuesday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextWednesday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextThursday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextFriday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _TextSaturday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         if (CommonUtils.getInstance(mContext).isTeacherMode)
         {
-            _TextClassName.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _TextClassName.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
     }
     /** ========== Init ========== */

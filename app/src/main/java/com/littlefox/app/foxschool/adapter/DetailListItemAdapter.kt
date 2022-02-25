@@ -328,9 +328,9 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         {
             if(mIndexColor.equals("") == false)
             {
-                _ContentIndexText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+                _ContentIndexText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
             }
-            _ContentTitleText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+            _ContentTitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
 
     }

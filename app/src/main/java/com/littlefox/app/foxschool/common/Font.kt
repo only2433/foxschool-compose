@@ -2,25 +2,16 @@ package com.littlefox.app.foxschool.common
 
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Build
 import java.lang.reflect.Type
 
 class Font (context : Context)
 {
-    /**
-     * Noto sans KR bold
-     */
-    private var robotoBold : Typeface? = null
-    /**
-     * Noto sans KR regular
-     */
-    private var robotoRegular : Typeface? = null
-    /**
-     * Noto sans KR medium
-     */
-    private var robotoMedium : Typeface? = null
-    private var robotoLight : Typeface? = null
+    private var typeFaceBold : Typeface? = null
+    private var typeFaceMedium : Typeface? = null
+    private var typeFaceRegular : Typeface? = null
+    private var typeFaceLight : Typeface? = null
     private var gungsu : Typeface? = null
-
 
     companion object
     {
@@ -33,33 +24,44 @@ class Font (context : Context)
             }
             return _self!!
         }
-
-
     }
 
     init
     {
         val mgr = context.assets
-        robotoBold = Typeface.createFromAsset(mgr, "fonts/Roboto-Bold.ttf")
-        robotoRegular = Typeface.createFromAsset(mgr, "fonts/Roboto-Regular.ttf")
-        robotoMedium = Typeface.createFromAsset(mgr, "fonts/Roboto-Medium.ttf")
-        robotoLight = Typeface.createFromAsset(mgr, "fonts/Roboto-Light.ttf")
+
+        // Android 12 (SDK 31) 부터는 pretendard 폰트 사용
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R)
+        {
+            typeFaceBold = Typeface.createFromAsset(mgr, "fonts/Pretendard-Bold.ttf")
+            typeFaceMedium = Typeface.createFromAsset(mgr, "fonts/Pretendard-Medium.ttf")
+            typeFaceRegular = Typeface.createFromAsset(mgr, "fonts/Pretendard-Regular.ttf")
+            typeFaceLight = Typeface.createFromAsset(mgr, "fonts/Pretendard-Light.ttf")
+        }
+        else
+        {
+            typeFaceBold = Typeface.createFromAsset(mgr, "fonts/Roboto-Bold.ttf")
+            typeFaceMedium = Typeface.createFromAsset(mgr, "fonts/Roboto-Medium.ttf")
+            typeFaceRegular = Typeface.createFromAsset(mgr, "fonts/Roboto-Regular.ttf")
+            typeFaceLight = Typeface.createFromAsset(mgr, "fonts/Roboto-Light.ttf")
+        }
         gungsu = Typeface.createFromAsset(mgr, "fonts/gungsu.ttf")
-        if(robotoBold == null)
+
+        if(typeFaceBold == null)
         {
-            robotoBold = Typeface.DEFAULT_BOLD
+            typeFaceBold = Typeface.DEFAULT_BOLD
         }
-        if(robotoRegular == null)
+        if(typeFaceMedium == null)
         {
-            robotoRegular = Typeface.DEFAULT
+            typeFaceMedium = Typeface.DEFAULT
         }
-        if(robotoLight == null)
+        if(typeFaceRegular == null)
         {
-            robotoLight = Typeface.DEFAULT
+            typeFaceRegular = Typeface.DEFAULT
         }
-        if(robotoMedium == null)
+        if(typeFaceLight == null)
         {
-            robotoMedium = Typeface.DEFAULT
+            typeFaceLight = Typeface.DEFAULT
         }
         if(gungsu == null)
         {
@@ -67,24 +69,24 @@ class Font (context : Context)
         }
     }
 
-    fun getRobotoBold() : Typeface?
+    fun getTypefaceBold() : Typeface?
     {
-        return robotoBold;
+        return typeFaceBold
     }
 
-    fun getRobotoRegular() : Typeface?
+    fun getTypefaceMedium() : Typeface?
     {
-        return robotoRegular;
+        return typeFaceMedium
+    }
+
+    fun getTypefaceRegular() : Typeface?
+    {
+        return typeFaceRegular
     }
 
     fun getRobotoLight() : Typeface?
     {
-        return robotoLight;
-    }
-
-    fun getRobotoMedium() : Typeface?
-    {
-        return robotoMedium;
+        return typeFaceLight
     }
 
     fun getGungsu() : Typeface?

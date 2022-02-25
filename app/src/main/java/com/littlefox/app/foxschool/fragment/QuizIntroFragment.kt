@@ -108,8 +108,8 @@ class QuizIntroFragment : Fragment()
 
     private fun initFont()
     {
-        _MainTitleText.typeface = (Font.getInstance(mContext).getRobotoMedium())
-        _QuizPlayButton.typeface = (Font.getInstance(mContext).getRobotoMedium())
+        _MainTitleText.typeface = (Font.getInstance(mContext).getTypefaceMedium())
+        _QuizPlayButton.typeface = (Font.getInstance(mContext).getTypefaceMedium())
     }
     /** ========== Init ========== */
 
@@ -126,7 +126,7 @@ class QuizIntroFragment : Fragment()
             _MainTitleText.setSeparateText(title, "\n$subtitle")
                 .setSeparateColor(resources.getColor(R.color.color_000000), resources.getColor(R.color.color_444444))
                 .setSeparateTextSize(CommonUtils.getInstance(mContext).getPixel(74), CommonUtils.getInstance(mContext).getPixel(48))
-                .setSeparateTextStyle((Font.getInstance(mContext).getRobotoBold()), (Font.getInstance(mContext).getRobotoMedium()))
+                .setSeparateTextStyle((Font.getInstance(mContext).getTypefaceBold()), (Font.getInstance(mContext).getTypefaceMedium()))
                 .showView()
         }
     }

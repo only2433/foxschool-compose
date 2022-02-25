@@ -135,7 +135,7 @@ class BottomBookAddDialog : BottomSheetDialog
 
     private fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
     }
 
     private fun initRecyclerView()
@@ -222,7 +222,7 @@ class BottomBookAddDialog : BottomSheetDialog
             constructor(view : View) : super(view)
             {
                 ButterKnife.bind(this, view)
-                _BooksTitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+                _BooksTitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
             }
         }
     }

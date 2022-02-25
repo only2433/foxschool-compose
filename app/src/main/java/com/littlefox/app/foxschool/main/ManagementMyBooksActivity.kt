@@ -153,11 +153,11 @@ class ManagementMyBooksActivity : BaseActivity(), MessageHandlerCallback, Manage
 
     override fun initFont()
     {
-        _TitleTextView.setTypeface(Font.getInstance(this).getRobotoBold())
-        _MessageText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _NameEditText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _SaveButton.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _CancelActionButton.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _TitleTextView.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _MessageText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _NameEditText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _SaveButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _CancelActionButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
     /**

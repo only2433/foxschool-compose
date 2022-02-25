@@ -172,12 +172,12 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
 
     override fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _MenuSelectAllText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuSelectPlayText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuSelectCountText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuRemoveBookshelfText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _MenuCancelText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _MenuSelectAllText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuSelectPlayText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuSelectCountText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuRemoveBookshelfText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _MenuCancelText.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
     /**

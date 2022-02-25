@@ -200,29 +200,29 @@ class MyInfoShowFragment : Fragment()
     private fun initFont()
     {
         // 학생 영역
-        _StudentMessageText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StudentIdTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StudentNameTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StudentClassTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StudentIdText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _StudentNameText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _StudentClassText.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _StudentMessageText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StudentIdTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StudentNameTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StudentClassTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StudentIdText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _StudentNameText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _StudentClassText.typeface = Font.getInstance(mContext).getTypefaceMedium()
 
         // 선생님 영역
-        _TeacherIdTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _TeacherNameTitleText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _TeacherIdText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _TeacherNameText.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _TeacherIdTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _TeacherNameTitleText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _TeacherIdText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _TeacherNameText.typeface = Font.getInstance(mContext).getTypefaceMedium()
 
         // 버튼 영역
-        _ChangeInfoButtonText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _ChangePasswordButtonText.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _ChangeInfoButtonText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _ChangePasswordButtonText.typeface = Font.getInstance(mContext).getTypefaceMedium()
 
         // 설정 영역
-        _SettingText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _AutoLoginText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _PushText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _PushInfoText.typeface = Font.getInstance(mContext).getRobotoRegular()
+        _SettingText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _AutoLoginText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _PushText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _PushInfoText.typeface = Font.getInstance(mContext).getTypefaceRegular()
     }
     /** ========== Init ========== */
 

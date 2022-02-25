@@ -151,15 +151,15 @@ class InquireActivity : BaseActivity(), MessageHandlerCallback, InquireContract.
 
     override fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(this).getRobotoBold())
-        _1on1EmailCheckText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _SelectCategoryText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _InputEmailEditText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _InputMessageEditText.setTypeface(Font.getInstance(this).getRobotoRegular())
-        _1on1TipText.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _RegisterButton.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _SendEmailButton.setTypeface(Font.getInstance(this).getRobotoMedium())
-        _1on1ReplyText.setTypeface(Font.getInstance(this).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
+        _1on1EmailCheckText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _SelectCategoryText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _InputEmailEditText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _InputMessageEditText.setTypeface(Font.getInstance(this).getTypefaceRegular())
+        _1on1TipText.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _RegisterButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _SendEmailButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
+        _1on1ReplyText.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
     /**
@@ -307,7 +307,6 @@ class InquireActivity : BaseActivity(), MessageHandlerCallback, InquireContract.
                     else
                     {
                         _InputEmailBg.setBackgroundResource(R.drawable.text_box)
-                        mInquirePresenter.checkEmailAvailable(_InputEmailEditText.text.toString().trim())
                     }
                 }
 

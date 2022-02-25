@@ -186,7 +186,7 @@ class SeriesCardViewAdapter : RecyclerView.Adapter<SeriesCardViewAdapter.ViewHol
 
         private fun initFont()
         {
-            _StoryCountText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+            _StoryCountText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
     }
 }

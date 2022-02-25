@@ -162,8 +162,8 @@ class MainMyBooksFragment() : Fragment()
 
     private fun initFont()
     {
-        _BookshelfTextButton.setTypeface(Font.getInstance(mContext).getRobotoBold())
-        _VocabularyTextButton.setTypeface(Font.getInstance(mContext).getRobotoBold())
+        _BookshelfTextButton.setTypeface(Font.getInstance(mContext).getTypefaceBold())
+        _VocabularyTextButton.setTypeface(Font.getInstance(mContext).getTypefaceBold())
     }
 
     private fun updateData(mainInformationResult : MainInformationResult)
@@ -355,7 +355,7 @@ class MainMyBooksFragment() : Fragment()
         {
             bottomLine.visibility = View.GONE
         }
-        bookTitle.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        bookTitle.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
         if(mCurrentBookType === BookType.BOOKSHELF)
         {
             iconImage.setImageResource(R.drawable.icon_bookshelf)
@@ -392,7 +392,7 @@ class MainMyBooksFragment() : Fragment()
         addMyBooksText.setOnClickListener(mSwitchTabClickListener)
 
         val switchButtonText : TextView = addModeView.findViewById<View>(R.id._mybooksAddText) as TextView
-        switchButtonText.setTypeface(Font.getInstance(mContext).getRobotoRegular())
+        switchButtonText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
 
         if(mCurrentBookType === BookType.BOOKSHELF)
         {

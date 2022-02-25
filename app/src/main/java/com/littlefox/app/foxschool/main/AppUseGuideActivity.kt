@@ -150,21 +150,21 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
 
     override fun initFont()
     {
-        _TitleText.typeface = Font.getInstance(this).getRobotoBold()
-        _VersionText.typeface = Font.getInstance(this).getRobotoMedium()
-        _VersionUpdateButton.typeface = Font.getInstance(this).getRobotoMedium()
-        _TermsOfServiceText.typeface = Font.getInstance(this).getRobotoMedium()
-        _PrivacyPolicyText.typeface = Font.getInstance(this).getRobotoMedium()
-        _CompanyNameText.typeface = Font.getInstance(this).getRobotoMedium()
+        _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
+        _VersionText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _VersionUpdateButton.typeface = Font.getInstance(this).getTypefaceMedium()
+        _TermsOfServiceText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _PrivacyPolicyText.typeface = Font.getInstance(this).getTypefaceMedium()
+        _CompanyNameText.typeface = Font.getInstance(this).getTypefaceMedium()
 
         for(titleText in _KoreaCompanyInformationTitleTextList)
         {
-            titleText.typeface = Font.getInstance(this).getRobotoMedium()
+            titleText.typeface = Font.getInstance(this).getTypefaceMedium()
         }
 
         for(nameText in _KoreaCompanyInformationNameTextList)
         {
-            nameText.typeface = Font.getInstance(this).getRobotoMedium()
+            nameText.typeface = Font.getInstance(this).getTypefaceMedium()
         }
     }
 

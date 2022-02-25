@@ -192,12 +192,12 @@ class FlashCardBookmarkFragment : Fragment()
 
     private fun initFont()
     {
-        _StartWordMessageText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StartMeaningMessageText.typeface = Font.getInstance(mContext).getRobotoRegular()
-        _StartWordButtonText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _StartMeaningButtonText.typeface = Font.getInstance(mContext).getRobotoBold()
-        _BookmarkCountText.typeface = Font.getInstance(mContext).getRobotoMedium()
-        _SaveMyBooksText.typeface = Font.getInstance(mContext).getRobotoMedium()
+        _StartWordMessageText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StartMeaningMessageText.typeface = Font.getInstance(mContext).getTypefaceRegular()
+        _StartWordButtonText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _StartMeaningButtonText.typeface = Font.getInstance(mContext).getTypefaceBold()
+        _BookmarkCountText.typeface = Font.getInstance(mContext).getTypefaceMedium()
+        _SaveMyBooksText.typeface = Font.getInstance(mContext).getTypefaceMedium()
     }
 
     private fun initRecyclerView()

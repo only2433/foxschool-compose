@@ -144,9 +144,9 @@ class AudioPlayDialog : Dialog
 
     private fun initFont()
     {
-        _TitleText.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _PlayerCurrentPlayTime.setTypeface(Font.getInstance(mContext).getRobotoMedium())
-        _PlayerRemainPlayTime.setTypeface(Font.getInstance(mContext).getRobotoMedium())
+        _TitleText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _PlayerCurrentPlayTime.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        _PlayerRemainPlayTime.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
     }
 
     private fun initSeekbar()
