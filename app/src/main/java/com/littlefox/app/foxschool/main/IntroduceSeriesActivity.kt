@@ -328,7 +328,7 @@ class IntroduceSeriesActivity : BaseActivity(), MessageHandlerCallback, Introduc
         var categoryData = ""
         if(result.getCategories() != "")
         {
-            categoryData = " | " + result.getCategories().replace("|", ", ")
+            categoryData = " | " + result.getCategories()
         }
         Log.i("categoryData : $categoryData")
 
