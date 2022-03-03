@@ -187,7 +187,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         {
             mMainHandler.removeMessages(MESSAGE_PLAY_TIME_CHECK)
         }
-        // TODO 통신 제거
+
         mMainHandler.removeCallbacksAndMessages(null)
         releaseRecord()
         releaseAudio()
@@ -203,7 +203,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 if (mRecordTotalTime >=  MAX_RECORDING_TIME)
                 {
-                    // 녹음 진행시간이 최대 녹음시간을 넘어가면 녹음 정지
                     Log.f("MESSAGE_RECORD_TIME_CHECK || recordStop")
                     onClickRecordStop()
                 }
@@ -323,9 +322,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 기능 준비
-     */
+
     private fun readyToRecord()
     {
         // 기존에 사용하던 흔적이 있는 경우 사용하던 폴더 제거 후 다시 생성
@@ -385,9 +382,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 오디오 재생 기능 준비
-     */
+
     private fun readyToPlay()
     {
         mMediaPlayer = MediaPlayer()
@@ -460,9 +455,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 기능 제거
-     */
     private fun releaseRecord()
     {
         if(mVoiceRecorderHelper != null)
@@ -472,9 +464,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mRecordingPathList.clear()
     }
 
-    /**
-     * 오디오 플레이어 제거
-     */
     private fun releaseAudio()
     {
         mMediaPlayer?.stop()
@@ -482,9 +471,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         mMediaPlayer = null
     }
 
-    /**
-     * 녹음 시작
-     */
     private fun setRecorderStart()
     {
         Log.f("")
@@ -501,9 +487,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         enableTimer(true)
     }
 
-    /**
-     * 녹음 일시정지
-     */
     private fun setRecorderPause()
     {
         Log.f("")
@@ -517,9 +500,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         setTimerText()
     }
 
-    /**
-     * 녹음 정지
-     */
     private fun setRecorderStop()
     {
         Log.f("")
@@ -537,9 +517,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 초기화
-     */
     private fun setRecorderReset()
     {
         Log.f("")
@@ -558,9 +535,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         FileUtils.deleteAllFileInPath(PATH_MP3_ROOT)
     }
 
-    /**
-     * 오디오 재생
-     */
     private fun setAudioPlay()
     {
         Log.f("")
@@ -575,9 +549,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         else readyToPlay()
     }
 
-    /**
-     * 오디오 재생 일시정지
-     */
     private fun setAudioPause()
     {
         Log.f("")
@@ -589,9 +560,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      * ===============================
      *           다이얼로그
      * ===============================
-     */
-    /**
-     * 녹음 초기화 확인 다이얼로그
      */
     private fun showRecordResetDialog()
     {
@@ -605,9 +573,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
     }
 
-    /**
-     * 녹음 초기화 경고 다이얼로그
-     */
     private fun showRecordResetWarningDialog()
     {
         mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
@@ -620,9 +585,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
     }
 
-    /**
-     * 화면 나가기 경고 다이얼로그
-     */
     private fun showExitScreenWarningDialog()
     {
         mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
@@ -635,9 +597,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음파일 업로드 완료 다이얼로그
-     */
     private fun showFileUploadCompleteDialog()
     {
         mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
@@ -654,9 +613,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      *          onClick Events
      * ===================================
      */
-    /**
-     * 첫 가이드 다시 보지 않기
-     */
+
     override fun onCoachMarkNeverSeeAgain()
     {
         Log.f("")
@@ -674,9 +631,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 닫기 버튼 클릭 이벤트
-     */
     override fun onClickClose()
     {
         Log.f("")
@@ -708,9 +662,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 시작 버튼 클릭 이벤트
-     */
     override fun onClickRecordStart()
     {
         Log.f("Recording Selected : START || RecorderStatus : $mRecorderStatus")
@@ -718,9 +669,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         setRecorderStart()
     }
 
-    /**
-     * 녹음 일시정지 버튼 클릭 이벤트
-     */
     override fun onClickRecordPause()
     {
         Log.f("Recording Selected : PAUSE || RecorderStatus : $mRecorderStatus")
@@ -738,9 +686,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 정지 버튼 클릭 이벤트
-     */
     override fun onClickRecordStop()
     {
         Log.f("Recording Selected : STOP || RecorderStatus : $mRecorderStatus")
@@ -752,9 +697,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 다시하기 버튼 클릭 이벤트
-     */
     override fun onClickRecordReset()
     {
         Log.f("Recording Selected : RESET || RecorderStatus : $mRecorderStatus")
@@ -785,9 +727,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음 재생 버튼 클릭 이벤트
-     */
     override fun onClickRecordPlay()
     {
         Log.f("Recording Selected : PLAY || RecorderStatus : $mRecorderStatus")
@@ -795,9 +734,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         setAudioPlay()
     }
 
-    /**
-     * 녹음 업로드 버튼 클릭 이벤트
-     */
     override fun onClickRecordUpload()
     {
         Log.f("Recording Selected : UPLOAD || RecorderStatus : $mRecorderStatus")
@@ -805,9 +741,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         requestRecordFileUpload()
     }
 
-    /**
-     * 오디오 재생 위치 이동
-     */
     override fun onSeekTo(time : Int)
     {
         mMediaPlayer!!.seekTo(time)
@@ -817,9 +750,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         }
     }
 
-    /**
-     * 녹음기록 화면으로 이동
-     */
     private fun startRecordHistoryActivity()
     {
         Log.f("")
@@ -829,9 +759,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 녹음파일 업로드
-     */
     private fun requestRecordFileUpload()
     {
         val data = RecordInfoData(
@@ -857,13 +784,11 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
      */
     private val mVoiceRecordEventListener : VoiceRecordEventListener = object : VoiceRecordEventListener
     {
-        /** 녹음 시작 */
         override fun onStartRecord() { }
 
         /** 녹음 시간 퍼센트 화면에 노출 */
         override fun onRecordProgress(percent : Int) { }
 
-        /** 녹음 완료 */
         override fun onCompleteRecord()
         {
             getRecordFileDuration(PATH_MP3_ROOT + "${mFileName}_${mCurrentRecordFileNumber}.mp3")
@@ -944,7 +869,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             }
             else if (eventType == DIALOG_WARNING_RECORD_EXIT)
             {
-                // 화면 나가기 알림 다이얼로그
                 when(buttonType)
                 {
                     DialogButtonType.BUTTON_1 ->
@@ -962,7 +886,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             }
             else if (eventType == DIALOG_FILE_UPLOAD_COMPLETE)
             {
-                // 녹음파일 업로드 완료 다이얼로그
                 when(buttonType)
                 {
                     DialogButtonType.BUTTON_1 ->
