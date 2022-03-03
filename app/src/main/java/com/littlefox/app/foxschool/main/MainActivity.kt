@@ -694,25 +694,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             }
         }
         _MainTabsLayout.getTabAt(Common.PAGE_STORY)?.getCustomView()?.setSelected(true)
-        val tabStrip : LinearLayout = (_MainTabsLayout.getChildAt(0) as LinearLayout)
-        if(Feature.IS_FREE_USER)
-        {
-            tabStrip.getChildAt(Common.PAGE_MY_BOOKS).setOnTouchListener(object : View.OnTouchListener
-            {
-                override fun onTouch(v : View, event : MotionEvent) : Boolean
-                {
-                    if(event.action == MotionEvent.ACTION_UP)
-                    {
-                        CommonUtils.getInstance(this@MainActivity).showSnackMessage(
-                            _MainContentCoordinatorLayout,
-                            resources.getString(R.string.message_payment_service_login),
-                            resources.getColor(R.color.color_d8232a)
-                        )
-                    }
-                    return true
-                }
-            })
-        }
     }
 
     private fun setStatusBarColor()

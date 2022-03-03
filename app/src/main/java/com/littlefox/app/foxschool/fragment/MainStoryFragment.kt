@@ -210,13 +210,6 @@ class MainStoryFragment : Fragment()
                 {
                     mCurrentSeriesType = SeriesType.LEVEL
                 }
-                if(Feature.IS_FREE_USER)
-                {
-                    val sortList : ArrayList<SeriesInformationResult> = sortBasicList
-                    mMainInformationResult.getMainStoryInformation()
-                        .setContentByLevelToList(sortList)
-                }
-
             }
             R.id._categoriesTextButton ->
             {
@@ -270,10 +263,6 @@ class MainStoryFragment : Fragment()
                 forceScrollStoryGridView(i)
             })
         }
-        if(Feature.IS_FREE_USER)
-        {
-            _NavigationControllerLayout.setVisibility(View.GONE)
-        }
     }
 
     private val sortBasicList : ArrayList<SeriesInformationResult>
@@ -317,10 +306,7 @@ class MainStoryFragment : Fragment()
                 CommonUtils.getInstance(mContext).checkTablet)
         )
         _StoryGridView.setAdapter(mSeriesCardViewAdapter)
-        if(Feature.IS_FREE_USER === false)
-        {
-            _StoryGridView.addOnScrollListener(mStoryGridViewListener)
-        }
+        _StoryGridView.addOnScrollListener(mStoryGridViewListener)
         _StoryGridView.getViewTreeObserver()
             .addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
             {

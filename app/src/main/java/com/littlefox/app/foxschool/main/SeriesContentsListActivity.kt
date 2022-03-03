@@ -269,15 +269,6 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
     @SuppressLint("RestrictedApi")
     override fun initView()
     {
-        Log.i("Feature.IS_FREE_USER : " + Feature.IS_FREE_USER)
-        if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
-        {
-            if(CommonUtils.getInstance(this).checkTablet == false)
-            {
-                _FloatingMenuButton.setVisibility(View.GONE)
-            }
-            _FloatingMenuBarLayout.setVisibility(View.GONE)
-        }
         if(CommonUtils.getInstance(this).checkTablet)
         {
             val TABLET_LIST_WIDTH : Int

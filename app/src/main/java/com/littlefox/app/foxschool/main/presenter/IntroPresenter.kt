@@ -146,7 +146,6 @@ class IntroPresenter : IntroContract.Presenter
         mPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
         mPermissionList.add(Manifest.permission.RECORD_AUDIO)
 
-        checkUserStatus()
         val autoLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
 
         isAutoLogin = if(autoLoginStatus == "Y") true else false
@@ -195,23 +194,6 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
-    /**
-     * 사용자 체크 (무료/유료)
-     * 팍스스쿨은 무료 이용자가 없으므로 추후 수정 예정
-     */
-    private fun checkUserStatus()
-    {
-        val `object` : UserLoginData? = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
-        if(`object` == null)
-        {
-            Feature.IS_FREE_USER = true
-        }
-        else
-        {
-            Feature.IS_FREE_USER = false
-        }
-    }
-
     private fun checkPermission()
     {
         if(CommonUtils.getInstance(mContext).getUnAuthorizePermissionList(mPermissionList).size > 0)
@@ -240,7 +222,6 @@ class IntroPresenter : IntroContract.Presenter
         }
         else
         {
-            Feature.IS_FREE_USER = true
             mMainContractView.showItemSelectView()
         }
     }
@@ -251,16 +232,8 @@ class IntroPresenter : IntroContract.Presenter
     private fun startAPIProcess()
     {
         Log.f("")
-        if(Feature.IS_FREE_USER)
-        {
-            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-        }
-        else
-        {
-            mCurrentIntroProcess = IntroProcess.INIT_COMPLETE
-            enableProgressAnimation(IntroProcess.INIT_COMPLETE)
-        }
+        mCurrentIntroProcess = IntroProcess.INIT_COMPLETE
+        enableProgressAnimation(IntroProcess.INIT_COMPLETE)
     }
 
     private fun enableProgressAnimation(process : IntroProcess)

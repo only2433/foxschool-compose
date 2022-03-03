@@ -908,12 +908,6 @@ class MainPresenter : MainContract.Presenter
         mMainMyBooksFragmentDataObserver.addBookshelfData.observe(mContext as AppCompatActivity,
             Observer<Boolean?> {
                 Log.f("onAddBookshelf")
-                if(Feature.IS_REMAIN_DAY_END_USER)
-                {
-                    Log.f("REMAIN_DAY_END_USER ADD BookShelf Not Support")
-                    mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_payment_service_paid_using))
-                    return@Observer
-                }
                 if(mMainInformationResult.getBookShelvesList().size > Common.MAX_BOOKSHELF_SIZE)
                 {
                     mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_maximum_bookshelf))
@@ -931,12 +925,6 @@ class MainPresenter : MainContract.Presenter
         mMainMyBooksFragmentDataObserver.addVocabularyData.observe(mContext as AppCompatActivity,
             Observer<Boolean?> {
                 Log.f("onAddVocabulary")
-                if(Feature.IS_REMAIN_DAY_END_USER)
-                {
-                    Log.f("REMAIN_DAY_END_USER ADD Vocabulary Not Support")
-                    mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_payment_service_paid_using))
-                    return@Observer
-                }
                 if(mMainInformationResult.getVocabulariesList().size > Common.MAX_VOCABULARY_SIZE)
                 {
                     mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_maximum_vocabulary))

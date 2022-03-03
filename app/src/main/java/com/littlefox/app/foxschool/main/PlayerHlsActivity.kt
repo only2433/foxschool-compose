@@ -1038,20 +1038,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    private fun settingPreviewEndUI()
-    {
-        if(Feature.IS_FREE_USER)
-        {
-            _PaymentMessageText.text = resources.getString(R.string.message_preview_free_user_end)
-            _PaymentButtonIconText.text = resources.getString(R.string.text_membership)
-        }
-        else if(Feature.IS_REMAIN_DAY_END_USER)
-        {
-            _PaymentMessageText.text = resources.getString(R.string.message_preview_remain_day_end)
-            _PaymentButtonIconText.text = resources.getString(R.string.text_subscribe)
-        }
-    }
-
     private fun moveBottomLayoutAnimation(start : Int, desc : Int, duration : Long)
     {
         isBottomLayoutAnimationing = true
@@ -1299,7 +1285,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         Log.f("")
         mCurrentLayoutMode = LAYOUT_TYPE.PREVIEW_PLAY
         initLayoutSetting()
-        settingPreviewEndUI()
         if(isEnableCaption && isSupportCaption)
         {
             enableCaptionAnimation(true)

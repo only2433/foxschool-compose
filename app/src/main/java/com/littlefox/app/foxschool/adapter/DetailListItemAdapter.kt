@@ -159,22 +159,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             holder._StudiedCheckIcon.visibility = View.GONE
         }
 
-        if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
-        {
-            if(mDataList[position].getServiceInformation()!!.getServiceSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
-            {
-                holder._ThumbnailImage.alpha = 0.5f
-                holder._FreeIconImage.visibility = View.GONE
-            } else
-            {
-                holder._ThumbnailImage.alpha = 1.0f
-                holder._FreeIconImage.visibility = View.VISIBLE
-            }
-        }
-        else
-        {
-            holder._ThumbnailImage.alpha = 1.0f
-        }
+        holder._ThumbnailImage.alpha = 1.0f
 
         if(mDataList[position].isOptionDisable())
         {
@@ -194,13 +179,10 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             {
                 return@OnClickListener
             }
-            if(Feature.IS_FREE_USER === false && Feature.IS_REMAIN_DAY_END_USER === false)
-            {
-                val isSelected : Boolean = !mDataList!![position].isSelected()
-                mDataList[position].setSelected(isSelected)
-                notifyItemChanged(position)
-                mDetailItemListener?.onItemSelectCount(getSelectedCount())
-            }
+            val isSelected : Boolean = !mDataList!![position].isSelected()
+            mDataList[position].setSelected(isSelected)
+            notifyItemChanged(position)
+            mDetailItemListener?.onItemSelectCount(getSelectedCount())
         })
         holder._ThumbnailImage.setOnClickListener {
             mDetailItemListener?.onItemClickThumbnail(position)

@@ -782,26 +782,13 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun isShowCoachmark(type : String) : Boolean
     {
-        if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
-        {
-            Log.f("serviceInformationType : "+mPlayInformationList[mCurrentPlayMovieIndex].getServiceInformation()?.getServiceSupportType());
-            if(mPlayInformationList[mCurrentPlayMovieIndex].getServiceInformation()?.getServiceSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
-            {
-                return false
-            }
-            else
-            {
-                return isNeverSeeAgainCheck(type)
-            }
-        }
-        else
-            return isNeverSeeAgainCheck(type)
+        return isNeverSeeAgainCheck(type)
     }
 
     private fun isNeverSeeAgainCheck(type : String) : Boolean
     {
         var isNeverSeeAgain = false
-        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mLoginInformationResult.getUserInformation().getFoxUserID()
+        val userID : String = mLoginInformationResult.getUserInformation().getFoxUserID()
         Log.f("userID : $userID, type : $type")
         if(type == Common.CONTENT_TYPE_STORY)
         {
@@ -1367,10 +1354,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun sendStudyLogSaveAsync()
     {
-        if(Feature.IS_FREE_USER)
-        {
-            return
-        }
         Log.f("-------------- 학습기록 로그 호출 ------------------")
         var autoPlay = ""
         mCurrentSaveLogIndex = mCurrentPlayMovieIndex
@@ -1676,7 +1659,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     override fun onCoachMarkNeverSeeAgain(type : String)
     {
-        val userID : String = if(Feature.IS_FREE_USER) Common.FREE_USER_NAME else mLoginInformationResult.getUserInformation().getFoxUserID()
+        val userID : String = mLoginInformationResult.getUserInformation().getFoxUserID()
         Log.f("userID : $userID , type : $type")
         if(type == Common.CONTENT_TYPE_STORY)
         {

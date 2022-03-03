@@ -20,16 +20,6 @@ object Feature {
     var IS_ABOVE_20_9_SUPPORT_RADIO_DISPLAY = false */
 
     /**
-     * 유료사용자 인지 무료 사용자인지 구분하기 위해 사용
-     */
-    var IS_FREE_USER : Boolean  = true
-
-    /**
-     * 기간이 종료된 회원 인지 여부
-     */
-    var IS_REMAIN_DAY_END_USER : Boolean  = false
-
-    /**
      * Webview 디버깅 관련 여부
      */
     const val IS_WEBVIEW_DEBUGING : Boolean  = false

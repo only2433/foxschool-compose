@@ -404,15 +404,6 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                 }
                 iconLayout.setOnClickListener(View.OnClickListener {
                     dismiss()
-                    if(Feature.IS_FREE_USER)
-                    {
-                        mItemOptionListener?.onErrorMessage(mContext.resources.getString(R.string.message_payment_service_login))
-                        return@OnClickListener
-                    } else if(Feature.IS_REMAIN_DAY_END_USER)
-                    {
-                        mItemOptionListener?.onErrorMessage(mContext.resources.getString(R.string.message_payment_service_paid_using))
-                        return@OnClickListener
-                    }
                     mItemOptionListener?.onClickBookshelf()
                 })
             }
@@ -434,27 +425,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
             SERVICE_INFO_FLASHCARD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getFlashcardSupportType()
             SERVICE_INFO_RECORD_PLAYER -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType()
         }
-        return if(Feature.IS_FREE_USER || Feature.IS_REMAIN_DAY_END_USER)
-        {
-            if(serviceCheck == Common.SERVICE_SUPPORTED_FREE)
-            {
-                true
-            } else
-            {
-                if(Feature.IS_FREE_USER)
-                {
-                    mItemOptionListener?.onErrorMessage(mContext.resources.getString(R.string.message_payment_service_login))
-                } else if(Feature.IS_REMAIN_DAY_END_USER)
-                {
-                    mItemOptionListener?.onErrorMessage(mContext.resources.getString(R.string.message_payment_service_paid_using))
-                }
-                false
-            }
-        }
-        else
-        {
-            true
-        }
+        return true
     }
 
 }

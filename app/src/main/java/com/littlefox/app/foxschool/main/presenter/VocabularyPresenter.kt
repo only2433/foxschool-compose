@@ -293,13 +293,6 @@ class VocabularyPresenter : VocabularyContract.Presenter
 
     override fun onClickBottomPutInVocabularyShelf()
     {
-        Log.f("")
-        if(Feature.IS_REMAIN_DAY_END_USER)
-        {
-            mVocabularyContractView.showErrorMessage(mContext.resources.getString(R.string.message_payment_service_paid_using))
-            return
-        }
-
         Log.f("Select Count : " + mVocabularyItemListAdapter.selectedCount)
         if(mVocabularyItemListAdapter.selectedCount > 0)
         {

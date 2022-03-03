@@ -1095,15 +1095,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
 
         // 나의 단어장에 저장하기 버튼 클릭
         mFlashcardBookmarkFragmentObserver.saveVocabularyData.observe((mContext as AppCompatActivity), Observer {
-            if(Feature.IS_FREE_USER) // TODO : 무료이용자 플래그 추후 제거 예정
-            {
-                mFlashcardContractView.showErrorMessage(mContext.resources.getString(R.string.message_payment_service_login))
-                return@Observer
-            }
-            else
-            {
-                showBottomVocabularyAddDialog()
-            }
+            showBottomVocabularyAddDialog()
         })
 
         // 북마크 버튼 클릭

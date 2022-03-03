@@ -311,7 +311,6 @@ class LoginPresenter : LoginContract.Presenter
                 {
                     // 로그인 성공
                     Log.f("Login Complete")
-                    Feature.IS_FREE_USER = false // TODO 무료이용자 플래그 추후 제거 예정
                     CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_AUTO_LOGIN_DATA, if(isAutoLogin) "Y" else "N")
                     mUserInformationResult = (result as LoginBaseObject).getData()
                     CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, mUserLoginData)

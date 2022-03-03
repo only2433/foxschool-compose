@@ -207,14 +207,11 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                         mDetailItemInformationResult.seriesARLevel
                     )
                 }
-                if(Feature.IS_FREE_USER === false)
+                if(mDetailItemInformationResult.seriesID.equals("") === false)
                 {
-                    if(mDetailItemInformationResult.seriesID.equals("") === false)
+                    if(mDetailItemInformationResult.isSingleSeries === false && mDetailItemInformationResult.isStillOnSeries)
                     {
-                        if(mDetailItemInformationResult.isSingleSeries === false && mDetailItemInformationResult.isStillOnSeries)
-                        {
-                            isStillOnSeries = true
-                        }
+                        isStillOnSeries = true
                     }
                 }
                 initContentItemList()
@@ -361,20 +358,17 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         mStoryDetailItemAdapter = DetailListItemAdapter(mContext, seriesColor, mDetailItemInformationResult.getContentsList())
         mStoryDetailItemAdapter.setDetailItemListener(mDetailItemListener)
         mStoryDetailListContractView.showStoryDetailListView(mStoryDetailItemAdapter)
-        if(Feature.IS_FREE_USER === false)
+        if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
         {
-            if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
-            {
-                val mLoginInformationResult : LoginInformationResult =
-                    CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
-                val resultIndex = lastStudyMovieIndex
-                mStoryDetailListContractView.showLastWatchSeriesInformation(
-                    mCurrentSeriesBaseResult.getSeriesName(),
-                    mLoginInformationResult.getUserInformation().getName(),
-                    resultIndex,
-                    if(resultIndex == mDetailItemInformationResult.getContentsList().size) true else false
-                )
-            }
+            val mLoginInformationResult : LoginInformationResult =
+                CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
+            val resultIndex = lastStudyMovieIndex
+            mStoryDetailListContractView.showLastWatchSeriesInformation(
+                mCurrentSeriesBaseResult.getSeriesName(),
+                mLoginInformationResult.getUserInformation().getName(),
+                resultIndex,
+                if(resultIndex == mDetailItemInformationResult.getContentsList().size) true else false
+            )
         }
     }
 
@@ -710,20 +704,17 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         override fun onItemSelectCount(count : Int)
         {
             Log.f("count : $count")
-            if(Feature.IS_FREE_USER === false)
+            if(count == 0)
             {
-                if(count == 0)
+                mStoryDetailListContractView.hideFloatingToolbarLayout()
+            }
+            else
+            {
+                if(count == 1)
                 {
-                    mStoryDetailListContractView.hideFloatingToolbarLayout()
+                    mStoryDetailListContractView.showFloatingToolbarLayout()
                 }
-                else
-                {
-                    if(count == 1)
-                    {
-                        mStoryDetailListContractView.showFloatingToolbarLayout()
-                    }
-                    mStoryDetailListContractView.setFloatingToolbarPlayCount(count)
-                }
+                mStoryDetailListContractView.setFloatingToolbarPlayCount(count)
             }
         }
     }

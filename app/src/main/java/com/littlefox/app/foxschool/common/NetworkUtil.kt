@@ -143,8 +143,7 @@ object NetworkUtil
             val token = "Bearer " + CommonUtils.getInstance(context)!!.getSharedPreference(Common.PARAMS_ACCESS_TOKEN, DataType.TYPE_STRING) as String
             val userAgent = Common.HTTP_HEADER_APP_NAME + ":" + deviceType + File.separator + CommonUtils.getInstance(context)!!.getPackageVersionName(Common.PACKAGE_NAME) + File.separator + Build.MODEL + File.separator + Common.HTTP_HEADER_ANDROID + ":" + Build.VERSION.RELEASE
             connection.addRequestProperty("api-user-agent", userAgent)
-            if(Feature.IS_FREE_USER == false) connection.addRequestProperty("Authorization", token)
-            Log.f("Feature.IS_FREE_USER : " + Feature.IS_FREE_USER)
+            connection.addRequestProperty("Authorization", token)
             Log.f("userAgent : $userAgent")
             Log.f("token : $token")
             connection.addRequestProperty("api-locale", Locale.getDefault().toString())

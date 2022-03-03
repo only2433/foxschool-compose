@@ -249,13 +249,6 @@ class QuizPresenter : QuizContract.Presenter
         mQuizFragmentDataObserver.studyInformationData.observe((mContext as AppCompatActivity),
             androidx.lifecycle.Observer {isSaveStudyInformation ->
                 Log.f("isSaveStudyInformation : $isSaveStudyInformation")
-                if(Feature.IS_FREE_USER)
-                {
-                    // 무료이용자는 저장불가
-                    mQuizContractView.showErrorMessage(mContext.resources.getString(R.string.message_payment_service_login))
-                    return@Observer
-                }
-
                 if(mQuizLimitTime <= 0)
                 {
                     // 풀이시간 초과는 저장불가
@@ -267,8 +260,7 @@ class QuizPresenter : QuizContract.Presenter
                 }
                 else
                 {
-                    mQuizRequestObject =
-                        QuizStudyRecordData(mQuizIntentParamsObject!!.getContentID(), mQuizUserSelectObjectList!!)
+                    mQuizRequestObject = QuizStudyRecordData(mQuizIntentParamsObject!!.getContentID(), mQuizUserSelectObjectList!!)
                     requestQuizSaveRecord()
                 }
             })
