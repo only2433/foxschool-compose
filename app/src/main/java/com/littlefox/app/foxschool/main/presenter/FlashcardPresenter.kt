@@ -144,10 +144,10 @@ class FlashcardPresenter : FlashcardContract.Presenter
         mFlashcardContractView.showPagerView(mFlashcardSelectionPagerAdapter)
 
         mFlashcardPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(FlashcardPresenterObserver::class.java)
-        setupFlashcardIntroFragmentListener()
-        setupFlashcardStudyFragmentListener()
-        setupFlashcardResultFragmentListener()
-        setupFlashcardBookmarkFragmentListener()
+        setupIntroFragmentListener()
+        setupStudyFragmentListener()
+        setupResultFragmentListener()
+        setupBookmarkFragmentListener()
 
         mCurrentUserID = mUserInformationResult.getUserInformation().getFoxUserID()
 
@@ -945,7 +945,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     /**
      * 플래시카드 인트로화면 옵저버 세팅
      */
-    private fun setupFlashcardIntroFragmentListener()
+    private fun setupIntroFragmentListener()
     {
         mFlashcardIntroFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity)).get(FlashcardIntroFragmentObserver::class.java)
 
@@ -980,7 +980,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     /**
      * 플래시카드 학습화면 옵저버 세팅
      */
-    private fun setupFlashcardStudyFragmentListener()
+    private fun setupStudyFragmentListener()
     {
         mFlashcardStudyFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardStudyFragmentObserver::class.java]
 
@@ -1033,7 +1033,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     /**
      * 플래시카드 결과화면 옵저버 세팅
      */
-    private fun setupFlashcardResultFragmentListener()
+    private fun setupResultFragmentListener()
     {
         mFlashcardResultFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardResultFragmentObserver::class.java]
 
@@ -1066,7 +1066,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     /**
      * 플래시카드 북마크화면 옵저버 세팅
      */
-    private fun setupFlashcardBookmarkFragmentListener()
+    private fun setupBookmarkFragmentListener()
     {
         mFlashcardBookmarkFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardBookmarkFragmentObserver::class.java]
 

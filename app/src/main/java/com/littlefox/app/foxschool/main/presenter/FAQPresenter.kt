@@ -61,17 +61,17 @@ class FAQPresenter : ForumContract.Presenter
     private fun init()
     {
         Log.f("")
-
-        mMainFragmentSelectionPagerAdapter = MainFragmentSelectionPagerAdapter((mContext as AppCompatActivity).supportFragmentManager)
-        mMainFragmentSelectionPagerAdapter.addFragment(ForumListFragment.instance)
-        mMainFragmentSelectionPagerAdapter.addFragment(ForumWebviewFragment.instance)
+        mMainFragmentSelectionPagerAdapter = MainFragmentSelectionPagerAdapter((mContext as AppCompatActivity).supportFragmentManager).apply {
+            addFragment(ForumListFragment.instance)
+            addFragment(ForumWebviewFragment.instance)
+        }
         mForumContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
-        requestFaqListAsync()
 
+        requestFaqListAsync()
         mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
         mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
         mForumPresenterObserver.setForumType(ForumType.FAQ)
-        setupForumFragmentListener()
+        setupFragmentListener()
     }
 
     override fun resume()
@@ -120,27 +120,7 @@ class FAQPresenter : ForumContract.Presenter
         }
     }
 
-    /**
-     * FAQ 리스트 요청
-     */
-    private fun requestFaqListAsync()
-    {
-        if(mFaqBaseObject != null)
-        {
-            mRequestPagePosition = mFaqBaseObject!!.getData().currentPageIndex + 1
-        }
-        Log.f("position : $mRequestPagePosition")
-        mFaqListCoroutine = ForumCoroutine(mContext)
-        mFaqListCoroutine!!.setData(
-            Common.API_FAQ,
-            mRequestPagePosition,
-            MAX_PER_PAGE_COUNT
-        )
-        mFaqListCoroutine!!.asyncListener = mAsyncListener
-        mFaqListCoroutine!!.execute()
-    }
-
-    private fun setupForumFragmentListener()
+    private fun setupFragmentListener()
     {
         // 당겨서 재조회 요청
         mForumFragmentObserver.refreshData.observe((mContext as AppCompatActivity), Observer {
@@ -173,6 +153,26 @@ class FAQPresenter : ForumContract.Presenter
             Log.f("onPageLoadComplete")
             mForumContractView.hideLoading()
         })
+    }
+
+    /**
+     * FAQ 리스트 요청
+     */
+    private fun requestFaqListAsync()
+    {
+        if(mFaqBaseObject != null)
+        {
+            mRequestPagePosition = mFaqBaseObject!!.getData().currentPageIndex + 1
+        }
+        Log.f("position : $mRequestPagePosition")
+        mFaqListCoroutine = ForumCoroutine(mContext)
+        mFaqListCoroutine!!.setData(
+            Common.API_FAQ,
+            mRequestPagePosition,
+            MAX_PER_PAGE_COUNT
+        )
+        mFaqListCoroutine!!.asyncListener = mAsyncListener
+        mFaqListCoroutine!!.execute()
     }
 
     /**

@@ -84,7 +84,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private var mBookshelfDetailListInformationCoroutine : BookshelfDetailListInformationCoroutine? = null
     private var mBookshelfContentRemoveCoroutine : BookshelfContentRemoveCoroutine? = null
 
-    private var mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
+    private var mDeleteBookItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mCurrentPlayIndex : Int = 0
     private var mCurrentOptionIndex : Int = 0
 
@@ -222,8 +222,8 @@ class BookshelfPresenter : BookshelfContract.Presenter
 
         if(mBookshelfDetailItemAdapter!!.getSelectedList().size > 0)
         {
-            mSendBookshelfAddList.clear()
-            mSendBookshelfAddList = mBookshelfDetailItemAdapter!!.getSelectedList()
+            mDeleteBookItemList.clear()
+            mDeleteBookItemList = mBookshelfDetailItemAdapter!!.getSelectedList()
             showBookshelfContentsDeleteDialog()
         }
     }
@@ -242,7 +242,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
 
     private fun refreshBookshelfItemData()
     {
-        for(deleteItem in mSendBookshelfAddList)
+        for(deleteItem in mDeleteBookItemList)
         {
             for(i in mBookItemInformationList!!.indices)
             {
@@ -401,7 +401,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     {
         Log.f("")
         mBookshelfContentRemoveCoroutine = BookshelfContentRemoveCoroutine(mContext).apply {
-            setData(mCurrentMyBookshelfResult!!.getID(), mSendBookshelfAddList)
+            setData(mCurrentMyBookshelfResult!!.getID(), mDeleteBookItemList)
             asyncListener = mAsyncListener
             execute()
         }
@@ -584,8 +584,8 @@ class BookshelfPresenter : BookshelfContract.Presenter
         override fun onClickBookshelf()
         {
             Log.f("DELETE")
-            mSendBookshelfAddList.clear()
-            mSendBookshelfAddList.add(mBookItemInformationList!![mCurrentOptionIndex])
+            mDeleteBookItemList.clear()
+            mDeleteBookItemList.add(mBookItemInformationList!![mCurrentOptionIndex])
             showBookshelfContentsDeleteDialog()
         }
 

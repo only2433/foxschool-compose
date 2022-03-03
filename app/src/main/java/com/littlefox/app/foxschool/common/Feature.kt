@@ -53,7 +53,4 @@ object Feature {
      */
     var IS_SUPPORT_EBOOK_PHONE : Boolean  = false
 
-
-
-    
 }

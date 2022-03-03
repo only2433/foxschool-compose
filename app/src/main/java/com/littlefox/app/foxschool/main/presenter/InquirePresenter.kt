@@ -49,9 +49,10 @@ class InquirePresenter : InquireContract.Presenter
     constructor(context : Context)
     {
         mContext = context
-        mInquireContractView = mContext as InquireContract.View
-        mInquireContractView.initView()
-        mInquireContractView.initFont()
+        mInquireContractView = (mContext as InquireContract.View).apply {
+            initView()
+            initFont()
+        }
         mMainHandler = WeakReferenceHandler(context as MessageHandlerCallback)
         Log.f("onCreate")
         init()
@@ -138,6 +139,9 @@ class InquirePresenter : InquireContract.Presenter
         return null
     }
 
+
+
+
     /**
      * 이메일 입력값 유효성 체크
      * showMessage : 화면으로 메세지 표시 이벤트 넘길지 말지
@@ -160,41 +164,22 @@ class InquirePresenter : InquireContract.Presenter
     {
         CommonUtils.getInstance(mContext).hideKeyboard()
         val category = getInquireType()
-        if (category == null || email == "" || email.length < 2 || text == "" || text.length < 2) // 하나라도 빈값이 있거나 2글자 미만인 경우
-        {
-            val message = Message.obtain()
-            if (category == null)
-            {
-                message.what = MESSAGE_CATEGORY_INPUT_ERROR
-                message.obj = mContext.resources.getString(R.string.message_warning_select_inquire_category)
-            }
-            else if (email == "")
-            {
-                // 이메일 빈 값
-                message.what = MESSAGE_EMAIL_INPUT_ERROR
-                message.obj = mContext.resources.getString(R.string.message_warning_empty_email)
-            }
-            else if (checkEmailAvailable(email) != "")
-            {
-                // 이메일 유효성 불일치
-                message.what = MESSAGE_EMAIL_INPUT_ERROR
-                message.obj = checkEmailAvailable(email)
-            }
-            else if (text == "" || text.length < 2)
-            {
-                message.what = MESSAGE_MESSAGE_INPUT_ERROR
-                message.obj = mContext.resources.getString(R.string.message_warning_empty_inquire)
-            }
-            mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
-            return
-        }
-        mInquireContractView.showLoading()
+        var message : Message? = checkRegisterData(category, email, text)
 
-        mInquireData = InquireData(category, text, email)
-        mInquireCoroutine = InquireCoroutine(mContext).apply {
-            setData(mInquireData)
-            asyncListener = mAsyncListener
-            execute()
+        if(message == null)
+        {
+            mInquireContractView.showLoading()
+
+            mInquireData = InquireData(category!!, text, email)
+            mInquireCoroutine = InquireCoroutine(mContext).apply {
+                setData(mInquireData)
+                asyncListener = mAsyncListener
+                execute()
+            }
+        }
+        else
+        {
+            mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
         }
     }
 
@@ -204,6 +189,56 @@ class InquirePresenter : InquireContract.Presenter
     override fun onClickSendToEmail(text : String)
     {
         CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL, text)
+    }
+
+
+    private fun checkRegisterData(category : InquireType?, email : String, text : String) : Message?
+    {
+        var message : Message? = Message.obtain()
+        if (category == null)
+        {
+            message!!.what = MESSAGE_CATEGORY_INPUT_ERROR
+            message!!.obj = mContext.resources.getString(R.string.message_warning_select_inquire_category)
+        }
+        else if(email == "" || email.length < 2)
+        {
+            // 이메일 빈 값
+            message!!.what = MESSAGE_EMAIL_INPUT_ERROR
+            message!!.obj = mContext.resources.getString(R.string.message_warning_empty_email)
+        }
+        else if (isEmailAvailable(email) == false)
+        {
+            // 이메일 유효성 불일치
+            var resultData = getEmailResultValue(email)
+            message!!.what = MESSAGE_EMAIL_INPUT_ERROR
+            message!!.obj = CheckUserInput().getErrorMessage(resultData)
+        }
+        else if(text == "" || text.length < 2)
+        {
+            message!!.what = MESSAGE_MESSAGE_INPUT_ERROR
+            message!!.obj = mContext.resources.getString(R.string.message_warning_empty_inquire)
+        }
+        else
+        {
+            message = null
+        }
+        return message
+    }
+
+    private fun isEmailAvailable(email : String) : Boolean
+    {
+        val emailResult = CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
+        if(emailResult == CheckUserInput.WARNING_EMAIL_NOT_INPUT ||
+            emailResult == CheckUserInput.WARNING_EMAIL_WRONG_INPUT)
+        {
+            return false
+        }
+        return true
+    }
+
+    private fun getEmailResultValue(email : String) : Int
+    {
+        return CheckUserInput.getInstance(mContext).checkEmailData(email).getResultValue()
     }
 
     /**
