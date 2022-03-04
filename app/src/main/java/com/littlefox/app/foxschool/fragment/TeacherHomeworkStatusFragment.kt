@@ -70,8 +70,6 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
-    private var isAllCheck : Boolean = false            // 전체 선택
-
     private var mClassName : String = ""                // 학급명
     private var mHomeworkDate : String = ""             // 숙제기간
 
@@ -195,8 +193,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     private fun updateStatusListData()
     {
         Log.f("Teacher Homework Status List update")
-        isAllCheck = false
-        setAllCheckDrawable()
+        setAllCheckDrawable(false)
         setStudentListView()
         setHomeworkDateText()
         setClassNameText()
@@ -246,9 +243,7 @@ class TeacherHomeworkStatusFragment : Fragment()
         // 화면을 완전히 떠나는 경우 데이터 초기화
         _TextClassName.text = ""
 
-        isAllCheck = false
-        setAllCheckDrawable()
-
+        setAllCheckDrawable(false)
         mHomeworkStatusList.clear()
         setStudentListView()
     }
@@ -256,7 +251,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     /**
      * 리스트 전체 체크 (Check/UnCheck)
      */
-    private fun setListAllCheck()
+    private fun setListAllCheck(isAllCheck : Boolean)
     {
         mHomeworkStatusList.forEach { item ->
             item.setSelected(isAllCheck)
@@ -271,7 +266,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     {
         val data : ArrayList<String> = ArrayList<String>()
         mHomeworkStatusList.forEach {
-            if (isAllCheck || it.isSelected())
+            if (it.isSelected())
             {
                 data.add(it.getUserID())
             }
@@ -279,15 +274,17 @@ class TeacherHomeworkStatusFragment : Fragment()
         mTeacherHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking(data)
     }
 
-    private fun setAllCheckDrawable()
+    private fun setAllCheckDrawable(isAllCheck : Boolean)
     {
         if (isAllCheck)
         {
             _AllCheckIcon.setImageResource(R.drawable.radio_on)
+            _AllCheckIcon.tag = "ON"
         }
         else
         {
             _AllCheckIcon.setImageResource(R.drawable.radio_off)
+            _AllCheckIcon.tag = "OFF"
         }
     }
 
@@ -307,9 +304,16 @@ class TeacherHomeworkStatusFragment : Fragment()
             R.id._allCheckIcon ->
             {
                 // [전체선택]
-                isAllCheck = !isAllCheck
-                setAllCheckDrawable()
-                setListAllCheck()
+                if(_AllCheckIcon.tag == "ON")
+                {
+                    setAllCheckDrawable(false)
+                    setListAllCheck(false)
+                }
+                else
+                {
+                    setAllCheckDrawable(true)
+                    setListAllCheck(true)
+                }
             }
             R.id._allHomeworkCheckingText ->
             {
@@ -331,13 +335,13 @@ class TeacherHomeworkStatusFragment : Fragment()
             // 리스트에서 체크된 숫자가 리스트의 갯수와 동일한 경우 전체선택 플래그 활성화
             if (count == mHomeworkStatusList.size)
             {
-                isAllCheck = true
+                setAllCheckDrawable(true)
             }
             else
             {
-                isAllCheck = false
+                setAllCheckDrawable(false)
             }
-            setAllCheckDrawable()
+
         }
 
         override fun onClickShowDetail(index : Int)
