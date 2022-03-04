@@ -1,13 +1,11 @@
 package com.littlefox.app.foxschool.main.presenter
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
-import android.os.Environment
 import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -43,7 +41,6 @@ import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class RecordPlayerPresenter : RecordPlayerContract.Presenter
 {
     companion object
@@ -63,6 +60,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
         private const val DIALOG_WARNING_RECORD_RESET : Int     = 10001
         private const val DIALOG_WARNING_RECORD_EXIT : Int      = 10002
         private const val DIALOG_FILE_UPLOAD_COMPLETE : Int     = 10003
+        private const val DIALOG_FILE_UPLOAD_FAIL : Int         = 10004
 
        // val PATH_SDCARD = Environment.getExternalStorageDirectory().absolutePath
        // val PATH_ROOT = "$PATH_SDCARD/LittleFox/Log"
@@ -92,7 +90,6 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     private var mUIUpdateTimer : Timer? = null
     private var mRecordTotalTime : Long = 0 // milli second
     private var mRecordAddTime : Int = 0
-
 
     // 녹음파일 재생 관련 변수
     private var mMediaPlayer : MediaPlayer? = null
@@ -220,11 +217,11 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             {
                 mRecordingPathList.clear()
                 showFileUploadCompleteDialog()
-                mRecordPlayerContractView.setUploadButtonEnable(false)
             }
             MESSAGE_RECORD_UPLOAD_FAIL ->
             {
-                mRecordPlayerContractView.showErrorMessage(mContext.resources.getString(R.string.message_record_upload_fail));
+                mRecordPlayerContractView.hideLoading()
+                showFileUploadFailDialog()
                 mRecordPlayerContractView.setUploadButtonEnable(true)
             }
             MESSAGE_START_RECORD_HISTORY ->
@@ -603,6 +600,19 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
             setMessage(mContext.getString(R.string.message_record_upload_complete))
             setDialogEventType(DIALOG_FILE_UPLOAD_COMPLETE)
             setButtonType(DialogButtonType.BUTTON_2)
+            setCancelPossible(false)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showFileUploadFailDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.getString(R.string.message_record_upload_fail))
+            setDialogEventType(DIALOG_FILE_UPLOAD_FAIL)
+            setButtonType(DialogButtonType.BUTTON_1)
+            setCancelPossible(false)
             setDialogListener(mDialogListener)
             show()
         }
@@ -738,6 +748,7 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
     {
         Log.f("Recording Selected : UPLOAD || RecorderStatus : $mRecorderStatus")
         mRecordPlayerContractView.showLoading()
+        mRecordPlayerContractView.setUploadButtonEnable(false)
         requestRecordFileUpload()
     }
 
@@ -956,6 +967,13 @@ class RecordPlayerPresenter : RecordPlayerContract.Presenter
 
         override fun onRunningAdvanceInformation(code : String?, `object` : Any?) { }
 
-        override fun onErrorListener(code : String?, message : String?) { }
+        override fun onErrorListener(code : String?, message : String?)
+        {
+            if (code.equals(Common.COROUTINE_CODE_CLASS_RECORD_FILE))
+            {
+                Log.f("Record File Upload Fail")
+                mMainHandler.sendEmptyMessage(MESSAGE_RECORD_UPLOAD_FAIL)
+            }
+        }
     }
 }

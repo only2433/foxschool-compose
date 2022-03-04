@@ -182,9 +182,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         })
     }
 
-    /**
-     * 학급 리스트 설정
-     */
     private fun setClassNameText()
     {
         val textSize = if (CommonUtils.getInstance(mContext).checkTablet) 32 else 40
@@ -198,7 +195,6 @@ class TeacherHomeworkStatusFragment : Fragment()
     private fun updateStatusListData()
     {
         Log.f("Teacher Homework Status List update")
-        // 전체 체크 해제
         isAllCheck = false
         setAllCheckDrawable()
         setStudentListView()
@@ -206,9 +202,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         setClassNameText()
     }
 
-    /**
-     * 숙제현황 리스트 뷰 세팅
-     */
     private fun setStudentListView()
     {
         if (mHomeworkStatusItemListAdapter == null)
@@ -233,9 +226,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         _StatusListView.adapter = mHomeworkStatusItemListAdapter
     }
 
-    /**
-     * 숙제기간 텍스트 설정
-     */
     private fun setHomeworkDateText()
     {
         var homeworkDate = ""
@@ -251,12 +241,9 @@ class TeacherHomeworkStatusFragment : Fragment()
         mHomeworkDate = homeworkDate
     }
 
-    /**
-     * 화면 데이터 초기화
-     */
     private fun clearScreenData()
     {
-        // 화면을 완전히 떠나는 경우
+        // 화면을 완전히 떠나는 경우 데이터 초기화
         _TextClassName.text = ""
 
         isAllCheck = false
@@ -292,9 +279,6 @@ class TeacherHomeworkStatusFragment : Fragment()
         mTeacherHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking(data)
     }
 
-    /**
-     * 컨텐츠 로딩바 표시/비표시
-     */
     private fun setAllCheckDrawable()
     {
         if (isAllCheck)

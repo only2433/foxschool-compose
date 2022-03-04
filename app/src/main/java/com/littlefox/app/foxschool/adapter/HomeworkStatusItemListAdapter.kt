@@ -15,7 +15,6 @@ import com.littlefox.app.foxschool.adapter.listener.HomeworkStatusItemListener
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.library.view.listener.OnSingleClickListner
-import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
@@ -28,8 +27,6 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
     private val mContext : Context
     private var mStatusList : ArrayList<HomeworkStatusItemData> = ArrayList<HomeworkStatusItemData>() // 숙제현황 리스트
     private var mHomeworkStatusItemListener : HomeworkStatusItemListener? = null
-    private var mCheckCount : Int = 0
-
 
     constructor(context : Context)
     {
@@ -73,6 +70,7 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
         val item = mStatusList[position]
         itemPosition = position;
         mCurrentViewHolder = holder
+
         // 체크박스
         if (item.isSelected())
         {
@@ -161,26 +159,27 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
             }
         }
 
-        // 클릭이벤트
+        // [체크박스] 클릭 이벤트
         holder._CheckIcon.setOnClickListener {
-            // [체크박스] 클릭 이벤트
             val isChecked = item.isSelected()
             if (isChecked)
             {
-                mCheckCount -= 1
                 item.setSelected(false)
             }
             else
             {
-                mCheckCount += 1
                 item.setSelected(true)
             }
             notifyDataSetChanged()
-            mHomeworkStatusItemListener!!.onClickCheck(mCheckCount)
+            mHomeworkStatusItemListener!!.onClickCheck(getListCheckCount())
         }
-
     }
 
+    private fun getListCheckCount() : Int
+    {
+        val count : Int = mStatusList.filter {it.isSelected() == true}.count()
+        return count
+    }
 
     inner class ViewHolder : RecyclerView.ViewHolder
     {

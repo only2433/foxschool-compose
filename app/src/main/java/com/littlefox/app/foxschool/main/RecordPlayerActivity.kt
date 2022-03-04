@@ -3,7 +3,6 @@ package com.littlefox.app.foxschool.main
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimationDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -289,9 +288,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
     }
 
-    /**
-     * 컨텐츠 제목 세팅
-     */
     override fun setRecordTitle(contents : RecordIntentParamsObject)
     {
         val title : String = contents.getName()
@@ -320,9 +316,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 코치마크 뷰 세팅
-     */
     override fun setCoachMarkView()
     {
         if (_CoachmarkImage.isShown)
@@ -337,9 +330,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 녹음 상태에 따른 화면 세팅
-     */
     override fun setRecorderStatus(status : RecorderStatus)
     {
         _RecordStartText.visibility = View.GONE
@@ -347,9 +337,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         setRecordingView(status)
     }
 
-    /**
-     * 녹음 상태에 따른 뷰 세팅
-     */
     private fun setRecordingView(status : RecorderStatus)
     {
         Log.f("setRecordingView : $status")
@@ -357,7 +344,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         {
             RecorderStatus.RECORD_STOP ->
             {
-                // 녹음 정지 (녹음 초기상태)
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
 
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_a4abb3))
@@ -378,7 +364,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.RECORD_START ->
             {
-                // 녹음 시작
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_444444))
 
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_19a0f7))
@@ -391,7 +376,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.RECORD_PAUSE ->
             {
-                // 녹음 일시정지
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_a4abb3))
                 _RecordingProgressView.cancelAnimation()
@@ -401,7 +385,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             RecorderStatus.RECORD_MERGE,
             RecorderStatus.AUDIO_STOP ->
             {
-                // 오디오 준비 (오디오 초기상태)
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
                 _RecordingProgressView.setProgressColor(resources.getColor(R.color.color_a4abb3))
                 _RecordingProgressView.cancelAnimation()
@@ -421,22 +404,17 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.AUDIO_PLAY ->
             {
-                // 오디오 재생
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_444444))
                 startFrameAnimation()
             }
             RecorderStatus.AUDIO_PAUSE ->
             {
-                // 오디오 일시정지
                 _RecordTimerText.setTextColor(this.resources.getColor(R.color.color_cacaca))
                 stopFrameAnimation()
             }
         }
     }
 
-    /**
-     * 녹음 상태에 따른 컨트롤러 뷰 세팅
-     */
     private fun setControllerView(status : RecorderStatus)
     {
         Log.f("setControllerView : $status")
@@ -449,7 +427,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         {
             RecorderStatus.RECORD_STOP ->
             {
-                // 녹음 정지 (녹음 초기상태)
                 _RecordStartButton.visibility = View.VISIBLE
                 _RecordPauseButton.visibility = View.GONE
                 _RecordPlayButton.visibility = View.GONE
@@ -463,7 +440,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.RECORD_START ->
             {
-                // 녹음 시작
                 _RecordStartButton.visibility = View.GONE
                 _RecordPauseButton.visibility = View.VISIBLE
                 _RecordPlayButton.visibility = View.GONE
@@ -475,7 +451,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.RECORD_PAUSE ->
             {
-                // 녹음 일시정지
                 _RecordStartButton.visibility = View.VISIBLE
                 _RecordPauseButton.visibility = View.GONE
                 _RecordPlayButton.visibility = View.GONE
@@ -495,7 +470,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             RecorderStatus.AUDIO_STOP,
             RecorderStatus.AUDIO_PAUSE ->
             {
-                // 오디오 정지 (오디오 초기상태), 일시정지
                 _RecordStartButton.visibility = View.GONE
                 _RecordPauseButton.visibility = View.GONE
                 _RecordPlayButton.visibility = View.VISIBLE
@@ -518,7 +492,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
             }
             RecorderStatus.AUDIO_PLAY ->
             {
-                // 오디오 재생
                 _RecordStartButton.visibility = View.GONE
                 _RecordPauseButton.visibility = View.VISIBLE
                 _RecordPlayButton.visibility = View.GONE
@@ -531,9 +504,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 오디오 툴바 버튼 On/Off 처리
-     */
     private fun setAudioToolEnable(isEnable : Boolean)
     {
         if (isEnable)
@@ -560,23 +530,8 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 오디오 재생 바 초기 세팅
-     */
     private fun setSeekBar()
     {
-        // 하위 버전에서 seekbar 높이 지정이 잘 안되는 부분 때문에 예외처리 진행.
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-        {
-            if (CommonUtils.getInstance(this).checkTablet)
-            {
-                _AudioSeekerBarView.moveChildView(_AudioSeekbarPlayBar, 100f, 10f, 450f, 25f)
-            }
-            else
-            {
-                _AudioSeekerBarView.moveChildView(_AudioSeekbarPlayBar, 180f, 10f, 722f, 45f)
-            }
-        }
         _AudioSeekbarPlayBar.run {
             thumbOffset = CommonUtils.getInstance(context).getPixel(0)
             progress = 0
@@ -585,17 +540,11 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 타이머 텍스트 변경
-     */
     override fun setTimerText(time : String)
     {
         _RecordTimerText.setText(time)
     }
 
-    /**
-     * 오디오 재생 바 세팅
-     */
     override fun setAudioPlayTime(currentTime : Int, maxTime : Int)
     {
         _AudioSeekbarPlayBar.progress = currentTime / Common.SECOND
@@ -605,9 +554,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         _AudioPlayFullTime.setText(CommonUtils.getInstance(this).getMillisecondTime(maxTime.toLong()))
     }
 
-    /**
-     * 녹음 프레임 애니메이션 시작
-     */
     private fun startFrameAnimation()
     {
         Log.f("")
@@ -620,9 +566,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         mFrameAnimationDrawable!!.start()
     }
 
-    /**
-     * 녹음 프레임 애니메이션 정지
-     */
     private fun stopFrameAnimation()
     {
         Log.f("")
@@ -638,9 +581,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         catch(e : Exception) { }
     }
 
-    /**
-     * 프로그레스 애니메이션 시작/재시작
-     */
     override fun startRecordingAnimation(duration : Long, percent : Int)
     {
         Log.f("startRecordingAnimation")
@@ -649,9 +589,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         _RecordProgressCircleImageView.startAnimation(CommonUtils.getInstance(this).getRotateAnimation(duration, position, 360f))
     }
 
-    /**
-     * 프로그레스 애니메이션 멈춤 (현재 위치 고정)
-     */
     override fun stopRecordingAnimation(percent : Int)
     {
         Log.f("stopRecordingAnimation")
@@ -661,9 +598,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         _RecordProgressCircleImageView.startAnimation(CommonUtils.getInstance(this).getRotateAnimation(0, position, position))
     }
 
-    /**
-     * 녹음파일 업로드 완료
-     */
     override fun setUploadButtonEnable(isEnable : Boolean)
     {
         _RecordUploadButtonRect.isEnabled = isEnable
@@ -671,9 +605,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         _RecordUploadButton.alpha = if (isEnable) 1.0f else 0.5f
     }
 
-    /**
-     * 녹음 시작 버튼 클릭 이벤트
-     */
     private fun onClickRecordStart()
     {
         Log.f("onClickRecordStart")
@@ -684,9 +615,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         mRecordPlayerPresenter.onClickRecordStart()
     }
 
-    /**
-     * 녹음 일시정지 버튼 클릭 이벤트
-     */
     private fun onClickRecordPause()
     {
         if (isEnableStopMediaRecorder)
@@ -696,9 +624,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 녹음 정지 버튼 클릭 이벤트
-     */
     private fun onClickRecordStop()
     {
         if (isEnableStopMediaRecorder)
@@ -708,9 +633,6 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 녹음 다시하기 버튼 클릭 이벤트
-     */
     private fun onClickRecordReset()
     {
         Log.f("onClickRecordReset")
@@ -720,18 +642,12 @@ class RecordPlayerActivity : BaseActivity(), MessageHandlerCallback, RecordPlaye
         }
     }
 
-    /**
-     * 녹음 재생하기 버튼 클릭 이벤트
-     */
     private fun onClickRecordPlay()
     {
         Log.f("onClickRecordPlay")
         mRecordPlayerPresenter.onClickRecordPlay()
     }
 
-    /**
-     * 녹음 업로드 버튼 클릭 이벤트
-     */
     private fun onClickRecordUpload()
     {
         Log.f("onClickRecordUpload")

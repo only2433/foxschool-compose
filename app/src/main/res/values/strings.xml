@@ -238,7 +238,7 @@
     <string name="message_record_start">버튼을 눌러 녹음을 시작하세요.</string>
     <string name="message_record_reset">다시 녹음 할까요?</string>
     <string name="message_record_upload_complete">녹음파일이 저장되었습니다. \n녹음 기록을 보시겠습니까?</string>
-    <string name="message_record_upload_fail">녹음 파일 저장을 실패 하였습니다.</string>
+    <string name="message_record_upload_fail">녹음 파일 업로드에 실패하였습니다.</string>
     <string name="message_record_permission">녹음 학습을 위해 마이크 권한을 허용해 주세요.</string>
     <string name="message_record_history">녹음기록은 30일간 보관 후 삭제되며 최근 7일 이내 녹음한 파일은 다시 듣기와 다운로드(PC에서만 가능)가 가능합니다</string>
     <string name="message_record_history_tablet">· 녹음기록은 30일간 보관 후 삭제되며 최근 7일 이내 녹음한 파일은 다시 듣기와 다운로드(PC에서만 가능)가 가능합니다</string>
