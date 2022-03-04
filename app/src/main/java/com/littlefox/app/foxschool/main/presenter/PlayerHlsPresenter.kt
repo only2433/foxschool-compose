@@ -79,14 +79,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         override fun run()
         {
-            if(mCurrentPlayerUserType === PlayerUserType.FULL_PLAY)
-            {
-                mMainHandler.sendEmptyMessage(MESSAGE_UI_UPDATE)
-            }
-            else if(mCurrentPlayerUserType === PlayerUserType.PREVIEW)
-            {
-                mMainHandler.sendEmptyMessage(MESSAGE_PREVIEW_UI_UPDATE)
-            }
+            mMainHandler.sendEmptyMessage(MESSAGE_UI_UPDATE)
             mCurrentStudyLogMilliSeconds = mCurrentStudyLogMilliSeconds + (Common.DURATION_SHORTEST * PLAY_SPEED_LIST[mCurrentPlaySpeedIndex]).toInt()
         }
     }
@@ -133,23 +126,22 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         private const val MAX_LOCKMODE_SECOND : Int             = 3
 
         private const val MESSAGE_UI_UPDATE : Int                       = 100
-        private const val MESSAGE_PREVIEW_UI_UPDATE : Int               = 101
-        private const val MESSAGE_LOCK_BUTTON_ACTIVATE : Int            = 102
-        private const val MESSAGE_WARNING_WATCH_MOVIE : Int             = 103
-        private const val MESSAGE_LOCK_COUNT_TIME : Int                 = 104
-        private const val MESSAGE_START_QUIZ : Int                      = 105
-        private const val MESSAGE_START_TRANSLATE : Int                 = 106
-        private const val MESSAGE_START_EBOOK : Int                     = 107
-        private const val MESSAGE_START_VOCABULARY : Int                = 108
-        private const val MESSAGE_START_GAME_STARWORDS : Int            = 109
-        private const val MESSAGE_START_GAME_CROSSWORD : Int            = 110
-        private const val MESSAGE_START_FLASHCARD : Int                 = 111
-        private const val MESSAGE_START_RECORD_PLAYER : Int             = 112
-        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 113
-        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 114
-        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 115
-        private const val MESSAGE_REQUEST_VIDEO : Int                   = 116
-        private const val MESSAGE_CHECK_MOVIE : Int                     = 117
+        private const val MESSAGE_LOCK_BUTTON_ACTIVATE : Int            = 101
+        private const val MESSAGE_WARNING_WATCH_MOVIE : Int             = 102
+        private const val MESSAGE_LOCK_COUNT_TIME : Int                 = 103
+        private const val MESSAGE_START_QUIZ : Int                      = 104
+        private const val MESSAGE_START_TRANSLATE : Int                 = 105
+        private const val MESSAGE_START_EBOOK : Int                     = 106
+        private const val MESSAGE_START_VOCABULARY : Int                = 107
+        private const val MESSAGE_START_GAME_STARWORDS : Int            = 108
+        private const val MESSAGE_START_GAME_CROSSWORD : Int            = 109
+        private const val MESSAGE_START_FLASHCARD : Int                 = 110
+        private const val MESSAGE_START_RECORD_PLAYER : Int             = 111
+        private const val MESSAGE_REQUEST_CONTENTS_ADD : Int            = 112
+        private const val MESSAGE_COMPLETE_CONTENTS_ADD : Int           = 113
+        private const val MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG : Int  = 114
+        private const val MESSAGE_REQUEST_VIDEO : Int                   = 115
+        private const val MESSAGE_CHECK_MOVIE : Int                     = 116
 
         private const val DIALOG_TYPE_WARNING_WATCH_MOVIE : Int         = 10001
         private const val DIALOG_TYPE_WARNING_API_EXCEPTION : Int       = 10002
@@ -171,10 +163,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mVibrator : Vibrator? = null
     private var mCurrentPlayDuration : Long = 0L
     private var mCurrentPlayerStatus : PlayerStatus = PlayerStatus.STOP
-    private var mCurrentPlayerUserType : PlayerUserType = PlayerUserType.PREVIEW
     private var isLockMode : Boolean = false
     private var mCurrentLockTime : Int = 0
-    private var mFreeUserPreviewTime : Int  = 0
 
     private lateinit var mPlayInformationList : ArrayList<ContentsBaseResult>
     private lateinit var mPlayerIntentParamsObject : PlayerIntentParamsObject
@@ -269,14 +259,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             mMainHandler.removeMessages(MESSAGE_UI_UPDATE)
         }
-        if(mMainHandler.hasMessages(MESSAGE_PREVIEW_UI_UPDATE))
-        {
-            mMainHandler.removeMessages(MESSAGE_PREVIEW_UI_UPDATE)
-        }
         mMainHandler.removeCallbacksAndMessages(null)
 
         mJob?.cancel()
-
     }
 
 
@@ -287,7 +272,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         when(msg.what)
         {
             MESSAGE_UI_UPDATE -> updateUI()
-            MESSAGE_PREVIEW_UI_UPDATE -> updatePreviewUI()
             MESSAGE_LOCK_BUTTON_ACTIVATE ->
             {
                 enableLockCountTimer(false)
@@ -652,31 +636,20 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         if(mCurrentPlayerStatus === PlayerStatus.PLAY)
         {
-            if(mCurrentPlayerUserType === PlayerUserType.FULL_PLAY)
-            {
-                Log.f("init Play Payment User")
-                Log.f("Max Duration : " + mPlayer!!.getDuration())
-                Log.f("Max Progress : " + (mPlayer!!.getDuration() / Common.SECOND))
+            Log.f("init Play")
+            Log.f("Max Duration : " + mPlayer!!.getDuration())
+            Log.f("Max Progress : " + (mPlayer!!.getDuration() / Common.SECOND))
 
-                mPlayerContractView.run {
-                    setCurrentMovieTime("00:00")
-                    setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
-                    setMaxProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
-                    if(isAvailableCaption)
-                    {
-                        settingCurrentPageLine(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
-                    }
-                    enableCurrentPage(-1)
-                    showPaymentUserStartView()
+            mPlayerContractView.run {
+                setCurrentMovieTime("00:00")
+                setRemainMovieTime(CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer!!.getDuration()))
+                setMaxProgress((mPlayer!!.getDuration().toInt() / Common.SECOND))
+                if(isAvailableCaption)
+                {
+                    settingCurrentPageLine(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
                 }
-
-            }
-            else if(mCurrentPlayerUserType === PlayerUserType.PREVIEW)
-            {
-                Log.f("init Play Free User")
-                Log.f("tempPreviewTime : " + mAuthContentResult.getPreviewTime())
-                mFreeUserPreviewTime = mAuthContentResult.getPreviewTime()
-                mPlayerContractView.showPreviewUserStartView()
+                enableCurrentPage(-1)
+                showPlayerStartView()
             }
         }
         mPlayerContractView.hideMovieLoading()
@@ -700,15 +673,16 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             if(mPlayInformationList.size > 1)
             {
                 if(nextMovieIndex >= mPlayInformationList.size)
+                {
                     nextMovieIndex = 0
-                else
-                    nextMovieIndex = nextMovieIndex
+                }
             }
             else
             {
                 nextMovieIndex = 0
             }
         }
+
         if(isRepeatOn)
         {
             Log.f("Repeat Movie Index : $nextMovieIndex, mCurrentPlayMovieIndex : $mCurrentPlayMovieIndex")
@@ -717,18 +691,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             Log.f("Next Movie Index : $nextMovieIndex")
         }
+
         if(nextMovieIndex >= mPlayInformationList.size)
         {
-            if(mCurrentPlayerUserType === PlayerUserType.FULL_PLAY)
-            {
-                Log.f("ALL FULL_PLAY Complete")
-                mPlayerContractView.showPaymentUserEndView()
-            }
-            else if(mCurrentPlayerUserType === PlayerUserType.PREVIEW)
-            {
-                Log.f("PREVIEW PLAY Complete")
-                mPlayerContractView.showPreviewUserEndView()
-            }
+            Log.f("ALL FULL_PLAY Complete")
+            mPlayerContractView.showPlayerEndView()
         }
         else
         {
@@ -762,9 +729,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayerContractView.initMovieLayout()
 
         mJob = CoroutineScope(Dispatchers.Main).launch{
-
             CoroutineScope(Dispatchers.Default).async {
-                isShowCoachingMark = isShowCoachmark(type)
+                isShowCoachingMark = isNeverSeeAgainCheck(type)
             }.await()
 
             if(isShowCoachingMark)
@@ -778,11 +744,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 prepareMovie()
             }
         }
-    }
-
-    private fun isShowCoachmark(type : String) : Boolean
-    {
-        return isNeverSeeAgainCheck(type)
     }
 
     private fun isNeverSeeAgainCheck(type : String) : Boolean
@@ -836,21 +797,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mPlayer?.release()
     }
 
-    /**
-     * 결제를 하기위해 메인으로 이동
-     */
-    private fun startMainActivityToPayment()
-    {
-        Log.f("")
-        MainObserver.executeToEnterPaymentPage()
-        IntentManagementFactory.getInstance()
-                .readyActivityMode(ActivityMode.MAIN)
-                .setAnimationMode(AnimationMode.REVERSE_NORMAL_ANIMATION)
-                .setIntentFlag(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                .startActivity()
-        (mContext as AppCompatActivity).finish()
-    }
-
     private fun notifyPlayItemIndex()
     {
         Log.f("list size : " + mPlayInformationList.size + ", index : " + mCurrentPlayMovieIndex)
@@ -876,14 +822,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         val isPageByPageEnable = CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_IS_ENABLE_PAGE_BY_PAGE, DataType.TYPE_BOOLEAN) as Boolean
         Log.f("mAuthContentResult.getVideoUrl() : " + mAuthContentResult.getMovieHlsUrl())
         mCurrentPlayerStatus = PlayerStatus.PLAY
-        if(mAuthContentResult.getPreviewTime() !== 0)
-        {
-            mCurrentPlayerUserType = PlayerUserType.PREVIEW
-        }
-        else
-        {
-            mCurrentPlayerUserType = PlayerUserType.FULL_PLAY
-        }
         notifyPlayItemIndex()
         settingCurrentMovieStudyOption()
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
@@ -970,7 +908,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             mPlayerContractView.availableMovieOptionButton(true)
         }
-        mPlayerContractView.settingPaymentEndView(
+        mPlayerContractView.settingPlayerEndView(
             isEbookAvailable = isEbookAvailable,
             isQuizAvailable = isQuizAvailable,
             isVocabularyAvailable = isVocabularyAvailable,
@@ -991,7 +929,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             setDialogListener(mDialogListener)
             show()
         }
-
     }
 
     private fun showTemplateAlertDialog(type : Int, firstButtonText : String, secondButtonText : String, message : String)
@@ -1019,7 +956,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             setDialogListener(mDialogListener)
             show()
         }
-
     }
 
     private fun showBottomItemOptionDialog(result : ContentsBaseResult)
@@ -1069,7 +1005,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             it.show()
             it
         }
-
     }
 
     private fun enableLockCountTimer(isStart : Boolean)
@@ -1155,34 +1090,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         {
             mPlayerContractView.setCaptionText(mAuthContentResult.getCaptionList().get(mCurrentCaptionIndex).getText())
             mCurrentCaptionIndex++
-        }
-    }
-
-    private fun updatePreviewUI()
-    {
-        try
-        {
-            if(isFreeUserLimitedTimeEnd && isPlaying)
-            {
-                Log.f("Preview End")
-                mCurrentPlayerStatus = PlayerStatus.COMPELTE
-                enableTimer(false)
-                mPlayer!!.setPlayWhenReady(false)
-                mPlayer!!.stop(true)
-                mPlayerContractView.showPreviewUserEndView()
-                return
-            }
-            val remainTime : Int = mFreeUserPreviewTime - mPlayer!!.getCurrentPosition().toInt() / Common.SECOND
-            mPlayerContractView.setRemainPreviewTime(remainTime)
-            if(isTimeForCaption == true)
-            {
-                mPlayerContractView.setCaptionText(mAuthContentResult.getCaptionList().get(mCurrentCaptionIndex).getText())
-                mCurrentCaptionIndex++
-            }
-        }
-        catch(e : Exception)
-        {
-            Log.f("message : " + e.message)
         }
     }
 
@@ -1420,21 +1327,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mAuthContentPlayCoroutine?.cancel()
         mAuthContentPlayCoroutine = null
     }
-
-    /**
-     * 프리로 보는 시간이 끝났다면 TRUE 아니면 FALSE 를 리턴
-     * @return
-     */
-    private val isFreeUserLimitedTimeEnd : Boolean
-        get()
-        {
-            if(mPlayer!!.getCurrentPosition().toInt() / Common.SECOND >= mFreeUserPreviewTime)
-            {
-                return true
-            }
-            else
-                return false
-        }
 
     private fun startQuizAcitiviy()
     {
@@ -1748,7 +1640,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mJob = CoroutineScope(Dispatchers.Main).launch {
 
             CoroutineScope(Dispatchers.Default).async {
-                isShowCoachingMark = isShowCoachmark(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+                isShowCoachingMark = isNeverSeeAgainCheck(mPlayInformationList[mCurrentPlayMovieIndex].getType())
             }.await()
 
             if(isShowCoachingMark)
@@ -1756,12 +1648,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 mPlayerContractView.settingCoachmarkView(mPlayInformationList[mCurrentPlayMovieIndex].getType())
             }
         }
-    }
-
-    override fun onPaymentButton()
-    {
-        Log.f("")
-        startMainActivityToPayment()
     }
 
     override fun onRepeatButton()

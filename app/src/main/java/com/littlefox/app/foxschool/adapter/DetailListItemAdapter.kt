@@ -159,8 +159,6 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             holder._StudiedCheckIcon.visibility = View.GONE
         }
 
-        holder._ThumbnailImage.alpha = 1.0f
-
         if(mDataList[position].isOptionDisable())
         {
             holder._thumbnailOption.visibility = View.GONE

@@ -216,8 +216,6 @@ class Common
          */
         const val MAX_PAGE_BY_PAGE_COUNT_IN_LINE : Int = 5
 
-        const val FREE_USER_NAME : String = "free_user"
-
         const val MAX_RECENTLY_LEARN_CONTENTS : Int     = 10
         const val MAX_BOOKSHELF_SIZE : Int              = 10
         const val MAX_BOOKSHELF_CONTENTS_SIZE : Int     = 300

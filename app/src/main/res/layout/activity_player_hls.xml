@@ -517,30 +517,6 @@
         </com.ssomai.android.scalablelayout.ScalableLayout>
 
         <com.ssomai.android.scalablelayout.ScalableLayout
-            android:id="@+id/_playerPreviewLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:scale_base_height="250"
-            app:scale_base_width="1920"
-
-            >
-
-            <TextView
-                android:id="@+id/_playerPreviewTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/preview_bg"
-                android:gravity="center"
-                android:textColor="@color/color_white"
-                app:scale_height="100"
-                app:scale_left="48"
-                app:scale_textsize="40"
-                app:scale_top="150"
-                app:scale_width="422" />
-        </com.ssomai.android.scalablelayout.ScalableLayout>
-
-        <com.ssomai.android.scalablelayout.ScalableLayout
             android:id="@+id/_playerPortraitTitleLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

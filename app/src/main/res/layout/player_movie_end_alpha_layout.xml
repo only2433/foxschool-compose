@@ -27,66 +27,7 @@
     </com.ssomai.android.scalablelayout.ScalableLayout>
 
     <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_freeUserEndLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:visibility="gone"
-        app:scale_base_height="424"
-        app:scale_base_width="1920">
-
-        <TextView
-            android:id="@+id/_paymentMessageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:lineSpacingExtra="10dp"
-            android:text="@string/message_preview_remain_day_end"
-            android:textColor="@color/color_white"
-            app:scale_height="224"
-            app:scale_left="0"
-            app:scale_textsize="46"
-            app:scale_top="0"
-            app:scale_width="1920" />
-
-        <ImageView
-            android:id="@+id/_paymentButtonBoxImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/replay_btn_box"
-            app:scale_height="148"
-            app:scale_left="710"
-            app:scale_top="224"
-            app:scale_width="497" />
-
-        <ImageView
-            android:id="@+id/_paymentButtonIconImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_payment"
-            app:scale_height="69"
-            app:scale_left="822"
-            app:scale_top="264"
-            app:scale_width="69" />
-
-        <TextView
-            android:id="@+id/_paymentButtonIconText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:lineSpacingExtra="10dp"
-            android:text="@string/text_subscribe"
-            android:textColor="@color/color_d6d6d6"
-            app:scale_height="69"
-            app:scale_left="940"
-            app:scale_textsize="38"
-            app:scale_top="264"
-            app:scale_width="260" />
-
-    </com.ssomai.android.scalablelayout.ScalableLayout>
-
-    <com.ssomai.android.scalablelayout.ScalableLayout
-        android:id="@+id/_paidUserEndLayout"
+        android:id="@+id/_playerEndLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

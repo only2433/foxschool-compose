@@ -101,18 +101,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._playerPlayButtonLayout)
     lateinit var _PlayerPlayButtonLayout : ScalableLayout
 
-    @BindView(R.id._freeUserEndLayout)
-    lateinit var _FreeUserEndLayout : ScalableLayout
-
-    @BindView(R.id._playerPreviewLayout)
-    lateinit var _PlayerPreviewLayout : ScalableLayout
-
     @Nullable
     @BindView(R.id._playerEndBaseLayout)
     lateinit var _PlayerEndBaseLayout : RelativeLayout
 
-    @BindView(R.id._paidUserEndLayout)
-    lateinit var _PaidUserEndLayout : ScalableLayout
+    @BindView(R.id._playerEndLayout)
+    lateinit var _PlayerEndLayout : ScalableLayout
 
     @BindView(R.id._playerEndButtonLayout)
     lateinit var _PlayerEndButtonLayout : ScalableLayout
@@ -126,17 +120,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._playerCaptionTitle)
     lateinit var _PlayerCaptionTitle : TextView
 
-    @BindView(R.id._playerPreviewTitle)
-    lateinit var _PlayerPreviewTitle : TextView
-
     @BindView(R.id._playListTitleText)
     lateinit var _PlayListTitleText : TextView
 
     @BindView(R.id._playSpeedListTitleText)
     lateinit var _PlaySpeedListTitleText : TextView
-
-    @BindView(R.id._paymentMessageText)
-    lateinit var _PaymentMessageText : TextView
 
     @BindView(R.id._playerCurrentPlayTime)
     lateinit var _PlayerCurrentPlayTime : TextView
@@ -261,15 +249,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._playerPortraitTitleOption)
     lateinit var _PlayerPortraitTitleOption : ImageView
 
-    @BindView(R.id._paymentButtonBoxImage)
-    lateinit var _PaymentButtonBoxImage : ImageView
-
-    @BindView(R.id._paymentButtonIconImage)
-    lateinit var _PaymentButtonIconImage : ImageView
-
-    @BindView(R.id._paymentButtonIconText)
-    lateinit var _PaymentButtonIconText : TextView
-
     @BindView(R.id._playerPageByPageLayout)
     lateinit var _PlayerPageByPageLayout : ScalableLayout
 
@@ -287,7 +266,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private enum class LAYOUT_TYPE
     {
-        INIT, NORMAL_PLAY, PREVIEW_PLAY, PREVIEW_END, NORMAL_END
+        INIT, PLAY, END
     }
 
     companion object
@@ -313,7 +292,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     private lateinit var mWeakReferenceHandler : WeakReferenceHandler
     private lateinit var mFadeAnimationController : FadeAnimationController
     private var isLockMode = false
-    private var mCurrentLayoutMode = LAYOUT_TYPE.NORMAL_PLAY
+    private var mCurrentLayoutMode = LAYOUT_TYPE.PLAY
     private var isNextMovieVisibleFromEndView = false
     private var mCurrentSeekProgress = 0
     private var isMoviePlaying = false
@@ -341,6 +320,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     private var mBottomHeight = 0
     private var mBottomHeightExceptCaption = 0
     private var isBottomLayoutAnimationing = false
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -436,11 +416,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerCaptionTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayerCurrentPlayTime.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayerRemainPlayTime.setTypeface(Font.getInstance(this).getTypefaceMedium())
-        _PlayerPreviewTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayListTitleText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlaySpeedListTitleText.setTypeface(Font.getInstance(this).getTypefaceMedium())
-        _PaymentMessageText.setTypeface(Font.getInstance(this).getTypefaceMedium())
-        _PaymentButtonIconText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayerPortraitTitleText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _ReplayButtonIconText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _NextButtonIconText.setTypeface(Font.getInstance(this).getTypefaceMedium())
@@ -563,9 +540,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 _SeekbarPortraitPlayBar.progress = 0
                 _SeekbarPlayBar.progress = 0
             }
-            LAYOUT_TYPE.NORMAL_PLAY ->
+            LAYOUT_TYPE.PLAY ->
             {
-                _PlayerPreviewLayout.visibility = View.GONE
                 if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
                 {
                     _SeekbarPortraitPlayBar.visibility = View.VISIBLE
@@ -575,25 +551,10 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                     _PlayerListButton.visibility = View.VISIBLE
                 }
             }
-            LAYOUT_TYPE.PREVIEW_PLAY ->
-            {
-                _PlayerPreviewLayout.visibility = View.VISIBLE
-                _PlayerListButton.visibility = View.GONE
-                _PlayerPageByPageButton.visibility = View.GONE
-                _SeekbarPortraitPlayBar.visibility = View.GONE
-            }
-            LAYOUT_TYPE.NORMAL_END ->
+            LAYOUT_TYPE.END ->
             {
                 _PlayerEndBaseLayout.visibility = View.VISIBLE
-                _FreeUserEndLayout.visibility = View.GONE
-                _PaidUserEndLayout.visibility = View.VISIBLE
-            }
-            LAYOUT_TYPE.PREVIEW_END ->
-            {
-                _PlayerEndBaseLayout.visibility = View.VISIBLE
-                _FreeUserEndLayout.visibility = View.VISIBLE
-                _PlayerPreviewLayout.visibility = View.GONE
-                _PaidUserEndLayout.visibility = View.GONE
+                _PlayerEndLayout.visibility = View.VISIBLE
             }
         }
     }
@@ -656,7 +617,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         changeModeCaptionLayout()
         changeModeBottomLayout()
         changeModePlayListLayout()
-        changeModePreview()
         changeModeLoadingLayout()
         changeModePlayEndLayout()
     }
@@ -720,7 +680,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _PlayerTopBaseLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 150f)
             _PlayerTopTitle.visibility = View.VISIBLE
-            if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY)
+            if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY)
             {
                 if(isSupportCaption)
                 {
@@ -815,11 +775,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     {
         Log.f("")
         var baseLayoutParams : RelativeLayout.LayoutParams? = null
-        if(mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_PLAY)
-        {
-            setPreviewBottomLayout()
-        }
-        else if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY)
+        if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY)
         {
             setNormalBottomLayout()
         }
@@ -901,35 +857,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    private fun setPreviewBottomLayout()
-    {
-        _PlayerCurrentPlayTime.visibility = View.GONE
-        _SeekbarPlayBar.visibility = View.GONE
-        _SeekbarPortraitPlayBar.visibility = View.GONE
-        _PlayerRemainPlayTime.visibility = View.GONE
-        _PlayerRepeatButton.visibility = View.GONE
-        _PlayerSpeedButton.visibility = View.GONE
-        _PlayerSpeedText.visibility = View.GONE
-        if(CommonUtils.getInstance(this).checkTablet)
-        {
-            _PlayerChangePortraitButton.visibility = View.GONE
-            _PlayerChangeLandscapeButton.visibility = View.GONE
-        }
-        else
-        {
-            if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-            {
-                _PlayerChangeLandscapeButton.visibility = View.VISIBLE
-                _PlayerChangePortraitButton.visibility = View.GONE
-            }
-            else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-            {
-                _PlayerChangeLandscapeButton.visibility = View.GONE
-                _PlayerChangePortraitButton.visibility = View.VISIBLE
-            }
-        }
-    }
-
     private fun changeModePlayListLayout()
     {
         var baseLayoutParams : RelativeLayout.LayoutParams? = null
@@ -976,21 +903,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerSpeedListBaseLayout.visibility = View.GONE
     }
 
-    private fun changeModePreview()
-    {
-        val baseLayoutParams : RelativeLayout.LayoutParams? = null
-        if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            _PlayerPreviewLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 124f)
-            _PlayerPreviewLayout.moveChildView(_PlayerPreviewTitle, 24f, 24f, 422f, 100f)
-        }
-        else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-        {
-            _PlayerPreviewLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 250f)
-            _PlayerPreviewLayout.moveChildView(_PlayerPreviewTitle, 48f, 150f, 422f, 100f)
-        }
-    }
-
     private fun changeModeLoadingLayout()
     {
         var baseLayoutParams : RelativeLayout.LayoutParams? = null
@@ -1028,11 +940,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _PlayerEndButtonLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 100f)
             _PlayerEndButtonLayout.moveChildView(_PlayerEndCloseButton, 1800f, 40f, 57f, 58f)
         }
-        if(mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_PLAY || mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_END)
-        {
-            setPreviewEndLayout()
-        }
-        else if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY || mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_END)
+        if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY || mCurrentLayoutMode == LAYOUT_TYPE.END)
         {
             setFullPlayEndLayout()
         }
@@ -1187,11 +1095,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerCurrentPlayTime.text = currentTime
     }
 
-    override fun setRemainPreviewTime(remainTime : Int)
-    {
-        _PlayerPreviewTitle.text = resources.getString(R.string.text_preview) + remainTime + resources.getString(R.string.text_second)
-    }
-
     override fun setSeekProgress(progress : Int)
     {
         if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -1261,10 +1164,10 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun showPaymentUserStartView()
+    override fun showPlayerStartView()
     {
         Log.f("")
-        mCurrentLayoutMode = LAYOUT_TYPE.NORMAL_PLAY
+        mCurrentLayoutMode = LAYOUT_TYPE.PLAY
         initLayoutSetting()
         if(isEnableCaption && isSupportCaption)
         {
@@ -1280,43 +1183,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_VIDEO_LOADING_COMPLETE, Common.DURATION_NORMAL)
     }
 
-    override fun showPreviewUserStartView()
-    {
-        Log.f("")
-        mCurrentLayoutMode = LAYOUT_TYPE.PREVIEW_PLAY
-        initLayoutSetting()
-        if(isEnableCaption && isSupportCaption)
-        {
-            enableCaptionAnimation(true)
-        }
-        changeModeBottomLayout()
-        changeModePlayEndLayout()
-        mWeakReferenceHandler!!.sendEmptyMessageDelayed(MESSAGE_VIDEO_LOADING_COMPLETE, Common.DURATION_NORMAL)
-    }
-
-    override fun showPreviewUserEndView()
-    {
-        Log.f("")
-        if(isMenuVisible)
-        {
-            enableMenuAnimation(false)
-            enableBackgroudAnimation(false)
-        }
-        mCurrentLayoutMode = LAYOUT_TYPE.PREVIEW_END
-        if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-        {
-            _SeekbarPortraitPlayBar!!.visibility = View.GONE
-        }
-        initLayoutSetting()
-        showPlayerEndLayoutAnimation()
-        enableCaptionAnimation(false)
-    }
-
-    override fun showPaymentUserEndView()
+    override fun showPlayerEndView()
     {
         Log.f("")
         hideMenuAndList()
-        mCurrentLayoutMode = LAYOUT_TYPE.NORMAL_END
+        mCurrentLayoutMode = LAYOUT_TYPE.END
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
             _SeekbarPortraitPlayBar!!.visibility = View.GONE
@@ -1327,7 +1198,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         showPlayerEndLayoutAnimation()
     }
 
-    override fun settingPaymentEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isCrosswordAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
+    override fun settingPlayerEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isCrosswordAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
     {
         mPlayEndStudyOptionIconList.clear()
         isNextMovieVisibleFromEndView = isNextButtonVisible
@@ -1926,7 +1797,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun enablePlayListAnimation(isVisible : Boolean)
     {
-        if((mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY || mCurrentLayoutMode == LAYOUT_TYPE.INIT))
+        if((mCurrentLayoutMode == LAYOUT_TYPE.PLAY || mCurrentLayoutMode == LAYOUT_TYPE.INIT))
         {
             if(isVisible)
             {
@@ -1941,7 +1812,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun enablePlaySpeedListAnimation(isVisible : Boolean)
     {
-        if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY)
+        if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY)
         {
             if(isVisible)
             {
@@ -2001,7 +1872,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         if(isVisible)
         {
             mFadeAnimationController.startAnimation(_PlayerTopBaseLayout, FadeAnimationController.TYPE_FADE_IN)
-            if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY || mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_PLAY)
+            if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY)
             {
                 mFadeAnimationController.startAnimation(_PlayerPlayButtonLayout, FadeAnimationController.TYPE_FADE_IN)
                 if(isCaptionVisible || mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
@@ -2018,7 +1889,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         else
         {
             mFadeAnimationController.startAnimation(_PlayerTopBaseLayout, FadeAnimationController.TYPE_FADE_OUT)
-            if(mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_PLAY || mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_PLAY)
+            if(mCurrentLayoutMode == LAYOUT_TYPE.PLAY)
             {
                 mFadeAnimationController.startAnimation(_PlayerPlayButtonLayout, FadeAnimationController.TYPE_FADE_OUT)
                 if(isCaptionVisible || mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
@@ -2048,42 +1919,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mWeakReferenceHandler.removeMessages(MESSAGE_AUTO_MENU_GONE)
     }
 
-    private fun setPreviewEndLayout()
-    {
-        _FreeUserEndLayout.run {
-            if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
-            {
-                setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 490f)
-                moveChildView(_PaymentMessageText, 0f, 112f, 1080f, 138f)
-                setScale_TextSize(_PaymentMessageText, 38f)
-                moveChildView(_PaymentButtonBoxImage, 288f, 290f, 497f, 148f)
-                moveChildView(_PaymentButtonIconImage, 400f, 330f, 69f, 69f)
-                moveChildView(_PaymentButtonIconText, 518f, 330f, 220f, 69f)
-                setScale_TextSize(_PaymentButtonIconText, 36f)
-            }
-            else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
-            {
-                setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 980f)
-                moveChildView(_PaymentMessageText, 0f, 320f, 1920f, 180f)
-                setScale_TextSize(_PaymentMessageText, 40f)
-                moveChildView(_PaymentButtonBoxImage, 710f, 530f, 497f, 148f)
-                moveChildView(_PaymentButtonIconImage, 822f, 570f, 69f, 69f)
-                moveChildView(_PaymentButtonIconText, 940f, 570f, 220f, 69f)
-                setScale_TextSize(_PaymentButtonIconText, 36f)
-            }
-        }
-    }
-
     private fun setFullPlayEndLayout()
     {
         Log.f("")
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            _PaidUserEndLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 337f)
+            _PlayerEndLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), 337f)
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            _PaidUserEndLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 375f)
+            _PlayerEndLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), 375f)
         }
         settingPlayEndButtonLayout(isNextMovieVisibleFromEndView, mPlayEndStudyOptionIconList)
     }
@@ -2098,7 +1943,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
                 _NextButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
-                _PaidUserEndLayout.run {
+                _PlayerEndLayout.run {
                     moveChildView(_ReplayButtonBoxImage, 73f, 189f, 457f, 120f)
                     moveChildView(_ReplayButtonIconImage, 185f, 220f, 51f, 58f)
                     moveChildView(_ReplayButtonIconText, 273f, 214f, 200f, 69f)
@@ -2110,14 +1955,14 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             else
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box_column)
-                _PaidUserEndLayout.run {
+                _PlayerEndLayout.run {
                     moveChildView(_ReplayButtonBoxImage, 312f, 189f, 457f, 120f)
                     moveChildView(_ReplayButtonIconImage, 424f, 220f, 51f, 58f)
                     moveChildView(_ReplayButtonIconText, 512f, 214f, 200f, 69f)
                 }
             }
 
-            _PaidUserEndLayout.run {
+            _PlayerEndLayout.run {
                 if(views.size > 0)
                 {
                     when(views.size)
@@ -2169,7 +2014,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
-                _PaidUserEndLayout.run {
+                _PlayerEndLayout.run {
                     moveChildView(_ReplayButtonBoxImage, 452f, 227f, 497f, 148f)
                     moveChildView(_ReplayButtonIconImage, 564f, 267f, 69f, 69f)
                     moveChildView(_ReplayButtonIconText, 682f, 267f, 250f, 69f)
@@ -2182,13 +2027,13 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             else
             {
                 _ReplayButtonBoxImage.setBackgroundResource(R.drawable.replay_btn_box)
-                _PaidUserEndLayout.run {
+                _PlayerEndLayout.run {
                     moveChildView(_ReplayButtonBoxImage, 712f, 227f, 497f, 148f)
                     moveChildView(_ReplayButtonIconImage, 824f, 267f, 69f, 69f)
                     moveChildView(_ReplayButtonIconText, 942f, 267f, 250f, 69f)
                 }
             }
-            _PaidUserEndLayout.run {
+            _PlayerEndLayout.run {
                 if(views.size > 0)
                 {
                     when(views.size)
@@ -2339,7 +2184,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @OnClick(
         R.id._playerPlayButton, R.id._playerPrevButton, R.id._playerNextButton, R.id._playerCaptionButton, R.id._playerCloseButton, R.id._playerListButton,
         R.id._playerEndCloseButton, R.id._playListCloseButtonRect, R.id._playerChangePortraitButton, R.id._playerChangeLandscapeButton,
-        R.id._nextButtonBoxImage, R.id._replayButtonBoxImage, R.id._paymentButtonBoxImage, R.id._playerRepeatButton, R.id._playerPortraitTitleOption,
+        R.id._nextButtonBoxImage, R.id._replayButtonBoxImage, R.id._playerRepeatButton, R.id._playerPortraitTitleOption,
         R.id._ebookButtonImage, R.id._quizButtonImage, R.id._vocabularyButtonImage, R.id._translateButtonImage, R.id._flashcardButtonImage, R.id._starwordsButtonImage,
         R.id._playerPageByPageButton, R.id._player1PageButton, R.id._player2PageButton, R.id._player3PageButton, R.id._player4PageButton, R.id._player5PageButton,
         R.id._playerPrevPageButton, R.id._playerNextPageButton, R.id._playerSpeedButton, R.id._playerSpeedText, R.id._playSpeedListCloseButtonRect, R.id._crosswordButtonImage
@@ -2421,7 +2266,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 }
                 mPlayerContractPresenter.onReplayButton()
             }
-            R.id._paymentButtonBoxImage -> mPlayerContractPresenter.onPaymentButton()
             R.id._playerRepeatButton -> mPlayerContractPresenter.onRepeatButton()
             R.id._playerPortraitTitleOption -> mPlayerContractPresenter.onClickCurrentMovieOptionButton()
             R.id._nextButtonBoxImage -> mPlayerContractPresenter.onNextMovieButton()
@@ -2472,7 +2316,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             {
                 return false
             }
-            if(mCurrentLayoutMode == LAYOUT_TYPE.PREVIEW_END || mCurrentLayoutMode == LAYOUT_TYPE.NORMAL_END)
+            if(mCurrentLayoutMode == LAYOUT_TYPE.END)
             {
                 return false
             }

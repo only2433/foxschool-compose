@@ -51,7 +51,6 @@
     <string name="text_count_series_stories">%s부작</string>
     <string name="text_count_songs">%s곡</string>
     <string name="text_login">로그인</string>
-    <string name="text_payment_membership">유료회원가입</string>
     <string name="text_learning_log">학습기록</string>
     <string name="text_record_history">녹음기록</string>
     <string name="text_homework_manage">숙제 관리</string>
@@ -183,8 +182,6 @@
     <string name="message_preview_remain_day_end">미리보기가 종료되었습니다.\n회비결제 후 모든 콘텐츠를 이용해보세요.</string>
     <string name="message_preview_free_user_end">미리보기가 종료되었습니다.\n회원가입 후 모든 콘텐츠를 이용해 보세요.</string>
     <string name="message_toast_network_error">"네트워크에 접속할 수 없습니다.\n네트워크 연결 상태를 확인해 주세요."</string>
-    <string name="message_payment_service_paid_using">유료 서비스 입니다. 회비결제 후 이용해주세요.</string>
-    <string name="message_payment_service_login">유료회원 전용 서비스입니다. 로그인 후 이용해주세요.</string>
     <string name="message_lock_on">화면을 잠그려면 3초간 눌러주세요</string>
     <string name="message_lock_off">잠금을 해제하려면 3초간 눌러주세요</string>
     <string name="message_longtime_play_warning">"오랜 시간 동안 영상을 시청하셨습니다. 잠시 쉬는 시간을 가져보세요. 영상을 계속 시청하시겠습니까?"</string>
@@ -236,7 +233,7 @@
     <string name="message_1on1_tip">"     잠깐! 앱 실행, 동영상 재생에 오류가 있으신가요? 아래 이메일로 의견 보내기를 통해 접수하시면 더 빠른 처리가 가능합니다."</string>
     <string name="message_1on1_reply">접수된 문의는 평일 업무시간 내 답변을 드립니다. \n- 평일 6시 이후 문의 : 다음 날까지 답변\n- 토/일/공휴일 문의 : 휴일 이후 답변</string>
     <string name="message_1on1_success">등록되었습니다.</string>
-    <string name="message_1on1_input_email">연락받을 이메일 주소를 입력해주세요.</string>
+    <string name="message_1on1_input_email">이메일 주소를 입력하세요.</string>
     <string name="message_record_info">녹음은 최대 10분까지 가능합니다.</string>
     <string name="message_record_start">버튼을 눌러 녹음을 시작하세요.</string>
     <string name="message_record_reset">다시 녹음 할까요?</string>
