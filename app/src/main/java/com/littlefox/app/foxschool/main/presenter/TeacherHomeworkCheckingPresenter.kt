@@ -88,9 +88,6 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
         }
     }
 
-    /**
-     * 등록 버튼 클릭 이벤트
-     */
     override fun onClickRegisterButton(index : Int, comment : String)
     {
         when(index)
@@ -104,9 +101,6 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
         requestHomeworkCheck()
     }
 
-    /**
-     * 숙제검사 통신 요청
-     */
     private fun requestHomeworkCheck()
     {
         Log.f("")
@@ -124,9 +118,6 @@ class TeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingContract.Present
         }
     }
 
-    /**
-     * 통신 이벤트 리스너
-     */
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String?) { }

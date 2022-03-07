@@ -149,9 +149,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         _CheckingCancelButton.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
-    /**
-     * 상단바 색상 설정
-     */
     private fun settingLayoutColor()
     {
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_25b4cf))
@@ -160,9 +157,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
 
     /** Init end **/
 
-    /**
-     * 기존에 입력되었던 데이터
-     */
     override fun setBeforeData(index : Int, comment : String)
     {
         setViewChecked(index)
@@ -171,9 +165,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         setCommentCountText()
     }
 
-    /**
-     * 평가 버튼 선택 이미지 전환
-     */
     private fun setViewChecked(index : Int)
     {
         mSelected = index
@@ -183,9 +174,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         _HomeworkEvalButtonList[index].background = this.resources.getDrawable(R.drawable.check_on)
     }
 
-    /**
-     * 코멘트 카운트 텍스트 설정
-     */
     private fun setCommentCountText()
     {
         // 바이트 사이즈 구하기 위해 코멘트 바이트로 변경

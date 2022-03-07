@@ -218,9 +218,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 뒤로가기 버튼 클릭 이벤트
-     */
     override fun onClickBackButton()
     {
         Log.f("currentPosition : "+mPagePosition)
@@ -238,9 +235,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 페이지 이동 이벤트
-     */
     override fun onPageChanged(position : Int)
     {
         Log.f("Page Change : "+ position)
@@ -257,9 +251,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      * ======================================================================================
      */
 
-    /**
-     * 숙제내용 리스트 클릭 이벤트
-     */
     private fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
         Log.f("Homework Type : ${item.getHomeworkType()}")
@@ -289,9 +280,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 오디오 플레이어 다이얼로그
-     */
     private fun showAudioPlayDialog(item : HomeworkDetailItemData)
     {
         Log.f("play Record Audio")
@@ -299,9 +287,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         mAudioPlayDialog!!.show()
     }
 
-    /**
-     * 동화/동요 플레이어로 이동
-     */
     private fun startPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
@@ -314,9 +299,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * eBook 학습화면으로 이동
-     */
     private fun startEBookActivity(contentID : String)
     {
         Log.f("")
@@ -329,9 +311,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 퀴즈 학습화면으로 이동
-     */
     private fun startQuizActivity(contentID : String)
     {
         Log.f("")
@@ -344,9 +323,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 크로스워드 학습화면으로 이동
-     */
     private fun startCrosswordActivity(contentID : String)
     {
         Log.f("")
@@ -359,9 +335,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 스타워즈 학습화면으로 이동
-     */
     private fun startStarWordsActivity(contentID : String)
     {
         Log.f("")
@@ -374,9 +347,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 녹음기 화면으로 이동
-     */
     private fun startRecordPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
@@ -389,9 +359,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 숙제 평가 화면으로 이동
-     */
     private fun startHomeworkCheckingActivity(data : HomeworkCheckingIntentParamsObject)
     {
         Log.f("")
@@ -416,7 +383,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             setDialogListener(mPermissionDialogListener)
             show()
         }
-
     }
 
     /**
@@ -425,9 +391,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      * ======================================================================================
      */
 
-    /**
-     * 숙제관리 클래스 리스트 요청
-     */
     private fun requestClassList()
     {
         Log.f("")
@@ -438,9 +401,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 숙제관리 달력 요청
-     */
     private fun requestClassCalendar(showLoading : Boolean = true)
     {
         Log.f("")
@@ -455,9 +415,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 숙제관리 학생 리스트 요청
-     */
     private fun requestStatusList()
     {
         Log.f("")
@@ -471,9 +428,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 숙제관리 통신 요청 (학생)
-     */
     private fun requestStudentHomework()
     {
         Log.f("")
@@ -488,9 +442,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 숙제내용 통신 요청
-     */
     private fun requestHomeworkDetail()
     {
         Log.f("")
@@ -513,7 +464,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     private fun setupCalendarFragmentListener()
     {
-        // 이전 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
             Log.f("onClick Calendar Before")
             mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
@@ -521,7 +471,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             requestClassCalendar()
         })
 
-        // 다음 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
             Log.f("onClick Calendar After")
             mYear = mHomeworkCalendarBaseResult!!.getNextYear()
@@ -529,14 +478,12 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             requestClassCalendar()
         })
 
-        // 반 선택
         mHomeworkCalendarFragmentObserver.onClickClassPicker.observe(mContext as AppCompatActivity, { index ->
             Log.f("onClick ClassItem : $index")
             mClassIndex = index
             requestClassCalendar()
         })
 
-        // 달력 아이템 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
             Log.f("onClick CalendarItem : $homeworkPosition")
             mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
@@ -554,7 +501,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
     private fun setupStatusFragmentListener()
     {
-        // [숙제 현황 상세 보기] 클릭 이벤트
         mHomeworkStatusFragmentObserver.onClickShowDetailButton.observe(mContext as AppCompatActivity, { index ->
             Log.f("onClick Homework Detail : $index")
             mSelectedStudentPosition = index
@@ -565,10 +511,9 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
         })
 
-        // [숙제 내용] 클릭 이벤트
         mHomeworkStatusFragmentObserver.onClickHomeworkContents.observe(mContext as AppCompatActivity, {
-            // 숙제 내용 페이지로 이동
             Log.f("onClick Homework Contents")
+            // 숙제 내용 페이지로 이동
             mPagePosition = Common.PAGE_HOMEWORK_DETAIL
             mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CONTENT
             mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
@@ -607,7 +552,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
 
     private fun setupListFragmentListener()
     {
-        // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
             Log.f("onClick Student Comment")
             mBeforePagePosition = mPagePosition
@@ -618,7 +562,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             mHomeworkManagePresenterObserver.setPageType(mCommentType, true)
         })
 
-        // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
             Log.f("onClick Teacher Comment")
             mBeforePagePosition = mPagePosition
@@ -649,9 +592,6 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
         })
     }
 
-    /**
-     * 통신 응답 Listener
-     */
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String?) { }
@@ -782,6 +722,4 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
             }
         }
     }
-
-
 }

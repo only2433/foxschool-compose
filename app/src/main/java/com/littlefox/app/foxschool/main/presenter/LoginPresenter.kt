@@ -134,27 +134,18 @@ class LoginPresenter : LoginContract.Presenter
         CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, mUserLoginData)
     }
 
-    /**
-     * 로그인 상태 유지 클릭 이벤트
-     */
     override fun onCheckAutoLogin(autoLogin : Boolean)
     {
         isAutoLogin = autoLogin
         Log.f("isAutoLogin : $isAutoLogin")
     }
 
-    /**
-     * 로그인 버튼 클릭 이벤트
-     */
     override fun onClickLogin(data : UserLoginData)
     {
         Log.f("Login")
         requestLoginAsync(data.userID, data.userPassword, data.userSchoolCode)
     }
 
-    /**
-     * 아이디 찾기 클릭 이벤트
-     */
     override fun onClickFindID()
     {
         Log.f("findID")
@@ -165,9 +156,6 @@ class LoginPresenter : LoginContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 비밀번호 찾기 클릭 이벤트
-     */
     override fun onClickFindPassword()
     {
         Log.f("findPassword")
@@ -178,9 +166,6 @@ class LoginPresenter : LoginContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 비밀번호 변경 화면으로 이동
-     */
     private fun showPasswordChangeDialog()
     {
         Log.f("")
@@ -191,9 +176,6 @@ class LoginPresenter : LoginContract.Presenter
         }
     }
 
-    /**
-     * 학교 리스트 요청
-     */
     private fun requestSchoolList()
     {
         mSchoolListCoroutine = SchoolListCoroutine(mContext).apply {
@@ -202,9 +184,6 @@ class LoginPresenter : LoginContract.Presenter
         }
     }
 
-    /**
-     * 로그인 요청
-     */
     private fun requestLoginAsync(id : String, password : String, schoolCode : String)
     {
         if(id == "" || password == "" || schoolCode == "")
@@ -248,9 +227,6 @@ class LoginPresenter : LoginContract.Presenter
         }
     }
 
-    /**
-     * 비밀번호 변경하기 통신 요청
-     */
     private fun requestPasswordChange()
     {
         mPasswordChangeDialog!!.showLoading()
@@ -285,9 +261,6 @@ class LoginPresenter : LoginContract.Presenter
         }
     }
 
-    /**
-     * 통신 이벤트 리스너
-     */
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String?) { }
@@ -359,11 +332,6 @@ class LoginPresenter : LoginContract.Presenter
                     (mContext as AppCompatActivity).finish()
                     IntentManagementFactory.getInstance().initScene()
                 }
-                else if (result.isInActiveAccount)
-                {
-                    Log.f("== InActiveAccount ==")
-                    mMainHandler.sendEmptyMessage(MESSAGE_WARNING_INACTIVE_ACCOUNT)
-                }
                 else if(result.isNetworkErrorStatus)
                 {
                     Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
@@ -408,9 +376,6 @@ class LoginPresenter : LoginContract.Presenter
         override fun onErrorListener(code : String?, message : String?) { }
     }
 
-    /**
-     * 비밀번호 변경 다이얼로그 Listener
-     */
     val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
     {
         /**

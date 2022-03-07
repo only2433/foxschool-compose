@@ -181,7 +181,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
                     Common.PAGE_HOMEWORK_CALENDAR ->
                     {
                         mHomeworkManagePresenterObserver.clearHomeworkList(true)
-                        requestStudentHomework()   // 숙제관리(달력) 통신 요청
+                        requestHomeworkCalendar()   // 숙제관리(달력) 통신 요청
                     }
                     Common.PAGE_HOMEWORK_STATUS -> requestHomeworkList()        // 숙제현황(리스트) 통신 요청
                 }
@@ -211,9 +211,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 페이지 이동 이벤트
-     */
     override fun onPageChanged(position : Int)
     {
         Log.f("Page Change : "+ position)
@@ -228,10 +225,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      * ======================================================================================
      *                              숙제 - 다른 화면으로 이동
      * ======================================================================================
-     */
-
-    /**
-     * 숙제현황 리스트 클릭 이벤트
      */
     private fun onClickHomeworkItem(item : HomeworkDetailItemData)
     {
@@ -262,9 +255,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 동화/동요 플레이어로 이동
-     */
     private fun startPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
@@ -277,9 +267,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * eBook 학습화면으로 이동
-     */
     private fun startEbookActivity(contentID : String)
     {
         Log.f("")
@@ -292,9 +279,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 퀴즈 학습화면으로 이동
-     */
     private fun startQuizActivity(contentID : String)
     {
         Log.f("")
@@ -307,9 +291,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 크로스워드 학습화면으로 이동
-     */
     private fun startCrosswordActivity(contentID : String)
     {
         Log.f("")
@@ -322,9 +303,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 스타워즈 학습화면으로 이동
-     */
     private fun startStarWordsActivity(contentID : String)
     {
         Log.f("")
@@ -337,9 +315,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .startActivity()
     }
 
-    /**
-     * 녹음기 화면으로 이동
-     */
     private fun startRecordPlayerActivity(content : ContentsBaseResult)
     {
         Log.f("")
@@ -373,10 +348,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      * ======================================================================================
      */
 
-    /**
-     * 숙제관리 달력 통신 요청 (학생)
-     */
-    private fun requestStudentHomework()
+    private fun requestHomeworkCalendar()
     {
         Log.f("")
         mStudentHomeworkContractView.showLoading()
@@ -387,13 +359,9 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 숙제현황 통신 요청 (학생)
-     */
     private fun requestHomeworkList()
     {
         Log.f("")
-        // 숙제 아이템 정보 요청
         mSelectHomeworkData = mHomeworkCalendarBaseResult!!.getHomeworkDataList()[mSelectedHomeworkPosition]
         mStudentHomeworkDetailListCoroutine = StudentHomeworkDetailListCoroutine(mContext).apply {
             setData(mSelectHomeworkData!!.getHomeworkNumber())
@@ -402,9 +370,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 코멘트 등록 요청
-     */
     private fun requestCommentRegister()
     {
         Log.f("")
@@ -417,9 +382,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 코멘트 수정 요청
-     */
     private fun requestCommentUpdate()
     {
         Log.f("")
@@ -432,9 +394,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         }
     }
 
-    /**
-     * 코멘트 수정 요청
-     */
     private fun requestCommentDelete()
     {
         Log.f("")
@@ -454,23 +413,20 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     private fun setupCalendarFragmentListener()
     {
-        // 이전 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
             Log.f("onClick Calendar Before")
             mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
             mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
-            requestStudentHomework()
+            requestHomeworkCalendar()
         })
 
-        // 다음 화살표 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
             Log.f("onClick Calendar After")
             mYear = mHomeworkCalendarBaseResult!!.getNextYear()
             mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
-            requestStudentHomework()
+            requestHomeworkCalendar()
         })
 
-        // 달력 아이템 클릭 이벤트
         mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
             Log.f("onClick CalendarItem : $homeworkPosition")
             mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
@@ -488,7 +444,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     private fun setupListFragmentListener()
     {
-        // 학습자 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
             Log.f("onClick Student Comment")
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
@@ -498,7 +453,6 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
         })
 
-        // 선생님 한마디 클릭 이벤트
         mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
             Log.f("onClick Teacher Comment")
             mPagePosition = Common.PAGE_HOMEWORK_COMMENT
@@ -516,27 +470,21 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     private fun setupCommentFragmentListener()
     {
-        // 학습자 한마디 등록 버튼 클릭 이벤트
         mHomeworkCommentFragmentObserver.onClickRegisterButton.observe(mContext as AppCompatActivity, { comment ->
             mStudentComment = comment
             requestCommentRegister()
         })
 
-        // 학습자 한마디 수정 버튼 클릭 이벤트
         mHomeworkCommentFragmentObserver.onClickUpdateButton.observe(mContext as AppCompatActivity, { comment ->
             mStudentComment = comment
             requestCommentUpdate()
         })
 
-        // 학습자 한마디 삭제 버튼 클릭 이벤트
         mHomeworkCommentFragmentObserver.onClickDeleteButton.observe(mContext as AppCompatActivity, {
             requestCommentDelete()
         })
     }
 
-    /**
-     * 통신 응답 Listener
-     */
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String?) { }

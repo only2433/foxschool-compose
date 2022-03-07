@@ -420,9 +420,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _InputSchoolLine.visibility = if (isSearch) View.VISIBLE else View.GONE // 검색 초기화 버튼 활성/비활성
     }
 
-    /**
-     * 로그인 버튼 배경화면 설정
-     */
     private fun setLoginButtonBackground()
     {
         if (mSelectedSchoolData != null &&
@@ -495,10 +492,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         override fun afterTextChanged(s : Editable?) { }
     }
 
-
-    /**
-     * EditText Focusing Listener
-     */
     private val mEditFocusListener = object : View.OnFocusChangeListener
     {
         override fun onFocusChange(view : View?, hasFocus : Boolean)

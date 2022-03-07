@@ -865,13 +865,10 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         else
         {
             if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
-                || CommonUtils.getInstance(mContext).checkTablet == false
+                || Feature.IS_SUPPORT_EBOOK_PHONE == false
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             {
-                if(Feature.IS_SUPPORT_EBOOK_PHONE == false)
-                {
-                    isEbookAvailable = false
-                }
+                isEbookAvailable = false
             }
 
             if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))

@@ -13,7 +13,6 @@ open class BaseResult
         const val FAIL_CODE_USER_EXPIRE_USER                        = 451
         const val FAIL_CODE_USER_DUPLICATE_LOGIN                    = 452
         const val FAIL_CODE_INTERNAL_SERVER_ERROR                   = 500
-        const val FAIL_CODE_INACTIVE_ACCOUNT                        = 4281
         const val SUCCESS_CODE_OK                                   = 200
     }
 
@@ -68,23 +67,6 @@ open class BaseResult
             }
             else
                 return false
-        }
-
-    /**
-     * 휴면 계정 여부 확인
-     * @return TRUE : 휴면계정 FALSE : 기본계정
-     */
-    val isInActiveAccount : Boolean
-        get()
-        {
-            if(getStatus() == FAIL_CODE_INACTIVE_ACCOUNT)
-            {
-                return true
-            }
-            else
-            {
-                return false
-            }
         }
 
     fun getStatus() : Int = status

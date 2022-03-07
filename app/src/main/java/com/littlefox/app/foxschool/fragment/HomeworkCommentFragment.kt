@@ -458,7 +458,7 @@ class HomeworkCommentFragment : Fragment()
     fun onClickView(view : View)
     {
         //중복이벤트 방지
-        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.HALF_SECOND)
         {
             return
         }

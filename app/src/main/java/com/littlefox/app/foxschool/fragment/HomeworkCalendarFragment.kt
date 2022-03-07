@@ -252,7 +252,7 @@ class HomeworkCalendarFragment : Fragment()
         mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
 
         // 달력 아이템
-        mHomeworkManagePresenterObserver.setCalendarData.observe(viewLifecycleOwner, Observer {result ->
+        mHomeworkManagePresenterObserver.setCalendarData.observe(viewLifecycleOwner, Observer { result ->
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()
@@ -315,7 +315,7 @@ class HomeworkCalendarFragment : Fragment()
             {
                 // 숙제 시작 포지션 == 숙제 종료 포지션 : 숙제가 1일 짜리
                 dateList[startPosition].setImageType(CalendarImageType.ONE_DAY) // 색 바 이미지 타입 지정 (하루)
-                dateList[startPosition].setHomeworkPosition(pos)            // 숙제 아이템 포지션 저장
+                dateList[startPosition].setHomeworkPosition(pos)                // 숙제 아이템 포지션 저장
             }
             else
             {
@@ -346,9 +346,6 @@ class HomeworkCalendarFragment : Fragment()
         }
     }
 
-    /**
-     * 리스트뷰 그리기
-     */
     private fun settingRecyclerView()
     {
         _ScrollView.scrollTo(0, 0)
@@ -375,9 +372,6 @@ class HomeworkCalendarFragment : Fragment()
         }
     }
 
-    /**
-     * 학급 리스트 설정
-     */
     private fun setClassName(className : String)
     {
         _TextClassName.text = className
@@ -407,45 +401,30 @@ class HomeworkCalendarFragment : Fragment()
         }
     }
 
-    /**
-     * 달력 이전 버튼 표시
-     */
     private fun showPrevButton()
     {
         _BeforeButton.visibility = View.VISIBLE
         _BeforeButtonRect.visibility = View.VISIBLE
     }
 
-    /**
-     * 달력 이전 버튼 숨김
-     */
     private fun hidePrevButton()
     {
         _BeforeButton.visibility = View.GONE
         _BeforeButtonRect.visibility = View.GONE
     }
 
-    /**
-     * 달력 다음 버튼 표시
-     */
     private fun showNextButton()
     {
         _AfterButton.visibility = View.VISIBLE
         _AfterButtonRect.visibility = View.VISIBLE
     }
 
-    /**
-     * 달력 다음 버튼 숨김
-     */
     private fun hideNexButton()
     {
         _AfterButton.visibility = View.GONE
         _AfterButtonRect.visibility = View.GONE
     }
 
-    /**
-     * 학급 선택 다이얼로그
-     */
     private fun showClassSelectDialog()
     {
         Log.f("")
@@ -467,8 +446,8 @@ class HomeworkCalendarFragment : Fragment()
         R.id._calendarClassBackground, R.id._textClassName)
     fun onClickView(view : View)
     {
-        //중복이벤트 방지
-        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        // 중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.HALF_SECOND)
         {
             return
         }
@@ -485,7 +464,7 @@ class HomeworkCalendarFragment : Fragment()
                 mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
             }
 
-            // 선생님 클래스 선택
+            // [선생님] 클래스 선택
             R.id._calendarClassBackground, R.id._textClassName ->
             {
                 showClassSelectDialog()
@@ -493,14 +472,11 @@ class HomeworkCalendarFragment : Fragment()
         }
     }
 
-    /**
-     * 숙제관리 리스트 클릭 이벤트 Listener
-     */
     private val mCalendarItemListener : OnItemViewClickListener = object : OnItemViewClickListener
     {
         override fun onItemClick(position : Int)
         {
-            if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+            if(SystemClock.elapsedRealtime() - mLastClickTime < Common.HALF_SECOND)
             {
                 return
             }

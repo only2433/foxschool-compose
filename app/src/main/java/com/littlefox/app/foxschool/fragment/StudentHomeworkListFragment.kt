@@ -564,9 +564,6 @@ class StudentHomeworkListFragment : Fragment()
         _HomeworkStudentCommentButton.visibility = View.VISIBLE
     }
 
-    /**
-     * 컨텐츠 로딩바 표시/비표시
-     */
     private fun setContentListLoadingVisible(isVisible : Boolean)
     {
         Log.f("[LIST LOADING] : $isVisible")
@@ -580,9 +577,6 @@ class StudentHomeworkListFragment : Fragment()
         }
     }
 
-    /**
-     * 화면 데이터 초기화
-     */
     private fun clearScreenData(allClear : Boolean)
     {
         Log.f("")
@@ -643,7 +637,7 @@ class StudentHomeworkListFragment : Fragment()
     fun onClickView(view : View)
     {
         //중복이벤트 방지
-        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.HALF_SECOND)
         {
             return
         }
@@ -687,9 +681,6 @@ class StudentHomeworkListFragment : Fragment()
         }
     }
 
-    /**
-     * 숙제현황 리스트 클릭 이벤트 Listener
-     */
     private val mHomeworkItemListener : OnItemViewClickListener = object : OnItemViewClickListener
     {
         override fun onItemClick(position : Int)

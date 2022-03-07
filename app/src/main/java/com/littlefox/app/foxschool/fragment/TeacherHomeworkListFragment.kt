@@ -640,9 +640,6 @@ class TeacherHomeworkListFragment : Fragment()
         dialog.show()
     }
 
-    /**
-     * 숙제목록 안내 다이얼로그
-     */
     private fun showHomeworkInfoDialog()
     {
         val message = mContext.getString(R.string.message_warning_homework_info)
@@ -658,8 +655,8 @@ class TeacherHomeworkListFragment : Fragment()
     @OnClick(R.id._homeworkInfoButton, R.id._homeworkFilterButton, R.id._homeworkOneCommentButton, R.id._homeworkStudentCommentButton, R.id._homeworkTeacherCommentButton)
     fun onClickView(view : View)
     {
-        //중복이벤트 방지
-        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.SECOND)
+        // 중복이벤트 방지
+        if(SystemClock.elapsedRealtime() - mLastClickTime < Common.HALF_SECOND)
         {
             return
         }
@@ -701,9 +698,6 @@ class TeacherHomeworkListFragment : Fragment()
         }
     }
 
-    /**
-     * 숙제현황 리스트 클릭 이벤트 Listener
-     */
     private val mHomeworkItemListener : OnItemViewClickListener = object : OnItemViewClickListener
     {
         override fun onItemClick(position : Int)

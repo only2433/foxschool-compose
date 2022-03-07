@@ -190,6 +190,7 @@ class Common
         const val USER_TYPE_TEACHER : String = "T"
 
         const val MILLI_SECOND : Int = 100
+        const val HALF_SECOND : Int = 500
         const val SECOND : Int = 1000
         const val MINIMUM_TABLET_DISPLAY_RADIO : Float  = 1.4f
         const val PHONE_DISPLAY_RADIO_20_9 : Float      = 1.9f
