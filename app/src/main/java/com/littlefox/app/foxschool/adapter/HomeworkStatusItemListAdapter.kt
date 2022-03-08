@@ -214,8 +214,8 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
         {
             ButterKnife.bind(this, view)
 
-            this._HomeworkDetailText.setOnClickListener(mOnSingleClickListner)
-            this._HomeworkEvalText.setOnClickListener(mOnSingleClickListner)
+            this._HomeworkDetailText.setOnClickListener(mOnSingleClickListener)
+            this._HomeworkEvalText.setOnClickListener(mOnSingleClickListener)
             initFont()
         }
 
@@ -227,7 +227,7 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
             _HomeworkEvalText.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         }
 
-        private val mOnSingleClickListner : OnSingleClickListner = object : OnSingleClickListner()
+        private val mOnSingleClickListener : OnSingleClickListner = object : OnSingleClickListner()
         {
             override fun onSingleClick(v : View)
             {

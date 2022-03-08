@@ -141,10 +141,11 @@ class IntroPresenter : IntroContract.Presenter
         CommonUtils.getInstance(mContext).showDeviceInfo()
         CommonUtils.getInstance(mContext).initFeature()
         LittlefoxLocale.setLocale(Locale.getDefault().toString())
-        mPermissionList = ArrayList()
-        mPermissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        mPermissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-        mPermissionList.add(Manifest.permission.RECORD_AUDIO)
+        mPermissionList = ArrayList<String>().apply {
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            add(Manifest.permission.READ_EXTERNAL_STORAGE)
+            add(Manifest.permission.RECORD_AUDIO)
+        }
 
         val autoLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
 

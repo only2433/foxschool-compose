@@ -630,7 +630,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _PlayerView.layoutParams = baseLayoutParams
             _PlayerBackground.layoutParams = baseLayoutParams
             _PlayerOptionBackground.layoutParams = baseLayoutParams
-            // TODO : _PlayerView.getHolder().setSizeFromLayout();
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
@@ -655,9 +654,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 _PlayerView.layoutParams = baseLayoutParams
                 _PlayerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
             }
-
-
-            //TODO : _PlayerView.getHolder().setSizeFromLayout();
         }
     }
 
