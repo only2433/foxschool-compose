@@ -72,7 +72,7 @@ class IntroduceSeriesTabletDialog : Dialog
         private val CREATORS_TYPE_NAME = arrayOf("Story", "Animation", "Cast")
     }
 
-    private var mContext : Context;
+    private var mContext : Context
     private var mContentsBaseLayoutHeight : Int = -1
     private var mContentsBackgroundHeight : Int  = -1
     private var mCurrentViewMarginTop : Int  = -1

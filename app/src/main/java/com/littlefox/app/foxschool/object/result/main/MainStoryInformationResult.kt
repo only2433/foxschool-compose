@@ -13,7 +13,7 @@ class MainStoryInformationResult
 
     fun setContentByLevelToList(data : ArrayList<SeriesInformationResult>)
     {
-        levels = data;
+        levels = data
     }
 
     fun getContentByCategoriesToList() : ArrayList<SeriesInformationResult> = categories

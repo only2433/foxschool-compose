@@ -83,7 +83,7 @@ class BottomBookAddDialog : BottomSheetDialog
 
     fun setBookshelfData(list : ArrayList<MyBookshelfResult>)
     {
-        Log.f("size ; " + list.size)
+        Log.f("size : " + list.size)
         mBooksType = BookType.BOOKSHELF
         mMyBookshelfResultList = list
         initView()
@@ -93,7 +93,7 @@ class BottomBookAddDialog : BottomSheetDialog
 
     fun setVocabularyData(list : ArrayList<MyVocabularyResult>)
     {
-        Log.f("size ; " + list.size)
+        Log.f("size : " + list.size)
         mBooksType = BookType.VOCABULARY
         mMyVocabularyResultList = list
         initView()

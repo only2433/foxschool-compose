@@ -63,12 +63,12 @@ object MainObserver
 
     fun isUpdateUserStatus() : Boolean
     {
-        return isUpdateUserStatus;
+        return isUpdateUserStatus
     }
 
     fun isEnterPaymentPage() : Boolean
     {
-        return isEnterPaymentPage;
+        return isEnterPaymentPage
     }
 
 

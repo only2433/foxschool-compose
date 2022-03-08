@@ -29,7 +29,7 @@ class SeriesCardViewAdapter : RecyclerView.Adapter<SeriesCardViewAdapter.ViewHol
     private var mSeriesCardItemListener : SeriesCardItemListener? = null
     private var mCurrentSeriesType : SeriesType = SeriesType.LEVEL
     private var mCurrentClickPosition = -1
-    private val mContext : Context;
+    private val mContext : Context
 
     companion object
     {
@@ -163,7 +163,7 @@ class SeriesCardViewAdapter : RecyclerView.Adapter<SeriesCardViewAdapter.ViewHol
 
     override fun getItemCount() : Int
     {
-        return mCurrentSeriesBaseResultList.size;
+        return mCurrentSeriesBaseResultList.size
     }
 
 

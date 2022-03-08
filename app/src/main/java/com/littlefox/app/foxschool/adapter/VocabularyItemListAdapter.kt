@@ -45,11 +45,11 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
     private var isTitleDataChanged = false
     private var isContentsDataChanged = false
     private var isPlaying = false
-    private val mContext : Context;
+    private val mContext : Context
 
     constructor(context : Context)
     {
-        mContext = context;
+        mContext = context
         mVocabularySelectData = VocabularySelectData()
         initViewData()
     }

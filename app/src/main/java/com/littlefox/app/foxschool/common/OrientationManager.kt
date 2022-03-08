@@ -14,7 +14,7 @@ class OrientationManager  : OrientationEventListener
 
     constructor(context : Context) : super(context)
     {
-        mContext = context;
+        mContext = context
     }
 
     override fun onOrientationChanged(orientation : Int)

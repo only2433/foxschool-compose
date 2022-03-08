@@ -108,23 +108,6 @@ class SearchListPresenter : SearchListContract.Presenter
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
     }
 
-    /**
-     * 재조회
-     */
-    override fun requestRefresh()
-    {
-        Log.f("")
-        if(mCurrentSearchListBaseResult!!.isLastPage())
-        {
-            Log.f("LAST PAGE")
-            mSearchListContractView.showErrorMessage(mContext.resources.getString(R.string.message_last_page))
-            mSearchListContractView.cancelRefreshView()
-        } else
-        {
-            requestSearchListAsync()
-        }
-    }
-
     override fun resume()
     {
         Log.f("")
@@ -149,52 +132,6 @@ class SearchListPresenter : SearchListContract.Presenter
 
     /** ====================== LifeCycle end ====================== */
 
-    /** ====================== onClick ====================== */
-
-    /**
-     * 검색 타입 클릭 이벤트 (전체/동화/동요)
-     */
-    override fun onClickSearchType(type : String)
-    {
-        if(mCurrentSearchType == type)
-        {
-            return
-        }
-        Log.f("type : $type")
-        mCurrentSearchType = type
-
-        if(mCurrentKeyword != "")
-        {
-            mRequestPagePosition = 1
-            mCurrentSearchListBaseResult = null
-            mSearchItemList.clear()
-            if(mSearchListItemAdapter != null)
-            {
-                mSearchListItemAdapter!!.notifyDataSetChanged()
-            }
-            requestSearchListAsync()
-        }
-    }
-
-    /**
-     * 검색 아이콘 클릭 이벤트
-     */
-    override fun onClickSearchExecute(keyword : String)
-    {
-        Log.f("keyword : $keyword")
-        if(keyword.trim().length < 2)
-        {
-            mSearchListContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_search_input_2_or_more))
-            return
-        }
-        clearData()
-        mCurrentKeyword = keyword
-        requestSearchListAsync()
-    }
-
-    /**
-     * 메세지 전달 이벤트
-     */
     override fun sendMessageEvent(msg : Message)
     {
         when(msg.what)
@@ -225,33 +162,6 @@ class SearchListPresenter : SearchListContract.Presenter
         }
     }
 
-    /**
-     * 데이터 수신 알림 (리스트 세팅)
-     */
-    private fun notifyData()
-    {
-        Log.f("")
-        mSearchListContractView.hideContentsListLoading()
-        mSearchListContractView.cancelRefreshView()
-        mSearchItemList.addAll(mCurrentSearchListBaseResult!!.getSearchList())
-        initRecyclerView()
-    }
-
-    /**
-     * 데이터 초기화
-     */
-    private fun clearData()
-    {
-        mRequestPagePosition = 1
-        mCurrentSearchListBaseResult = null
-        mCurrentKeyword = ""
-        mSearchItemList.clear()
-        mSearchListItemAdapter?.notifyDataSetChanged()
-    }
-
-    /**
-     * 리스트 세팅
-     */
     private fun initRecyclerView()
     {
         if(mSearchListItemAdapter == null)
@@ -261,7 +171,8 @@ class SearchListPresenter : SearchListContract.Presenter
             mSearchListItemAdapter = DetailListItemAdapter(mContext)
                 .setData(mSearchItemList)
                 .setFullName()
-                .setSelectDisable().setBottomViewDisable()
+                .setSelectDisable()
+                .setBottomViewDisable()
                 .setDetailItemListener(mDetailItemListener)
             mSearchListContractView.showSearchListView(mSearchListItemAdapter!!)
         }
@@ -278,22 +189,241 @@ class SearchListPresenter : SearchListContract.Presenter
         }
     }
 
-    /**
-     * 책장담기 요청
-     */
-    private fun requestBookshelfContentsAddAsync(data : java.util.ArrayList<ContentsBaseResult>)
+    override fun requestRefresh()
     {
         Log.f("")
-        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext).apply {
-            setData(mCurrentBookshelfAddResult!!.getID(), data)
-            asyncListener = mAsyncListener
-            execute()
+        if(mCurrentSearchListBaseResult!!.isLastPage())
+        {
+            Log.f("LAST PAGE")
+            mSearchListContractView.showErrorMessage(mContext.resources.getString(R.string.message_last_page))
+            mSearchListContractView.cancelRefreshView()
+        } else
+        {
+            requestSearchListAsync()
+        }
+    }
+
+    private fun notifyData()
+    {
+        Log.f("")
+        mSearchListContractView.hideContentsListLoading()
+        mSearchListContractView.cancelRefreshView()
+        mSearchItemList.addAll(mCurrentSearchListBaseResult!!.getSearchList())
+        initRecyclerView()
+    }
+
+    private fun clearData()
+    {
+        mRequestPagePosition = 1
+        mCurrentSearchListBaseResult = null
+        mCurrentKeyword = ""
+        mSearchItemList.clear()
+        mSearchListItemAdapter?.notifyDataSetChanged()
+    }
+
+    private fun updateBookshelfData(result : MyBookshelfResult)
+    {
+        for(i in mMainInformationResult.getBookShelvesList().indices)
+        {
+            if(mMainInformationResult.getBookShelvesList()[i].getID() == result.getID())
+            {
+                Log.f("update Index :$i")
+                mMainInformationResult.getBookShelvesList()[i] = result
+            }
+        }
+        CommonUtils.getInstance(mContext).saveMainData(mMainInformationResult)
+        MainObserver.updatePage(Common.PAGE_MY_BOOKS)
+    }
+
+    /**
+     * 검색 타입 클릭 이벤트 (전체/동화/동요)
+     */
+    override fun onClickSearchType(type : String)
+    {
+        if(mCurrentSearchType == type)
+        {
+            return
+        }
+        Log.f("type : $type")
+        mCurrentSearchType = type
+
+        if(mCurrentKeyword != "")
+        {
+            mRequestPagePosition = 1
+            mCurrentSearchListBaseResult = null
+            mSearchItemList.clear()
+            if(mSearchListItemAdapter != null)
+            {
+                mSearchListItemAdapter!!.notifyDataSetChanged()
+            }
+            requestSearchListAsync()
+        }
+    }
+
+    override fun onClickSearchExecute(keyword : String)
+    {
+        Log.f("keyword : $keyword")
+        if(keyword.trim().length < 2)
+        {
+            mSearchListContractView.showErrorMessage(mContext.resources.getString(R.string.message_warning_search_input_2_or_more))
+            return
+        }
+        clearData()
+        mCurrentKeyword = keyword
+        requestSearchListAsync()
+    }
+
+    private fun showBottomStoryItemDialog()
+    {
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mSearchItemList[mCurrentOptionIndex])
+        mBottomContentItemOptionDialog
+            .setItemOptionListener(mItemOptionListener)
+            .setFullName()
+            .setView()
+        mBottomContentItemOptionDialog.show()
+    }
+
+    private fun showBottomBookAddDialog()
+    {
+        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
+            setCancelable(true)
+            setBookshelfData(mMainInformationResult.getBookShelvesList())
+            setBookSelectListener(mBookAddListener)
+            show()
         }
     }
 
     /**
-     * 검색 리스트 요청
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
      */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
+            setMessage(mContext.resources.getString(R.string.message_record_permission))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
+            setDialogListener(mPermissionDialogListener)
+            show()
+        }
+    }
+
+    /** ====================== StartActivity ====================== */
+    private fun startCurrentSelectMovieActivity()
+    {
+        Log.f("Movie ID : " + mSearchItemList[mCurrentPlayIndex].getID())
+        val sendItemList = java.util.ArrayList<ContentsBaseResult>()
+        sendItemList.add(mSearchItemList[mCurrentPlayIndex])
+        val playerParamsObject = PlayerIntentParamsObject(sendItemList)
+
+        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .setData(playerParamsObject)
+            .startActivity()
+    }
+
+    private fun startQuizActivity()
+    {
+        Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
+        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.QUIZ)
+            .setData(quizIntentParamsObject)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startOriginTranslateActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
+            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startEbookActivity()
+    {
+        Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startVocabularyActivity()
+    {
+        Log.f("")
+        val title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mSearchItemList[mCurrentOptionIndex])
+        val myVocabularyResult = MyVocabularyResult(
+            mSearchItemList[mCurrentOptionIndex].getID(),
+            title,
+            VocabularyType.VOCABULARY_CONTENTS)
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.VOCABULARY)
+            .setData(myVocabularyResult)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startGameStarwordsActivity()
+    {
+        Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startGameCrosswordActivity()
+    {
+        Log.f("")
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        val data = FlashcardDataObject(
+            mSearchItemList[mCurrentOptionIndex].getID(),
+            mSearchItemList[mCurrentOptionIndex].getName(),
+            mSearchItemList[mCurrentOptionIndex].getSubName(),
+            VocabularyType.VOCABULARY_CONTENTS
+        )
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.FLASHCARD)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startRecordPlayerActivity()
+    {
+        Log.f("")
+        val recordIntentParamsObject = RecordIntentParamsObject(mSearchItemList[mCurrentOptionIndex])
+
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.RECORD_PLAYER)
+            .setData(recordIntentParamsObject)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
     private fun requestSearchListAsync()
     {
         /**
@@ -321,215 +451,18 @@ class SearchListPresenter : SearchListContract.Presenter
             asyncListener = mAsyncListener
             execute()
         }
-
     }
 
-    /**
-     * 컨텐츠 옵션 다이얼로그 표시
-     */
-    private fun showBottomStoryItemDialog()
+    private fun requestBookshelfContentsAddAsync(data : java.util.ArrayList<ContentsBaseResult>)
     {
-        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mSearchItemList[mCurrentOptionIndex])
-        mBottomContentItemOptionDialog
-            .setItemOptionListener(mItemOptionListener)
-            .setFullName()
-            .setView()
-        mBottomContentItemOptionDialog.show()
-    }
-
-    /**
-     * 책장담기 다이얼로그 표시
-     */
-    private fun showBottomBookAddDialog()
-    {
-        mBottomBookAddDialog = BottomBookAddDialog(mContext).apply {
-            setCancelable(true)
-            setBookshelfData(mMainInformationResult.getBookShelvesList())
-            setBookSelectListener(mBookAddListener)
-            show()
+        Log.f("")
+        mBookshelfContentAddCoroutine = BookshelfContentAddCoroutine(mContext).apply {
+            setData(mCurrentBookshelfAddResult!!.getID(), data)
+            asyncListener = mAsyncListener
+            execute()
         }
     }
 
-    /**
-     * 마이크 권한 허용 요청 다이얼로그
-     * - 녹음기 기능 사용을 위해
-     */
-    private fun showChangeRecordPermissionDialog()
-    {
-        mTemplateAlertDialog = TemplateAlertDialog(mContext).apply {
-            setMessage(mContext.resources.getString(R.string.message_record_permission))
-            setButtonType(DialogButtonType.BUTTON_2)
-            setButtonText(mContext.resources.getString(R.string.text_cancel), mContext.resources.getString(R.string.text_change_permission))
-            setDialogListener(mPermissionDialogListener)
-            show()
-        }
-    }
-
-    /** ====================== StartActivity ====================== */
-    /**
-     * 플레이어 화면으로 이동
-     */
-    private fun startCurrentSelectMovieActivity()
-    {
-        Log.f("Movie ID : " + mSearchItemList[mCurrentPlayIndex].getID())
-        val sendItemList = java.util.ArrayList<ContentsBaseResult>()
-        sendItemList.add(mSearchItemList[mCurrentPlayIndex])
-        val playerParamsObject = PlayerIntentParamsObject(sendItemList)
-
-        IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setData(playerParamsObject)
-            .startActivity()
-    }
-
-    /**
-     * 퀴즈 화면으로 이동
-     */
-    private fun startQuizActivity()
-    {
-        Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
-        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.QUIZ)
-            .setData(quizIntentParamsObject)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 해석 화면으로 이동
-     */
-    private fun startOriginTranslateActivity()
-    {
-        Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mSearchItemList[mCurrentOptionIndex].getID())
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * eBook 화면으로 이동
-     */
-    private fun startEbookActivity()
-    {
-        Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
-            .setData(data)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 단어장 화면으로 이동
-     */
-    private fun startVocabularyActivity()
-    {
-        Log.f("")
-        val title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mSearchItemList[mCurrentOptionIndex])
-        val myVocabularyResult = MyVocabularyResult(
-            mSearchItemList[mCurrentOptionIndex].getID(),
-            title,
-            VocabularyType.VOCABULARY_CONTENTS)
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.VOCABULARY)
-            .setData(myVocabularyResult)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 스타워즈 게임화면으로 이동
-     */
-    private fun startGameStarwordsActivity()
-    {
-        Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
-            .setData(data)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 크로스워드 게임화면으로 이동
-     */
-    private fun startGameCrosswordActivity()
-    {
-        Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
-            .setData(data)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 플래시카드 학습화면으로 이동
-     */
-    private fun startFlashcardActivity()
-    {
-        Log.f("")
-        val data = FlashcardDataObject(
-            mSearchItemList[mCurrentOptionIndex].getID(),
-            mSearchItemList[mCurrentOptionIndex].getName(),
-            mSearchItemList[mCurrentOptionIndex].getSubName(),
-            VocabularyType.VOCABULARY_CONTENTS
-        )
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.FLASHCARD)
-            .setData(data)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 녹음기 화면으로 이동
-     */
-    private fun startRecordPlayerActivity()
-    {
-        Log.f("")
-        val recordIntentParamsObject = RecordIntentParamsObject(mSearchItemList[mCurrentOptionIndex])
-
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.RECORD_PLAYER)
-            .setData(recordIntentParamsObject)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
-    }
-
-    /**
-     * 책장 업데이트
-     */
-    private fun updateBookshelfData(result : MyBookshelfResult)
-    {
-        for(i in mMainInformationResult.getBookShelvesList().indices)
-        {
-            if(mMainInformationResult.getBookShelvesList()[i].getID() == result.getID())
-            {
-                Log.f("update Index :$i")
-                mMainInformationResult.getBookShelvesList()[i] = result
-            }
-        }
-        CommonUtils.getInstance(mContext).saveMainData(mMainInformationResult)
-        MainObserver.updatePage(Common.PAGE_MY_BOOKS)
-    }
-
-    /** ====================== set Listener ====================== */
-
-    /**
-     * 책장 이벤트 리스너
-     */
     private val mBookAddListener : BookAddListener = object : BookAddListener
     {
         override fun onClickBook(index : Int)
@@ -543,9 +476,6 @@ class SearchListPresenter : SearchListContract.Presenter
         }
     }
 
-    /**
-     * 리스트 아이템 이벤트 리스너
-     */
     private val mDetailItemListener = object : DetailItemListener
     {
         override fun onItemClickThumbnail(index : Int)
@@ -565,9 +495,6 @@ class SearchListPresenter : SearchListContract.Presenter
         override fun onItemSelectCount(count : Int) { }
     }
 
-    /**
-     * 컨텐츠 옵션 다이얼로그 이벤트 리스너
-     */
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
         override fun onClickQuiz()
@@ -646,9 +573,7 @@ class SearchListPresenter : SearchListContract.Presenter
      */
     private val mPermissionDialogListener : DialogListener = object : DialogListener
     {
-        override fun onConfirmButtonClick(messageType : Int)
-        {
-        }
+        override fun onConfirmButtonClick(messageType : Int) { }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
         {
@@ -671,9 +596,6 @@ class SearchListPresenter : SearchListContract.Presenter
         }
     }
 
-    /**
-     * 통신 이벤트 리스너
-     */
     private val mAsyncListener : AsyncListener = object : AsyncListener
     {
         override fun onRunningStart(code : String?) { }

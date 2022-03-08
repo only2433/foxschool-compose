@@ -64,11 +64,11 @@ class HomeworkStatusItemListAdapter: RecyclerView.Adapter<HomeworkStatusItemList
         return ViewHolder(view)
     }
     private final lateinit var mCurrentViewHolder : ViewHolder
-    final var itemPosition : Int = 0;
+    final var itemPosition : Int = 0
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
         val item = mStatusList[position]
-        itemPosition = position;
+        itemPosition = position
         mCurrentViewHolder = holder
 
         // 체크박스

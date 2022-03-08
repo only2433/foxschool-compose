@@ -91,6 +91,6 @@ class Font (context : Context)
 
     fun getGungsu() : Typeface?
     {
-        return gungsu;
+        return gungsu
     }
 }

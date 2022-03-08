@@ -36,11 +36,11 @@ object LittlefoxLocale
 
     fun getCurrentLocale() : String
     {
-        return mCurrentLocale;
+        return mCurrentLocale
     }
 
     fun getDeviceLocale() : String
     {
-        return Locale.getDefault().toString();
+        return Locale.getDefault().toString()
     }
 }

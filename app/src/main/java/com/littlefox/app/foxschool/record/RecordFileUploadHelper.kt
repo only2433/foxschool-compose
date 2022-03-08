@@ -112,10 +112,10 @@ class RecordFileUploadHelper(private val mContext : Context)
         if(audioFile.exists())
         {
             Log.f("파일 있음")
-            Log.f("record_file : " + mRecordInfoData.getFileName());
-            Log.f("content_id : " + mRecordInfoData.getContentsID());
-            Log.f("record_time : " + mRecordInfoData.getRecordTime().toString());
-            Log.f("hw_no : " + mRecordInfoData.getHomeworkNumber().toString());
+            Log.f("record_file : " + mRecordInfoData.getFileName())
+            Log.f("content_id : " + mRecordInfoData.getContentsID())
+            Log.f("record_time : " + mRecordInfoData.getRecordTime().toString())
+            Log.f("hw_no : " + mRecordInfoData.getHomeworkNumber().toString())
             multipartBody.setType(MultipartBody.FORM)
                 .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("audio/mpeg"), audioFile))
                 .addFormDataPart("content_id", java.lang.String.valueOf(mRecordInfoData.getContentsID()))

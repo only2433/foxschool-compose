@@ -17,9 +17,9 @@ class GridSpacingItemDecoration : ItemDecoration
 
     constructor(context : Context, spanCount : Int, spacing : Int, isPaddingDisable : Boolean)
     {
-        mContext  = context;
-        this.spanCount = spanCount;
-        this.spacing = spacing;
+        mContext  = context
+        this.spanCount = spanCount
+        this.spacing = spacing
         this.isPaddingDisable = isPaddingDisable
     }
     override fun getItemOffsets(outRect : Rect, view : View, parent : RecyclerView, state : RecyclerView.State)

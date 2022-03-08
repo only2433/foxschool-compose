@@ -20,11 +20,10 @@ class ProgressBarAnimation : Animation
 
     constructor(progressBar : ProgressBar, progressText : TextView, from : Float, to : Float) : super()
     {
-
-        this.progressBar = progressBar;
-        this.progressText = progressText;
-        this.from = from;
-        this.to = to;
+        this.progressBar = progressBar
+        this.progressText = progressText
+        this.from = from
+        this.to = to
     }
 
     override fun applyTransformation(interpolatedTime : Float, t : Transformation)

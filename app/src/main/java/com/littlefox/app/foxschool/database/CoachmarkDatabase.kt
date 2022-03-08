@@ -12,7 +12,7 @@ abstract class CoachmarkDatabase : RoomDatabase()
 
     companion object
     {
-        private var sInstance : CoachmarkDatabase? = null;
+        private var sInstance : CoachmarkDatabase? = null
 
         @Synchronized
         fun getInstance(context : Context) : CoachmarkDatabase?
@@ -20,15 +20,15 @@ abstract class CoachmarkDatabase : RoomDatabase()
             if(sInstance == null)
             {
                 sInstance = Room.databaseBuilder(
-                        context.applicationContext, CoachmarkDatabase::class.java, "coachmark.db").fallbackToDestructiveMigration().build();
+                        context.applicationContext, CoachmarkDatabase::class.java, "coachmark.db").fallbackToDestructiveMigration().build()
             }
 
-            return sInstance;
+            return sInstance
         }
 
         fun release()
         {
-            sInstance = null;
+            sInstance = null
         }
 
     }

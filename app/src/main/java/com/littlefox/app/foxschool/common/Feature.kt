@@ -39,8 +39,8 @@ object Feature {
     var IS_SUPPORT_LITTLEFOX_CLASS : Boolean  = true
 
     /**
-     * 이북 폰 지원 여부
+     * 이북 지원 여부
      */
-    var IS_SUPPORT_EBOOK_PHONE : Boolean  = false
+    var IS_SUPPORT_EBOOK : Boolean  = true
 
 }

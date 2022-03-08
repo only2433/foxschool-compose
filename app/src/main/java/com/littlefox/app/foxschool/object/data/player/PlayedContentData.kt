@@ -29,34 +29,34 @@ class PlayedContentData
 
     fun setContentID(contentID : String)
     {
-        this.contentID = contentID;
+        this.contentID = contentID
     }
 
     fun getRecentPlayTime() : String = recentPlayTime
 
     fun setRecentPlayTime(recentPlayTime : String)
     {
-        this.recentPlayTime = recentPlayTime;
+        this.recentPlayTime = recentPlayTime
     }
 
     fun getFilePath() : String = filePath
 
     fun setFilePath(filePath : String)
     {
-        this.filePath = filePath;
+        this.filePath = filePath
     }
 
     fun getTotalPlayTime() : String = totalPlayTime
 
     fun setTotalPlayTime(totalPlayTime : String)
     {
-        this.totalPlayTime = totalPlayTime;
+        this.totalPlayTime = totalPlayTime
     }
 
     fun isDownloadComplete() : Boolean = isDownloadComplete
 
     fun setDownloadComplete(isDownloadComplete : Boolean)
     {
-        this.isDownloadComplete = isDownloadComplete;
+        this.isDownloadComplete = isDownloadComplete
     }
 }

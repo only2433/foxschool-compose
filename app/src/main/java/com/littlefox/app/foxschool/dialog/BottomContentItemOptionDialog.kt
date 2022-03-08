@@ -72,7 +72,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
 
     override fun onCreate(savedInstanceState : Bundle?)
     {
-        Log.f("");
+        Log.f("")
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(mContext).checkTablet)
         {
@@ -185,7 +185,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(CommonUtils.getInstance(mContext).checkTablet || Feature.IS_SUPPORT_EBOOK_PHONE)
+            if(CommonUtils.getInstance(mContext).checkTablet || Feature.IS_SUPPORT_EBOOK)
             {
                 if(mContentsInformationResult.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
                 {

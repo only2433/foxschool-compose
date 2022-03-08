@@ -59,7 +59,7 @@ open class SeriesBaseResult : Parcelable
         {
             return  Common.CONTENT_TYPE_STORY
         }
-        return seriesType!!;
+        return seriesType!!
     }
 
     fun getThumbnailUrl() : String = thumbnail_url
@@ -84,12 +84,12 @@ open class SeriesBaseResult : Parcelable
 
     fun setTransitionType(type : TransitionType)
     {
-        transitionType = type;
+        transitionType = type
     }
 
     fun setSeriesType(seriesType : String)
     {
-        this.seriesType = seriesType;
+        this.seriesType = seriesType
     }
 
     val statusBarColor : String

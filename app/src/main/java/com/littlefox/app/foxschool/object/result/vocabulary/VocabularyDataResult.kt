@@ -62,17 +62,17 @@ open class VocabularyDataResult : Parcelable
 
     fun setContentViewSize(size : Int)
     {
-        contentViewSize = size;
+        contentViewSize = size
     }
 
     fun getContentViewSize() : Int
     {
-        return contentViewSize;
+        return contentViewSize
     }
 
     fun setSelected(isSelect : Boolean)
     {
-        isSelected = isSelect;
+        isSelected = isSelect
     }
 
     fun isSelected() : Boolean = isSelected

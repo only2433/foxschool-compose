@@ -71,7 +71,7 @@ class IACController
      */
     fun isIACVisible() : Boolean
     {
-        return isIACAwake;
+        return isIACAwake
     }
 
     /**

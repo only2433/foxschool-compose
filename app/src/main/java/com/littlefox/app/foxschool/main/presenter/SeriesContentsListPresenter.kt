@@ -405,7 +405,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             .readyActivityMode(ActivityMode.PLAYER)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .setData(playerIntentParamsObject)
-            .startActivity();
+            .startActivity()
     }
 
     private fun startQuizActivity()

@@ -23,7 +23,7 @@ class SchoolListCoroutine : BaseCoroutine
         synchronized(mSync) {
             isRunning = true
             val response = NetworkUtil.requestServerPair(mContext, Common.API_SCHOOL_LIST, null, NetworkUtil.GET_METHOD)
-            Log.f("response : "+response);
+            Log.f("response : "+response)
             result = Gson().fromJson(response, SchoolListBaseObject::class.java)
             if(result.getAccessToken() != "")
             {

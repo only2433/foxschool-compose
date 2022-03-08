@@ -120,13 +120,13 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     override fun onResume()
     {
         super.onResume()
-        mSearchListPresenter.resume();
+        mSearchListPresenter.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mSearchListPresenter.pause();
+        mSearchListPresenter.pause()
     }
 
     override fun onDestroy()
@@ -255,9 +255,6 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         }
     }
 
-    /**
-     * 리스트 새로고침 취소
-     */
     override fun cancelRefreshView()
     {
         Log.f("")
@@ -312,13 +309,8 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
 
     @Optional
     @OnClick(
-        R.id._closeButtonRect,
-        R.id._searchAllRect,
-        R.id._searchStoryRect,
-        R.id._searchSongRect,
-        R.id._searchConfirmIcon,
-        R.id._searchConfirmTabletIcon,
-        R.id._searchCancelIcon
+        R.id._closeButtonRect, R.id._searchAllRect, R.id._searchStoryRect, R.id._searchSongRect,
+        R.id._searchConfirmIcon, R.id._searchConfirmTabletIcon, R.id._searchCancelIcon
     )
     fun onClickView(view: View)
     {
@@ -385,10 +377,6 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         }
     }
 
-    /**
-     * 검색영역 활성/비활성 처리
-     * - 검색 통신 진행중에는 버튼 선택되지 않도록 처리함
-     */
     private fun setSearchButtonEnable(isEnable : Boolean)
     {
         val alpha = if(isEnable) 1.0f else 0.5f
@@ -437,12 +425,14 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
             when(view.id)
             {
                 R.id._searchEditText ->
+                {
                     if(hasFocus)
                     {
                         if(CommonUtils.getInstance(this@SearchListActivity).checkTablet)
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.text_box_b)
-                        } else
+                        }
+                        else
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.text_box_b_search)
                         }
@@ -454,20 +444,19 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
                         if(CommonUtils.getInstance(this@SearchListActivity).checkTablet)
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.box_list)
-                        } else
+                        }
+                        else
                         {
                             _SearchEditBackgroundImage.setBackgroundResource(R.drawable.search_box1)
                         }
 
                         _SearchEditText.isCursorVisible = false
                     }
+                }
             }
         }
     }
 
-    /**
-     * 당겨서 재조회 이벤트 리스너
-     */
     private val mOnRefreshListener = object : SwipyRefreshLayout.OnRefreshListener
     {
         override fun onRefresh(direction : SwipyRefreshLayoutDirection?)

@@ -9,7 +9,7 @@ class SearchListContract
     {
         fun showContentsListLoading()
         fun hideContentsListLoading()
-        fun showSearchListView(adapter: DetailListItemAdapter)
+        fun showSearchListView(detailListItemAdapter: DetailListItemAdapter)
         fun cancelRefreshView()
     }
     interface Presenter : BaseContract.Presenter

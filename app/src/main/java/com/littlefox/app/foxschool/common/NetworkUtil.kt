@@ -199,11 +199,11 @@ object NetworkUtil
             }
             while(true)
             {
-                val stringLine = bufferedReader.readLine();
+                val stringLine = bufferedReader.readLine()
 
                 if(stringLine == null)
                 {
-                    break;
+                    break
                 }
                 responseStringBuilder.append(stringLine +'\n')
             }
@@ -220,7 +220,7 @@ object NetworkUtil
         }
         catch(e : Exception)
         {
-            Log.f("e : "+ e.message);
+            Log.f("e : "+ e.message)
             Log.exception(e)
             response = getNetworkErrorJson(context)
         }

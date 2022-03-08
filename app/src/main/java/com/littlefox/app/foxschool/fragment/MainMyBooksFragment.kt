@@ -59,7 +59,7 @@ class MainMyBooksFragment() : Fragment()
 
     companion object
     {
-        private var SWITCH_TAB_WIDTH : Float = 0f;
+        private var SWITCH_TAB_WIDTH : Float = 0f
         private val BOOKS_MAX_SIZE = 10
         val instance : MainMyBooksFragment
             get() = MainMyBooksFragment()

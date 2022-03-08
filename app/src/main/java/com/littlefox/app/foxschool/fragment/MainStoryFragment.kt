@@ -83,9 +83,6 @@ class MainStoryFragment : Fragment()
         private const val MESSAGE_HIDE_CONTROLLER = 100
         private const val DURATION_NAVIGATION_CONTROLLER_HIDE = 2500
 
-        /*private static final int COLUMN_COUNT       = Feature.IS_TABLET ? 5 : 2;
-    private static final int SWITCH_TAB_WIDTH   = Feature.IS_TABLET ? 232 : 330;
-    private static final int COLUMN_MARGIN      = Feature.IS_TABLET ? 20 : 24;*/
         private var COLUMN_COUNT = 0
         private var SWITCH_TAB_WIDTH : Float = 0.0f
         private var COLUMN_MARGIN = 0

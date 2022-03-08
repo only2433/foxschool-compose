@@ -118,7 +118,7 @@ class MainPresenter : MainContract.Presenter
     private lateinit var mMainSongFragmentDataObserver : MainSongFragmentDataObserver
     private lateinit var mMainMyBooksFragmentDataObserver : MainMyBooksFragmentDataObserver
     private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
-    private lateinit var mContext : Context;
+    private lateinit var mContext : Context
 
     constructor(context : Context)
     {

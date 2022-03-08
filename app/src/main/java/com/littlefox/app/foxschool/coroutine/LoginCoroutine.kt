@@ -13,8 +13,8 @@ import com.littlefox.library.system.coroutine.BaseCoroutine
 class LoginCoroutine : BaseCoroutine
 {
     private var mLoginID : String = ""
-    private var mPassword : String = "";
-    private var mSchoolID : String = "";
+    private var mPassword : String = ""
+    private var mSchoolID : String = ""
 
     constructor(context : Context) : super(context, Common.COROUTINE_CODE_LOGIN) {}
 

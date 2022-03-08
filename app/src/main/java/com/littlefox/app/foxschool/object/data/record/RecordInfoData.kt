@@ -19,17 +19,17 @@ class RecordInfoData(filePath : String, fileName : String, contentsID : String, 
 
     fun getFilePath() : String
     {
-        return mFilePath;
+        return mFilePath
     }
 
     fun getFileName() : String
     {
-        return mFileName;
+        return mFileName
     }
 
     fun getContentsID() : String
     {
-        return mContentsID;
+        return mContentsID
     }
 
     fun getRecordTime() : Int

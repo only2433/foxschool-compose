@@ -184,8 +184,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentBookshelfAddResult : MyBookshelfResult
-    private var mBottomBookAddDialog : BottomBookAddDialog ? = null;
-    private var mBottomContentItemOptionDialog : BottomContentItemOptionDialog? = null;
+    private var mBottomBookAddDialog : BottomBookAddDialog ? = null
+    private var mBottomContentItemOptionDialog : BottomContentItemOptionDialog? = null
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mPageByPageDataList : ArrayList<PageByPageData> = ArrayList<PageByPageData>()
     private var mCurrentRepeatPageIndex : Int = -1
@@ -194,7 +194,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mPlayer : SimpleExoPlayer? = null
     private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
-    protected var mJob: Job? = null;
+    protected var mJob: Job? = null
     private lateinit var mLoginInformationResult : LoginInformationResult
     private lateinit var _PlayerView : PlayerView
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
@@ -230,22 +230,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     override fun resume()
     {
         Log.f("status : $mCurrentPlayerStatus")
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-        {
-            if(mCurrentPlayerStatus === PlayerStatus.PAUSE)
-            {
-                Log.f("Build.VERSION.SDK_INT ERROR : " + Build.VERSION.SDK_INT)
-                isVideoPrepared = false
-                mCurrentCaptionIndex = 0
-                mCurrentPageIndex = 0
-                mPlayerContractView.initCaptionText()
-                startMovie()
-            }
-        }
-        else
-        {
-            resumePlayer()
-        }
+        resumePlayer()
     }
 
     override fun destroy()
@@ -281,7 +266,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 }
                 else
                 {
-                    mVibrator?.vibrate(Common.DURATION_NORMAL);
+                    mVibrator?.vibrate(Common.DURATION_NORMAL)
                 }
                 isLockMode = !isLockMode
                 mPlayerContractView.enableLockMenu(isLockMode)
@@ -373,12 +358,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun accessDataBase()
     {
-        mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao();
+        mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao()
     }
 
     private fun isStoryCoachmarkViewed(userID : String) : Boolean
     {
-        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID)
         if(data == null)
         {
             Log.f("data null story")
@@ -400,7 +385,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun setStoryCoachmarkViewed(userID : String)
     {
         CoroutineScope(Dispatchers.IO).launch {
-            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID)
 
             if(data == null)
             {
@@ -408,14 +393,14 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 data = CoachmarkEntity(userID,
                     true,
                     false,
-                    false);
-                mCoachingMarkUserDao?.insertItem(data);
+                    false)
+                mCoachingMarkUserDao?.insertItem(data)
             }
             else
             {
                 Log.f("data update  ")
-                data.isStoryCoachmarkViewed = true;
-                mCoachingMarkUserDao?.updateItem(data);
+                data.isStoryCoachmarkViewed = true
+                mCoachingMarkUserDao?.updateItem(data)
             }
         }
 
@@ -424,39 +409,39 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun setSongCoachmarkViewed(userID : String)
     {
         CoroutineScope(Dispatchers.IO).launch {
-            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+            var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID)
             if(data == null)
             {
                 data = CoachmarkEntity(userID,
                     false,
                     true,
-                    false);
-                mCoachingMarkUserDao?.insertItem(data);
+                    false)
+                mCoachingMarkUserDao?.insertItem(data)
             }
             else
             {
-                data.isSongCoachmarkViewed = true;
-                mCoachingMarkUserDao?.updateItem(data);
+                data.isSongCoachmarkViewed = true
+                mCoachingMarkUserDao?.updateItem(data)
             }
         }
     }
 
     private fun isSongCoachmarkViewed(userID : String) : Boolean
     {
-        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID);
+        var data : CoachmarkEntity? = mCoachingMarkUserDao?.getSavedCoachmarkUser(userID)
         if(data == null)
         {
-            return false;
+            return false
         }
         else
         {
             if(data.isSongCoachmarkViewed)
             {
-                return true;
+                return true
             }
             else
             {
-                return false;
+                return false
             }
         }
     }
@@ -533,14 +518,11 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
     }
 
-    private fun setVideoSpeed(speendIndex : Int)
+    private fun setVideoSpeed(speedIndex : Int)
     {
         var params : PlaybackParameters? = null
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-        {
-            params = PlaybackParameters(PLAY_SPEED_LIST[speendIndex])
-            mPlayer?.setPlaybackParameters(params)
-        }
+        params = PlaybackParameters(PLAY_SPEED_LIST[speedIndex])
+        mPlayer?.setPlaybackParameters(params)
     }
 
     private fun setupPlayVideo()
@@ -865,8 +847,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         else
         {
             if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
-                || Feature.IS_SUPPORT_EBOOK_PHONE == false
-                || Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                || Feature.IS_SUPPORT_EBOOK == false)
             {
                 isEbookAvailable = false
             }
@@ -1556,7 +1537,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         else
         {
-            setSongCoachmarkViewed(userID);
+            setSongCoachmarkViewed(userID)
         }
         prepareMovie()
     }

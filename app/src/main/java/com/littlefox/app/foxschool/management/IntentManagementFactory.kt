@@ -454,7 +454,7 @@ class IntentManagementFactory
         {
             if(sIntentManagementFactory == null)
             {
-                sIntentManagementFactory = IntentManagementFactory();
+                sIntentManagementFactory = IntentManagementFactory()
             }
 
             return sIntentManagementFactory!!

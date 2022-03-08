@@ -21,11 +21,11 @@ class PageByPageData
 
     fun setStartTime(time : Float)
     {
-        startTime = time;
+        startTime = time
     }
 
     fun setEndTime(time : Float)
     {
-        endTime = time;
+        endTime = time
     }
 }
