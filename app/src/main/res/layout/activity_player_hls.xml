@@ -390,7 +390,7 @@
                 app:scale_left="172"
                 app:scale_textsize="34"
                 app:scale_top="0"
-                app:scale_width="94" />
+                app:scale_width="110" />
 
             <SeekBar
                 android:id="@+id/_seekbarPlayBar"
@@ -418,11 +418,10 @@
                 android:text="12:12"
                 android:textColor="@color/color_white"
                 app:scale_height="71"
-                app:scale_left="1414"
+                app:scale_left="1410"
                 app:scale_textsize="34"
                 app:scale_top="0"
-                app:scale_width="94" />
-
+                app:scale_width="110" />
 
             <ImageView
                 android:id="@+id/_playerSpeedButton"
