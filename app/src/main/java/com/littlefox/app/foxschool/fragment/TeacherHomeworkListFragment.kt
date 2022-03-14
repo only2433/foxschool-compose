@@ -470,7 +470,7 @@ class TeacherHomeworkListFragment : Fragment()
         if (CommonUtils.getInstance(mContext).checkTablet)
         {
             // 태블릿 설정
-            comment = " ${evaluationText}."
+            comment = " $evaluationText"
             evalSize = 30
             commentSize = 30
         }

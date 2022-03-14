@@ -89,6 +89,8 @@
             android:text="@string/text_homework_excellent"
             android:textColor="@color/color_fa4959"
             android:gravity="center_vertical"
+            android:maxLines="3"
+            android:ellipsize="end"
             app:scale_left="205"
             app:scale_top="0"
             app:scale_width="800"
