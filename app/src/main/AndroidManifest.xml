@@ -52,7 +52,7 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data
                     android:host="main"
-                    android:scheme="littlefox_foxschool" />
+                    android:scheme="foxschool" />
             </intent-filter>
         </activity>
 
