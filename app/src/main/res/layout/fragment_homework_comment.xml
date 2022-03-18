@@ -54,7 +54,7 @@
             app:scale_left="28"
             app:scale_top="60"
             app:scale_width="1020"
-            app:scale_height="350" />
+            app:scale_height="700" />
 
         <EditText
             android:id="@+id/_commentEditText"
@@ -70,7 +70,7 @@
             app:scale_left="62"
             app:scale_top="105"
             app:scale_width="952"
-            app:scale_height="270"
+            app:scale_height="620"
             app:scale_textsize="40"/>
 
         <TextView
@@ -85,7 +85,7 @@
             android:visibility="gone"
             android:enabled="false"
             app:scale_left="100"
-            app:scale_top="570"
+            app:scale_top="920"
             app:scale_width="880"
             app:scale_height="120"
             app:scale_textsize="42" />
@@ -102,7 +102,7 @@
             android:visibility="gone"
             android:enabled="false"
             app:scale_left="100"
-            app:scale_top="570"
+            app:scale_top="920"
             app:scale_width="424"
             app:scale_height="120"
             app:scale_textsize="42" />
@@ -118,7 +118,7 @@
             android:textColor="@color/color_29c8e6"
             android:visibility="gone"
             app:scale_left="556"
-            app:scale_top="570"
+            app:scale_top="920"
             app:scale_width="424"
             app:scale_height="120"
             app:scale_textsize="42" />
