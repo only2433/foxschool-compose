@@ -22,7 +22,7 @@ object Feature {
     /**
      * Webview 디버깅 관련 여부
      */
-    const val IS_WEBVIEW_DEBUGING : Boolean  = false
+    const val IS_WEBVIEW_DEBUGING : Boolean  = true
 
     /**
      * 구글 스토어 체크 할지 안할지의 여부 ( 안하면 앱을 사용하고, 하면 앱을 사용 못함 )
