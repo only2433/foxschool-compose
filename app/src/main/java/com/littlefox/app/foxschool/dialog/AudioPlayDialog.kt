@@ -130,6 +130,7 @@ class AudioPlayDialog : Dialog
         initView()
         initFont()
         initSeekbar()
+        enableController(false)
         startAudio()
     }
 
@@ -156,6 +157,22 @@ class AudioPlayDialog : Dialog
             progress = 0
             secondaryProgress = 0
             setOnSeekBarChangeListener(mOnSeekBarListener)
+        }
+    }
+
+    private fun enableController(isEnable : Boolean)
+    {
+        if(isEnable)
+        {
+            _SeekbarPlayBar.visibility = View.VISIBLE
+            _PlayerCurrentPlayTime.visibility = View.VISIBLE
+            _PlayerRemainPlayTime.visibility = View.VISIBLE
+        }
+        else
+        {
+            _SeekbarPlayBar.visibility = View.GONE
+            _PlayerCurrentPlayTime.visibility = View.GONE
+            _PlayerRemainPlayTime.visibility = View.GONE
         }
     }
 
@@ -204,6 +221,7 @@ class AudioPlayDialog : Dialog
                     setRemainDuration()
                     _ProgressWheelView.visibility = View.GONE
                     _PlayButton.visibility = View.VISIBLE
+                    enableController(true)
                     enableTimer(isStart = true)
                     mMediaPlayer?.start()
                 }

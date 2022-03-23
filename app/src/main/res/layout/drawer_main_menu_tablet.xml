@@ -168,9 +168,9 @@
 
         <include
             android:id="@+id/_menuItemLayout"
+            layout="@layout/drawer_item_user_tablet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/drawer_item_user_tablet" />
+            android:layout_height="wrap_content" />
 
     </ScrollView>
 
