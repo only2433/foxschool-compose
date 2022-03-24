@@ -111,13 +111,21 @@ class IntroduceSeriesPresenter : IntroduceSeriesContract.Presenter
             }
             else
             {
-                Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                if(result.isAuthenticationBroken)
+                if(result.isDuplicateLogin)
+                {
+                    //중복 로그인 시 재시작
+                    (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
+                    IntentManagementFactory.getInstance().initAutoIntroSequence()
+                }
+                else if(result.isAuthenticationBroken)
                 {
                     Log.f("== isAuthenticationBroken ==")
                     (mContext as AppCompatActivity).finish()
+                    Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                     IntentManagementFactory.getInstance().initScene()
-                } else
+                }
+                else
                 {
                     (mContext as AppCompatActivity).onBackPressed()
                 }
