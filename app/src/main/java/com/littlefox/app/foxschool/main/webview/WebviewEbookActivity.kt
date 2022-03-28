@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Message
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -73,6 +74,7 @@ class WebviewEbookActivity : BaseActivity()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         super.onCreate(savedInstanceState)
         Log.f("")
 
