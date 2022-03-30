@@ -72,6 +72,7 @@ class MainMyBooksFragment() : Fragment()
     private var mCurrentBookType : BookType = BookType.BOOKSHELF
     private lateinit var mMainMyBooksFragmentDataObserver : MainMyBooksFragmentDataObserver
     private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
+    private var mSelectColor : Int = -1
 
     override fun onAttach(context : Context)
     {
@@ -158,6 +159,19 @@ class MainMyBooksFragment() : Fragment()
         {
             SWITCH_TAB_WIDTH = 330.0f
         }
+
+        // 선생님/학생에 따른 셀렉터 on 이미지, 컬러 설정
+        if (CommonUtils.getInstance(mContext).isTeacherMode)
+        {
+            mSelectColor = mContext.resources.getColor(R.color.color_29c8e6)
+            _SwitchAnimationButton.setImageResource(R.drawable.tab_main_on_teacher)
+        }
+        else
+        {
+            mSelectColor = mContext.resources.getColor(R.color.color_23cc8a)
+            _SwitchAnimationButton.setImageResource(R.drawable.tab_main_on_student)
+        }
+        switchTabsTextColor(mCurrentBookType)
     }
 
     private fun initFont()
@@ -208,12 +222,13 @@ class MainMyBooksFragment() : Fragment()
     {
         if(type === BookType.BOOKSHELF)
         {
-            _BookshelfTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_8d65ff))
+            _BookshelfTextButton.setTextColor(mSelectColor)
             _VocabularyTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_a0a0a0))
-        } else
+        }
+        else
         {
             _BookshelfTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_a0a0a0))
-            _VocabularyTextButton.setTextColor(mContext!!.resources.getColor(R.color.color_8d65ff))
+            _VocabularyTextButton.setTextColor(mSelectColor)
         }
     }
 
@@ -362,15 +377,16 @@ class MainMyBooksFragment() : Fragment()
             coverImage.setImageResource(CommonUtils.getInstance(mContext).getBookResource(color))
             bookTitle.setText(
                 (mMainInformationResult.getBookShelvesList().get(position).getName()
-                        + "(" + mMainInformationResult.getBookShelvesList().get(position).getContentsCount() + ")")
+                        + " (" + mMainInformationResult.getBookShelvesList().get(position).getContentsCount() + ")")
             )
-        } else
+        }
+        else
         {
             iconImage.setImageResource(R.drawable.icon_voca)
             coverImage.setImageResource(CommonUtils.getInstance(mContext).getBookResource(color))
             bookTitle.setText(
                 (mMainInformationResult.getVocabulariesList().get(position).getName()
-                     + "(" + mMainInformationResult.getVocabulariesList().get(position).getWordCount() + ")")
+                     + " (" + mMainInformationResult.getVocabulariesList().get(position).getWordCount() + ")")
             )
         }
         _BooksItemBaseLayout.addView(itemView)

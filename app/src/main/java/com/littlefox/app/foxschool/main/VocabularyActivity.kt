@@ -346,7 +346,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
             MARGIN_TOP_TABLET_ITEM_COUNT = 512
             MARGIN_LEFT_PHONE_ITEM_COUNT = 680
             _BottomWordsActionIcon.setImageResource(if(CommonUtils.getInstance(this).checkTablet) R.drawable.tablet_voca else R.drawable.bottom_voca)
-            _BottomWordsActionText.setText(resources.getString(R.string.text_add_vocabulary))
+            _BottomWordsActionText.setText(resources.getString(R.string.text_put_vocabulary))
         }
         else if(type === VocabularyType.VOCABULARY_SHELF)
         {

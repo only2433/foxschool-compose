@@ -189,7 +189,7 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
             Common.PAGE_HOMEWORK_CALENDAR ->
             {
                 Log.f("[StudentHomeworkPage] PAGE_HOMEWORK_CALENDAR")
-                _TitleText.text = resources.getString(R.string.text_homework_manage)
+                _TitleText.text = resources.getString(R.string.text_homework_manage_title)
             }
             Common.PAGE_HOMEWORK_STATUS ->
             {

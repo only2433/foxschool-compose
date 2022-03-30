@@ -39,8 +39,9 @@
     <string name="text_add_bookshelf">책장 추가</string>
     <string name="text_manage_bookshelf">책장 관리</string>
     <string name="text_add_vocabulary">단어장 추가</string>
+    <string name="text_put_vocabulary">단어장 담기</string>
     <string name="text_manage_vocabulary">단어장 관리</string>
-    <string name="text_stop_play">그만듣기</string>
+    <string name="text_stop_play">그만 듣기</string>
     <string name="text_select_init">선택 해제</string>
     <string name="text_levels">단계별</string>
     <string name="text_categories">주제별</string>
@@ -53,7 +54,7 @@
     <string name="text_login">로그인</string>
     <string name="text_learning_log">학습기록</string>
     <string name="text_record_history">녹음기록</string>
-    <string name="text_homework_manage">숙제 관리</string>
+    <string name="text_homework_manage">숙제관리</string>
     <string name="text_school_news">학교 소식</string>
     <string name="text_foxschool_news">팍스스쿨 소식</string>
     <string name="text_teacher_manual">교사 메뉴얼</string>
@@ -155,6 +156,7 @@
     <string name="text_calendar_saturday">토</string>
 
     <string name="text_study_date">학습일시</string>
+    <string name="text_homework_manage_title">숙제 관리</string>
     <string name="text_homework_status">숙제 현황</string>
     <string name="text_homework_status_detail">숙제 현황 상세 보기</string>
     <string name="text_homework_student_comment">학습자 한마디</string>

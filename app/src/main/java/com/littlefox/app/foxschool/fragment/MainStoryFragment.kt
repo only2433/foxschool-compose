@@ -103,6 +103,8 @@ class MainStoryFragment : Fragment()
     private var mCurrentScrollDy = 0
     private lateinit var mMainStoryFragmentDataObserver : MainStoryFragmentDataObserver
     private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
+    private var mSelectColor : Int = -1
+
     override fun onAttach(context : Context)
     {
         super.onAttach(context)
@@ -240,6 +242,19 @@ class MainStoryFragment : Fragment()
             SWITCH_TAB_WIDTH = 330.0f
             COLUMN_MARGIN = 24
         }
+
+        // 선생님/학생에 따른 셀렉터 on 이미지, 컬러 설정
+        if (CommonUtils.getInstance(mContext).isTeacherMode)
+        {
+            mSelectColor = mContext.resources.getColor(R.color.color_29c8e6)
+            _SwitchAnimationButton.setImageResource(R.drawable.tab_main_on_teacher)
+        }
+        else
+        {
+            mSelectColor = mContext.resources.getColor(R.color.color_23cc8a)
+            _SwitchAnimationButton.setImageResource(R.drawable.tab_main_on_student)
+        }
+        switchTabsTextColor(mCurrentSeriesType)
     }
 
     private fun initFont()
@@ -369,12 +384,13 @@ class MainStoryFragment : Fragment()
     {
         if(tab === SeriesType.LEVEL)
         {
-            _LevelsTextButton.setTextColor(mContext.resources.getColor(R.color.color_26d0df))
+            _LevelsTextButton.setTextColor(mSelectColor)
             _CategoriesTextButton.setTextColor(mContext.resources.getColor(R.color.color_a0a0a0))
-        } else
+        }
+        else
         {
             _LevelsTextButton.setTextColor(mContext.resources.getColor(R.color.color_a0a0a0))
-            _CategoriesTextButton.setTextColor(mContext.resources.getColor(R.color.color_26d0df))
+            _CategoriesTextButton.setTextColor(mSelectColor)
         }
     }
 

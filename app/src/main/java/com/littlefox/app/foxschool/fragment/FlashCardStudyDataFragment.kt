@@ -60,6 +60,12 @@ class FlashCardStudyDataFragment : Fragment()
     @BindView(R.id._nextButton)
     lateinit var _NextButton : ImageView
 
+    @BindView(R.id._prevButtonRect)
+    lateinit var _PrevButtonRect : ImageView
+
+    @BindView(R.id._nextButtonRect)
+    lateinit var _NextButtonRect : ImageView
+
     /** 플래시카드 ViewPager (카드 2장) */
     lateinit var _Item1ContainerLayout : FrameLayout
     lateinit var _Item2ContainerLayout : FrameLayout
@@ -250,6 +256,8 @@ class FlashCardStudyDataFragment : Fragment()
                 setScaleSize(1920f, 730f)
                 moveChildView(_PrevButton, 120f, 624f)
                 moveChildView(_NextButton, 1746f, 624f)
+                moveChildView(_PrevButtonRect, 105f, 609f)
+                moveChildView(_NextButtonRect, 1731f, 609f)
             }
 
         }
