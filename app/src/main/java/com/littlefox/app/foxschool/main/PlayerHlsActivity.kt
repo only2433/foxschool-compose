@@ -1275,6 +1275,8 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _NextButtonIconText!!.visibility = View.GONE
         }
 
+        Log.f("size : "+ mPlayEndStudyOptionIconList.size)
+
         settingPlayEndButtonLayout(isNextMovieVisibleFromEndView, mPlayEndStudyOptionIconList)
     }
 
@@ -1998,6 +2000,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                             moveChildView(views[3], 553f, 0f, 114f, 114f)
                             moveChildView(views[4], 693f, 0f, 114f, 114f)
                             moveChildView(views[5], 833f, 0f, 114f, 114f)
+                        }
+                        7 ->
+                        {
+                            moveChildView(views[0], 64f, 0f, 114f, 114f)
+                            moveChildView(views[1], 204f, 0f, 114f, 114f)
+                            moveChildView(views[2], 344f, 0f, 114f, 114f)
+                            moveChildView(views[3], 484f, 0f, 114f, 114f)
+                            moveChildView(views[4], 623f, 0f, 114f, 114f)
+                            moveChildView(views[5], 763f, 0f, 114f, 114f)
+                            moveChildView(views[6], 903f, 0f, 114f, 114f)
                         }
                     }
                 }
