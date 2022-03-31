@@ -475,7 +475,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _PlayerBottomBaseLayout.run{
                 moveChildView(_SeekbarPlayBar, 266f, 8f, 1230f, 62f)
-                moveChildView(_PlayerRemainPlayTime, 1514f, 0f, 94f, 71f)
+                moveChildView(_PlayerRemainPlayTime, 1514f, 0f, 110f, 71f)
                 moveChildView(_PlayerSpeedButton, 1684f, 7f, 60f, 60f)
                 moveChildView(_PlayerSpeedText, 1764f, 0f, 110f, 71f)
             }
