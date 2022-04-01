@@ -128,14 +128,7 @@ class IntroPresenter : IntroContract.Presenter
 
     private fun init()
     {
-        if(Feature.IS_WEBVIEW_DEBUGING)
-        {
-            Log.init(mContext, Common.LOG_FILE , MonitorMode.DEBUG_MODE)
-        }
-        else
-        {
-            Log.init(mContext, Common.LOG_FILE , MonitorMode.RELEASE_MODE)
-        }
+        Log.init(mContext, Common.LOG_FILE , MonitorMode.RELEASE_MODE)
 
         CommonUtils.getInstance(mContext).windowInfo()
         CommonUtils.getInstance(mContext).showDeviceInfo()
