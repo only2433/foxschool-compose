@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Message
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -55,6 +56,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     override fun onCreate(savedInstanceState : Bundle?)
     {
         window.requestFeature(Window.FEATURE_CONTENT_TRANSITIONS)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         super.onCreate(savedInstanceState)
         Log.f("")
 
@@ -100,8 +102,7 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     /** ========== Init ========== */
     private fun initView()
     {
-        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_000000))
     }
 
     private fun initWebView()

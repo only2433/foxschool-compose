@@ -115,9 +115,7 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
     /** ========== Init ========== */
     private fun initView()
     {
-        val statusBarColor : Int = CommonUtils.getInstance(this).getTopBarStatusBarColor()
-        CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
-
+        CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_000000))
         _TitleBaseLayout.visibility = View.GONE
     }
 
