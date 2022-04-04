@@ -356,7 +356,12 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         }
 
         mStoryDetailItemAdapter = DetailListItemAdapter(mContext, seriesColor, mDetailItemInformationResult.getContentsList())
+        if (mDetailItemInformationResult.isSingleSeries)
+        {
+            mStoryDetailItemAdapter.setFullName()
+        }
         mStoryDetailItemAdapter.setDetailItemListener(mDetailItemListener)
+
         mStoryDetailListContractView.showStoryDetailListView(mStoryDetailItemAdapter)
         if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
         {
@@ -523,11 +528,16 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         Log.f("getThumbnailUrl() : " + mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getThumbnailUrl())
         Log.f("mCurrentOptionIndex() : $mCurrentOptionIndex")
         mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
-        mBottomContentItemOptionDialog
-            .setPosition(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getIndex())
-            .setIndexColor(seriesColor)
-            .setItemOptionListener(mStoryDetailOptionListener)
-            .setView()
+        mBottomContentItemOptionDialog.let {
+            if (mDetailItemInformationResult.isSingleSeries)
+            {
+                it.setFullName()
+            }
+            it.setPosition(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getIndex())
+            it.setIndexColor(seriesColor)
+            it.setItemOptionListener(mStoryDetailOptionListener)
+            it.setView()
+        }
         mBottomContentItemOptionDialog.show()
     }
 
