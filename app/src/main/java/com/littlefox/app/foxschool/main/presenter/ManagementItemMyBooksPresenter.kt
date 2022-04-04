@@ -321,6 +321,7 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
             {
                 Log.f("Delete Bookshelf Index :" + i + ", ID : " + mManagementBooksData.getID())
                 mMainInformationResult!!.getBookShelvesList().removeAt(i)
+                return
             }
         }
     }
@@ -351,6 +352,7 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
             {
                 Log.f("Delete Vocabulary Index :" + i + ", ID : " + mManagementBooksData.getID())
                 mMainInformationResult!!.getVocabulariesList().removeAt(i)
+                return
             }
         }
     }
