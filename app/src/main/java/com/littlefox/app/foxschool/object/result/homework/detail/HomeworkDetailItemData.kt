@@ -1,6 +1,5 @@
 package com.littlefox.app.foxschool.`object`.result.homework.detail
 
-import com.littlefox.app.foxschool.enumerate.ContentType
 import com.littlefox.app.foxschool.enumerate.HomeworkType
 
 class HomeworkDetailItemData
@@ -30,16 +29,7 @@ class HomeworkDetailItemData
 
     fun getContentID() : String = content_id
 
-    fun getContentType() : ContentType
-    {
-        when (content_type)
-        {
-            "S" -> return ContentType.STORY
-            "M" -> return ContentType.SONG
-            "G" -> return ContentType.GAME
-            else -> return ContentType.STORY
-        }
-    }
+    fun getContentType() : String = content_type
 
     fun getThumbnailUrl() : String = thumbnail_url
 

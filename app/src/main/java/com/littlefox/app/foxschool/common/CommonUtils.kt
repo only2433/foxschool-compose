@@ -2506,12 +2506,12 @@ class CommonUtils
     /**
      * 컨텐츠 종류에 따른 이미지
      */
-    fun getContentTypeImage(type : ContentType) : Drawable
+    fun getContentTypeImage(type : String) : Drawable
     {
         when (type)
         {
-            ContentType.STORY -> return sContext.resources.getDrawable(R.drawable.icon_story)
-            ContentType.SONG -> return sContext.resources.getDrawable(R.drawable.icon_song)
+            "S" -> return sContext.resources.getDrawable(R.drawable.icon_story) // 동화
+            "M" -> return sContext.resources.getDrawable(R.drawable.icon_song)  // 동요
             else -> return sContext.resources.getDrawable(R.drawable.icon_story)
         }
     }
