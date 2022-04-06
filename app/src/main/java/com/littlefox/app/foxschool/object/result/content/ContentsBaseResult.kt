@@ -66,6 +66,43 @@ class ContentsBaseResult  : Parcelable
         return sub_name!!
     }
 
+    /**
+     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
+     * @return 컨텐츠 네임
+     */
+    fun getContentsName() : String
+    {
+        var result : String = ""
+        if(sub_name == "")
+        {
+            result = name
+        }
+        else
+        {
+            result = "$name: ${getSubName()}"
+        }
+        return result
+    }
+
+    /**
+     * 단어장은 서브네임이 있을 경우엔 서브네임을 타이틀로, 없을 경우 컨텐츠 네임으로 보여준다.
+     * @param data 컨텐츠 데이터
+     * @return 컨텐츠 네임
+     */
+    fun getVocabularyName() : String
+    {
+        var result : String = ""
+        if (getSubName().equals(""))
+        {
+            result = name
+        }
+        else
+        {
+            result = getSubName()
+        }
+        return result
+    }
+
     fun getThumbnailUrl() : String = thumbnail_url
 
     fun getServiceInformation() : ServiceSupportedTypeResult? = service_info
@@ -93,23 +130,6 @@ class ContentsBaseResult  : Parcelable
     {
         this.name = title
         this.sub_name = subTitle
-    }
-
-    /**
-     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
-     * @return 컨텐츠 네임
-     */
-    fun getContentsName() : String
-    {
-        var result : String = ""
-        if(sub_name == "")
-        {
-            result = name
-        } else
-        {
-            result = "$name: $sub_name"
-        }
-        return result
     }
 
     fun setThumbnailUrl(url : String)

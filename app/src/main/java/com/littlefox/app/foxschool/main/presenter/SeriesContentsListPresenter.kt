@@ -507,9 +507,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startVocabularyActivity()
     {
         Log.f("")
-        var title = ""
-        title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
-
+        val title = mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
             mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID(),
             title,

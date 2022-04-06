@@ -736,7 +736,7 @@ class MainPresenter : MainContract.Presenter
     private fun startVocabularyActivity()
     {
         Log.f("")
-        var title : String = CommonUtils.getInstance(mContext).getVocabularyTitleName(mCurrentDetailOptionResult)
+        val title : String = mCurrentDetailOptionResult.getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(mCurrentDetailOptionResult.getID(), title, VocabularyType.VOCABULARY_CONTENTS)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.VOCABULARY)

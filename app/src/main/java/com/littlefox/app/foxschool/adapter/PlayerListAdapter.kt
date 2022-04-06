@@ -73,7 +73,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
             .load(mPlayInformationList[position].getThumbnailUrl())
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder._ItemTitleImage)
-        holder._ItemTitleText.setText(CommonUtils.getInstance(mContext).getContentsName(mPlayInformationList[position]))
+        holder._ItemTitleText.setText(mPlayInformationList[position].getContentsName())
         if(mCurrentPlayIndex == position)
         {
             Log.f("yellow : $mCurrentPlayIndex")
