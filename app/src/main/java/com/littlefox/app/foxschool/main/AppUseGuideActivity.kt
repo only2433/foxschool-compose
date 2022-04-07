@@ -8,7 +8,6 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.app.ActivityCompat
 import butterknife.*
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.main.CompanyInformationResult
@@ -21,7 +20,6 @@ import com.littlefox.app.foxschool.main.contract.AppUseGuideContract
 import com.littlefox.app.foxschool.main.presenter.AppUseGuidePresenter
 import com.littlefox.library.view.text.SeparateTextView
 import com.ssomai.android.scalablelayout.ScalableLayout
-import kotlin.system.exitProcess
 
 class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
 {
@@ -45,9 +43,6 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
 
     @BindView(R.id._versionText)
     lateinit var _VersionText : SeparateTextView
-
-    @BindView(R.id._versionUpdateButton)
-    lateinit var _VersionUpdateButton : TextView
 
     @BindView(R.id._menuServiceLayout)
     lateinit var _MenuServiceLayout : ScalableLayout
@@ -152,7 +147,6 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _VersionText.typeface = Font.getInstance(this).getTypefaceMedium()
-        _VersionUpdateButton.typeface = Font.getInstance(this).getTypefaceMedium()
         _TermsOfServiceText.typeface = Font.getInstance(this).getTypefaceMedium()
         _PrivacyPolicyText.typeface = Font.getInstance(this).getTypefaceMedium()
         _CompanyNameText.typeface = Font.getInstance(this).getTypefaceMedium()
@@ -205,14 +199,6 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
                 resources.getColor(R.color.color_444444),
                 resources.getColor(R.color.color_29c8e6)
             ).showView()
-
-        if(result!!.isNeedUpdate)
-        {
-            _VersionUpdateButton.visibility = View.VISIBLE
-        } else
-        {
-            _VersionUpdateButton.visibility = View.GONE
-        }
     }
 
     override fun showLoading()
@@ -235,8 +221,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
     @OnClick(
         R.id._closeButtonRect,
         R.id._termsOfServiceButton,
-        R.id._privacyPolicyButton,
-        R.id._versionUpdateButton
+        R.id._privacyPolicyButton
     )
     fun onClickView(view : View)
     {
@@ -245,7 +230,6 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
             R.id._closeButtonRect -> super.onBackPressed()
             R.id._termsOfServiceButton -> mAppUseGuidePresenter.onClickTermsOfService()
             R.id._privacyPolicyButton -> mAppUseGuidePresenter.onClickPrivacyPolicy()
-            R.id._versionUpdateButton -> mAppUseGuidePresenter.onClickUpdate()
         }
     }
 

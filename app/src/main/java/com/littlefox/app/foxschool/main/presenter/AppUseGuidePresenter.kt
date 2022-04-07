@@ -3,8 +3,6 @@ package com.littlefox.app.foxschool.main.presenter
 import android.content.Context
 import android.content.Intent
 import android.os.Message
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.common.Common
@@ -14,7 +12,6 @@ import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.main.contract.AppUseGuideContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.logmonitor.Log
-import kotlin.system.exitProcess
 
 class AppUseGuidePresenter : AppUseGuideContract.Presenter
 {
@@ -53,15 +50,6 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
     override fun sendMessageEvent(msg : Message) { }
 
     /** ========== onClick Events ========== */
-
-    /** 업데이트 클릭 */
-    override fun onClickUpdate()
-    {
-        Log.f("")
-        CommonUtils.getInstance(mContext).startLinkMove(mVersionDataResult!!.getStoreUrl())
-        ActivityCompat.finishAffinity(mContext as AppCompatActivity)
-        exitProcess(0)
-    }
 
     /** 서비스 이용약관 클릭 */
     override fun onClickTermsOfService()
