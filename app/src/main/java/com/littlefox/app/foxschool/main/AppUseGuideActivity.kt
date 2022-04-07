@@ -245,12 +245,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
             R.id._closeButtonRect -> super.onBackPressed()
             R.id._termsOfServiceButton -> mAppUseGuidePresenter.onClickTermsOfService()
             R.id._privacyPolicyButton -> mAppUseGuidePresenter.onClickPrivacyPolicy()
-            R.id._versionUpdateButton ->
-            {
-                CommonUtils.getInstance(this@AppUseGuideActivity).startLinkMove(Common.APP_LINK)
-                ActivityCompat.finishAffinity(this)
-                exitProcess(0)
-            }
+            R.id._versionUpdateButton -> mAppUseGuidePresenter.onClickUpdate()
         }
     }
 
