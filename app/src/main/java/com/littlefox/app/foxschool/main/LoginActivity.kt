@@ -281,7 +281,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     }
 
     @OnClick(
-        R.id._closeButtonRect, R.id._autoLoginIcon, R.id._loginButtonText, R.id._forgetIDText,
+        R.id._closeButtonRect, R.id._autoLoginIcon, R.id._autoLoginText, R.id._loginButtonText, R.id._forgetIDText,
         R.id._forgetPasswordText, R.id._inputSchoolDeleteButton
     )
     fun onClickView(view : View)
@@ -289,7 +289,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._autoLoginIcon ->
+            R.id._autoLoginIcon, R.id._autoLoginText ->
             {
                 isAutoLoginCheck = !isAutoLoginCheck
                 if(isAutoLoginCheck)
