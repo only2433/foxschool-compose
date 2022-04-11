@@ -313,6 +313,10 @@ object NetworkUtil
             dest_file.createNewFile()
             val resultUrl = URL(url)
             val conn = resultUrl.openConnection()
+            conn.readTimeout = CONNECTION_TIMEOUT
+            conn.connectTimeout = CONNECTION_TIMEOUT
+            conn.useCaches = false
+            conn.defaultUseCaches = false
             conn.connect()
             val fileLength = conn.contentLength
             Log.f("fileLength : $fileLength")
