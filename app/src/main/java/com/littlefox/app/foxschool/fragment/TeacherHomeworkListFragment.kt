@@ -417,6 +417,11 @@ class TeacherHomeworkListFragment : Fragment()
     {
         val homework : HomeworkDetailBaseResult = mHomeworkDetailBaseResult!!
 
+        // 코멘트 영역 숨기기 (화면 초기화)
+        _EvaluationCompleteLayout.visibility = View.GONE
+        _OneCommentLayout.visibility = View.GONE
+        _TwoCommentLayout.visibility = View.GONE
+
         // [최종평가 영역 설정]
         if (homework.isEvaluationComplete())
         {

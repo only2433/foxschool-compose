@@ -159,7 +159,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
 
         if(isFullName)
         {
-            _ContentTitleText.setText(CommonUtils.getInstance(mContext).getContentsName(mContentsInformationResult))
+            _ContentTitleText.setText(mContentsInformationResult.getContentsName())
         }
         else
         {

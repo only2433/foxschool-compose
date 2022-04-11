@@ -14,7 +14,6 @@ class AppUseGuideContract
 
     interface Presenter : BaseContract.Presenter
     {
-        fun onClickUpdate()
         fun onClickTermsOfService()
         fun onClickPrivacyPolicy()
     }

@@ -358,7 +358,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startVocabularyActivity()
     {
         Log.f("")
-        val title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mSearchItemList[mCurrentOptionIndex])
+        val title = mSearchItemList[mCurrentOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
             mSearchItemList[mCurrentOptionIndex].getID(),
             title,

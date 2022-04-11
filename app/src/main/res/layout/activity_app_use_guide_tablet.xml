@@ -64,20 +64,6 @@
                         app:scale_height="130"
                         app:scale_textsize="30"/>
 
-                    <TextView
-                        android:id="@+id/_versionUpdateButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/btn_b_small"
-                        android:gravity="center"
-                        android:text="@string/text_update"
-                        android:textColor="@color/color_ffffff"
-                        app:scale_top="30"
-                        app:scale_left="1100"
-                        app:scale_width="300"
-                        app:scale_height="67"
-                        app:scale_textsize="30"/>
-
                 </com.ssomai.android.scalablelayout.ScalableLayout>
 
                 <com.ssomai.android.scalablelayout.ScalableLayout

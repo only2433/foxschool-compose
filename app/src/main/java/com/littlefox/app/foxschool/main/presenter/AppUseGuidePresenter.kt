@@ -17,6 +17,7 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
 {
     private lateinit var mContext : Context
     private lateinit var mAppUseGuideContractView : AppUseGuideContract.View
+    private var mVersionDataResult : VersionDataResult? = null
 
     constructor(context : Context)
     {
@@ -31,8 +32,8 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
 
     private fun init()
     {
-        val versionDataResult : VersionDataResult? = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_VERSION_INFORMATION, VersionDataResult::class.java) as VersionDataResult?
-        mAppUseGuideContractView.setAppVersion(versionDataResult)
+        mVersionDataResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_VERSION_INFORMATION, VersionDataResult::class.java) as VersionDataResult?
+        mAppUseGuideContractView.setAppVersion(mVersionDataResult)
 
         val mainInformationResult : MainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mAppUseGuideContractView.setCompanyInformationLayout(mainInformationResult.getCompanyInformation())
@@ -49,13 +50,6 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
     override fun sendMessageEvent(msg : Message) { }
 
     /** ========== onClick Events ========== */
-
-    /** 업데이트 클릭 */
-    override fun onClickUpdate()
-    {
-        Log.f("")
-        CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
-    }
 
     /** 서비스 이용약관 클릭 */
     override fun onClickTermsOfService()

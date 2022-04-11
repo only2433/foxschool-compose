@@ -2104,42 +2104,6 @@ class CommonUtils
     }
 
     /**
-     * 화면에 보일 컨텐츠 이름을 리턴한다. 서브네임이 있을 경우엔 시리즈 명과 같이 노출
-     * @param data 컨텐츠 데이터
-     * @return 컨텐츠 네임
-     */
-    fun getContentsName(data : ContentsBaseResult) : String
-    {
-        var result : String? = ""
-        if(data.getSubName().equals(""))
-        {
-            result = data.getName()
-        } else
-        {
-            result = data.getName() + ": " + data.getSubName()
-        }
-        return result
-    }
-
-    /**
-     * 단어장은 서브네임이 있을 경우엔 서브네임을 타이틀로, 없을 경우 컨텐츠 네임으로 보여준다.
-     * @param data 컨텐츠 데이터
-     * @return 컨텐츠 네임
-     */
-    fun getVocabularyTitleName(data : ContentsBaseResult) : String
-    {
-        var result : String = ""
-        if(data.getSubName().equals(""))
-        {
-            result = data.getName()
-        } else
-        {
-            result = data.getSubName()
-        }
-        return result
-    }
-
-    /**
      * 총 플레이타임의 80퍼센트를 봐야 학습 기록을 저장하기위해 총시간에서 80퍼센트를 계산
      * @param duration 학습 가능 플레이 타임
      * @return

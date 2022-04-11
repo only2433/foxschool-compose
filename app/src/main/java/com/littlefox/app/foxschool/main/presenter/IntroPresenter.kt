@@ -81,6 +81,7 @@ class IntroPresenter : IntroContract.Presenter
 
     private var mUserLoginData : UserLoginData? = null // 로그인 데이터
     private var mUserInformationResult : LoginInformationResult? = null // 사용자 정보 (로그인 통신 응답)
+    private var mVersionDataResult : VersionDataResult? = null // 버전정보
 
     // 비밀번호 변경 안내 관련 변수
     private var mPasswordChangeDialog : PasswordChangeDialog? = null
@@ -280,6 +281,7 @@ class IntroPresenter : IntroContract.Presenter
             setDialogEventType(type)
             setButtonType(buttonType)
             setDialogListener(mDialogListener)
+            setCancelPossible(false)
             show()
         }
     }
@@ -545,11 +547,11 @@ class IntroPresenter : IntroContract.Presenter
             {
                 if(code == Common.COROUTINE_CODE_INIT)
                 {
-                    val versionDataResult : VersionDataResult = (result as VersionBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, versionDataResult)
-                    if(versionDataResult.isNeedUpdate)
+                    mVersionDataResult = (result as VersionBaseObject).getData()
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
+                    if(mVersionDataResult!!.isNeedUpdate)
                     {
-                        if(versionDataResult.isForceUpdate())
+                        if(mVersionDataResult!!.isForceUpdate())
                         {
                             showTemplateAlertDialog(
                                 DIALOG_TYPE_FORCE_UPDATE,
@@ -668,7 +670,7 @@ class IntroPresenter : IntroContract.Presenter
             if(messageType == DIALOG_TYPE_FORCE_UPDATE)
             {
                 (mContext as AppCompatActivity).finish()
-                CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
+                CommonUtils.getInstance(mContext).startLinkMove(mVersionDataResult!!.getStoreUrl())
             }
         }
 
@@ -686,7 +688,7 @@ class IntroPresenter : IntroContract.Presenter
                     DialogButtonType.BUTTON_2 ->
                     {
                         (mContext as AppCompatActivity).finish()
-                        CommonUtils.getInstance(mContext).startLinkMove(Common.APP_LINK)
+                        CommonUtils.getInstance(mContext).startLinkMove(mVersionDataResult!!.getStoreUrl())
                     }
                 }
 

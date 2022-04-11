@@ -320,7 +320,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startVocabularyActivity()
     {
         Log.f("")
-        val title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mBookItemInformationList!![mCurrentOptionIndex])
+        val title = mBookItemInformationList!![mCurrentOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
             mBookItemInformationList!![mCurrentOptionIndex].getID(),
             title,

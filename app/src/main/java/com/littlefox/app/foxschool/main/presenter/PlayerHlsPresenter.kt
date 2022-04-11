@@ -755,7 +755,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun prepareMovie()
     {
         Log.f("mCurrentPlayMovieIndex : $mCurrentPlayMovieIndex")
-        val title : String = CommonUtils.getInstance(mContext).getContentsName(mPlayInformationList[mCurrentPlayMovieIndex])
+        val title : String = mPlayInformationList[mCurrentPlayMovieIndex].getContentsName()
         isAuthorizationComplete = false
         mCurrentCaptionIndex = 0
         isVideoPrepared = false
@@ -1342,8 +1342,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startVocabularyActivity()
     {
         Log.f("")
-        var title = ""
-        title = CommonUtils.getInstance(mContext).getVocabularyTitleName(mPlayInformationList[mSelectItemOptionIndex]).toString()
+        val title = mPlayInformationList[mSelectItemOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
                 mPlayInformationList[mSelectItemOptionIndex].getID(),
                 title,

@@ -7,7 +7,6 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
-import android.os.Message
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -24,19 +23,15 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
-import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.main.webview.bridge.BaseWebviewBridge
-import com.littlefox.library.system.handler.WeakReferenceHandler
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import java.io.File
-import java.util.ArrayList
 
 class WebviewEbookActivity : BaseActivity()
 {
@@ -173,7 +168,15 @@ class WebviewEbookActivity : BaseActivity()
                 Common.BRIDGE_NAME
             )
         }
+    }
 
+    override fun onWindowFocusChanged(hasFocus : Boolean)
+    {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus)
+        {
+            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
     }
 
     private fun releaseWebView()
