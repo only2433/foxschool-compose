@@ -151,6 +151,7 @@
         <activity android:name=".main.StudentHomeworkManageActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme_Default">
         </activity>
 
