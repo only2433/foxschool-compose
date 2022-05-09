@@ -37,6 +37,7 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_intro_tablet.xml" value="0.21014492753623187" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_introduce_series.xml" value="0.3759057971014493" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_introduce_series_tablet.xml" value="0.4114921223354958" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_login.xml" value="0.2869791666666667" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_main.xml" value="0.19718309859154928" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_my_info.xml" value="0.3536458333333333" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/activity_player_hls.xml" value="0.18645833333333334" />
@@ -72,6 +73,10 @@
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_flashcard_study_data_flip_phone.xml" value="0.4" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_forum_webview.xml" value="0.3451086956521739" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_calendar.xml" value="0.33" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_comment.xml" value="0.3307291666666667" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_comment_tablet.xml" value="0.3307291666666667" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_list.xml" value="0.38125" />
+        <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_homework_status.xml" value="0.38125" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_my_info_change.xml" value="0.234375" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_my_info_change_tablet.xml" value="0.33" />
         <entry key="..\:/android_studio_workspace/FoxSchool/app/src/main/res/layout/fragment_my_info_show.xml" value="0.26145833333333335" />

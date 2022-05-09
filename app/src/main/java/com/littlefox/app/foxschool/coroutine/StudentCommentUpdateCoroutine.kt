@@ -17,6 +17,11 @@ class StudentCommentUpdateCoroutine : BaseCoroutine
 
     override fun doInBackground() : Any?
     {
+        if(isRunning == true)
+        {
+            return null
+        }
+
         lateinit var result : BaseResult
         synchronized(mSync) {
             isRunning = true
