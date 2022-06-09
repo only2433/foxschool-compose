@@ -6,6 +6,7 @@ import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
@@ -397,29 +398,33 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private fun setupMyInfoFragmentListener()
     {
         // 자동로그인 스위치 클릭 이벤트
-        mMyInfoShowFragmentDataObserver.clickAutoLogin.observe(mContext as AppCompatActivity, {
-            onClickAutoLoginSwitch()
-        })
+        mMyInfoShowFragmentDataObserver.clickAutoLogin.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                onClickAutoLoginSwitch()
+            })
 
         // 푸시알림 스위치 클릭 이벤트
-        mMyInfoShowFragmentDataObserver.clickPush.observe(mContext as AppCompatActivity, {
-            onClickPushSwitch()
-        })
+        mMyInfoShowFragmentDataObserver.clickPush.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                onClickPushSwitch()
+            })
 
         // 정보 수정 버튼 클릭 이벤트
-        mMyInfoShowFragmentDataObserver.clickInfoChange.observe(mContext as AppCompatActivity, {
-            Log.f("나의 정보 수정 화면으로 이동")
-            mMyInfoPresenterDataObserver.setMyInfoChangeFragment(mLoginInformation!!) // 데이터 초기화
-            mMyInfoPresenterDataObserver.setViewPagerChange(Common.PAGE_MY_INFO_CHANGE)
-            mMyInformationContractView.setCurrentViewPage(Common.PAGE_MY_INFO_CHANGE)
-        })
+        mMyInfoShowFragmentDataObserver.clickInfoChange.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("나의 정보 수정 화면으로 이동")
+                mMyInfoPresenterDataObserver.setMyInfoChangeFragment(mLoginInformation!!) // 데이터 초기화
+                mMyInfoPresenterDataObserver.setViewPagerChange(Common.PAGE_MY_INFO_CHANGE)
+                mMyInformationContractView.setCurrentViewPage(Common.PAGE_MY_INFO_CHANGE)
+            })
 
         // 비밀번호 변경 버튼 클릭 이벤트
-        mMyInfoShowFragmentDataObserver.clickPasswordChange.observe(mContext as AppCompatActivity, {
-            Log.f("비밀번호 변경 화면으로 이동")
-            mMyInfoPresenterDataObserver.setViewPagerChange(Common.PAGE_PASSWORD_CHANGE)
-            mMyInformationContractView.setCurrentViewPage(Common.PAGE_PASSWORD_CHANGE)
-        })
+        mMyInfoShowFragmentDataObserver.clickPasswordChange.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("비밀번호 변경 화면으로 이동")
+                mMyInfoPresenterDataObserver.setViewPagerChange(Common.PAGE_PASSWORD_CHANGE)
+                mMyInformationContractView.setCurrentViewPage(Common.PAGE_PASSWORD_CHANGE)
+            })
     }
 
     /**
@@ -428,14 +433,16 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private fun setupMyInfoChangeFragmentListener()
     {
         // 전체 입력데이터 체크
-        mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable.observe(mContext as AppCompatActivity, {data ->
-            checkAllInformationData(data)
-        })
+        mMyInfoChangeFragmentDataObserver.checkInfoInputDataAvailable.observe(mContext as AppCompatActivity,
+            Observer<MyInformationData> { data ->
+                checkAllInformationData(data)
+            })
 
         // 저장버튼 클릭 이벤트
-        mMyInfoChangeFragmentDataObserver.clickInfoChangeButton.observe(mContext as AppCompatActivity, {inputData ->
-            checkAllInformationData(inputData, true)
-        })
+        mMyInfoChangeFragmentDataObserver.clickInfoChangeButton.observe(mContext as AppCompatActivity,
+            Observer<MyInformationData> { inputData ->
+                checkAllInformationData(inputData, true)
+            })
     }
 
     /**
@@ -444,18 +451,20 @@ class MyInformationPresenter : MyInformationContract.Presenter
     private fun setupMyPasswordChangeFragmentListener()
     {
         // 입력데이터 체크
-        mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable.observe(mContext as AppCompatActivity, {data ->
-            if (data.getNewPassword() != "")
-            {
-                // 신규 비밀번호 입력했을 때 유효성 체크
-                checkPasswordInputData(data)
-            }
-        })
+        mMyInfoChangeFragmentDataObserver.checkPasswordInputDataAvailable.observe(mContext as AppCompatActivity,
+            Observer<MyPasswordData> { data ->
+                if (data.getNewPassword() != "")
+                {
+                    // 신규 비밀번호 입력했을 때 유효성 체크
+                    checkPasswordInputData(data)
+                }
+            })
 
         // 저장버튼 클릭 이벤트
-        mMyInfoChangeFragmentDataObserver.clickPasswordChangeButton.observe(mContext as AppCompatActivity, {data ->
-            checkPasswordInputData(data, true)
-        })
+        mMyInfoChangeFragmentDataObserver.clickPasswordChangeButton.observe(mContext as AppCompatActivity,
+            Observer<MyPasswordData> { data ->
+                checkPasswordInputData(data, true)
+            })
     }
 
     /**

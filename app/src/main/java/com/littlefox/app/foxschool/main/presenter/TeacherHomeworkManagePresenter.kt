@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
@@ -464,132 +465,144 @@ class TeacherHomeworkManagePresenter : TeacherHomeworkContract.Presenter
      */
     private fun setupCalendarFragmentListener()
     {
-        mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Calendar Before")
-            mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
-            mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
-            requestClassCalendar()
-        })
+        mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Calendar Before")
+                mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
+                requestClassCalendar()
+            })
 
-        mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Calendar After")
-            mYear = mHomeworkCalendarBaseResult!!.getNextYear()
-            mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
-            requestClassCalendar()
-        })
+        mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Calendar After")
+                mYear = mHomeworkCalendarBaseResult!!.getNextYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
+                requestClassCalendar()
+            })
 
-        mHomeworkCalendarFragmentObserver.onClickClassPicker.observe(mContext as AppCompatActivity, { index ->
-            Log.f("onClick ClassItem : $index")
-            mClassIndex = index
-            requestClassCalendar()
-        })
+        mHomeworkCalendarFragmentObserver.onClickClassPicker.observe(mContext as AppCompatActivity,
+            Observer<Int> { index ->
+                Log.f("onClick ClassItem : $index")
+                mClassIndex = index
+                requestClassCalendar()
+            })
 
-        mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
-            Log.f("onClick CalendarItem : $homeworkPosition")
-            mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
+        mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity,
+            Observer<Int> { homeworkPosition ->
+                Log.f("onClick CalendarItem : $homeworkPosition")
+                mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
 
-            // 숙제 현황 페이지로 이동
-            mPagePosition = Common.PAGE_HOMEWORK_STATUS
-            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition)
-        })
+                // 숙제 현황 페이지로 이동
+                mPagePosition = Common.PAGE_HOMEWORK_STATUS
+                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition)
+            })
 
         // 달력 세팅 완료 (Activity 로딩 다이얼로그 닫기)
-        mHomeworkCalendarFragmentObserver.onCompletedCalendarSet.observe(mContext as AppCompatActivity, {
-            mMainHandler!!.sendEmptyMessage(MESSAGE_LIST_SET_COMPLETE)
-        })
+        mHomeworkCalendarFragmentObserver.onCompletedCalendarSet.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                mMainHandler!!.sendEmptyMessage(MESSAGE_LIST_SET_COMPLETE)
+            })
     }
 
     private fun setupStatusFragmentListener()
     {
-        mHomeworkStatusFragmentObserver.onClickShowDetailButton.observe(mContext as AppCompatActivity, { index ->
-            Log.f("onClick Homework Detail : $index")
-            mSelectedStudentPosition = index
+        mHomeworkStatusFragmentObserver.onClickShowDetailButton.observe(mContext as AppCompatActivity,
+            Observer<Int> { index ->
+                Log.f("onClick Homework Detail : $index")
+                mSelectedStudentPosition = index
 
-            // 숙제 현황 상세 페이지로 이동
-            mPagePosition = Common.PAGE_HOMEWORK_DETAIL
-            mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL
-            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
-        })
+                // 숙제 현황 상세 페이지로 이동
+                mPagePosition = Common.PAGE_HOMEWORK_DETAIL
+                mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL
+                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
+            })
 
-        mHomeworkStatusFragmentObserver.onClickHomeworkContents.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Homework Contents")
-            // 숙제 내용 페이지로 이동
-            mPagePosition = Common.PAGE_HOMEWORK_DETAIL
-            mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CONTENT
-            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
-        })
+        mHomeworkStatusFragmentObserver.onClickHomeworkContents.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Homework Contents")
+                // 숙제 내용 페이지로 이동
+                mPagePosition = Common.PAGE_HOMEWORK_DETAIL
+                mDetailType = HomeworkDetailType.TYPE_HOMEWORK_CONTENT
+                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, detailType = mDetailType)
+            })
 
         // [숙제 검사] 클릭 이벤트 (1건)
-        mHomeworkStatusFragmentObserver.onClickHomeworkChecking.observe(mContext as AppCompatActivity, { index ->
-            Log.f("onClick HomeworkChecking one")
-            val data = HomeworkCheckingIntentParamsObject(
-                mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
-                mClassListBaseResult!!.get(mClassIndex).getClassID(),
-                mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!.get(index)
-            )
-
-            startHomeworkCheckingActivity(data)
-        })
-
-        // [일괄 숙제 검사] 클릭 이벤트
-        mHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking.observe(mContext as AppCompatActivity, { IDList ->
-            Log.f("onClick HomeworkChecking multi")
-            if (IDList.isEmpty())
-            {
-                mTeacherHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_choose_student))
-            }
-            else
-            {
+        mHomeworkStatusFragmentObserver.onClickHomeworkChecking.observe(mContext as AppCompatActivity,
+            Observer<Int> { index ->
+                Log.f("onClick HomeworkChecking one")
                 val data = HomeworkCheckingIntentParamsObject(
                     mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
                     mClassListBaseResult!!.get(mClassIndex).getClassID(),
-                    IDList
+                    mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!.get(index)
                 )
+
                 startHomeworkCheckingActivity(data)
-            }
-        })
+            })
+
+        // [일괄 숙제 검사] 클릭 이벤트
+        mHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking.observe(mContext as AppCompatActivity,
+            Observer<ArrayList<String>> {IDList ->
+                Log.f("onClick HomeworkChecking multi")
+                if (IDList.isEmpty())
+                {
+                    mTeacherHomeworkContractView.showErrorMessage(mContext.getString(R.string.message_warning_choose_student))
+                }
+                else
+                {
+                    val data = HomeworkCheckingIntentParamsObject(
+                        mHomeworkCalendarBaseResult!!.getHomeworkDataList().get(mSelectedHomeworkPosition).getHomeworkNumber(),
+                        mClassListBaseResult!!.get(mClassIndex).getClassID(),
+                        IDList
+                    )
+                    startHomeworkCheckingActivity(data)
+                }
+            })
     }
 
     private fun setupListFragmentListener()
     {
-        mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Student Comment")
-            mBeforePagePosition = mPagePosition
-            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
-            mCommentType = HomeworkCommentType.COMMENT_STUDENT
-            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, commentType = mCommentType)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
-            mHomeworkManagePresenterObserver.setPageType(mCommentType, true)
-        })
+        mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Student Comment")
+                mBeforePagePosition = mPagePosition
+                mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+                mCommentType = HomeworkCommentType.COMMENT_STUDENT
+                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, commentType = mCommentType)
+                mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
+                mHomeworkManagePresenterObserver.setPageType(mCommentType, true)
+            })
 
-        mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Teacher Comment")
-            mBeforePagePosition = mPagePosition
-            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
-            mCommentType = HomeworkCommentType.COMMENT_TEACHER
-            mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, commentType = mCommentType)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
-            mHomeworkManagePresenterObserver.setPageType(mCommentType, true)
-        })
+        mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Teacher Comment")
+                mBeforePagePosition = mPagePosition
+                mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+                mCommentType = HomeworkCommentType.COMMENT_TEACHER
+                mTeacherHomeworkContractView.setCurrentViewPage(mPagePosition, commentType = mCommentType)
+                mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
+                mHomeworkManagePresenterObserver.setPageType(mCommentType, true)
+            })
 
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
-        mHomeworkListFragmentObserver.onClickHomeworkItem.observe(mContext as AppCompatActivity, { item ->
-            // 숙제내용 화면 인 경우에만 학습 가능
-            if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
-            {
-                Log.f("onClick play homework")
-                onClickHomeworkItem(item)
-            }
-            else if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL &&
+        mHomeworkListFragmentObserver.onClickHomeworkItem.observe(mContext as AppCompatActivity,
+            Observer<HomeworkDetailItemData> {item ->
+                // 숙제내용 화면 인 경우에만 학습 가능
+                if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CONTENT)
+                {
+                    Log.f("onClick play homework")
+                    onClickHomeworkItem(item)
+                }
+                else if (mDetailType == HomeworkDetailType.TYPE_HOMEWORK_CURRENT_STATUS_DETAIL &&
                     item.getHomeworkType() == HomeworkType.RECORDER &&
                     item.isComplete && item.getExpired() > 0)
-            {
-                Log.f("onClick play record audio")
-                // 숙제 현황 상세 보기 화면
-                // 녹음 데이터가 있는 경우
-                showAudioPlayDialog(item)
-            }
-        })
+                {
+                    Log.f("onClick play record audio")
+                    // 숙제 현황 상세 보기 화면
+                    // 녹음 데이터가 있는 경우
+                    showAudioPlayDialog(item)
+                }
+            })
     }
 
     private val mAsyncListener : AsyncListener = object : AsyncListener

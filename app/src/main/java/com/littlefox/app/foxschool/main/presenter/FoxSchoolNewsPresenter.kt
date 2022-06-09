@@ -143,7 +143,7 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
     private fun setupForumFragmentListener()
     {
         // 당겨서 재조회 요청
-        mForumFragmentObserver.refreshData.observe((mContext as AppCompatActivity), Observer {
+        mForumFragmentObserver.refreshData.observe((mContext as AppCompatActivity), Observer<Boolean> {
             Log.f("requestRefresh")
             if(mFoxSchoolNewsBaseObject!!.getData().isLastPage)
             {
@@ -171,7 +171,7 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
         })
 
         // 페이지 로딩 완료 (로딩 다이얼로그 닫기)
-        mForumFragmentObserver.pageLoadData.observe((mContext as AppCompatActivity), Observer<Boolean?> {
+        mForumFragmentObserver.pageLoadData.observe((mContext as AppCompatActivity), Observer<Boolean> {
             Log.f("onPageLoadComplete")
             mForumContractView.hideLoading()
         })

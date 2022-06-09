@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
@@ -413,76 +414,86 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
      */
     private fun setupCalendarFragmentListener()
     {
-        mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Calendar Before")
-            mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
-            mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
-            requestHomeworkCalendar()
-        })
+        mHomeworkCalendarFragmentObserver.onClickCalendarBefore.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Calendar Before")
+                mYear = mHomeworkCalendarBaseResult!!.getPrevYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getPrevMonth()
+                requestHomeworkCalendar()
+            })
 
-        mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Calendar After")
-            mYear = mHomeworkCalendarBaseResult!!.getNextYear()
-            mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
-            requestHomeworkCalendar()
-        })
+        mHomeworkCalendarFragmentObserver.onClickCalendarAfter.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Calendar After")
+                mYear = mHomeworkCalendarBaseResult!!.getNextYear()
+                mMonth = mHomeworkCalendarBaseResult!!.getNextMonth()
+                requestHomeworkCalendar()
+            })
 
-        mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity, { homeworkPosition ->
-            Log.f("onClick CalendarItem : $homeworkPosition")
-            mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
+        mHomeworkCalendarFragmentObserver.onClickCalendarItem.observe(mContext as AppCompatActivity,
+            Observer<Int> { homeworkPosition ->
+                Log.f("onClick CalendarItem : $homeworkPosition")
+                mSelectedHomeworkPosition = homeworkPosition // 선택한 숙제 인덱스 저장
 
-            // 숙제 현황 페이지로 이동
-            mPagePosition = Common.PAGE_HOMEWORK_STATUS
-            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition)
-        })
+                // 숙제 현황 페이지로 이동
+                mPagePosition = Common.PAGE_HOMEWORK_STATUS
+                mStudentHomeworkContractView.setCurrentViewPage(mPagePosition)
+            })
 
         // 달력 세팅 완료 (Activity 로딩 다이얼로그 닫기)
-        mHomeworkCalendarFragmentObserver.onCompletedCalendarSet.observe(mContext as AppCompatActivity, {
-            mMainHandler!!.sendEmptyMessageDelayed(MESSAGE_LIST_SET_COMPLETE, Common.DURATION_NORMAL)
-        })
+        mHomeworkCalendarFragmentObserver.onCompletedCalendarSet.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                mMainHandler!!.sendEmptyMessageDelayed(MESSAGE_LIST_SET_COMPLETE, Common.DURATION_NORMAL)
+            })
     }
 
     private fun setupListFragmentListener()
     {
-        mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Student Comment")
-            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
-            mCommentType = HomeworkCommentType.COMMENT_STUDENT
-            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
-            mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-        })
+        mHomeworkListFragmentObserver.onClickStudentCommentButton.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Student Comment")
+                mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+                mCommentType = HomeworkCommentType.COMMENT_STUDENT
+                mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
+                mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
+                mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+            })
 
-        mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity, {
-            Log.f("onClick Teacher Comment")
-            mPagePosition = Common.PAGE_HOMEWORK_COMMENT
-            mCommentType = HomeworkCommentType.COMMENT_TEACHER
-            mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
-            mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
-            mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
-        })
+        mHomeworkListFragmentObserver.onClickTeacherCommentButton.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                Log.f("onClick Teacher Comment")
+                mPagePosition = Common.PAGE_HOMEWORK_COMMENT
+                mCommentType = HomeworkCommentType.COMMENT_TEACHER
+                mStudentHomeworkContractView.setCurrentViewPage(mPagePosition, mCommentType)
+                mHomeworkManagePresenterObserver.setCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
+                mHomeworkManagePresenterObserver.setPageType(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+            })
 
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
-        mHomeworkListFragmentObserver.onClickHomeworkItem.observe(mContext as AppCompatActivity, { item ->
-            onClickHomeworkItem(item)
-        })
+        mHomeworkListFragmentObserver.onClickHomeworkItem.observe(mContext as AppCompatActivity,
+            Observer<HomeworkDetailItemData> {item ->
+                onClickHomeworkItem(item)
+            })
     }
 
     private fun setupCommentFragmentListener()
     {
-        mHomeworkCommentFragmentObserver.onClickRegisterButton.observe(mContext as AppCompatActivity, { comment ->
-            mStudentComment = comment
-            requestCommentRegister()
-        })
+        mHomeworkCommentFragmentObserver.onClickRegisterButton.observe(mContext as AppCompatActivity,
+            Observer<String> { comment ->
+                mStudentComment = comment
+                requestCommentRegister()
+            })
 
-        mHomeworkCommentFragmentObserver.onClickUpdateButton.observe(mContext as AppCompatActivity, { comment ->
-            mStudentComment = comment
-            requestCommentUpdate()
-        })
+        mHomeworkCommentFragmentObserver.onClickUpdateButton.observe(mContext as AppCompatActivity,
+            Observer<String> { comment ->
+                mStudentComment = comment
+                requestCommentUpdate()
+            })
 
-        mHomeworkCommentFragmentObserver.onClickDeleteButton.observe(mContext as AppCompatActivity, {
-            requestCommentDelete()
-        })
+        mHomeworkCommentFragmentObserver.onClickDeleteButton.observe(mContext as AppCompatActivity,
+            Observer<Boolean> {
+                requestCommentDelete()
+            })
     }
 
     private val mAsyncListener : AsyncListener = object : AsyncListener

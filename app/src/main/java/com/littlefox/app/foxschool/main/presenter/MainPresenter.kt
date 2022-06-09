@@ -1,11 +1,8 @@
 package com.littlefox.app.foxschool.main.presenter
 
 import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Environment
 import android.os.Message
 import android.view.Gravity
 import android.view.View
@@ -15,7 +12,6 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.android.exoplayer2.offline.DownloadService
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -37,7 +33,6 @@ import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
 import com.littlefox.app.foxschool.coroutine.MainInformationCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
@@ -906,7 +901,7 @@ class MainPresenter : MainContract.Presenter
     private fun setupMainMyBooksFragmentListener()
     {
         mMainMyBooksFragmentDataObserver.addBookshelfData.observe(mContext as AppCompatActivity,
-            Observer<Boolean?> {
+            Observer<Boolean> {
                 Log.f("onAddBookshelf")
                 if(mMainInformationResult.getBookShelvesList().size > Common.MAX_BOOKSHELF_SIZE)
                 {
@@ -922,8 +917,9 @@ class MainPresenter : MainContract.Presenter
                         .startActivity()
                 }
             })
+
         mMainMyBooksFragmentDataObserver.addVocabularyData.observe(mContext as AppCompatActivity,
-            Observer<Boolean?> {
+            Observer<Boolean> {
                 Log.f("onAddVocabulary")
                 if(mMainInformationResult.getVocabulariesList().size > Common.MAX_VOCABULARY_SIZE)
                 {
@@ -937,6 +933,7 @@ class MainPresenter : MainContract.Presenter
                         .setData(mManagementBooksData).startActivity()
                 }
             })
+
         mMainMyBooksFragmentDataObserver.enterBookshelfListData.observe(mContext as AppCompatActivity,
             Observer<Int> {index ->
                 Log.f("onEnterBookshelfList : $index")
@@ -955,6 +952,7 @@ class MainPresenter : MainContract.Presenter
                     mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_empty_bookshelf_contents))
                 }
             })
+
         mMainMyBooksFragmentDataObserver.enterVocabularyListData.observe(mContext as AppCompatActivity,
             Observer<Int> {index ->
                 Log.f("onEnterVocabularyList : $index")
@@ -974,6 +972,7 @@ class MainPresenter : MainContract.Presenter
                     mMainContractView.showErrorMessage(mContext.resources.getString(R.string.message_empty_vocabulary_contents))
                 }
             })
+
         mMainMyBooksFragmentDataObserver.settingBookshelfData.observe(
             mContext as AppCompatActivity,
             Observer<Int> {index ->
@@ -987,6 +986,7 @@ class MainPresenter : MainContract.Presenter
                     .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
                     .startActivity()
             })
+
         mMainMyBooksFragmentDataObserver.settingVocabularyData.observe(mContext as AppCompatActivity,
             Observer<Int> {index ->
                 Log.f("onSettingVocabulary : $index")

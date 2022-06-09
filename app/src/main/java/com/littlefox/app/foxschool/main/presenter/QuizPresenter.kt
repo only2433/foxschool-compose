@@ -7,14 +7,13 @@ import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorQuizImageNotHaveData
@@ -221,24 +220,23 @@ class QuizPresenter : QuizContract.Presenter
     private fun setupQuizCommunicateObserver()
     {
         // 사운드 플레이
-        mQuizFragmentDataObserver.playSoundData.observe(
-            (mContext as AppCompatActivity),
-            {isPlaySound ->
+        mQuizFragmentDataObserver.playSoundData.observe((mContext as AppCompatActivity),
+            Observer<Boolean> { isPlaySound ->
                 Log.f("isPlaySound : $isPlaySound")
                 playQuestion(mCurrentQuizPageIndex)
             })
 
         // 다음 퀴즈
-        mQuizFragmentDataObserver.nextData.observe((mContext as AppCompatActivity), {isGoNext ->
-            Log.f("isGoNext : $isGoNext")
-            stopMediaPlay()
-            setQuizPlayStatus()
-        })
+        mQuizFragmentDataObserver.nextData.observe((mContext as AppCompatActivity),
+            Observer<Boolean> { isGoNext ->
+                Log.f("isGoNext : $isGoNext")
+                stopMediaPlay()
+                setQuizPlayStatus()
+            })
 
         // 문제 선택
-        mQuizFragmentDataObserver.choiceItemData.observe(
-            (mContext as AppCompatActivity),
-            {`object` ->
+        mQuizFragmentDataObserver.choiceItemData.observe((mContext as AppCompatActivity),
+            Observer<QuizUserInteractionData> { `object` ->
                 mQuizUserSelectObjectList!!.add(`object`)
                 mCorrectAnswerCount = if(`object`.isCorrect()) mCorrectAnswerCount + 1 else mCorrectAnswerCount
                 mQuizContractView.showCorrectAnswerCount("$mCorrectAnswerCount/$mQuizPlayingCount")
@@ -247,7 +245,7 @@ class QuizPresenter : QuizContract.Presenter
 
         // 퀴즈 결과 전송 완료
         mQuizFragmentDataObserver.studyInformationData.observe((mContext as AppCompatActivity),
-            androidx.lifecycle.Observer {isSaveStudyInformation ->
+            Observer<Boolean> { isSaveStudyInformation ->
                 Log.f("isSaveStudyInformation : $isSaveStudyInformation")
                 if(mQuizLimitTime <= 0)
                 {
@@ -266,20 +264,21 @@ class QuizPresenter : QuizContract.Presenter
             })
 
         // 퀴즈 재시작
-        mQuizFragmentDataObserver.replayData.observe((mContext as AppCompatActivity), {isGoReplay ->
-            Log.f("isGoReplay : $isGoReplay")
-            Log.f("mCurrentQuizType : $mCurrentQuizType")
-            when(mCurrentQuizType)
-            {
-                Common.QUIZ_CODE_PICTURE ->
-                    makePictureQuestion(PLAY_REPLAY)
-                Common.QUIZ_CODE_TEXT,
-                Common.QUIZ_CODE_SOUND_TEXT ->
-                    makeTextQuestion(PLAY_REPLAY)
-                Common.QUIZ_CODE_PHONICS_SOUND_TEXT ->
-                    makePhonicsTextQuestion(PLAY_REPLAY)
-            }
-        })
+        mQuizFragmentDataObserver.replayData.observe((mContext as AppCompatActivity),
+            Observer<Boolean> { isGoReplay ->
+                Log.f("isGoReplay : $isGoReplay")
+                Log.f("mCurrentQuizType : $mCurrentQuizType")
+                when(mCurrentQuizType)
+                {
+                    Common.QUIZ_CODE_PICTURE ->
+                        makePictureQuestion(PLAY_REPLAY)
+                    Common.QUIZ_CODE_TEXT,
+                    Common.QUIZ_CODE_SOUND_TEXT ->
+                        makeTextQuestion(PLAY_REPLAY)
+                    Common.QUIZ_CODE_PHONICS_SOUND_TEXT ->
+                        makePhonicsTextQuestion(PLAY_REPLAY)
+                }
+            })
     }
 
     /**

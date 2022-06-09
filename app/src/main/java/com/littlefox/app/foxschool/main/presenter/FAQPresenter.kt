@@ -123,36 +123,39 @@ class FAQPresenter : ForumContract.Presenter
     private fun setupFragmentListener()
     {
         // 당겨서 재조회 요청
-        mForumFragmentObserver.refreshData.observe((mContext as AppCompatActivity), Observer {
-            Log.f("requestRefresh")
-            if(mFaqBaseObject!!.getData().isLastPage)
-            {
-                mForumContractView.showErrorMessage(mContext.resources.getString(R.string.message_last_page))
-                mForumPresenterObserver.onCancelRefreshData()
-            }
-            else
-            {
-                requestFaqListAsync()
-            }
-        })
+        mForumFragmentObserver.refreshData.observe((mContext as AppCompatActivity),
+            Observer<Boolean> {
+                Log.f("requestRefresh")
+                if(mFaqBaseObject!!.getData().isLastPage)
+                {
+                    mForumContractView.showErrorMessage(mContext.resources.getString(R.string.message_last_page))
+                    mForumPresenterObserver.onCancelRefreshData()
+                }
+                else
+                {
+                    requestFaqListAsync()
+                }
+            })
 
         // 리스트 클릭 (상세화면으로 이동)
-        mForumFragmentObserver.webviewIDData.observe((mContext as AppCompatActivity), Observer<String> { articleID ->
-            Log.f("showWebView articleID : $articleID")
-            mMainFragmentSelectionPagerAdapter.setFragment(Common.PAGE_FORUM_WEBVIEW, ForumWebviewFragment.instance)
-            mMainFragmentSelectionPagerAdapter.notifyDataSetChanged()
+        mForumFragmentObserver.webviewIDData.observe((mContext as AppCompatActivity),
+            Observer<String> { articleID ->
+                Log.f("showWebView articleID : $articleID")
+                mMainFragmentSelectionPagerAdapter.setFragment(Common.PAGE_FORUM_WEBVIEW, ForumWebviewFragment.instance)
+                mMainFragmentSelectionPagerAdapter.notifyDataSetChanged()
 
-            val message = Message.obtain()
-            message.what = MESSAGE_GO_TO_ARTICLE
-            message.obj = Common.URL_FAQ_DETAIL + articleID
-            mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
-        })
+                val message = Message.obtain()
+                message.what = MESSAGE_GO_TO_ARTICLE
+                message.obj = Common.URL_FAQ_DETAIL + articleID
+                mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
+            })
 
         // 페이지 로딩 완료 (로딩 다이얼로그 닫기)
-        mForumFragmentObserver.pageLoadData.observe((mContext as AppCompatActivity), Observer<Boolean?> {
-            Log.f("onPageLoadComplete")
-            mForumContractView.hideLoading()
-        })
+        mForumFragmentObserver.pageLoadData.observe((mContext as AppCompatActivity),
+            Observer<Boolean> {
+                Log.f("onPageLoadComplete")
+                mForumContractView.hideLoading()
+            })
     }
 
     /**

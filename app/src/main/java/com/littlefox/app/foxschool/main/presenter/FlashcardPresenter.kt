@@ -13,6 +13,7 @@ import android.os.Parcelable
 import android.view.Gravity
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -29,7 +30,6 @@ import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResu
 import com.littlefox.app.foxschool.adapter.FlashcardSelectionPagerAdapter
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.coroutine.FlashcardSaveCoroutine
 import com.littlefox.app.foxschool.coroutine.VocabularyContentsAddCoroutine
 import com.littlefox.app.foxschool.coroutine.VocabularyContentsListCoroutine
@@ -985,49 +985,54 @@ class FlashcardPresenter : FlashcardContract.Presenter
         mFlashcardStudyFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardStudyFragmentObserver::class.java]
 
         // 학습중인 화면 클릭 (자동재생 정지)
-        mFlashcardStudyFragmentObserver.buttonClickData.observe((mContext as AppCompatActivity), {
-            isCheckAutoPlay = false
-            mMainHandler!!.removeMessages(MESSAGE_AUTO_PLAY)
-            mFlashcardContractView.checkAutoplayBox(mCurrentFlashcardStatus, isCheckAutoPlay)
-        })
+        mFlashcardStudyFragmentObserver.buttonClickData.observe((mContext as AppCompatActivity),
+            Observer<Void> {
+                isCheckAutoPlay = false
+                mMainHandler!!.removeMessages(MESSAGE_AUTO_PLAY)
+                mFlashcardContractView.checkAutoplayBox(mCurrentFlashcardStatus, isCheckAutoPlay)
+            })
 
         // 북마크 버튼 클릭
-        mFlashcardStudyFragmentObserver.enableBookmarkData.observe((mContext as AppCompatActivity), { data ->
-            Log.f("Bookmark ID : " + data.first + " , isEnable  : " + data.second)
-            checkBookmarkItem(data.first, data.second)
-        })
+        mFlashcardStudyFragmentObserver.enableBookmarkData.observe((mContext as AppCompatActivity),
+            Observer<Pair<String, Boolean>> { data ->
+                Log.f("Bookmark ID : " + data.first + " , isEnable  : " + data.second)
+                checkBookmarkItem(data.first, data.second)
+            })
 
         // 자동 넘기기에 의한 사운드 재생
-        mFlashcardStudyFragmentObserver.autoStartSoundData.observe((mContext as AppCompatActivity), { wordID ->
-            startFlashcardAudio(wordID!!, false)
-        })
+        mFlashcardStudyFragmentObserver.autoStartSoundData.observe((mContext as AppCompatActivity),
+            Observer<String> { wordID ->
+                startFlashcardAudio(wordID!!, false)
+            })
 
         // 사용자 클릭에 의한 사운드 재생
-        mFlashcardStudyFragmentObserver.touchStartSoundData.observe((mContext as AppCompatActivity), { wordID ->
-            startFlashcardAudio(wordID!!, true)
-        })
+        mFlashcardStudyFragmentObserver.touchStartSoundData.observe((mContext as AppCompatActivity),
+            Observer<String> { wordID ->
+                startFlashcardAudio(wordID!!, true)
+            })
 
         // 학습종료
-        mFlashcardStudyFragmentObserver.studyEndData.observe((mContext as AppCompatActivity), {
-            if(mCurrentFlashcardStatus === FlashcardStatus.BOOKMARK_STUDY)
-            {
-                // 찜단어 학습일 때
-                if(isHaveBookmarkedItem())
+        mFlashcardStudyFragmentObserver.studyEndData.observe((mContext as AppCompatActivity),
+            Observer<Void> {
+                if(mCurrentFlashcardStatus === FlashcardStatus.BOOKMARK_STUDY)
                 {
-                    Log.f("찜 단어 인트로 화면으로 이동 하기")
-                    setPageAction(FlashcardStatus.BOOKMARK_INTRO)
+                    // 찜단어 학습일 때
+                    if(isHaveBookmarkedItem())
+                    {
+                        Log.f("찜 단어 인트로 화면으로 이동 하기")
+                        setPageAction(FlashcardStatus.BOOKMARK_INTRO)
+                    }
+                    else
+                    {
+                        showTemplateDialog(mContext.resources.getString(R.string.message_warning_bookmark_empty))
+                        setCheckAutoPlay(false)
+                    }
                 }
                 else
                 {
-                    showTemplateDialog(mContext.resources.getString(R.string.message_warning_bookmark_empty))
-                    setCheckAutoPlay(false)
+                    setPageAction(FlashcardStatus.RESULT)
                 }
-            }
-            else
-            {
-                setPageAction(FlashcardStatus.RESULT)
-            }
-        })
+            })
     }
 
     /**
