@@ -1609,11 +1609,7 @@ class CommonUtils
         val unAuthorizeList = ArrayList<String>()
         for(i in permissionList.indices)
         {
-            if(ContextCompat.checkSelfPermission(
-                    sContext,
-                    permissionList[i]
-                ) != PackageManager.PERMISSION_GRANTED
-            )
+            if(ContextCompat.checkSelfPermission(sContext, permissionList[i]) != PackageManager.PERMISSION_GRANTED)
             {
                 unAuthorizeList.add(permissionList[i])
             }
@@ -1622,10 +1618,7 @@ class CommonUtils
         {
             var unAuthorizePermissions : Array<String?>? = arrayOfNulls(unAuthorizeList.size)
             unAuthorizePermissions = unAuthorizeList.toArray(unAuthorizePermissions)
-            (sContext as AppCompatActivity?)!!.requestPermissions(
-                unAuthorizePermissions,
-                requestCode
-            )
+            (sContext as AppCompatActivity?)!!.requestPermissions(unAuthorizePermissions, requestCode)
         }
     }
 

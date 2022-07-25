@@ -315,6 +315,7 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestInitAsync()
     {
         Log.f("")
+
         mInitCoroutine = InitCoroutine(mContext)
         mInitCoroutine?.setData(
             CommonUtils.getInstance(mContext).secureDeviceID,
