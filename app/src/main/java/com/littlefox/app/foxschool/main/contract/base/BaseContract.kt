@@ -1,6 +1,5 @@
 package com.littlefox.app.foxschool.main.contract.base
 
-import android.content.Intent
 import android.os.Message
 
 /**
@@ -24,7 +23,6 @@ class BaseContract
         fun resume()
         fun pause()
         fun destroy()
-        fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
         fun sendMessageEvent(msg : Message)
     }
 }

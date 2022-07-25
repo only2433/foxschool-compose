@@ -10,6 +10,7 @@ import android.media.MediaPlayer
 import android.os.Build
 import android.os.Message
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -59,7 +60,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
     {
         private const val DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS : Int = 10001
 
-        private const val REQUEST_CODE_UPDATE_VOCABULARY : Int          = 1001
+        private const val INDEX_UPDATE_VOCABULARY : Int                 = 0
 
         private const val MESSAGE_REQUEST_VOCABULARY_DETAIL_LIST : Int  = 100
         private const val MESSAGE_SETTING_LIST : Int                    = 101
@@ -98,6 +99,8 @@ class VocabularyPresenter : VocabularyContract.Presenter
     private var mCurrentPlayIndex : Int = 0
     private var isSequencePlay : Boolean = false
     private var isPause : Boolean = false
+
+    private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
 
     constructor(context : Context)
     {
@@ -164,21 +167,17 @@ class VocabularyPresenter : VocabularyContract.Presenter
         releaseAudio()
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-        when(requestCode)
-        {
-            REQUEST_CODE_UPDATE_VOCABULARY ->
-            {
-                if(resultCode == Activity.RESULT_OK)
-                {
-                    val bookName : String = data!!.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME) as String
-                    Log.f("bookName : $bookName")
-                    mVocabularyContractView.setTitle(bookName)
-                }
-            }
-        }
+        mResultLauncherList = arrayListOf()
+        mResultLauncherList.add(launchers.get(0))
+    }
+
+    override fun onActivityResultUpdateVocabulary(data : Intent?)
+    {
+        val bookName : String = data!!.getStringExtra(Common.INTENT_MODIFY_VOCABULARY_NAME) as String
+        Log.f("bookName : $bookName")
+        mVocabularyContractView.setTitle(bookName)
     }
 
     override fun sendMessageEvent(msg : Message)

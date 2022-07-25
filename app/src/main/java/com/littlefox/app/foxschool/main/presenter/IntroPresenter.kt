@@ -1,22 +1,21 @@
 package com.littlefox.app.foxschool.main.presenter
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Message
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
+import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.VersionBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
@@ -37,16 +36,14 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.littlefox.logmonitor.enumItem.MonitorMode
-import java.io.IOException
-
 import java.util.*
+import kotlin.collections.ArrayList
 
 class IntroPresenter : IntroContract.Presenter
 {
     companion object
     {
         private const val PERMISSION_REQUEST : Int                  = 0x01
-        private const val REQUEST_CODE_LOGIN : Int                  = 1001
 
         private const val DIALOG_TYPE_SELECT_UPDATE_CONFIRM : Int   = 10001
         private const val DIALOG_TYPE_FORCE_UPDATE : Int            = 10002
@@ -61,6 +58,8 @@ class IntroPresenter : IntroContract.Presenter
         private const val MESSAGE_APP_SERVER_ERROR : Int            = 106
         private const val MESSAGE_DEVELOPER_TO_EMAIL : Int          = 107
         private const val MESSAGE_CHANGE_PASSWORD : Int             = 108
+
+        private const val INDEX_LOGIN                               = 0
 
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
@@ -93,6 +92,7 @@ class IntroPresenter : IntroContract.Presenter
     private var mConfirmPassword : String = ""
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private var isRequestPermission : Boolean = false
+    private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
 
     constructor(context : Context)
     {
@@ -150,6 +150,22 @@ class IntroPresenter : IntroContract.Presenter
         checkPermission()
     }
 
+    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
+    {
+        mResultLauncherList = arrayListOf()
+        mResultLauncherList.add(launchers.get(0))
+    }
+
+    override fun onActivityResultLogin()
+    {
+        Log.f("")
+        mMainContractView.showProgressView()
+        /**
+         * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
+         */
+        mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
+    }
+
     override fun resume()
     {
         Log.f("")
@@ -170,23 +186,6 @@ class IntroPresenter : IntroContract.Presenter
     {
         Log.f("")
         release()
-    }
-
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-        when(requestCode)
-        {
-            REQUEST_CODE_LOGIN ->
-                if(resultCode == Activity.RESULT_OK)
-                {
-                    mMainContractView.showProgressView()
-                    /**
-                     * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
-                     */
-                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
-                }
-        }
     }
 
     private fun checkPermission()
@@ -398,7 +397,7 @@ class IntroPresenter : IntroContract.Presenter
             .readyActivityMode(ActivityMode.LOGIN)
             .setData(isLoginFromMain)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_LOGIN)
+            .setResultLauncher(mResultLauncherList.get(INDEX_LOGIN))
             .startActivity()
     }
 
@@ -456,7 +455,7 @@ class IntroPresenter : IntroContract.Presenter
 
     }
 
-    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
+    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
     {
         Log.f("requestCode : $requestCode")
         var isAllCheckSuccess = true

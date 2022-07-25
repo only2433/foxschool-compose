@@ -270,12 +270,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         mMainPresenter.sendMessageEvent(message)
     }
 
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        super.onActivityResult(requestCode, resultCode, data)
-        mMainPresenter.activityResult(requestCode, resultCode, data)
-    }
-
     override fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
     {
         settingViewPagerInformation(mainFragmentSelectionPagerAdapter)

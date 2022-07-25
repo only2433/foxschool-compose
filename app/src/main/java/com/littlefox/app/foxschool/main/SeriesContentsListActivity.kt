@@ -259,12 +259,6 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         mSeriesContentsListPresenter.sendMessageEvent(message)
     }
 
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        super.onActivityResult(requestCode, resultCode, data)
-        mSeriesContentsListPresenter.activityResult(requestCode, resultCode, data)
-    }
-
 
     @SuppressLint("RestrictedApi")
     override fun initView()

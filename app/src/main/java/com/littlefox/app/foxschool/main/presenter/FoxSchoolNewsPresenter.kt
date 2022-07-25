@@ -92,8 +92,6 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
         mMainHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
-
     override fun onPageSelected(position : Int)
     {
         Log.f("position : $position")

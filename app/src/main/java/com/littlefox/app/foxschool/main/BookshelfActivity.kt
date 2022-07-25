@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -126,6 +127,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
 
         ButterKnife.bind(this)
         mBookshelfPresenter = BookshelfPresenter(this)
+        mBookshelfPresenter.onAddActivityResultLaunchers(mBookAddActivityResult)
     }
 
     override fun onResume()
@@ -388,6 +390,14 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                     _FabToolbarLayout.show()
                 }
             }
+        }
+    }
+
+    private val mBookAddActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        if(result.resultCode == RESULT_OK)
+        {
+            mBookshelfPresenter.onActivityResultUpdateBookshelf(result.data)
         }
     }
 }

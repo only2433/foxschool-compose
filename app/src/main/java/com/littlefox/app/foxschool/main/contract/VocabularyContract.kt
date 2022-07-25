@@ -1,5 +1,7 @@
 package com.littlefox.app.foxschool.main.contract
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.adapter.VocabularyItemListAdapter
 import com.littlefox.app.foxschool.enumerate.VocabularyType
@@ -37,5 +39,7 @@ class VocabularyContract
         fun onClickBottomRemoveAll()
         fun onClickBottomFlashcard()
         fun onListLayoutChangedComplete()
+        fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
+        fun onActivityResultUpdateVocabulary(data : Intent?)
     }
 }

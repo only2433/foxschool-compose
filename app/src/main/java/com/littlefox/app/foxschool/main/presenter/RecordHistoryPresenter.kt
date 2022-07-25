@@ -75,8 +75,6 @@ class RecordHistoryPresenter : RecordHistoryContract.Presenter
         mRecordHistoryCoroutine = null
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
-
     override fun sendMessageEvent(msg : Message)
     {
         when(msg.what) { }

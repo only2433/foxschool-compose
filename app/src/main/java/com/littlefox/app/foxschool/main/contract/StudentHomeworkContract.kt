@@ -1,5 +1,7 @@
 package com.littlefox.app.foxschool.main.contract
 
+import android.content.Intent
+import androidx.activity.result.ActivityResultLauncher
 import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
 import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
 import com.littlefox.app.foxschool.main.contract.base.BaseContract
@@ -16,5 +18,7 @@ class StudentHomeworkContract
     {
         fun onClickBackButton()
         fun onPageChanged(position : Int)
+        fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
+        fun onActivityResultStatus()
     }
 }

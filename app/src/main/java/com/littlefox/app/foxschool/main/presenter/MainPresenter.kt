@@ -278,11 +278,6 @@ class MainPresenter : MainContract.Presenter
         mMainHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-    }
-
     override fun sendMessageEvent(msg : Message)
     {
         when(msg.what)

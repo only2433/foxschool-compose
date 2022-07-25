@@ -128,8 +128,6 @@ class SearchListPresenter : SearchListContract.Presenter
         mMainHandler.removeCallbacksAndMessages(null)
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
-
     /** ====================== LifeCycle end ====================== */
 
     override fun sendMessageEvent(msg : Message)

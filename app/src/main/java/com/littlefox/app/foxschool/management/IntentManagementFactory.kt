@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Message
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
@@ -40,12 +41,12 @@ class IntentManagementFactory
     private lateinit var mContext : Context
     private var mCurrentExecuteMode : ActivityMode = ActivityMode.MAIN
     private var mCurrentExecuteAnimationMode : AnimationMode = AnimationMode.NO_ANIATION
-    private var mCurrentExecuteRequestCode = -1
     private var mCurrentExecuteData : Any? = null
     private var mCurrentExecuteIntentFlag = -1
     private var mCurrentViewPair : Pair<View, String>? = null
     private var mSync = Any()
     private var isRunning = false
+    private var mCurrentExecuteResultLauncher : ActivityResultLauncher<Intent?>? = null
     private val mHandler : Handler = object : Handler()
     {
         override fun handleMessage(msg : Message)
@@ -88,14 +89,13 @@ class IntentManagementFactory
     }
 
     /**
-     * 기존 액티비티가 받아야 하는 requestCode 를 세팅한다.
-     *
-     * @param requestCode 액티비티가 받아야 하는 requestCode
+     * 다음 액티비티에서 받아야할 데이터를 참조하기 위한 ActivityResultLauncher룰 세팅하여 기존의 액티비티에서 값을 받게끔 한다.
+     * @param launcher  액티비티에서 받아야할 데이터를 참조하기 위한 ActivityResultLauncher
      * @return IntentManagementFactory
      */
-    fun setRequestCode(requestCode : Int) : IntentManagementFactory
+    fun setResultLauncher(launcher : ActivityResultLauncher<Intent?>?) : IntentManagementFactory
     {
-        mCurrentExecuteRequestCode = requestCode
+        mCurrentExecuteResultLauncher = launcher
         return this
     }
 
@@ -141,7 +141,7 @@ class IntentManagementFactory
         }
         synchronized(mSync) {
             isRunning = true
-            startActivity(mCurrentExecuteMode, mCurrentExecuteAnimationMode, mCurrentExecuteRequestCode, mCurrentExecuteData, mCurrentExecuteIntentFlag)
+            startActivity(mCurrentExecuteMode, mCurrentExecuteAnimationMode, mCurrentExecuteResultLauncher, mCurrentExecuteData, mCurrentExecuteIntentFlag)
             mHandler.sendEmptyMessageDelayed(MESSAGE_EXECUTE_POSSIBLE, Common.DURATION_NORMAL)
         }
     }
@@ -153,7 +153,7 @@ class IntentManagementFactory
         CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, "")
         CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_LOGIN, null)
         CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, false)
-        startActivity(ActivityMode.INTRO, AnimationMode.REVERSE_NORMAL_ANIMATION, -1, null, Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(ActivityMode.INTRO, AnimationMode.REVERSE_NORMAL_ANIMATION, null, null, Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
     fun initAutoIntroSequence()
@@ -161,7 +161,7 @@ class IntentManagementFactory
         Log.f("")
         MainObserver.clearAll()
         CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, true)
-        startActivity(ActivityMode.INTRO, AnimationMode.REVERSE_NORMAL_ANIMATION, -1, null, Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(ActivityMode.INTRO, AnimationMode.REVERSE_NORMAL_ANIMATION, null, null, Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
     fun clearLogin()
@@ -169,12 +169,12 @@ class IntentManagementFactory
         Log.f("")
         val isLoginFromMain = true
         MainObserver.clearAll()
-        startActivity(ActivityMode.LOGIN, AnimationMode.NORMAL_ANIMATION, -1, isLoginFromMain, Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(ActivityMode.LOGIN, AnimationMode.NORMAL_ANIMATION, null, isLoginFromMain, Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
     }
 
-    private fun startActivity(mode : ActivityMode, animationMode : AnimationMode, requestCode : Int, `object` : Any?, addFlag : Int)
+    private fun startActivity(mode : ActivityMode, animationMode : AnimationMode, launcher : ActivityResultLauncher<Intent?>?, `object` : Any?, addFlag : Int)
     {
-        Log.f("executeMode : $mode, requestCode : $requestCode, addFlag : $addFlag")
+        Log.f("executeMode : $mode, launcher : $launcher, addFlag : $addFlag")
         mCurrentExecuteAnimationMode = animationMode
         var intent : Intent? = null
         when(mode)
@@ -377,74 +377,102 @@ class IntentManagementFactory
         when(animationMode)
         {
             AnimationMode.NO_ANIATION ->
-                if(requestCode == -1)
-                        (mContext as Activity).startActivity(intent)
+            {
+                if(launcher != null)
+                {
+                    launcher.launch(intent)
+                }
                 else
-                        (mContext as Activity).startActivityForResult(intent, requestCode)
+                {
+                    (mContext as Activity).startActivity(intent)
+                }
+            }
 
             AnimationMode.NORMAL_ANIMATION ->
             {
-                if(requestCode == -1)
-                        (mContext as Activity).startActivity(intent)
+                if(launcher != null)
+                {
+                    launcher.launch(intent)
+                }
                 else
-                        (mContext as Activity).startActivityForResult(intent, requestCode)
+                {
+                    (mContext as Activity).startActivity(intent)
+                }
                 (mContext as Activity).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
             }
 
             AnimationMode.REVERSE_NORMAL_ANIMATION ->
             {
-                if(requestCode == -1)
-                        (mContext as Activity).startActivity(intent)
+                if(launcher != null)
+                {
+                    launcher.launch(intent)
+                }
                 else
-                        (mContext as Activity).startActivityForResult(intent, requestCode)
+                {
+                    (mContext as Activity).startActivity(intent)
+                }
                 (mContext as Activity).overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
             }
-            AnimationMode.METERIAL_ANIMATION -> try
+
+            AnimationMode.METERIAL_ANIMATION ->
             {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    val options : ActivityOptionsCompat
-                    options = if(mCurrentViewPair != null)
+                try {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     {
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(mContext as Activity, mCurrentViewPair)
+                        val options : ActivityOptionsCompat
+                        options = if(mCurrentViewPair != null)
+                        {
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(mContext as Activity, mCurrentViewPair)
+                        }
+                        else
+                        {
+                            ActivityOptionsCompat.makeSceneTransitionAnimation(mContext as Activity)
+                        }
+
+                        if(launcher != null)
+                        {
+                            launcher.launch(intent, options)
+                        }
+                        else
+                        {
+                            ActivityCompat.startActivity((mContext as Activity), intent!!, options.toBundle())
+                        }
                     }
                     else
                     {
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(mContext as Activity)
-                    }
-                    if(requestCode == -1)
-                        ActivityCompat.startActivity(mContext as Activity, intent!!, options.toBundle())
-                    else
-                        ActivityCompat.startActivityForResult(mContext as Activity, intent!!, requestCode, options.toBundle())
-                }
-                else
-                {
-                    if(requestCode == -1)
+                        if(launcher != null)
+                        {
+                            launcher.launch(intent)
+                        } else
+                        {
                             (mContext as Activity).startActivity(intent)
-                    else
-                            (mContext as Activity).startActivityForResult(intent, requestCode)
+                        }
+                        (mContext as Activity).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
+                    }
+                }
+                catch(e : NoSuchMethodError)
+                {
+                    if(launcher != null)
+                    {
+                        launcher.launch(intent)
+                    } else
+                    {
+                        (mContext as Activity).startActivity(intent)
+                    }
                     (mContext as Activity).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
                 }
-            }
-            catch(e : NoSuchMethodError)
-            {
-                if(requestCode == -1)
-                        (mContext as Activity).startActivity(intent)
-                else
-                        (mContext as Activity).startActivityForResult(intent, requestCode)
-                (mContext as Activity).overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out)
             }
         }
     }
 
     private fun init()
     {
-        mCurrentExecuteMode = ActivityMode.MAIN
-        mCurrentExecuteAnimationMode = AnimationMode.NO_ANIATION
-        mCurrentExecuteRequestCode = -1
-        mCurrentExecuteData = null
-        mCurrentExecuteIntentFlag = -1
-        mCurrentViewPair = null
+        mCurrentExecuteMode             = ActivityMode.MAIN
+        mCurrentExecuteAnimationMode    = AnimationMode.NO_ANIATION
+        mCurrentExecuteData             = null
+        mCurrentExecuteIntentFlag       = -1
+        mCurrentViewPair                = null
+        mCurrentExecuteResultLauncher   = null
     }
 
     companion object

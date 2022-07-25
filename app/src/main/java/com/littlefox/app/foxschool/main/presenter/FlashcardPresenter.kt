@@ -184,8 +184,6 @@ class FlashcardPresenter : FlashcardContract.Presenter
         releaseCoroutine()
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
-
     /**
      * 플래시카드 페이지 전환
      */

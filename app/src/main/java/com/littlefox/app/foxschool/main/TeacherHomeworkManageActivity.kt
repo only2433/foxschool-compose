@@ -9,6 +9,7 @@ import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.viewpager.widget.ViewPager
@@ -87,6 +88,7 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
 
         ButterKnife.bind(this)
         mHomeworkManagePresenter = TeacherHomeworkManagePresenter(this)
+        mHomeworkManagePresenter.onAddActivityResultLaunchers(mHomeworkDetailActivityResult, mHomeworkStatusActivityResult)
     }
 
     override fun onResume()
@@ -111,12 +113,6 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
     {
         super.finish()
         overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
-    }
-
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        super.onActivityResult(requestCode, resultCode, data)
-        mHomeworkManagePresenter.activityResult(requestCode, resultCode, data)
     }
     /** LifeCycle end **/
 
@@ -303,5 +299,15 @@ class TeacherHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, Te
         }
 
         override fun onPageScrollStateChanged(state : Int) { }
+    }
+
+    private val mHomeworkDetailActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        mHomeworkManagePresenter.onActivityResultHomeworkDetail()
+    }
+
+    private val mHomeworkStatusActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        mHomeworkManagePresenter.onActivityResultHomeworkStatus()
     }
 }

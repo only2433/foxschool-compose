@@ -1,7 +1,6 @@
 package com.littlefox.app.foxschool.main.presenter
 
 import android.content.Context
-import android.content.Intent
 import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -91,8 +90,6 @@ class FAQPresenter : ForumContract.Presenter
         mFaqListCoroutine = null
         mMainHandler.removeCallbacksAndMessages(null)
     }
-
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     override fun onPageSelected(position : Int)
     {

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Message
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -55,7 +56,8 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
     {
         private const val MESSAGE_LIST_SET_COMPLETE : Int   = 100
         private const val MESSAGE_PAGE_CHANGE : Int         = 101
-        private const val REQUEST_CODE_NOTIFY : Int         = 1000
+
+        private const val INDEX_STATUS : Int                = 0
     }
 
     private lateinit var mContext : Context
@@ -96,6 +98,8 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
 
     private var mSelectHomeworkData : HomeworkCalendarItemData? = null // 선택한 숙제 아이템
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+
+    private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
 
     constructor(context : Context)
     {
@@ -156,17 +160,17 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
         mStudentCommentDeleteCoroutine = null
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-        when(requestCode)
-        {
-            REQUEST_CODE_NOTIFY ->
-            {
-                mStudentHomeworkContractView.showLoading()
-                onPageChanged(Common.PAGE_HOMEWORK_STATUS)
-            }
-        }
+        mResultLauncherList = arrayListOf()
+        mResultLauncherList.add(launchers.get(0))
+    }
+
+    override fun onActivityResultStatus()
+    {
+        Log.f("")
+        mStudentHomeworkContractView.showLoading()
+        onPageChanged(Common.PAGE_HOMEWORK_STATUS)
     }
 
     override fun sendMessageEvent(msg : Message)
@@ -264,7 +268,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.PLAYER)
             .setData(playerIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 
@@ -276,7 +280,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 
@@ -288,7 +292,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 
@@ -300,7 +304,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 
@@ -312,7 +316,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 
@@ -324,7 +328,7 @@ class StudentHomeworkManagePresenter : StudentHomeworkContract.Presenter
             .readyActivityMode(ActivityMode.RECORD_PLAYER)
             .setData(recordIntentParamsObject)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setRequestCode(REQUEST_CODE_NOTIFY)
+            .setResultLauncher(mResultLauncherList.get(INDEX_STATUS))
             .startActivity()
     }
 

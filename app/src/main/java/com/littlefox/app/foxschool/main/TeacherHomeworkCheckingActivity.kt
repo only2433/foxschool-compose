@@ -118,12 +118,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         super.finish()
         overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
     }
-
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        super.onActivityResult(requestCode, resultCode, data)
-        mTeacherHomeworkCheckingPresenter.activityResult(requestCode, resultCode, data)
-    }
     /** LifeCycle end **/
 
     /** Init **/

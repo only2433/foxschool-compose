@@ -11,6 +11,7 @@ import android.view.animation.LayoutAnimationController
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -174,6 +175,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         }
         ButterKnife.bind(this)
         mVocabularyPresenter = VocabularyPresenter(this)
+        mVocabularyPresenter.onAddActivityResultLaunchers(mVocabularyAddActivityResult)
     }
 
     override fun onResume()
@@ -198,12 +200,6 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
     {
         super.finish()
         overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
-    }
-
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        super.onActivityResult(requestCode, resultCode, data)
-        mVocabularyPresenter.activityResult(requestCode, resultCode, data)
     }
     /** LifeCycle end **/
 
@@ -686,6 +682,14 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
                     mVocabularyPresenter.onClickBottomSelectAll()
                 }
             }
+        }
+    }
+
+    private val mVocabularyAddActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result ->
+        if(result.resultCode == RESULT_OK)
+        {
+            mVocabularyPresenter.onActivityResultUpdateVocabulary(result.data)
         }
     }
 }

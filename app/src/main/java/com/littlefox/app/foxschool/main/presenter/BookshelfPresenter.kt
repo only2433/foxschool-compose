@@ -8,6 +8,7 @@ import android.os.Message
 import android.os.Parcelable
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -43,6 +44,7 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * 책장 Presenter
@@ -53,8 +55,6 @@ class BookshelfPresenter : BookshelfContract.Presenter
     {
         private const val DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS : Int      = 10001
         private const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int       = 10002
-
-        private const val REQUEST_CODE_UPDATE_BOOKSHELF : Int               = 1001
 
         private const val MESSAGE_REQUEST_BOOKSHELF_DETAIL_LIST : Int       = 100
         private const val MESSAGE_SET_BOOKSHELF_DETAIL_LIST : Int           = 101
@@ -69,6 +69,8 @@ class BookshelfPresenter : BookshelfContract.Presenter
         private const val MESSAGE_START_GAME_CROSSWORD : Int                = 110
         private const val MESSAGE_START_FLASHCARD : Int                     = 111
         private const val MESSAGE_START_RECORD_PLAYER : Int                 = 112
+
+        private const val INDEX_UPDATE_BOOKSHELF : Int                      = 0
     }
 
     private lateinit var mContext : Context
@@ -87,6 +89,8 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private var mDeleteBookItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mCurrentPlayIndex : Int = 0
     private var mCurrentOptionIndex : Int = 0
+
+    private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
 
     constructor(context : Context)
     {
@@ -123,22 +127,17 @@ class BookshelfPresenter : BookshelfContract.Presenter
         mBookshelfContentRemoveCoroutine = null
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
+        mResultLauncherList = arrayListOf()
+        mResultLauncherList.add(launchers.get(0))
+    }
 
-        when(requestCode)
-        {
-            REQUEST_CODE_UPDATE_BOOKSHELF ->
-            {
-                if(resultCode == Activity.RESULT_OK)
-                {
-                    val bookName = data!!.getStringExtra(Common.INTENT_MODIFY_BOOKSHELF_NAME)
-                    Log.f("bookName : $bookName")
-                    mBookshelfContractView.setTitle(bookName)
-                }
-            }
-        }
+    override fun onActivityResultUpdateBookshelf(data : Intent?)
+    {
+        val bookName = data!!.getStringExtra(Common.INTENT_MODIFY_BOOKSHELF_NAME)
+        Log.f("bookName : $bookName")
+        mBookshelfContractView.setTitle(bookName)
     }
 
     override fun sendMessageEvent(msg : Message)

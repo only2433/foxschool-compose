@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -97,6 +98,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         }
         ButterKnife.bind(this)
         mIntroPresenter = IntroPresenter(this)
+        mIntroPresenter.onAddActivityResultLaunchers(mLoginActivityResult)
         mHomeKeyIntentFilter = IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
     }
 
@@ -163,14 +165,9 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         Log.f("")
     }
 
-    override fun onActivityResult(requestCode : Int, resultCode : Int, data : Intent?)
+    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
     {
-        super.onActivityResult(requestCode, resultCode, data)
-        mIntroPresenter.activityResult(requestCode, resultCode, data)
-    }
-
-    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<String>, grantResults : IntArray)
-    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         mIntroPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
@@ -275,6 +272,14 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
                     }
                 }
             }
+        }
+    }
+
+    private val mLoginActivityResult = registerForActivityResult(StartActivityForResult())
+    { result ->
+        if(result.resultCode == RESULT_OK)
+        {
+            mIntroPresenter.onActivityResultLogin()
         }
     }
 }

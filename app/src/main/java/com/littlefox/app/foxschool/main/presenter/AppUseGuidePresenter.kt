@@ -1,7 +1,6 @@
 package com.littlefox.app.foxschool.main.presenter
 
 import android.content.Context
-import android.content.Intent
 import android.os.Message
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
@@ -44,8 +43,6 @@ class AppUseGuidePresenter : AppUseGuideContract.Presenter
     override fun pause() { }
 
     override fun destroy() { }
-
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?) { }
 
     override fun sendMessageEvent(msg : Message) { }
 

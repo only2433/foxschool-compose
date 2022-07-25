@@ -153,11 +153,6 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         releaseDialog()
     }
 
-    override fun activityResult(requestCode : Int, resultCode : Int, data : Intent?)
-    {
-        Log.f("requestCode : $requestCode, resultCode : $resultCode")
-    }
-
     override fun sendMessageEvent(msg : Message)
     {
         when(msg.what)
