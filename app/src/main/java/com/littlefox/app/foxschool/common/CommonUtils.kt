@@ -1482,8 +1482,8 @@ class CommonUtils
             val availableYears = arrayOfNulls<String>(MAX_TERM_YEAR)
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = System.currentTimeMillis()
-            val startYear = calendar[Calendar.YEAR] - (MAX_TERM_YEAR - 1)
-            val endYear = calendar[Calendar.YEAR]
+            val startYear: Int = calendar[Calendar.YEAR] - (MAX_TERM_YEAR - 1)
+            val endYear: Int = calendar[Calendar.YEAR]
             Log.i("startYear : " + startYear + " , Current Year : " + calendar[Calendar.YEAR])
             var count = 0
             for(i in startYear..endYear)
