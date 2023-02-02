@@ -60,7 +60,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_INIT))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_VERSION))
                 }
             }
             enqueueCommandEnd()
@@ -80,7 +80,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_ME))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_AUTH_ME))
                 }
             }
             enqueueCommandEnd()
@@ -100,7 +100,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_MAIN))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_MAIN))
                 }
             }
             enqueueCommandEnd()
@@ -120,7 +120,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_PASSWORD_CHANGE))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE))
                 }
             }
             enqueueCommandEnd()
@@ -140,7 +140,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT))
                 }
             }
             enqueueCommandEnd()
@@ -160,7 +160,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
                 }
                 is ResultData.Fail ->
                 {
-                    errorReport.postValue(Pair(result, Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP))
+                    errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP))
                 }
             }
             enqueueCommandEnd()

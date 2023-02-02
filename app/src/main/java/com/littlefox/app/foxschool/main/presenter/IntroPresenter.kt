@@ -252,9 +252,9 @@ class IntroPresenter : IntroContract.Presenter
             }
             else
             {
-                if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE ||
-                    code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT ||
-                    code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
+                if (code == RequestCode.CODE_PASSWORD_CHANGE ||
+                    code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
+                    code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                 {
                     if (mPasswordChangeDialog!!.isShowing)
                     {

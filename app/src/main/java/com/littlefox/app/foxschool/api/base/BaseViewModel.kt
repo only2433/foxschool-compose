@@ -14,8 +14,8 @@ abstract class BaseViewModel : ViewModel()
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    protected val errorReport = MutableLiveData<Pair<ResultData.Fail, String>>()
-    val _errorReport : LiveData<Pair<ResultData.Fail, String>> = errorReport
+    protected val errorReport = MutableLiveData<Pair<ResultData.Fail, RequestCode>>()
+    val _errorReport : LiveData<Pair<ResultData.Fail, RequestCode>> = errorReport
 
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false
