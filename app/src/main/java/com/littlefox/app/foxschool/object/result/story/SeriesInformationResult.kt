@@ -1,18 +1,23 @@
 package com.littlefox.app.foxschool.`object`.result.story
 
 import android.os.Parcel
+import com.google.gson.annotations.SerializedName
 
 
 class SeriesInformationResult : SeriesBaseResult
 {
 
+    @SerializedName("contents_count")
     private val contents_count = -1
 
     /**
      * 해당 부분은 카테고리별로 묶이는 경우는 데이터가 없을수 있다.
      * @return 컨텐츠의 해당 레벨
      */
+    @SerializedName("level")
     private val level = -1
+
+    @SerializedName("is_single")
     private val is_single : String? = ""
 
     constructor(`in` : Parcel) : super(`in`) {}

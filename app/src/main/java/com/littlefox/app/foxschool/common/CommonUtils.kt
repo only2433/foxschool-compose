@@ -504,10 +504,10 @@ class CommonUtils
         return pref.getBoolean(key, false)
     }
 
-    fun getSharedPreferenceString(key : String, defaultValue : String) : String
+    fun getSharedPreferenceString(key : String, defaultValue : String = "") : String
     {
         val pref : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(sContext)
-        return pref.getString(key, defaultValue).toString()
+        return pref.getString(key, defaultValue)!!
     }
 
     fun getSharedPreferenceInteger(key : String, defaultValue : Int) : Int

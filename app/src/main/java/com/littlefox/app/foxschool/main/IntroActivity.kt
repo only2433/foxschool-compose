@@ -22,6 +22,7 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.IntroViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -32,8 +33,10 @@ import com.littlefox.app.foxschool.view.ProgressBarAnimation
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.activity.viewModels
 
-
+@AndroidEntryPoint
 class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 {
     @BindView(R.id._mainBaseLayout)
@@ -83,6 +86,8 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     private var mFrameAnimationDrawable : AnimationDrawable? = null
     private var mHomeKeyIntentFilter : IntentFilter? = null
 
+    private val viewModel: IntroViewModel by viewModels()
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -97,7 +102,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
             setContentView(R.layout.activity_intro)
         }
         ButterKnife.bind(this)
-        mIntroPresenter = IntroPresenter(this)
+        mIntroPresenter = IntroPresenter(this, viewModel)
         mIntroPresenter.onAddActivityResultLaunchers(mLoginActivityResult)
         mHomeKeyIntentFilter = IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
     }

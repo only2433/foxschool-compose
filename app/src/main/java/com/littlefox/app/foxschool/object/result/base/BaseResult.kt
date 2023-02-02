@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.`object`.result.base
 
+import com.google.gson.annotations.SerializedName
 import com.littlefox.logmonitor.Log
 
 open class BaseResult
@@ -16,11 +17,29 @@ open class BaseResult
         const val SUCCESS_CODE_OK                                   = 200
     }
 
+    @SerializedName("status")
     private var status : Int = -1
+
+    @SerializedName("message")
     private var message = ""
+
+    @SerializedName("access_token")
     private var access_token : String = ""
 
-    val isNetworkErrorStatus : Boolean
+    val isSuccess: Boolean
+        get()
+        {
+            if(getStatus() == SUCCESS_CODE_OK)
+            {
+                return true
+            }
+            else
+            {
+                return false
+            }
+        }
+
+    val isNetworkError : Boolean
         get()
         {
             if(getStatus() == FAIL_CODE_NETWORK_NOT_CONNECT)

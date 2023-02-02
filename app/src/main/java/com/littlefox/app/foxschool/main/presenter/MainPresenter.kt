@@ -1063,6 +1063,7 @@ class MainPresenter : MainContract.Presenter
                             obj = result.getMessage()
                             arg1 = Activity.RESULT_CANCELED
                         }
+
                         mMainHandler.sendMessageDelayed(message, Common.DURATION_SHORT)
                     }
                     else if(code == Common.COROUTINE_CODE_MAIN)

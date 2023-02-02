@@ -5,6 +5,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.NetworkUtil
@@ -38,6 +39,7 @@ class LoginCoroutine : BaseCoroutine
             if(result.getAccessToken().equals("") === false)
             {
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_ACCESS_TOKEN, result.getAccessToken())
+                MainApplication.instance.setUserToken(result.getAccessToken())
             }
         }
         return result

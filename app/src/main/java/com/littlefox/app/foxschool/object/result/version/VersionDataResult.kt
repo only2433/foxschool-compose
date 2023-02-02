@@ -1,15 +1,27 @@
 package com.littlefox.app.foxschool.`object`.result.version
 
+import com.google.gson.annotations.SerializedName
 import com.littlefox.app.foxschool.common.Common
 
 
 class VersionDataResult
 {
+    @SerializedName("installed_version")
     private var installed_version : String = ""
+
+    @SerializedName("latest_version")
     private var latest_version : String = ""
+
+    @SerializedName("store_url")
     private var store_url : String = ""
+
+    @SerializedName("player_type")
     private var player_type : String = ""
+
+    @SerializedName("is_installed_latest")
     private var is_installed_latest = false
+
+    @SerializedName("force_update")
     private var force_update : Boolean = false
 
     val isNeedUpdate : Boolean

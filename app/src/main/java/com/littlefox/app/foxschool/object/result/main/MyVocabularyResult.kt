@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.`object`.result.main
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 
 open class MyVocabularyResult : Parcelable
@@ -9,9 +10,16 @@ open class MyVocabularyResult : Parcelable
     /**
      * 보케블러리 책장 ID
      */
+    @SerializedName("id")
     private var id : String = ""
+
+    @SerializedName("name")
     private var name : String = ""
+
+    @SerializedName("color")
     private var color : String = ""
+
+    @SerializedName("words_count")
     private var words_count : Int = 0
 
     /**

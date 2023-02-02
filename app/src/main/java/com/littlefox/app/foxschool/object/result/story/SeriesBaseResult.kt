@@ -2,19 +2,35 @@ package com.littlefox.app.foxschool.`object`.result.story
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.enumerate.TransitionType
 import java.io.Serializable
 
 open class SeriesBaseResult : Parcelable
 {
+    @SerializedName("id")
     private var id : String = ""
+
+    @SerializedName("name")
     private var name : String = ""
+
+    @SerializedName("thumbnail_url")
     private var thumbnail_url : String = ""
+
+    @SerializedName("colors")
     private var colors : ColorData? = null
+
+    @SerializedName("series")
     private var series : SeriesData? = null
+
+    @SerializedName("free_single_sort_number")
     private var free_single_sort_number : Int = 0
+
+    @SerializedName("free_series_sort_number")
     private var free_series_sort_number : Int = 0
+
+    @SerializedName("basic_sort_number")
     private var basic_sort_number : Int = 0
     private var seriesType : String? = Common.CONTENT_TYPE_STORY
     private var transitionType : TransitionType = TransitionType.PAIR_IMAGE
@@ -138,13 +154,19 @@ open class SeriesBaseResult : Parcelable
 
     inner class ColorData : Serializable
     {
+        @SerializedName("status_bar")
         var status_bar : String = ""
+
+        @SerializedName("title")
         var title : String  = ""
     }
 
     inner class SeriesData : Serializable
     {
+        @SerializedName("introduction")
         var introduction : String  = ""
+
+        @SerializedName("categories")
         var categories : String = ""
     }
 
@@ -164,8 +186,4 @@ open class SeriesBaseResult : Parcelable
             }
         }
     }
-
-
-
-
 }

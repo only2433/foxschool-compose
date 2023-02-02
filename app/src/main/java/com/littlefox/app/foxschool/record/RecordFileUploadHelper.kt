@@ -17,6 +17,7 @@ import io.github.lizhangqu.coreprogress.ProgressHelper
 import io.github.lizhangqu.coreprogress.ProgressListener
 
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -66,7 +67,7 @@ class RecordFileUploadHelper(private val mContext : Context)
                     var result : RecordFileUploadBaseObject? = null
                     try
                     {
-                        result = gson.fromJson(response.body()!!.string(), RecordFileUploadBaseObject::class.java)
+                        result = gson.fromJson(response.body!!.string(), RecordFileUploadBaseObject::class.java)
                     }
                     catch(e : Exception)
                     {
@@ -117,7 +118,7 @@ class RecordFileUploadHelper(private val mContext : Context)
             Log.f("record_time : " + mRecordInfoData.getRecordTime().toString())
             Log.f("hw_no : " + mRecordInfoData.getHomeworkNumber().toString())
             multipartBody.setType(MultipartBody.FORM)
-                .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create(MediaType.parse("audio/mpeg"), audioFile))
+                .addFormDataPart("record_file", mRecordInfoData.getFileName(), RequestBody.create("audio/mpeg".toMediaTypeOrNull(), audioFile))
                 .addFormDataPart("content_id", java.lang.String.valueOf(mRecordInfoData.getContentsID()))
                 .addFormDataPart("record_time", mRecordInfoData.getRecordTime().toString())
 

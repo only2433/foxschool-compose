@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Message
 import android.provider.Settings
+
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +22,9 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
+import com.littlefox.app.foxschool.api.data.ResultData
+import com.littlefox.app.foxschool.api.enumerate.RequestCode
+import com.littlefox.app.foxschool.api.viewmodel.IntroViewModel
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.coroutine.*
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
@@ -68,10 +72,6 @@ class IntroPresenter : IntroContract.Presenter
     private lateinit var mMainContractView : IntroContract.View
     private lateinit var mMainHandler : WeakReferenceHandler
 
-    private var mInitCoroutine : InitCoroutine? = null
-    private var mAuthMeCoroutine : AuthMeCoroutine? = null
-    private var mMainInformationCoroutine : MainInformationCoroutine? = null
-
     private lateinit var mPermissionList : ArrayList<String>
     private var mCurrentIntroProcess : IntroProcess = IntroProcess.NONE
 
@@ -84,19 +84,19 @@ class IntroPresenter : IntroContract.Presenter
 
     // 비밀번호 변경 안내 관련 변수
     private var mPasswordChangeDialog : PasswordChangeDialog? = null
-    private var mPasswordChangeCoroutine : PasswordChangeCoroutine? = null
-    private var mPasswordChangeNextCoroutine : PasswordChangeNextCoroutine? = null
-    private var mPasswordChangeKeepCoroutine : PasswordChangeKeepCoroutine? = null
+
     private var mPassword : String  = ""
     private var mNewPassword : String = ""
     private var mConfirmPassword : String = ""
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private var isRequestPermission : Boolean = false
     private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
+    private lateinit var mIntroViewModel: IntroViewModel
 
-    constructor(context : Context)
+    constructor(context : Context, viewModel : IntroViewModel)
     {
         mContext = context
+        mIntroViewModel = viewModel
         mMainContractView = (mContext as IntroContract.View).apply {
             initView()
             initFont()
@@ -124,6 +124,8 @@ class IntroPresenter : IntroContract.Presenter
             CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_PUSH_SEND, "Y")
         }
 
+        setupViewModelObserver()
+
         mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT, Common.DURATION_NORMAL)
     }
 
@@ -148,6 +150,124 @@ class IntroPresenter : IntroContract.Presenter
         Log.f("isAutoLogin : $isAutoLogin, isDisposableLogin : $isDisposableLogin")
 
         checkPermission()
+    }
+
+    private fun setupViewModelObserver()
+    {
+        mIntroViewModel._versionData.observe(mContext as AppCompatActivity){ data ->
+
+            mVersionDataResult = data
+            CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
+            if(mVersionDataResult!!.isNeedUpdate)
+            {
+                if(mVersionDataResult!!.isForceUpdate())
+                {
+                    showTemplateAlertDialog(
+                        DIALOG_TYPE_FORCE_UPDATE,
+                        DialogButtonType.BUTTON_1,
+                        mContext.resources.getString(R.string.message_force_update)
+                    )
+                }
+                else
+                {
+                    showTemplateAlertDialog(
+                        DIALOG_TYPE_SELECT_UPDATE_CONFIRM,
+                        DialogButtonType.BUTTON_2,
+                        mContext.resources.getString(R.string.message_need_update)
+                    )
+                }
+            }
+            else
+            {
+                startAPIProcess()
+            }
+        }
+
+        mIntroViewModel._authMeData.observe(mContext as AppCompatActivity){ data ->
+
+            mUserInformationResult = data
+            CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
+
+            if (mUserInformationResult!!.isNeedChangePassword())
+            {
+                // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
+                mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+                showPasswordChangeDialog()
+            }
+            else
+            {
+                // 자동로그인 완료
+                mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+            }
+        }
+
+        mIntroViewModel._mainData.observe(mContext as AppCompatActivity){ data ->
+
+            Log.f("Main data get to API Success")
+            CommonUtils.getInstance(mContext).saveMainData(data)
+            mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
+            enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_MAIN, Common.DURATION_SHORT_LONG)
+        }
+
+        mIntroViewModel._changePasswordData.observe(mContext as AppCompatActivity){
+
+            // 비밀번호 변경 성공
+            Log.f("Password Change Complete")
+            changeUserLoginData()
+            mPasswordChangeDialog!!.hideLoading()
+            mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
+        }
+
+        mIntroViewModel._changePasswordNextData.observe(mContext as AppCompatActivity){
+
+            // 다음에 변경
+            mPasswordChangeDialog!!.hideLoading()
+            mMainHandler.sendEmptyMessage(MESSAGE_CHANGE_PASSWORD)
+        }
+
+        mIntroViewModel._changePasswordKeepData.observe(mContext as AppCompatActivity){
+
+            // 현재 비밀번호 유지
+            mPasswordChangeDialog!!.hideLoading()
+            mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
+            mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
+        }
+
+        mIntroViewModel._errorReport.observe(mContext as AppCompatActivity){ data ->
+
+            val result = data.first as ResultData.Fail
+            val code = data.second
+
+            Log.f("status : ${result.status}, message : ${result.message} , code : ${data.second}")
+
+            Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
+            if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
+            {
+                Log.f("== isAuthenticationBroken ==")
+                (mContext as AppCompatActivity).finish()
+                IntentManagementFactory.getInstance().initScene()
+            }
+            else
+            {
+                if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE ||
+                    code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT ||
+                    code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
+                {
+                    if (mPasswordChangeDialog!!.isShowing)
+                    {
+                        mPasswordChangeDialog!!.hideLoading()
+                    }
+                    mPasswordChangeDialog!!.showErrorMessage(result.message)
+                }
+                else
+                {
+                    (mContext as AppCompatActivity).finish()
+                }
+            }
+        }
     }
 
     override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
@@ -213,6 +333,8 @@ class IntroPresenter : IntroContract.Presenter
             }
             mMainContractView.showProgressView()
             requestInitAsync()
+            requestAutoLoginAsync()
+            requestMainInformationAsync()
         }
         else
         {
@@ -238,17 +360,14 @@ class IntroPresenter : IntroContract.Presenter
             IntroProcess.INIT_COMPLETE ->
             {
                 mMainContractView.setProgressPercent(PERCENT_SEQUENCE[0], PERCENT_SEQUENCE[1])
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_AUTO_LOGIN, Common.DURATION_SHORT_LONG)
             }
             IntroProcess.LOGIN_COMPLTE ->
             {
                 mMainContractView.setProgressPercent(PERCENT_SEQUENCE[1], PERCENT_SEQUENCE[2])
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHECK_API_MAIN, Common.DURATION_SHORT_LONG)
             }
             IntroProcess.MAIN_COMPELTE ->
             {
                 mMainContractView.setProgressPercent(PERCENT_SEQUENCE[2], PERCENT_SEQUENCE[3])
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_MAIN, Common.DURATION_SHORT_LONG)
             }
         }
     }
@@ -316,30 +435,36 @@ class IntroPresenter : IntroContract.Presenter
     {
         Log.f("")
 
-        mInitCoroutine = InitCoroutine(mContext)
-        mInitCoroutine?.setData(
-            CommonUtils.getInstance(mContext).secureDeviceID,
-            CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_FIREBASE_PUSH_TOKEN, DataType.TYPE_STRING),
-            CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
-        )
-        mInitCoroutine?.asyncListener = mIntroAsyncListener
-        mInitCoroutine?.execute()
+        var deviceID = CommonUtils.getInstance(mContext).secureDeviceID
+        var pushAddress: String = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_FIREBASE_PUSH_TOKEN)
+        var pushOn = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
+
+        mIntroViewModel.enqueueCommandStart(
+            RequestCode.CODE_VERSION,
+            Common.DURATION_SHORT_LONG,
+            deviceID,
+            pushAddress,
+            pushOn)
     }
 
     private fun requestAutoLoginAsync()
     {
         Log.f("")
-        mAuthMeCoroutine = AuthMeCoroutine(mContext)
-        mAuthMeCoroutine?.asyncListener = mIntroAsyncListener
-        mAuthMeCoroutine?.execute()
+
+        mIntroViewModel.enqueueCommandStart(
+            RequestCode.CODE_AUTH_ME,
+            Common.DURATION_SHORT_LONG
+        )
     }
 
     private fun requestMainInformationAsync()
     {
         Log.f("")
-        mMainInformationCoroutine = MainInformationCoroutine(mContext)
-        mMainInformationCoroutine?.asyncListener = mIntroAsyncListener
-        mMainInformationCoroutine?.execute()
+
+        mIntroViewModel.enqueueCommandStart(
+            RequestCode.CODE_MAIN,
+            Common.DURATION_SHORT_LONG
+        )
     }
 
     /**
@@ -348,12 +473,13 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChange()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeCoroutine = PasswordChangeCoroutine(mContext).apply {
-            setData(mPassword, mNewPassword, mConfirmPassword)
-            asyncListener = mIntroAsyncListener
-            execute()
-        }
 
+        mIntroViewModel.enqueueCommandStart(
+            RequestCode.CODE_PASSWORD_CHANGE,
+            0L,
+            mPassword,
+            mNewPassword,
+            mConfirmPassword)
     }
 
     /**
@@ -362,10 +488,8 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeNext()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeNextCoroutine = PasswordChangeNextCoroutine(mContext).apply {
-            asyncListener = mIntroAsyncListener
-            execute()
-        }
+
+        mIntroViewModel.enqueueCommandStart(RequestCode.CODE_PASSWORD_CHANGE_NEXT)
     }
 
     /**
@@ -374,9 +498,8 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeKeep()
     {
         mPasswordChangeDialog!!.showLoading()
-        mPasswordChangeKeepCoroutine = PasswordChangeKeepCoroutine(mContext)
-        mPasswordChangeKeepCoroutine!!.asyncListener = mIntroAsyncListener
-        mPasswordChangeKeepCoroutine!!.execute()
+
+        mIntroViewModel.enqueueCommandStart(RequestCode.CODE_PASSWORD_CHANGE_KEEP)
     }
 
     private fun startMainActivity()
@@ -405,14 +528,6 @@ class IntroPresenter : IntroContract.Presenter
     private fun release()
     {
         Log.f("")
-        mInitCoroutine?.cancel()
-        mInitCoroutine = null
-        mAuthMeCoroutine?.cancel()
-        mAuthMeCoroutine = null
-        mMainInformationCoroutine?.cancel()
-        mMainInformationCoroutine = null
-        mPasswordChangeCoroutine?.cancel()
-        mPasswordChangeCoroutine = null
         mMainHandler.removeCallbacksAndMessages(null)
         (mContext as AppCompatActivity).finish()
     }
@@ -534,134 +649,6 @@ class IntroPresenter : IntroContract.Presenter
         }
     }
 
-    private val mIntroAsyncListener : AsyncListener = object : AsyncListener
-    {
-        override fun onRunningStart(code : String) {}
-
-        override fun onRunningEnd(code : String, `object` : Any)
-        {
-            val result : BaseResult = `object` as BaseResult
-
-            Log.f("code : " + code + ", status : " + result.getStatus())
-            if(result.getStatus() == BaseResult.SUCCESS_CODE_OK)
-            {
-                if(code == Common.COROUTINE_CODE_INIT)
-                {
-                    mVersionDataResult = (result as VersionBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
-                    if(mVersionDataResult!!.isNeedUpdate)
-                    {
-                        if(mVersionDataResult!!.isForceUpdate())
-                        {
-                            showTemplateAlertDialog(
-                                DIALOG_TYPE_FORCE_UPDATE,
-                                DialogButtonType.BUTTON_1,
-                                mContext.resources.getString(R.string.message_force_update)
-                            )
-                        }
-                        else
-                        {
-                            showTemplateAlertDialog(
-                                DIALOG_TYPE_SELECT_UPDATE_CONFIRM,
-                                DialogButtonType.BUTTON_2,
-                                mContext.resources.getString(R.string.message_need_update)
-                            )
-                        }
-                    }
-                    else
-                    {
-                        startAPIProcess()
-                    }
-                }
-                else if(code == Common.COROUTINE_CODE_ME)
-                {
-                    mUserInformationResult = (result as LoginBaseObject).getData()
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
-
-                    if (mUserInformationResult!!.isNeedChangePassword())
-                    {
-                        // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
-                        mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
-                        showPasswordChangeDialog()
-                    }
-                    else
-                    {
-                        // 자동로그인 완료
-                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-                    }
-                }
-                else if(code == Common.COROUTINE_CODE_MAIN)
-                {
-                    Log.f("Main data get to API Success")
-                    val mainInformationResult : MainInformationResult = (`object` as MainInformationBaseObject).getData()
-                    CommonUtils.getInstance(mContext).saveMainData(mainInformationResult)
-                    mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
-                    enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
-                }
-                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE)
-                {
-                    // 비밀번호 변경 성공
-                    Log.f("Password Change Complete")
-                    changeUserLoginData()
-                    mPasswordChangeDialog!!.hideLoading()
-                    mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
-                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
-                }
-                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT)
-                {
-                    // 다음에 변경
-                    mPasswordChangeDialog!!.hideLoading()
-                    mMainHandler.sendEmptyMessage(MESSAGE_CHANGE_PASSWORD)
-                }
-                else if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
-                {
-                    // 현재 비밀번호 유지
-                    mPasswordChangeDialog!!.hideLoading()
-                    mPasswordChangeDialog!!.showSuccessMessage(mContext.getString(R.string.message_password_change_complete))
-                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
-                }
-            }
-            else
-            {
-                Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
-                if(result.isAuthenticationBroken || result.getStatus() == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
-                {
-                    Log.f("== isAuthenticationBroken ==")
-                    (mContext as AppCompatActivity).finish()
-                    IntentManagementFactory.getInstance().initScene()
-                }
-                else
-                {
-                    if (code == Common.COROUTINE_CODE_PASSWORD_CHANGE ||
-                        code == Common.COROUTINE_CODE_PASSWORD_CHANGE_NEXT ||
-                        code == Common.COROUTINE_CODE_PASSWORD_CHANGE_KEEP)
-                    {
-                        if (mPasswordChangeDialog!!.isShowing)
-                        {
-                            mPasswordChangeDialog!!.hideLoading()
-                        }
-                        mPasswordChangeDialog!!.showErrorMessage(result.getMessage())
-                    }
-                    else
-                    {
-                        (mContext as AppCompatActivity).finish()
-                    }
-                }
-            }
-        }
-
-        override fun onRunningCanceled(code : String) {}
-
-        override fun onRunningProgress(code : String, progress : Int) {}
-
-        override fun onRunningAdvanceInformation(code : String, `object` : Any) {}
-
-        override fun onErrorListener(code : String, message : String)
-        {
-            mMainHandler.sendEmptyMessage(MESSAGE_APP_SERVER_ERROR)
-        }
-    }
 
     private val mDialogListener : DialogListener = object : DialogListener
     {

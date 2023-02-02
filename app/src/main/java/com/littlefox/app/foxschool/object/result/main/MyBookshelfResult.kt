@@ -2,12 +2,20 @@ package com.littlefox.app.foxschool.`object`.result.main
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 open class MyBookshelfResult : Parcelable
 {
+    @SerializedName("id")
     private var id : String             = ""
+
+    @SerializedName("name")
     private var name : String           = ""
+
+    @SerializedName("color")
     private var color : String          = ""
+
+    @SerializedName("contents_count")
     private var contents_count : Int    = 0
 
     constructor(id : String, name : String, color : String)

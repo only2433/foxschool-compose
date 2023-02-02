@@ -278,6 +278,16 @@ class Common
 
         const val FILE_TEACHER_MANUAL : String = "teacher_manual.pdf"
         const val FILE_HOME_NEWSPAPER : String = "school_letter.hwp"
+
+        //API
+        const val FAIL_CODE_NETWORK_NOT_CONNECT                     = 105
+        const val FAIL_CODE_USER_AUTHORIZATION_NO_TAKEN             = 401
+        const val FAIL_CODE_USER_AUTHORIZATION_INVALID_TOKEN        = 4011
+        const val FAIL_CODE_USER_PAID_CHANGE                        = 450
+        const val FAIL_CODE_USER_EXPIRE_USER                        = 451
+        const val FAIL_CODE_USER_DUPLICATE_LOGIN                    = 452
+        const val FAIL_CODE_INTERNAL_SERVER_ERROR                   = 500
+        const val SUCCESS_CODE_OK                                   = 200
     }
 
 }

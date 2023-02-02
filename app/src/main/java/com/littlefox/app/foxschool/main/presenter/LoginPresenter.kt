@@ -2,7 +2,6 @@ package com.littlefox.app.foxschool.main.presenter
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -330,7 +329,7 @@ class LoginPresenter : LoginContract.Presenter
                     (mContext as AppCompatActivity).finish()
                     IntentManagementFactory.getInstance().initScene()
                 }
-                else if(result.isNetworkErrorStatus)
+                else if(result.isNetworkError)
                 {
                     Toast.makeText(mContext, result.getMessage(), Toast.LENGTH_LONG).show()
                     (mContext as AppCompatActivity).finish()
