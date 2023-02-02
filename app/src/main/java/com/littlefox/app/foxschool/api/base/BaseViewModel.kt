@@ -57,8 +57,6 @@ abstract class BaseViewModel : ViewModel()
         }
     }
 
-    open fun pullNext(data: QueueData) {}
-
     fun enqueueCommandEnd()
     {
         isRunningTask = false
@@ -72,4 +70,6 @@ abstract class BaseViewModel : ViewModel()
             setIsLoading(false)
         }
     }
+
+    open fun pullNext(data: QueueData) {}
 }

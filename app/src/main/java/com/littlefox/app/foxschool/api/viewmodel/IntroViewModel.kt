@@ -47,7 +47,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
     val _changePasswordKeepData : LiveData<BaseResponse<Nothing>> = changePasswordKeepData
 
 
-    fun getVersion(deviceID : String, pushAddress : String, pushOn : String)
+    private fun getVersion(deviceID : String, pushAddress : String, pushOn : String)
     {
         viewModelScope.launch(Dispatchers.Main) {
             val result = repository.getVersion(deviceID, pushAddress, pushOn)
@@ -67,7 +67,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    fun getAuthMe()
+    private fun getAuthMe()
     {
         viewModelScope.launch (Dispatchers.Main){
             val result = repository.getAuthMe()
@@ -87,7 +87,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    fun getMain()
+    private fun getMain()
     {
         viewModelScope.launch(Dispatchers.Main) {
             val result = repository.getMain()
@@ -107,7 +107,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    fun changePassword(currentPassword: String, changePassword: String, changePasswordConfirm: String)
+    private  fun changePassword(currentPassword: String, changePassword: String, changePasswordConfirm: String)
     {
         viewModelScope.launch(Dispatchers.Main){
             val result = repository.setChangePassword(currentPassword, changePassword, changePasswordConfirm)
@@ -127,7 +127,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    fun changePasswordToDoNext()
+    private fun changePasswordToDoNext()
     {
         viewModelScope.launch(Dispatchers.Main){
             val result = repository.setChangePasswordToDoNext()
@@ -147,7 +147,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    fun changePasswordToKeep()
+    private fun changePasswordToKeep()
     {
         viewModelScope.launch(Dispatchers.Main){
             val result = repository.setChangePasswordToKeep()
