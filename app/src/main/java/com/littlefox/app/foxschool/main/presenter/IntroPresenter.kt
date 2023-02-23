@@ -54,14 +54,12 @@ class IntroPresenter : IntroContract.Presenter
         private const val DIALOG_TYPE_WARNING_FILE_PERMISSION       = 10003
 
         private const val MESSAGE_INIT : Int                        = 100
-        private const val MESSAGE_REQUEST_AUTO_LOGIN : Int          = 101
-        private const val MESSAGE_CHECK_API_MAIN : Int              = 102
-        private const val MESSAGE_REQUEST_COMPLETE_LOGIN : Int      = 103
-        private const val MESSAGE_START_LOGIN : Int                 = 104
-        private const val MESSAGE_START_MAIN : Int                  = 105
-        private const val MESSAGE_APP_SERVER_ERROR : Int            = 106
-        private const val MESSAGE_DEVELOPER_TO_EMAIL : Int          = 107
-        private const val MESSAGE_CHANGE_PASSWORD : Int             = 108
+        private const val MESSAGE_REQUEST_COMPLETE_LOGIN : Int      = 101
+        private const val MESSAGE_START_LOGIN : Int                 = 102
+        private const val MESSAGE_START_MAIN : Int                  = 103
+        private const val MESSAGE_APP_SERVER_ERROR : Int            = 104
+        private const val MESSAGE_DEVELOPER_TO_EMAIL : Int          = 105
+        private const val MESSAGE_CHANGE_PASSWORD : Int             = 106
 
         private const val INDEX_LOGIN                               = 0
 
@@ -619,9 +617,12 @@ class IntroPresenter : IntroContract.Presenter
         when(msg.what)
         {
             MESSAGE_INIT -> init()
-            MESSAGE_REQUEST_AUTO_LOGIN -> requestAutoLoginAsync()
-            MESSAGE_CHECK_API_MAIN -> requestMainInformationAsync()
-            MESSAGE_REQUEST_COMPLETE_LOGIN -> requestInitAsync()
+            MESSAGE_REQUEST_COMPLETE_LOGIN ->
+            {
+                requestInitAsync()
+                requestAutoLoginAsync()
+                requestMainInformationAsync()
+            }
             MESSAGE_START_LOGIN -> startLoginActivity()
             MESSAGE_START_MAIN ->
             {

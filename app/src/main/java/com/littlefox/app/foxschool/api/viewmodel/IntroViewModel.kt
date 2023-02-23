@@ -20,6 +20,7 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,22 +29,22 @@ import javax.inject.Inject
 @HiltViewModel
 class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepository) : BaseViewModel()
 {
-    private val versionData = MutableLiveData<VersionDataResult>()
+    private val versionData = SingleLiveEvent<VersionDataResult>()
     val _versionData : LiveData<VersionDataResult> = versionData
 
-    private val authMeData = MutableLiveData<LoginInformationResult>()
+    private val authMeData = SingleLiveEvent<LoginInformationResult>()
     val _authMeData : LiveData<LoginInformationResult> = authMeData
 
-    private val mainData = MutableLiveData<MainInformationResult>()
+    private val mainData = SingleLiveEvent<MainInformationResult>()
     val _mainData : LiveData<MainInformationResult> = mainData
 
-    private val changePasswordData = MutableLiveData<BaseResponse<Nothing>>()
+    private val changePasswordData = SingleLiveEvent<BaseResponse<Nothing>>()
     val _changePasswordData : LiveData<BaseResponse<Nothing>> = changePasswordData
 
-    private val changePasswordNextData = MutableLiveData<BaseResponse<Nothing>>()
+    private val changePasswordNextData = SingleLiveEvent<BaseResponse<Nothing>>()
     val _changePasswordNextData : LiveData<BaseResponse<Nothing>> = changePasswordNextData
 
-    private val changePasswordKeepData = MutableLiveData<BaseResponse<Nothing>>()
+    private val changePasswordKeepData = SingleLiveEvent<BaseResponse<Nothing>>()
     val _changePasswordKeepData : LiveData<BaseResponse<Nothing>> = changePasswordKeepData
 
 
