@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.adapter
 
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -34,4 +35,5 @@ class HomeworkPagerAdapter : FragmentStatePagerAdapter
     override fun getItem(position : Int) : Fragment = mHomeworkFragmentList!![position]
 
     override fun getPageTitle(position : Int) : CharSequence? = null
+
 }

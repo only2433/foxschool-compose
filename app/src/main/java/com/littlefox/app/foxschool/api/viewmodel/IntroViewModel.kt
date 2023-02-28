@@ -27,7 +27,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepository) : BaseViewModel()
+class IntroViewModel @Inject constructor(
+    private val repository : FoxSchoolRepository,
+    private val appicationContext: Context) : BaseViewModel()
 {
     private val versionData = SingleLiveEvent<VersionDataResult>()
     val _versionData : LiveData<VersionDataResult> = versionData
@@ -108,7 +110,7 @@ class IntroViewModel @Inject constructor(private val repository : FoxSchoolRepos
         }
     }
 
-    private  fun changePassword(currentPassword: String, changePassword: String, changePasswordConfirm: String)
+    private fun changePassword(currentPassword: String, changePassword: String, changePasswordConfirm: String)
     {
         viewModelScope.launch(Dispatchers.Main){
             val result = repository.setChangePassword(currentPassword, changePassword, changePasswordConfirm)

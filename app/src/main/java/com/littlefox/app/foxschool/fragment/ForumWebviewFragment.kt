@@ -24,10 +24,12 @@ import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * [팍스스쿨 소식], [자주 묻는 질문] WebView Fragment
  */
+@AndroidEntryPoint
 class ForumWebviewFragment : Fragment()
 {
     @BindView(R.id._webview)

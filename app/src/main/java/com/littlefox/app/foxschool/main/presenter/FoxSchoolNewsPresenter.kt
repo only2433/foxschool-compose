@@ -66,7 +66,7 @@ class FoxSchoolNewsPresenter : ForumContract.Presenter
             addFragment(ForumWebviewFragment.instance)
         }
         mForumContractView.initViewPager(mMainFragmentSelectionPagerAdapter)
-        requestNewsListAsync()
+      //  requestNewsListAsync()
 
         mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
         mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)

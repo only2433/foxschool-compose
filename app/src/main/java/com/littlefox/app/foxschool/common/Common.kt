@@ -288,6 +288,8 @@ class Common
         const val FAIL_CODE_USER_DUPLICATE_LOGIN                    = 452
         const val FAIL_CODE_INTERNAL_SERVER_ERROR                   = 500
         const val SUCCESS_CODE_OK                                   = 200
+
+        const val PAGE_LOAD_COUNT: Int = 10
     }
 
 }

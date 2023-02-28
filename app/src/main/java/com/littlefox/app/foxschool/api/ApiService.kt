@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.preference.PreferenceManager
+import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
 import com.littlefox.app.foxschool.`object`.result.VersionBaseObject
+import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBaseListPagingResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
@@ -58,6 +60,13 @@ interface ApiService
     @Headers("Content-Type: application/json")
     @GET("users/password/keep")
     suspend fun passwordChangeKeepAsync() : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @GET("forum/board/news")
+    suspend fun forumListAsync(
+        @Query("per_page") pageCount: Int,
+        @Query("page") currentPage: Int
+    ) : Response<BaseResponse<ForumBaseListPagingResult>>
 
     companion object
     {

@@ -1,13 +1,19 @@
-package com.littlefox.app.foxschool.`object`.result.forum
+package com.littlefox.app.foxschool.`object`.result.forum.paging
 
+import com.google.gson.annotations.SerializedName
 import java.util.ArrayList
 
-class ForumBaseListResult
-{
-    private val isnew : String = ""
-    private val list : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
-    private val meta : MetaDataResult? = null
+data class ForumBaseListPagingResult(
+    @SerializedName("isnew")
+    val isnew : String = "",
 
+    @SerializedName("list")
+    val list : ArrayList<ForumBasePagingResult> = ArrayList<ForumBasePagingResult>(),
+
+    @SerializedName("meta")
+    val meta : ForumMetaDataPagingResult? = null
+)
+{
     fun getIsNew() : String = isnew
 
     val currentPageIndex : Int
@@ -22,15 +28,15 @@ class ForumBaseListResult
         }
 
     val lastPageIndex : Int
-    get()
-    {
-        if(meta != null)
+        get()
         {
-            return meta.last_page
+            if(meta != null)
+            {
+                return meta.last_page
+            }
+            else
+                return 0
         }
-        else
-            return 0
-    }
 
     val isLastPage : Boolean
         get()
@@ -56,5 +62,5 @@ class ForumBaseListResult
                 return 0
         }
 
-    fun getNewsList() : List<ForumBaseResult> = list
+    fun getNewsList() : List<ForumBasePagingResult> = list
 }

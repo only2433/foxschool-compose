@@ -1,7 +1,14 @@
 package com.littlefox.app.foxschool.api.di
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBasePagingResult
 import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.base.safeApiCall
+import com.littlefox.app.foxschool.api.paging.ForumPagingSource
+import com.littlefox.app.foxschool.common.Common
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
@@ -46,5 +53,13 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
      */
     suspend fun setChangePasswordToKeep() = safeApiCall {
         remote.passwordChangeKeepAsync()
+    }
+
+    fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
+    {
+        return Pager(
+            config = PagingConfig(enablePlaceholders = false, pageSize = Common.PAGE_LOAD_COUNT),
+            pagingSourceFactory = { ForumPagingSource(remote)}
+        ).flow
     }
 }
