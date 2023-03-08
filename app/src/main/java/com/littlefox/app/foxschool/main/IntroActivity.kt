@@ -8,7 +8,6 @@ import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
-import android.os.Message
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -19,21 +18,17 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.IntroContract
-import com.littlefox.app.foxschool.main.presenter.IntroPresenter
 import com.littlefox.app.foxschool.view.ProgressBarAnimation
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.littlefox.app.foxschool.api.enumerate.IntroViewMode
+import com.littlefox.app.foxschool.enumerate.IntroViewMode
 import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
@@ -184,7 +179,7 @@ class IntroActivity : BaseActivity()
             CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
         })
 
-        factoryViewModel.bottomViewType.observe(this, Observer<IntroViewMode> { mode ->
+        factoryViewModel.bottomViewType.observe(this, Observer<IntroViewMode> {mode ->
                 when(mode)
                 {
                     IntroViewMode.PROGRESS ->
@@ -227,7 +222,9 @@ class IntroActivity : BaseActivity()
             showPasswordChangeDialog(type)
         })
 
-        factoryViewModel.hideDialogPasswordChange
+        factoryViewModel.hideDialogPasswordChange.observe(this, Observer{
+            hidePasswordChangeDialog()
+        })
     }
 
 

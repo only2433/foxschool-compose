@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.api.enumerate
+package com.littlefox.app.foxschool.enumerate
 
 enum class IntroViewMode
 {
