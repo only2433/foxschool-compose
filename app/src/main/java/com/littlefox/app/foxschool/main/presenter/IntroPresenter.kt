@@ -146,7 +146,7 @@ class IntroPresenter : IntroContract.Presenter
 
     private fun setupViewModelObserver()
     {
-        mIntroViewModel.versionData.observe(mContext as AppCompatActivity){ data ->
+        /*mIntroViewModel.versionData.observe(mContext as AppCompatActivity){ data ->
 
             mVersionDataResult = data
             CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
@@ -259,7 +259,7 @@ class IntroPresenter : IntroContract.Presenter
                     (mContext as AppCompatActivity).finish()
                 }
             }
-        }
+        }*/
     }
 
     override fun resume()

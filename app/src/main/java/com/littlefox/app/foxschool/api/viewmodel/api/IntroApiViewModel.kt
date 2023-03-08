@@ -16,28 +16,29 @@ import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRepository) : BaseApiViewModel()
 {
-    private val _versionData = SingleLiveEvent<VersionDataResult>()
-    val versionData : LiveData<VersionDataResult> = _versionData
+    private val _versionData = MutableStateFlow<VersionDataResult?>(null)
+    val versionData : MutableStateFlow<VersionDataResult?> = _versionData
 
-    private val _authMeData = SingleLiveEvent<LoginInformationResult>()
-    val authMeData : LiveData<LoginInformationResult> = _authMeData
+    private val _authMeData = MutableStateFlow<LoginInformationResult?>(null)
+    val authMeData : MutableStateFlow<LoginInformationResult?> = _authMeData
 
-    private val _mainData = SingleLiveEvent<MainInformationResult>()
-    val mainData : LiveData<MainInformationResult> = _mainData
+    private val _mainData = MutableStateFlow<MainInformationResult?>(null)
+    val mainData : MutableStateFlow<MainInformationResult?> = _mainData
 
-    private val _changePasswordData = SingleLiveEvent<BaseResponse<Nothing>>()
-    val changePasswordData : LiveData<BaseResponse<Nothing>> = _changePasswordData
+    private val _changePasswordData = MutableStateFlow<BaseResponse<Nothing>?>(null)
+    val changePasswordData : MutableStateFlow<BaseResponse<Nothing>?> = _changePasswordData
 
-    private val _changePasswordNextData = SingleLiveEvent<BaseResponse<Nothing>>()
-    val changePasswordNextData : LiveData<BaseResponse<Nothing>> = _changePasswordNextData
+    private val _changePasswordNextData = MutableStateFlow<BaseResponse<Nothing>?>(null)
+    val changePasswordNextData : MutableStateFlow<BaseResponse<Nothing>?> = _changePasswordNextData
 
-    private val _changePasswordKeepData = SingleLiveEvent<BaseResponse<Nothing>>()
-    val changePasswordKeepData : LiveData<BaseResponse<Nothing>> = _changePasswordKeepData
+    private val _changePasswordKeepData = MutableStateFlow<BaseResponse<Nothing>?>(null)
+    val changePasswordKeepData : MutableStateFlow<BaseResponse<Nothing>?> = _changePasswordKeepData
 
     private var mJob: Job? = null
 
@@ -52,11 +53,11 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 is ResultData.Success ->
                 {
                     val data = result.data as VersionDataResult
-                    _versionData.postValue(data)
+                    _versionData.value = data
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.postValue(Pair(result, RequestCode.CODE_VERSION))
+                    _errorReport.value = Pair(result, RequestCode.CODE_VERSION)
                 }
             }
         }
@@ -73,11 +74,11 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 is ResultData.Success ->
                 {
                     val data = result.data as LoginInformationResult
-                    _authMeData.postValue(data)
+                    _authMeData.value = data
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.postValue(Pair(result, RequestCode.CODE_AUTH_ME))
+                    _errorReport.value = Pair(result, RequestCode.CODE_AUTH_ME)
                 }
             }
         }
@@ -94,11 +95,11 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 is ResultData.Success ->
                 {
                     val data = result.data as MainInformationResult
-                    _mainData.postValue(data)
+                    _mainData.value = data
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.postValue(Pair(result, RequestCode.CODE_MAIN))
+                    _errorReport.value = Pair(result, RequestCode.CODE_MAIN)
                 }
             }
         }
@@ -116,11 +117,11 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 is ResultData.Success ->
                 {
                     val data = result.data as BaseResponse
-                    _changePasswordData.postValue(data)
+                    _changePasswordData.value = data
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE))
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE)
                 }
             }
         }
@@ -130,16 +131,19 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     private suspend fun changePasswordToDoNext()
     {
         val result = repository.setChangePasswordToDoNext()
-        when(result)
+        withContext(Dispatchers.Main)
         {
-            is ResultData.Success ->
+            when(result)
             {
-                val data = result.data as BaseResponse
-                _changePasswordNextData.postValue(data)
-            }
-            is ResultData.Fail ->
-            {
-                _errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT))
+                is ResultData.Success ->
+                {
+                    val data = result.data as BaseResponse
+                    _changePasswordNextData.value = data
+                }
+                is ResultData.Fail ->
+                {
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
+                }
             }
         }
         enqueueCommandEnd()
@@ -149,16 +153,19 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     private suspend fun changePasswordToKeep()
     {
         val result = repository.setChangePasswordToKeep()
-        when(result)
+        withContext(Dispatchers.Main)
         {
-            is ResultData.Success ->
+            when(result)
             {
-                val data = result.data as BaseResponse
-                _changePasswordKeepData.postValue(data)
-            }
-            is ResultData.Fail ->
-            {
-                _errorReport.postValue(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP))
+                is ResultData.Success ->
+                {
+                    val data = result.data as BaseResponse
+                    _changePasswordKeepData.value = data
+                }
+                is ResultData.Fail ->
+                {
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                }
             }
         }
         enqueueCommandEnd()

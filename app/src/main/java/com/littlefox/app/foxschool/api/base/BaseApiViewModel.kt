@@ -7,15 +7,16 @@ import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.logmonitor.Log
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.LinkedList
 
 abstract class BaseApiViewModel : ViewModel()
 {
-    private val _isLoading = MutableLiveData<Pair<RequestCode,Boolean>>()
-    val isLoading: LiveData<Pair<RequestCode,Boolean>> get() = _isLoading
+    private val _isLoading = MutableStateFlow<Pair<RequestCode,Boolean>?>(null)
+    val isLoading: MutableStateFlow<Pair<RequestCode,Boolean>?> get() = _isLoading
 
-    protected val _errorReport = MutableLiveData<Pair<ResultData.Fail, RequestCode>>()
-    val errorReport : LiveData<Pair<ResultData.Fail, RequestCode>> = _errorReport
+    protected val _errorReport = MutableStateFlow<Pair<ResultData.Fail, RequestCode>?>(null)
+    val errorReport : MutableStateFlow<Pair<ResultData.Fail, RequestCode>?> = _errorReport
 
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false
@@ -28,7 +29,7 @@ abstract class BaseApiViewModel : ViewModel()
     fun setIsLoading(code: RequestCode, isLoading: Boolean)
     {
         Log.f("code : $code , isLoading : $isLoading")
-        _isLoading.postValue(Pair(code, isLoading))
+        _isLoading.value = Pair(code, isLoading)
     }
 
     fun enqueueCommandStart(code: RequestCode, duration: Long = 0L, vararg objects : Any?)

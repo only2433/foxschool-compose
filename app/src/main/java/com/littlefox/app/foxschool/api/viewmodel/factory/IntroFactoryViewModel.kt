@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -38,6 +39,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -136,127 +138,157 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
 
     override fun setupViewModelObserver()
     {
-        apiViewModel.isLoading.observe(mContext as AppCompatActivity){ data ->
-
-            if (data.first == RequestCode.CODE_PASSWORD_CHANGE ||
-                data.first == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
-                data.first == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
-            {
-                if(data.second)
-                {
-                    _isLoading.postValue(true)
-                }
-                else
-                {
-                    _isLoading.postValue(false)
-                }
-            }
-        }
-        apiViewModel.versionData.observe(mContext as AppCompatActivity){ data ->
-            mVersionDataResult = data
-            CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
-            if(mVersionDataResult!!.isNeedUpdate)
-            {
-                if(mVersionDataResult!!.isForceUpdate())
-                {
-                    _dialogSelectUpdate.call()
-                }
-                else
-                {
-                    _dialogForceUpdate.call()
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.isLoading.collect { data ->
+                data?.let {
+                    if (data.first == RequestCode.CODE_PASSWORD_CHANGE ||
+                        data.first == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
+                        data.first == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                    {
+                        if(data.second)
+                        {
+                            _isLoading.postValue(true)
+                        }
+                        else
+                        {
+                            _isLoading.postValue(false)
+                        }
+                    }
                 }
             }
-            else
-            {
-                startAPIProcess()
-            }
         }
 
-        apiViewModel.authMeData.observe(mContext as AppCompatActivity){data ->
-            mUserInformationResult = data
-            CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
-            if (mUserInformationResult!!.isNeedChangePassword())
-            {
-                // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
-                mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
-                _showDialogPasswordChange.value = mUserInformationResult!!.getPasswordChangeType()
-            }
-            else
-            {
-                // 자동로그인 완료
-                mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-            }
-        }
-
-        apiViewModel.mainData.observe(mContext as AppCompatActivity){data ->
-            Log.f("Main data get to API Success")
-            CommonUtils.getInstance(mContext).saveMainData(data)
-            mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
-            enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
-
-            viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_SHORT_LONG)
-                startMainActivity()
-            }
-        }
-
-        apiViewModel.changePasswordData.observe(mContext as AppCompatActivity){
-            // 비밀번호 변경 성공
-            Log.f("Password Change Complete")
-            changeUserLoginData()
-            _toast.value = mContext.getString(R.string.message_password_change_complete)
-            viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_LONG)
-                _hideDialogPasswordChange.call()
-                mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-            }
-        }
-
-        apiViewModel.changePasswordNextData.observe(mContext as AppCompatActivity){
-            // 다음에 변경
-            _hideDialogPasswordChange.call()
-            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-        }
-
-        apiViewModel.changePasswordKeepData.observe(mContext as AppCompatActivity){
-            // 현재 비밀번호 유지
-            _toast.value = mContext.getString(R.string.message_password_change_complete)
-            viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_LONG)
-                _hideDialogPasswordChange.call()
-                mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-            }
-        }
-
-        apiViewModel.errorReport.observe(mContext as AppCompatActivity){data ->
-
-            val result = data.first as ResultData.Fail
-            val code = data.second
-
-            Log.f("status : ${result.status}, message : ${result.message} , code : ${data.second}")
-
-            Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
-            if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
-            {
-                Log.f("== isAuthenticationBroken ==")
-                (mContext as AppCompatActivity).finish()
-                IntentManagementFactory.getInstance().initScene()
-            }
-            else
-            {
-                if (code == RequestCode.CODE_PASSWORD_CHANGE ||
-                    code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
-                    code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
-                {
-                    _toast.value = result.message
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.versionData.collect{ data ->
+                data?.let {
+                    mVersionDataResult = data
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
+                    if(mVersionDataResult!!.isNeedUpdate)
+                    {
+                        if(mVersionDataResult!!.isForceUpdate())
+                        {
+                            _dialogSelectUpdate.call()
+                        }
+                        else
+                        {
+                            _dialogForceUpdate.call()
+                        }
+                    }
+                    else
+                    {
+                        startAPIProcess()
+                    }
                 }
-                else
-                {
-                    (mContext as AppCompatActivity).finish()
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.authMeData.collect{ data ->
+                data?.let {
+                    mUserInformationResult = data
+                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
+                    if (mUserInformationResult!!.isNeedChangePassword())
+                    {
+                        // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
+                        mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+                        _showDialogPasswordChange.value = mUserInformationResult!!.getPasswordChangeType()
+                    }
+                    else
+                    {
+                        // 자동로그인 완료
+                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.mainData.collect{ data ->
+                data?.let {
+                    Log.f("Main data get to API Success")
+                    CommonUtils.getInstance(mContext).saveMainData(data)
+                    mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
+                    enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
+
+                    viewModelScope.launch(Dispatchers.Main) {
+                        delay(Common.DURATION_SHORT_LONG)
+                        startMainActivity()
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.changePasswordData.collect { data ->
+                data?.let {
+                    // 비밀번호 변경 성공
+                    Log.f("Password Change Complete")
+                    changeUserLoginData()
+                    _toast.value = mContext.getString(R.string.message_password_change_complete)
+                    viewModelScope.launch(Dispatchers.Main) {
+                        delay(Common.DURATION_LONG)
+                        _hideDialogPasswordChange.call()
+                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.changePasswordNextData.collect { data ->
+                data?.let {
+                    // 다음에 변경
+                    _hideDialogPasswordChange.call()
+                    mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                    enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.changePasswordKeepData.collect { data ->
+                data?.let {
+                    // 현재 비밀번호 유지
+                    _toast.value = mContext.getString(R.string.message_password_change_complete)
+                    viewModelScope.launch(Dispatchers.Main) {
+                        delay(Common.DURATION_LONG)
+                        _hideDialogPasswordChange.call()
+                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                    }
+                }
+            }
+        }
+        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
+            apiViewModel.errorReport.collect { data ->
+                data?.let {
+                    val result = data.first as ResultData.Fail
+                    val code = data.second
+
+                    Log.f("status : ${result.status}, message : ${result.message} , code : ${data.second}")
+
+                    Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
+                    if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
+                    {
+                        Log.f("== isAuthenticationBroken ==")
+                        (mContext as AppCompatActivity).finish()
+                        IntentManagementFactory.getInstance().initScene()
+                    }
+                    else
+                    {
+                        if (code == RequestCode.CODE_PASSWORD_CHANGE ||
+                            code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
+                            code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                        {
+                            _toast.value = result.message
+                        }
+                        else
+                        {
+                            (mContext as AppCompatActivity).finish()
+                        }
+                    }
                 }
             }
         }
