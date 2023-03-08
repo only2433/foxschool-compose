@@ -59,7 +59,6 @@ class WebviewEbookActivity : BaseActivity()
     @BindView(R.id._closeButton)
     lateinit var _CloseButton : ImageView
 
-    private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mWebviewIntentParamsObject : WebviewIntentParamsObject? = null
     private var mMediaPlayer : MediaPlayer? = null
     private var mAudioAttributes : AudioAttributes? = null
@@ -251,27 +250,6 @@ class WebviewEbookActivity : BaseActivity()
         val backgroundColor : Int = CommonUtils.getInstance(this).getTopBarBackgroundColor()
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(statusBarColor))
         _TitleLayout.setBackgroundColor(resources.getColor(backgroundColor))
-    }
-
-    private fun showLoading()
-    {
-        if(mLoadingDialog == null)
-        {
-            mLoadingDialog = MaterialLoadingDialog(
-                this,
-                CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-            )
-        }
-        mLoadingDialog!!.show()
-    }
-
-    private fun hideLoading()
-    {
-        if(mLoadingDialog != null)
-        {
-            mLoadingDialog!!.dismiss()
-            mLoadingDialog = null
-        }
     }
 
     @OnClick(R.id._closeButtonRect)

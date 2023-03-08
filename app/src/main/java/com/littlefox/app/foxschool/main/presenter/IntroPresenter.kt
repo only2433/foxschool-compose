@@ -15,18 +15,13 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.LoginBaseObject
-import com.littlefox.app.foxschool.`object`.result.MainInformationBaseObject
-import com.littlefox.app.foxschool.`object`.result.VersionBaseObject
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
-import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
-import com.littlefox.app.foxschool.api.viewmodel.IntroViewModel
+import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
 import com.littlefox.app.foxschool.common.*
-import com.littlefox.app.foxschool.coroutine.*
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
@@ -35,7 +30,6 @@ import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.contract.IntroContract
 import com.littlefox.app.foxschool.management.IntentManagementFactory
-import com.littlefox.library.system.async.listener.AsyncListener
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
@@ -89,9 +83,9 @@ class IntroPresenter : IntroContract.Presenter
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private var isRequestPermission : Boolean = false
     private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
-    private lateinit var mIntroViewModel: IntroViewModel
+    private lateinit var mIntroViewModel: IntroApiViewModel
 
-    constructor(context : Context, viewModel : IntroViewModel)
+    constructor(context : Context, viewModel : IntroApiViewModel)
     {
         mContext = context
         mIntroViewModel = viewModel
@@ -152,7 +146,7 @@ class IntroPresenter : IntroContract.Presenter
 
     private fun setupViewModelObserver()
     {
-        mIntroViewModel._versionData.observe(mContext as AppCompatActivity){ data ->
+        mIntroViewModel.versionData.observe(mContext as AppCompatActivity){ data ->
 
             mVersionDataResult = data
             CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
@@ -181,7 +175,7 @@ class IntroPresenter : IntroContract.Presenter
             }
         }
 
-        mIntroViewModel._authMeData.observe(mContext as AppCompatActivity){ data ->
+        mIntroViewModel.authMeData.observe(mContext as AppCompatActivity){ data ->
 
             mUserInformationResult = data
             CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
@@ -200,7 +194,7 @@ class IntroPresenter : IntroContract.Presenter
             }
         }
 
-        mIntroViewModel._mainData.observe(mContext as AppCompatActivity){ data ->
+        mIntroViewModel.mainData.observe(mContext as AppCompatActivity){ data ->
 
             Log.f("Main data get to API Success")
             CommonUtils.getInstance(mContext).saveMainData(data)
@@ -209,7 +203,7 @@ class IntroPresenter : IntroContract.Presenter
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_MAIN, Common.DURATION_SHORT_LONG)
         }
 
-        mIntroViewModel._changePasswordData.observe(mContext as AppCompatActivity){
+        mIntroViewModel.changePasswordData.observe(mContext as AppCompatActivity){
 
             // 비밀번호 변경 성공
             Log.f("Password Change Complete")
@@ -219,14 +213,14 @@ class IntroPresenter : IntroContract.Presenter
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
         }
 
-        mIntroViewModel._changePasswordNextData.observe(mContext as AppCompatActivity){
+        mIntroViewModel.changePasswordNextData.observe(mContext as AppCompatActivity){
 
             // 다음에 변경
             mPasswordChangeDialog!!.hideLoading()
             mMainHandler.sendEmptyMessage(MESSAGE_CHANGE_PASSWORD)
         }
 
-        mIntroViewModel._changePasswordKeepData.observe(mContext as AppCompatActivity){
+        mIntroViewModel.changePasswordKeepData.observe(mContext as AppCompatActivity){
 
             // 현재 비밀번호 유지
             mPasswordChangeDialog!!.hideLoading()
@@ -234,7 +228,7 @@ class IntroPresenter : IntroContract.Presenter
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_CHANGE_PASSWORD, Common.DURATION_LONG)
         }
 
-        mIntroViewModel._errorReport.observe(mContext as AppCompatActivity){ data ->
+        mIntroViewModel.errorReport.observe(mContext as AppCompatActivity){ data ->
 
             val result = data.first as ResultData.Fail
             val code = data.second
@@ -266,22 +260,6 @@ class IntroPresenter : IntroContract.Presenter
                 }
             }
         }
-    }
-
-    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
-    {
-        mResultLauncherList = arrayListOf()
-        mResultLauncherList.add(launchers.get(0))
-    }
-
-    override fun onActivityResultLogin()
-    {
-        Log.f("")
-        mMainContractView.showProgressView()
-        /**
-         * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
-         */
-        mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
     }
 
     override fun resume()
@@ -405,7 +383,7 @@ class IntroPresenter : IntroContract.Presenter
     private fun showPasswordChangeDialog()
     {
         Log.f("")
-        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!).apply {
+        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserInformationResult!!.getPasswordChangeType()).apply {
             setPasswordChangeListener(mPasswordChangeDialogListener)
             setCancelable(false)
             show()
@@ -471,7 +449,6 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChange()
     {
         mPasswordChangeDialog!!.showLoading()
-
         mIntroViewModel.enqueueCommandStart(
             RequestCode.CODE_PASSWORD_CHANGE,
             0L,
@@ -486,7 +463,6 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeNext()
     {
         mPasswordChangeDialog!!.showLoading()
-
         mIntroViewModel.enqueueCommandStart(RequestCode.CODE_PASSWORD_CHANGE_NEXT)
     }
 
@@ -496,7 +472,6 @@ class IntroPresenter : IntroContract.Presenter
     private fun requestPasswordChangeKeep()
     {
         mPasswordChangeDialog!!.showLoading()
-
         mIntroViewModel.enqueueCommandStart(RequestCode.CODE_PASSWORD_CHANGE_KEEP)
     }
 
@@ -566,7 +541,22 @@ class IntroPresenter : IntroContract.Presenter
             Toast.makeText(mContext, mContext.resources.getString(R.string.message_toast_network_error), Toast.LENGTH_LONG).show()
             (mContext as AppCompatActivity).finish()
         }
+    }
 
+    override fun onAddActivityResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
+    {
+        mResultLauncherList = arrayListOf()
+        mResultLauncherList.add(launchers.get(0))
+    }
+
+    override fun onActivityResultLogin()
+    {
+        Log.f("")
+        mMainContractView.showProgressView()
+        /**
+         * Login Activity의 Activity 종료가 늦게되서 프로그래스랑 겹쳐 틱 되는 현상 때문에 조금 늦췃다.
+         */
+        mMainHandler.sendEmptyMessageDelayed(MESSAGE_REQUEST_COMPLETE_LOGIN, Common.DURATION_NORMAL)
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)

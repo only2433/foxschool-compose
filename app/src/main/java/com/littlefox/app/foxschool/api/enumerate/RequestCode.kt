@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.api.enumerate
 
 enum class RequestCode
 {
+    CODE_DEFAULT,
     CODE_VERSION,
     CODE_AUTH_ME,
     CODE_MAIN,

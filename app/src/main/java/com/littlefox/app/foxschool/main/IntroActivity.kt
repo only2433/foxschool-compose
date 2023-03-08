@@ -12,17 +12,14 @@ import android.os.Message
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.api.viewmodel.IntroViewModel
+import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -35,9 +32,19 @@ import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
+import com.littlefox.app.foxschool.api.enumerate.IntroViewMode
+import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
+import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.PasswordGuideType
+import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 
 @AndroidEntryPoint
-class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
+class IntroActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -81,12 +88,16 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         private const val SYSTEM_DIALOG_REASON_HOME_KEY : String    = "homekey"
     }
 
-    private lateinit var mIntroPresenter : IntroContract.Presenter
     private lateinit var mProgressBarAnimation : ProgressBarAnimation
     private var mFrameAnimationDrawable : AnimationDrawable? = null
     private var mHomeKeyIntentFilter : IntentFilter? = null
 
-    private val viewModel: IntroViewModel by viewModels()
+    // 비밀번호 변경 안내 관련 변수
+    private var mPasswordChangeDialog : PasswordChangeDialog? = null
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+
+
+    private val factoryViewModel: IntroFactoryViewModel by viewModels()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -102,22 +113,27 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
             setContentView(R.layout.activity_intro)
         }
         ButterKnife.bind(this)
-        mIntroPresenter = IntroPresenter(this, viewModel)
-        mIntroPresenter.onAddActivityResultLaunchers(mLoginActivityResult)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this)
+        factoryViewModel.onAddResultLaunchers(mLoginActivityResult)
         mHomeKeyIntentFilter = IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mIntroPresenter.resume()
+        factoryViewModel.resume()
         registerReceiver(mBroadcastReceiver, mHomeKeyIntentFilter)
     }
 
     override fun onPause()
     {
         super.onPause()
-        mIntroPresenter.pause()
+        factoryViewModel.pause()
         unregisterReceiver(mBroadcastReceiver)
     }
 
@@ -130,39 +146,90 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     override fun onDestroy()
     {
         super.onDestroy()
-        mIntroPresenter.destroy()
+        factoryViewModel.destroy()
         stopFrameAnimation()
     }
 
-    override fun initView()
+    fun initView()
     {
         _IntroLogoTextImage.setOnTouchListener(mLogoTouchListener)
     }
 
-    override fun initFont()
+    fun initFont()
     {
         _IntroTitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
         _IntroProgressText.setTypeface(Font.getInstance(this).getTypefaceBold())
         _IntroduceTextButton.setTypeface(Font.getInstance(this).getTypefaceBold())
         _LoginTextButton.setTypeface(Font.getInstance(this).getTypefaceBold())
-
-
     }
 
-    override fun handlerMessage(message : Message)
+    fun setupObserverViewModel()
     {
-        mIntroPresenter.sendMessageEvent(message)
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.bottomViewType.observe(this, Observer<IntroViewMode> { mode ->
+                when(mode)
+                {
+                    IntroViewMode.PROGRESS ->
+                    {
+                        Log.f("------> IntroViewMode.PROGRESS")
+                        _IntroItemSelectLayout.setVisibility(View.GONE)
+                        _ProgressLayout.setVisibility(View.VISIBLE)
+                        _FrameAnimationLayout.setVisibility(View.VISIBLE)
+                        startFrameAnimation()
+                    }
+                    IntroViewMode.SELECT ->
+                    {
+                        Log.f("------> IntroViewMode.SELECT")
+                        _IntroItemSelectLayout.setVisibility(View.VISIBLE)
+                        _ProgressLayout.setVisibility(View.GONE)
+                        _FrameAnimationLayout.setVisibility(View.GONE)
+                    }
+                }
+            })
+
+        factoryViewModel.progressPercent.observe(this, Observer<Pair<Float, Float>> { progress ->
+            mProgressBarAnimation = ProgressBarAnimation(_IntroProgressPercent, _IntroProgressText, progress.first, progress.second)
+            mProgressBarAnimation.duration = Common.DURATION_SHORT_LONG
+            _IntroProgressPercent.startAnimation(mProgressBarAnimation)
+        })
+
+        factoryViewModel.dialogFilePermission.observe(this, Observer {
+            showChangeFilePermissionDialog()
+        })
+
+        factoryViewModel.dialogSelectUpdate.observe(this, Observer {
+            showSelectUpdateDialog()
+        })
+
+        factoryViewModel.dialogForceUpdate.observe(this, Observer {
+            showForceUpdateDialog()
+        })
+
+        factoryViewModel.showDialogPasswordChange.observe(this, Observer<PasswordGuideType> { type ->
+            showPasswordChangeDialog(type)
+        })
+
+        factoryViewModel.hideDialogPasswordChange
     }
 
-    override fun showLoading() {}
-
-    override fun hideLoading() {}
-
-    override fun showSuccessMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-    }
-    override fun showErrorMessage(message : String) {}
 
     override fun onUserLeaveHint()
     {
@@ -173,42 +240,13 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        mIntroPresenter.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        factoryViewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onNewIntent(intent : Intent?)
     {
         Log.i("")
         super.onNewIntent(intent)
-    }
-
-    override fun showToast(message : String)
-    {
-        CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun showItemSelectView()
-    {
-        Log.f("")
-        _IntroItemSelectLayout.setVisibility(View.VISIBLE)
-        _ProgressLayout.setVisibility(View.GONE)
-        _FrameAnimationLayout.setVisibility(View.GONE)
-    }
-
-    override fun showProgressView()
-    {
-        Log.f("")
-        _IntroItemSelectLayout.setVisibility(View.GONE)
-        _ProgressLayout.setVisibility(View.VISIBLE)
-        _FrameAnimationLayout.setVisibility(View.VISIBLE)
-        startFrameAnimation()
-    }
-
-    override fun setProgressPercent(fromPercent : Float, toPercent : Float)
-    {
-        mProgressBarAnimation = ProgressBarAnimation(_IntroProgressPercent, _IntroProgressText, fromPercent, toPercent)
-        mProgressBarAnimation.duration = Common.DURATION_SHORT_LONG
-        _IntroProgressPercent.startAnimation(mProgressBarAnimation)
     }
 
     private fun startFrameAnimation()
@@ -229,16 +267,86 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
 
     override fun onBackPressed()
     {
-        super.onBackPressed()
+        finish()
     }
+
+    /**
+     * 파일 권한 허용 요청 다이얼로그
+     * - 로그 파일 저장을 위해
+     */
+    private fun showChangeFilePermissionDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_warning_storage_permission))
+            setDialogEventType(IntroFactoryViewModel.DIALOG_TYPE_WARNING_FILE_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(resources.getString(R.string.text_cancel), resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showForceUpdateDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_force_update))
+            setDialogEventType(IntroFactoryViewModel.DIALOG_TYPE_FORCE_UPDATE)
+            setButtonType(DialogButtonType.BUTTON_1)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showSelectUpdateDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_need_update))
+            setDialogEventType(IntroFactoryViewModel.DIALOG_TYPE_SELECT_UPDATE_CONFIRM)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showPasswordChangeDialog(type: PasswordGuideType)
+    {
+        Log.f("")
+        mPasswordChangeDialog = PasswordChangeDialog(this, type).apply {
+            setPasswordChangeListener(mPasswordChangeDialogListener)
+            setCancelable(false)
+            show()
+        }
+    }
+
+    private fun hidePasswordChangeDialog()
+    {
+        mPasswordChangeDialog!!.dismiss()
+    }
+
 
     @OnClick( R.id._introduceText, R.id._loginText)
     fun onClickView(view : View)
     {
         when(view.id)
         {
-            R.id._introduceText -> mIntroPresenter.onClickIntroduce()
-            R.id._loginText -> mIntroPresenter.onClickLogin()
+            R.id._introduceText -> factoryViewModel.onClickIntroduce()
+            R.id._loginText -> factoryViewModel.onClickLogin()
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            factoryViewModel.onDialogClick(eventType)
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            factoryViewModel.onDialogChoiceClick(buttonType, eventType)
         }
     }
 
@@ -248,16 +356,44 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
         {
             if(event?.action == MotionEvent.ACTION_DOWN)
             {
-                mIntroPresenter.onActivateEasterEgg()
+                factoryViewModel.onActivateEasterEgg()
             }
             else if(event?.action == MotionEvent.ACTION_UP || event?.action == MotionEvent.ACTION_OUTSIDE)
             {
-                mIntroPresenter.onDeactivateEasterEgg()
+                factoryViewModel.onDeactiveEasterEgg()
             }
-
             return true
         }
+    }
 
+    /**
+     * 비밀번호 변경 다이얼로그 Listener
+     */
+    val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
+    {
+        /**
+         * [비밀번호 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+        {
+            factoryViewModel.onClickChangeButton(oldPassword, newPassword, confirmPassword)
+        }
+
+        /**
+         * [다음에 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickLaterButton()
+        {
+            factoryViewModel.onClickLaterButton()
+        }
+
+        /**
+         * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
+         */
+        override fun onClickKeepButton()
+        {
+           factoryViewModel.onClickKeepButton()
+        }
     }
 
     private val mBroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver()
@@ -273,7 +409,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
                 {
                     if(reason == SYSTEM_DIALOG_REASON_HOME_KEY)
                     {
-                        mIntroPresenter.onClickHomeButton()
+                        factoryViewModel.onClickHomeButton()
                     }
                 }
             }
@@ -284,7 +420,7 @@ class IntroActivity : BaseActivity(), MessageHandlerCallback, IntroContract.View
     { result ->
         if(result.resultCode == RESULT_OK)
         {
-            mIntroPresenter.onActivityResultLogin()
+            factoryViewModel.onActivityResult(ResultLauncherCode.LOGIN)
         }
     }
 }

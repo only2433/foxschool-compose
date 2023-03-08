@@ -53,7 +53,6 @@ class WebviewFAQActivity : BaseActivity()
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
 
-    private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mCurrentURL = ""
 
     /** ========== LifeCycle ========== */
@@ -164,27 +163,6 @@ class WebviewFAQActivity : BaseActivity()
             _BackButtonRect.visibility = View.GONE
             _CloseButtonRect.visibility = View.VISIBLE
             _CloseButton.visibility = View.VISIBLE
-        }
-    }
-
-    private fun showLoading()
-    {
-        if(mLoadingDialog == null)
-        {
-            mLoadingDialog = MaterialLoadingDialog(
-                this,
-                CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-            )
-        }
-        mLoadingDialog?.show()
-    }
-
-    private fun hideLoading()
-    {
-        if(mLoadingDialog != null)
-        {
-            mLoadingDialog?.dismiss()
-            mLoadingDialog = null
         }
     }
 

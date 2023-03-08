@@ -62,7 +62,6 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
         const val MESSAGE_PAGE_LOAD_ERROR : Int = 11
     }
     private var mCurrentURL : String = ""
-    private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mMainHandler : WeakReferenceHandler? = null
 
     /** ========== LifeCycle ========== */
@@ -177,27 +176,6 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
             _BackButtonRect.visibility = View.GONE
             _CloseButtonRect.visibility = View.VISIBLE
             _CloseButton.visibility = View.VISIBLE
-        }
-    }
-
-    private fun showLoading()
-    {
-        if(mLoadingDialog == null)
-        {
-            mLoadingDialog = MaterialLoadingDialog(
-                this,
-                CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-            )
-        }
-        mLoadingDialog?.show()
-    }
-
-    private fun hideLoading()
-    {
-        if(mLoadingDialog != null)
-        {
-            mLoadingDialog?.dismiss()
-            mLoadingDialog = null
         }
     }
 

@@ -47,9 +47,7 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
 
     @BindView(R.id._webview)
     lateinit var _WebView : WebView
-
-    private var mLoadingDialog : MaterialLoadingDialog? = null
-
+    
     /** ========== LifeCycle ========== */
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -133,27 +131,6 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
 
     }
     /** ========== Init end ========== */
-
-    private fun showLoading()
-    {
-        if(mLoadingDialog == null)
-        {
-            mLoadingDialog = MaterialLoadingDialog(
-                this,
-                CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-            )
-        }
-        mLoadingDialog?.show()
-    }
-
-    private fun hideLoading()
-    {
-        if(mLoadingDialog != null)
-        {
-            mLoadingDialog?.dismiss()
-            mLoadingDialog = null
-        }
-    }
 
     @OnClick(R.id._closeButtonRect)
     fun onClickView(view : View)

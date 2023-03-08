@@ -166,7 +166,7 @@ class LoginPresenter : LoginContract.Presenter
     private fun showPasswordChangeDialog()
     {
         Log.f("")
-        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserLoginData!!, mUserInformationResult!!).apply {
+        mPasswordChangeDialog = PasswordChangeDialog(mContext, mUserInformationResult!!.getPasswordChangeType()).apply {
             setPasswordChangeListener(mPasswordChangeDialogListener)
             setCancelable(false)
             show()

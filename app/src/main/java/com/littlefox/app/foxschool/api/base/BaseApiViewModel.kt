@@ -9,28 +9,36 @@ import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.logmonitor.Log
 import java.util.LinkedList
 
-abstract class BaseViewModel : ViewModel()
+abstract class BaseApiViewModel : ViewModel()
 {
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
+    private val _isLoading = MutableLiveData<Pair<RequestCode,Boolean>>()
+    val isLoading: LiveData<Pair<RequestCode,Boolean>> get() = _isLoading
 
-    protected val errorReport = MutableLiveData<Pair<ResultData.Fail, RequestCode>>()
-    val _errorReport : LiveData<Pair<ResultData.Fail, RequestCode>> = errorReport
+    protected val _errorReport = MutableLiveData<Pair<ResultData.Fail, RequestCode>>()
+    val errorReport : LiveData<Pair<ResultData.Fail, RequestCode>> = _errorReport
 
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false
 
-
-    fun setIsLoading(isLoading: Boolean)
+    init
     {
-        _isLoading.value = isLoading
+        setIsLoading(RequestCode.CODE_DEFAULT, false)
+    }
+
+    fun setIsLoading(code: RequestCode, isLoading: Boolean)
+    {
+        Log.f("code : $code , isLoading : $isLoading")
+        _isLoading.postValue(Pair(code, isLoading))
     }
 
     fun enqueueCommandStart(code: RequestCode, duration: Long = 0L, vararg objects : Any?)
     {
-        if(_isLoading.value == false)
-        {
-            setIsLoading(true)
+        Log.f("code : $code , _isLoading.value?.second : $_isLoading.value?.second")
+        _isLoading.value?.let { data ->
+            if(data.second == false)
+            {
+                setIsLoading(code,true)
+            }
         }
 
         if(isRunningTask)
@@ -67,7 +75,10 @@ abstract class BaseViewModel : ViewModel()
         }
         else
         {
-            setIsLoading(false)
+            _isLoading.value?.let { data ->
+                setIsLoading(data.first,false)
+            }
+
         }
     }
 

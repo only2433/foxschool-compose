@@ -16,8 +16,6 @@ class StoryCategoryListContract
         fun settingTitleViewTablet(title : String)
         fun settingBackgroundViewTablet(thumbnailUrl : String, topbarColor : String)
         fun showCategoryCardListView(seriesCardViewAdapter : SeriesCardViewAdapter)
-        override fun showLoading()
-        override fun hideLoading()
         fun showSeriesCountView(count : Int)
     }
 

@@ -10,8 +10,6 @@ class MainContract
     interface View : BaseContract.View
     {
         fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
-        override fun showLoading()
-        override fun hideLoading()
         override fun showSuccessMessage(message : String)
         override fun showErrorMessage(message : String)
         fun showDownloadMessage(message : String)

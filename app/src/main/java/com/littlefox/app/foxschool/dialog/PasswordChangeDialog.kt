@@ -128,7 +128,7 @@ class PasswordChangeDialog : Dialog
         }
     }
 
-    constructor(context : Context, loginData : UserLoginData, loginResult : LoginInformationResult) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
+    constructor(context : Context, type: PasswordGuideType) : super(context, android.R.style.Theme_Translucent_NoTitleBar)
     {
         if(CommonUtils.getInstance(context).checkTablet)
         {
@@ -140,11 +140,9 @@ class PasswordChangeDialog : Dialog
         }
         ButterKnife.bind(this)
         mContext = context
-        mUserLoginData = loginData
-        mUserInformationResult = loginResult
 
         // 화면 타입 세팅 (180일 / 90일)
-        mScreenType = mUserInformationResult.getPasswordChangeType()
+        mScreenType = type
     }
 
     override fun onCreate(savedInstanceState : Bundle?)

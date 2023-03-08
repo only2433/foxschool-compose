@@ -44,7 +44,6 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
     lateinit var _WebView : WebView
 
     private var mWebviewIntentParamsObject : WebviewIntentParamsObject? = null
-    private var mLoadingDialog : MaterialLoadingDialog? = null
     private var mMainHandler : WeakReferenceHandler? = null
 
     companion object
@@ -164,27 +163,6 @@ class WebviewGameStarwordsActivity : BaseActivity(), MessageHandlerCallback
                     resources.getString(R.string.message_webview_connect_error),
                     Toast.LENGTH_LONG).show()
             }
-        }
-    }
-
-    private fun showLoading()
-    {
-        if(mLoadingDialog == null)
-        {
-            mLoadingDialog = MaterialLoadingDialog(
-                this,
-                CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-            )
-        }
-        mLoadingDialog!!.show()
-    }
-
-    private fun hideLoading()
-    {
-        if(mLoadingDialog != null)
-        {
-            mLoadingDialog!!.dismiss()
-            mLoadingDialog = null
         }
     }
 
