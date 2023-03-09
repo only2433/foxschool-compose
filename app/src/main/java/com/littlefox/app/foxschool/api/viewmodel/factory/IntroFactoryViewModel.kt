@@ -210,7 +210,6 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     CommonUtils.getInstance(mContext).saveMainData(data)
                     mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
                     enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
-
                     viewModelScope.launch(Dispatchers.Main) {
                         delay(Common.DURATION_SHORT_LONG)
                         startMainActivity()
@@ -261,6 +260,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                 }
             }
         }
+
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.errorReport.collect { data ->
                 data?.let {

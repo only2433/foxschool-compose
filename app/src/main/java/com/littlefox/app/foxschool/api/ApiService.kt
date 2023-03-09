@@ -74,8 +74,6 @@ interface ApiService
 
         fun create() : ApiService
         {
-
-
             val okHttpClient = OkHttpClient.Builder().apply {
                 addInterceptor(
                     HeaderInterceptor()
@@ -98,6 +96,5 @@ interface ApiService
                 .build()
                 .create(ApiService::class.java)
         }
-
     }
 }
