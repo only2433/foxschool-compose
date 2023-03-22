@@ -21,7 +21,6 @@ import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
-import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.enumerate.IntroViewMode
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
@@ -264,10 +263,10 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.errorReport.collect { data ->
                 data?.let {
-                    val result = data.first as ResultData.Fail
-                    val code = data.second
+                    val result = data.result
+                    val code = data.code
 
-                    Log.f("status : ${result.status}, message : ${result.message} , code : ${data.second}")
+                    Log.f("status : ${result.status}, message : ${result.message} , code : $code")
 
                     Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
                     if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)

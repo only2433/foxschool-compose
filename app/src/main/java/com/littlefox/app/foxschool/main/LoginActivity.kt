@@ -1,10 +1,11 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -13,25 +14,28 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.Observer
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.login.SchoolItemDataResult
+import com.littlefox.app.foxschool.api.viewmodel.factory.LoginFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.LoginContract
-import com.littlefox.app.foxschool.main.presenter.LoginPresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
+import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
+import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
-class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
+@AndroidEntryPoint
+class LoginActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -102,8 +106,8 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     @BindView(R.id._searchSchoolView)
     lateinit var _SearchSchoolView : ScrollView
 
-    private lateinit var mLoginPresenter : LoginPresenter
-    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
+    // 비밀번호 변경 안내 관련 변수
+    private var mPasswordChangeDialog : PasswordChangeDialog? = null
 
     private val mBaseSchoolList : ArrayList<SchoolItemDataResult> = ArrayList<SchoolItemDataResult>() // 학교 베이스 리스트
     private val mSearchSchoolList : ArrayList<SchoolItemDataResult> = ArrayList<SchoolItemDataResult>() // 학교 검색 결과 리스트
@@ -122,6 +126,8 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     private var mSearchTextTop : Float = 0f
     private var mSearchTextSize : Float = 0f
 
+    private val factoryViewModel : LoginFactoryViewModel by viewModels()
+
     /** ========== LifeCycle ========== */
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -138,7 +144,10 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         }
 
         ButterKnife.bind(this)
-        mLoginPresenter = LoginPresenter(this)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
 
         // 학교 검색 팝업 레이아웃 사이즈
         mSearchLayoutHeight = if(CommonUtils.getInstance(this).checkTablet) 84f else 120f
@@ -151,18 +160,20 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         mSearchTextLeft = if(CommonUtils.getInstance(this).checkTablet) 105f else 140f
         mSearchTextTop= if(CommonUtils.getInstance(this).checkTablet) 135f else 195f
         mSearchTextSize = if(CommonUtils.getInstance(this).checkTablet) 32f else 42f
+
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mLoginPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mLoginPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onStop()
@@ -175,7 +186,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     {
         super.onDestroy()
         mSelectedSchoolData = null
-        mLoginPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -187,7 +198,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    override fun initView()
+    private fun initView()
     {
         _TitleText.text = resources.getString(R.string.text_login)
         _CloseButton.visibility = View.VISIBLE
@@ -202,7 +213,7 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _InputPasswordEditText.setOnEditorActionListener(mEditKeyActionListener)
     }
 
-    override fun initFont()
+    private fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _InputIdEditText.typeface = Font.getInstance(this).getTypefaceRegular()
@@ -215,33 +226,73 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
         _OnlyWebSignPossibleTitleText.typeface = Font.getInstance(this).getTypefaceMedium()
         _CustomerCenterInfoText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
-    /** ========== Init end  ========== */
 
-    override fun showLoading()
+    private fun setupObserverViewModel()
     {
-        mMaterialLoadingDialog = MaterialLoadingDialog(this, CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE))
-        mMaterialLoadingDialog?.show()
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if (loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.schoolList.observe(this, Observer<ArrayList<SchoolItemDataResult>> { data ->
+            mBaseSchoolList.addAll(data) // 학교 리스트 세팅
+        })
+
+        factoryViewModel.inputEmptyMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.showDialogPasswordChange.observe(this, Observer<PasswordGuideType> { type ->
+            showPasswordChangeDialog(type)
+        })
+
+        factoryViewModel.hideDialogPasswordChange.observe(this, Observer{
+            hidePasswordChangeDialog()
+        })
+
+        factoryViewModel.finishActivity.observe(this, Observer{
+            setResult(Activity.RESULT_OK)
+            finish()
+        })
     }
 
-    override fun hideLoading()
+    override fun onNewIntent(intent : Intent?)
     {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
+        Log.i("")
+        super.onNewIntent(intent)
     }
 
-    override fun showSuccessMessage(message : String)
+    private fun showPasswordChangeDialog(type: PasswordGuideType)
     {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        Log.f("")
+        mPasswordChangeDialog = PasswordChangeDialog(this, type).apply {
+            setPasswordChangeListener(mPasswordChangeDialogListener)
+            setCancelable(false)
+            show()
+        }
     }
 
-    override fun showErrorMessage(message : String)
+    private fun hidePasswordChangeDialog()
     {
-        CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-    }
-
-    override fun handlerMessage(message : Message)
-    {
-        mLoginPresenter.sendMessageEvent(message)
+        mPasswordChangeDialog!!.dismiss()
     }
 
     override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
@@ -299,12 +350,12 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                 {
                     _AutoLoginCheckIcon.setImageResource(R.drawable.radio_off)
                 }
-                mLoginPresenter.onCheckAutoLogin(isAutoLoginCheck)
+                factoryViewModel.onCheckAutoLogin(isAutoLoginCheck)
             }
             R.id._loginButtonText ->
             {
                 val schoolCode = if (_InputSchoolEditText.text.isNotEmpty()) mSelectedSchoolData!!.getSchoolID() else ""
-                mLoginPresenter.onClickLogin(
+                factoryViewModel.onClickLogin(
                     UserLoginData(
                         _InputIdEditText.text.toString().trim(),
                         _InputPasswordEditText.text.toString().trim(),
@@ -312,8 +363,8 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                     )
                 )
             }
-            R.id._forgetIDText -> mLoginPresenter.onClickFindID()
-            R.id._forgetPasswordText -> mLoginPresenter.onClickFindPassword()
+            R.id._forgetIDText -> factoryViewModel.onClickFindID()
+            R.id._forgetPasswordText -> factoryViewModel.onClickFindPassword()
             R.id._inputSchoolDeleteButton ->
             {
                 _InputSchoolEditText.text.clear()
@@ -321,14 +372,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                 setLoginButtonBackground()
             }
         }
-    }
-
-    /**
-     * 학교 베이스 리스트 세팅
-     */
-    override fun setSchoolList(data : ArrayList<SchoolItemDataResult>)
-    {
-        mBaseSchoolList.addAll(data)
     }
 
     /**
@@ -446,16 +489,6 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
     }
 
     /**
-     * 입력창 초기화
-     */
-    override fun clearInputData()
-    {
-        _InputSchoolEditText.setText("")
-        _InputIdEditText.setText("")
-        _InputPasswordEditText.setText("")
-    }
-
-    /**
      * 학교검색 EditText TextChange Listener
      */
     private val mEditTextChangeListener = object : TextWatcher
@@ -550,6 +583,33 @@ class LoginActivity : BaseActivity(), MessageHandlerCallback, LoginContract.View
                 return true
             }
             return false
+        }
+    }
+
+    private val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
+    {
+        /**
+         * [비밀번호 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+        {
+            factoryViewModel.onClickChangeButton(oldPassword, newPassword, confirmPassword)
+        }
+
+        /**
+         * [다음에 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickLaterButton()
+        {
+            factoryViewModel.onClickLaterButton()
+        }
+
+        /**
+         * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
+         */
+        override fun onClickKeepButton()
+        {
+            factoryViewModel.onClickKeepButton()
         }
     }
 }

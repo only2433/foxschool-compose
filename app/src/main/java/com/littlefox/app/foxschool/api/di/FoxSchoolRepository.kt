@@ -9,6 +9,7 @@ import com.littlefox.app.foxschool.api.base.safeApiCall
 import com.littlefox.app.foxschool.api.paging.ForumPagingSource
 import com.littlefox.app.foxschool.common.Common
 import kotlinx.coroutines.flow.Flow
+import org.json.JSONObject
 import javax.inject.Inject
 
 class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
@@ -53,6 +54,20 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
      */
     suspend fun setChangePasswordToKeep() = safeApiCall {
         remote.passwordChangeKeepAsync()
+    }
+
+    /**
+     * 학교 리스트 가져오기
+     */
+    suspend fun getSchoolList() = safeApiCall {
+        remote.schoolListAsync()
+    }
+
+    /**
+     * 로그인
+     */
+    suspend fun login(id : String, password : String, schoolCode : String) = safeApiCall {
+        remote.loginAsync(id, password, schoolCode)
     }
 
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
