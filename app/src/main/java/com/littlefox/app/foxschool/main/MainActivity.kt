@@ -2,18 +2,17 @@ package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.opengl.Visibility
 import android.os.Bundle
-import android.os.Message
 import android.view.*
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.annotation.Nullable
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import butterknife.*
 import butterknife.Optional
@@ -21,28 +20,29 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.`object`.result.main.InAppCompaignResult
+import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.MainContract
-import com.littlefox.app.foxschool.main.presenter.MainPresenter
-import com.littlefox.library.common.CommonUtils.setSharedPreference
-import com.littlefox.library.system.handler.WeakReferenceHandler
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
 import java.lang.reflect.Field
-import java.util.*
 
-class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
+@AndroidEntryPoint
+class MainActivity() : BaseActivity()
 {
     @BindView(R.id._mainDrawLayout)
     lateinit var _MainDrawLayout : DrawerLayout
@@ -135,8 +135,6 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
 
     companion object
     {
-        private val MESSAGE_FORCE_CLOSE_DRAWER_MENU : Int   = 10
-
         private val TAB_IMAGE_ICONS_STUDENT = intArrayOf(
             R.drawable.choice_top_bar_icon_story_student,
             R.drawable.choice_top_bar_icon_song_student,
@@ -152,19 +150,19 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             R.drawable.choice_top_bar_icon_song_tablet,
             R.drawable.choice_top_bar_icon_my_books_tablet
         )
-
     }
 
-    private lateinit var mMainPresenter : MainPresenter
     private lateinit var _SchoolNameText : TextView
     private lateinit var _SettingButton : ImageView
     private lateinit var _SearchButton : ImageView
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
-    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
-    private lateinit var mWeakReferenceHandler : WeakReferenceHandler
-    private var mSelectMenuLayoutHeight = 0
-    private var mCurrentUserStatusSize = 0
+
     private var mLoginInformationResult : LoginInformationResult? = null
+    private lateinit var mMainInformationResult : MainInformationResult
+
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+
+    private val factoryViewModel : MainFactoryViewModel by viewModels()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -183,30 +181,34 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             setContentView(R.layout.activity_main)
         }
         ButterKnife.bind(this)
-        mWeakReferenceHandler = WeakReferenceHandler(this)
-        mMainPresenter = MainPresenter(this)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
         Log.f("")
-        mMainPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mMainPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mMainPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
-    override fun initView()
+    private fun initView()
     {
         setStatusBarColor()
         setIndicatorBarColor()
@@ -237,7 +239,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-    override fun initFont()
+    private fun initFont()
     {
         _UserNameText.typeface = Font.getInstance(this).getTypefaceMedium()
         _UserInfoButtonText.typeface = Font.getInstance(this).getTypefaceMedium()
@@ -250,27 +252,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-    override fun onBackPressed()
-    {
-        if(_MainDrawLayout.isDrawerOpen(_NavigationBaseLayout))
-        {
-            _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-        } else
-        {
-            mMainPresenter.onBackPressed()
-        }
-    }
-
-    override fun handlerMessage(message : Message)
-    {
-        when(message.what)
-        {
-            MESSAGE_FORCE_CLOSE_DRAWER_MENU -> _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-        }
-        mMainPresenter.sendMessageEvent(message)
-    }
-
-    override fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
+    private fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter)
     {
         settingViewPagerInformation(mainFragmentSelectionPagerAdapter)
         settingViewPagerController()
@@ -280,59 +262,86 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-    override fun showLoading()
+    override fun onBackPressed()
     {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
+        if(_MainDrawLayout.isDrawerOpen(_NavigationBaseLayout))
+        {
+            _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
+        }
+        else
+        {
+            factoryViewModel.onBackPressed()
+        }
     }
 
-    override fun hideLoading()
+    private fun setupObserverViewModel()
     {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if (loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+            CommonUtils.getInstance(this).showErrorSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.showIACInformationDialog.observe(this, Observer { result ->
+            showIACInformationDialog(result)
+        })
+
+        factoryViewModel.showNoClassStudentDialog.observe(this, Observer {
+            showStudentNoClassDialog()
+        })
+
+        factoryViewModel.showNoClassTeacherDialog.observe(this, Observer {
+            showTeacherNoClassDialog()
+        })
+
+        factoryViewModel.showAppEndDialog.observe(this, Observer {
+            showAppEndDialog()
+        })
+
+        factoryViewModel.settingViewPager.observe(this, Observer { adapter ->
+            initViewPager(adapter)
+        })
+
+        factoryViewModel.settingMenuView.observe(this, Observer { pair ->
+            val isUpdateHomework = pair.first
+            val isUpdateNews = pair.second
+
+            Log.f("isUpdateHomework : $isUpdateHomework, isUpdateNews : $isUpdateNews")
+            initMenuView(isUpdateHomework, isUpdateNews)
+        })
+
+        factoryViewModel.settingUserInformation.observe(this, Observer { userInformation ->
+            mLoginInformationResult = userInformation
+
+            settingUserLayout()
+            settingLayoutColor()
+            settingSchoolName()
+        })
     }
 
-    override fun showSuccessMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(
-            _MainContentCoordinatorLayout,
-            message,
-            Gravity.CENTER
-        )
-    }
-
-    override fun showErrorMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showErrorSnackMessage(
-            _MainContentCoordinatorLayout,
-            message,
-            Gravity.CENTER
-        )
-    }
-
-    override fun showDownloadMessage(message : String)
+    private fun showDownloadMessage(message : String)
     {
         CommonUtils.getInstance(this).showSnackMessage(
             _MainContentCoordinatorLayout,
             message,
             resources.getColor(R.color.color_white))
-    }
-
-    /**
-     * 사용자 데이터 화면에 세팅
-     */
-    override fun settingUserInformation(loginInformationResult : LoginInformationResult?, isUpdateHomework : Boolean, isUpdateNews : Boolean)
-    {
-        mLoginInformationResult = loginInformationResult
-        Log.f("isUpdateHomework : "+isUpdateHomework+", isUpdateNews : "+isUpdateNews)
-        initMenuView(isUpdateHomework, isUpdateNews)
-
-        settingUserLayout()
-        settingLayoutColor()
-        settingSchoolName()
     }
 
     /**
@@ -433,10 +442,71 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
         }
     }
 
-    override fun setCurrentPage(page : Int)
+    private fun showAppEndDialog()
     {
-        Log.f("page : $page")
-        _MainViewPager.currentItem = page
+        Log.f("Check End App")
+        showTemplateAlertDialog(
+            this.resources.getString(R.string.message_check_end_app),
+            MainFactoryViewModel.DIALOG_TYPE_APP_END,
+            DialogButtonType.BUTTON_2
+        )
+    }
+
+    private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(message)
+            setDialogEventType(eventType)
+            setButtonType(buttonType)
+            setDialogListener(mDialogListener)
+            setGravity(Gravity.LEFT)
+            show()
+        }
+    }
+
+    private fun showStudentNoClassDialog()
+    {
+        showTemplateAlertDialog(
+            getString(R.string.message_warning_not_have_class_student),
+            MainFactoryViewModel.DIALOG_TYPE_NOT_HAVE_CLASS,
+            DialogButtonType.BUTTON_1
+        )
+    }
+
+    private fun showTeacherNoClassDialog()
+    {
+        showTemplateAlertDialog(
+            getString(R.string.message_warning_not_have_class_teacher),
+            MainFactoryViewModel.DIALOG_TYPE_NOT_HAVE_CLASS,
+            DialogButtonType.BUTTON_1
+        )
+    }
+
+    private fun showLogoutDialog()
+    {
+        showTemplateAlertDialog(
+            getString(R.string.message_try_logout),
+            MainFactoryViewModel.DIALOG_TYPE_LOGOUT,
+            DialogButtonType.BUTTON_2
+        )
+    }
+
+    private fun showIACInformationDialog(result : InAppCompaignResult)
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setTitle(result.getTitle())
+            setMessage(result.getContent())
+            if(result.isButton1Use == false)
+            {
+                setButtonText(result.getButton2Text())
+            } else
+            {
+                setButtonText(result.getButton1Text(), result.getButton2Text())
+            }
+            setDialogEventType(MainFactoryViewModel.DIALOG_TYPE_IAC)
+            setDialogListener(mDialogListener)
+            show()
+        }
     }
 
     @Optional
@@ -451,27 +521,27 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             R.id._userInfoButtonText ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuMyInformation()
+                factoryViewModel.onClickMenuMyInformation()
             }
             R.id._leaningLogMenuButton ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuLearningLog()
+                factoryViewModel.onClickMenuLearningLog()
             }
             R.id._recordLogMenuButton ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickRecordHistory()
+                factoryViewModel.onClickRecordHistory()
             }
             R.id._homeworkManageMenuButton ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuHomeworkManage()
+                factoryViewModel.onClickMenuHomeworkManage()
             }
             R.id._menuLogoutLayout ->
             {
                 _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                mMainPresenter.onClickMenuLogout()
+                showLogoutDialog()
             }
             R.id._topMenuSetting ->
             {
@@ -481,7 +551,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             R.id._topMenuSearch ->
             {
                 Log.f("")
-                mMainPresenter.onClickSearch()
+                factoryViewModel.onClickSearch()
             }
         }
     }
@@ -644,7 +714,7 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
             override fun onClick(view : View)
             {
                 Log.f("")
-                mMainPresenter.onClickSearch()
+                factoryViewModel.onClickSearch()
             }
         })
         getSupportActionBar()?.setCustomView(customView)
@@ -737,33 +807,98 @@ class MainActivity() : BaseActivity(), MessageHandlerCallback, MainContract.View
                 R.id._menuFoxschoolNewsButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickFoxschoolNews()
+                    factoryViewModel.onClickFoxschoolNews()
                 }
                 R.id._menuFAQsButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuFAQ()
+                    factoryViewModel.onClickMenuFAQ()
                 }
                 R.id._menu1on1AskButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenu1On1Ask()
+                    factoryViewModel.onClickMenu1On1Ask()
                 }
                 R.id._menuAboutAppButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuAppUseGuide()
+                    factoryViewModel.onClickMenuAppUseGuide()
                 }
                 R.id._menuTeacherManualButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuTeacherManual()
+                    showDownloadMessage(getString(R.string.message_download_teacher_manual))
+                    factoryViewModel.onClickMenuTeacherManual()
                 }
                 R.id._menuHomeNewspaperButtonRect ->
                 {
                     _MainDrawLayout.closeDrawer(_NavigationBaseLayout)
-                    mMainPresenter.onClickMenuHomeNewsPaper()
+                    showDownloadMessage(getString(R.string.message_download_home_newspaper))
+                    factoryViewModel.onClickMenuHomeNewsPaper()
                 }
+            }
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            when(eventType)
+            {
+                MainFactoryViewModel.DIALOG_TYPE_IAC ->
+                {
+                    Log.f("IAC Link move")
+                    if(mMainInformationResult.getInAppCompaignInformation()?.getButton1Mode().equals(Common.INAPP_CAMPAIGN_MODE_NEWS))
+                    {
+                        Log.f("새소식 articleID : " + mMainInformationResult.getInAppCompaignInformation()?.getArticleID())
+                        factoryViewModel.onClickIACLink(java.lang.String.valueOf(mMainInformationResult.getInAppCompaignInformation()?.getArticleID()))
+                    }
+                    else
+                    {
+                        CommonUtils.getInstance(this@MainActivity).startLinkMove(mMainInformationResult.getInAppCompaignInformation()?.getButton1Link())
+                        factoryViewModel.onClickIACPositiveButton()
+                    }
+                }
+            }
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            Log.f("eventType : $eventType, buttonType : $buttonType")
+            when(eventType)
+            {
+                MainFactoryViewModel.DIALOG_TYPE_IAC ->
+                    if(buttonType == DialogButtonType.BUTTON_1)
+                    {
+                        Log.f("IAC Link move")
+                        if(mMainInformationResult.getInAppCompaignInformation()?.getButton1Mode().equals(Common.INAPP_CAMPAIGN_MODE_NEWS))
+                        {
+                            Log.f("articleID : " + mMainInformationResult.getInAppCompaignInformation()?.getArticleID())
+                            factoryViewModel.onClickIACLink(java.lang.String.valueOf(mMainInformationResult.getInAppCompaignInformation()?.getArticleID()))
+                        }
+                        else
+                        {
+                            CommonUtils.getInstance(this@MainActivity).startLinkMove(mMainInformationResult.getInAppCompaignInformation()?.getButton1Link())
+                            factoryViewModel.onClickIACPositiveButton()
+                        }
+                    }
+                    else if(buttonType == DialogButtonType.BUTTON_2)
+                    {
+                        Log.f("IAC Cancel")
+                        factoryViewModel.onClickIACCloseButton()
+                    }
+                MainFactoryViewModel.DIALOG_TYPE_LOGOUT ->
+                    if(buttonType == DialogButtonType.BUTTON_2)
+                    {
+                        factoryViewModel.setLogout()
+                    }
+                MainFactoryViewModel.DIALOG_TYPE_APP_END ->
+                    if(buttonType == DialogButtonType.BUTTON_2)
+                    {
+                        Log.f("============ APP END ============")
+                        finish()
+                    }
             }
         }
     }

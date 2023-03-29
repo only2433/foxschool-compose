@@ -26,7 +26,9 @@ import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
 {
     @BindView(R.id._mainBaseLayout)

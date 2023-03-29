@@ -9,28 +9,24 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.Nullable
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
+import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.BookColor
 import com.littlefox.app.foxschool.enumerate.BookType
-import com.littlefox.app.foxschool.viewmodel.MainMyBooksFragmentDataObserver
-import com.littlefox.app.foxschool.viewmodel.MainPresenterDataObserver
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
-
 
 class MainMyBooksFragment() : Fragment()
 {
@@ -70,9 +66,9 @@ class MainMyBooksFragment() : Fragment()
     private var mCurrentBookItemSize = 0
     private lateinit var mMainInformationResult : MainInformationResult
     private var mCurrentBookType : BookType = BookType.BOOKSHELF
-    private lateinit var mMainMyBooksFragmentDataObserver : MainMyBooksFragmentDataObserver
-    private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
     private var mSelectColor : Int = -1
+
+    private val factoryViewModel : MainFactoryViewModel by activityViewModels()
 
     override fun onAttach(context : Context)
     {
@@ -195,10 +191,7 @@ class MainMyBooksFragment() : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mMainMyBooksFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainMyBooksFragmentDataObserver::class.java)
-        mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-
-        mMainPresenterDataObserver.updateMyBooksData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+        factoryViewModel.updateMyBooksData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
             updateData(mainInformationResult as MainInformationResult)
         })
     }
@@ -253,11 +246,11 @@ class MainMyBooksFragment() : Fragment()
             settingButton.setOnClickListener(View.OnClickListener {
                 if(mCurrentBookType === BookType.BOOKSHELF)
                 {
-                    mMainMyBooksFragmentDataObserver.onSettingBookshelf(index)
+                    factoryViewModel.onSettingBookshelf(index)
                 }
                 else
                 {
-                    mMainMyBooksFragmentDataObserver.onSettingVocabulary(index)
+                    factoryViewModel.onSettingVocabulary(index)
                 }
             })
             baseLayout.setOnClickListener(object : View.OnClickListener
@@ -266,10 +259,10 @@ class MainMyBooksFragment() : Fragment()
                 {
                     if(mCurrentBookType === BookType.BOOKSHELF)
                     {
-                        mMainMyBooksFragmentDataObserver.onEnterBookshelfList(index)
+                        factoryViewModel.onEnterBookshelfList(index)
                     } else
                     {
-                        mMainMyBooksFragmentDataObserver.onEnterVocabularyList(index)
+                        factoryViewModel.onEnterVocabularyList(index)
                     }
                 }
             })
@@ -324,10 +317,10 @@ class MainMyBooksFragment() : Fragment()
                 {
                     if(mCurrentBookType === BookType.BOOKSHELF)
                     {
-                        mMainMyBooksFragmentDataObserver.onEnterBookshelfList(index)
+                        factoryViewModel.onEnterBookshelfList(index)
                     } else
                     {
-                        mMainMyBooksFragmentDataObserver.onEnterVocabularyList(index)
+                        factoryViewModel.onEnterVocabularyList(index)
                     }
                 }
             })
@@ -337,10 +330,10 @@ class MainMyBooksFragment() : Fragment()
                 {
                     if(mCurrentBookType === BookType.BOOKSHELF)
                     {
-                        mMainMyBooksFragmentDataObserver.onSettingBookshelf(index)
+                        factoryViewModel.onSettingBookshelf(index)
                     } else
                     {
-                        mMainMyBooksFragmentDataObserver.onSettingVocabulary(index)
+                        factoryViewModel.onSettingVocabulary(index)
                     }
                 }
             })
@@ -463,14 +456,12 @@ class MainMyBooksFragment() : Fragment()
             Log.i("")
             if(mCurrentBookType === BookType.BOOKSHELF)
             {
-                mMainMyBooksFragmentDataObserver.onAddBookshelf()
+                factoryViewModel.onAddBookshelf()
             }
             else
             {
-                mMainMyBooksFragmentDataObserver.onAddVocabulary()
+                factoryViewModel.onAddVocabulary()
             }
         }
     }
-
-
 }

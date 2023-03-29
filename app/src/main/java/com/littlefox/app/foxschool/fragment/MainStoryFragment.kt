@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
@@ -22,19 +21,16 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.adapter.SeriesCardViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.SeriesCardItemListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.SeriesType
 import com.littlefox.app.foxschool.view.decoration.GridSpacingItemDecoration
-import com.littlefox.app.foxschool.viewmodel.MainPresenterDataObserver
-import com.littlefox.app.foxschool.viewmodel.MainStoryFragmentDataObserver
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
-import java.lang.String
 import java.util.*
 
 class MainStoryFragment : Fragment()
@@ -101,9 +97,9 @@ class MainStoryFragment : Fragment()
     private var mNewScrollState = 0
     private var mCurrentScrollState = 0
     private var mCurrentScrollDy = 0
-    private lateinit var mMainStoryFragmentDataObserver : MainStoryFragmentDataObserver
-    private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
     private var mSelectColor : Int = -1
+
+    private val factoryViewModel : MainFactoryViewModel by activityViewModels()
 
     override fun onAttach(context : Context)
     {
@@ -177,9 +173,7 @@ class MainStoryFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mMainStoryFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainStoryFragmentDataObserver::class.java)
-        mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-        mMainPresenterDataObserver.updateStoryData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+        factoryViewModel.updateStoryData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
             updateData(mainInformationResult as MainInformationResult)
         })
     }
@@ -434,12 +428,11 @@ class MainStoryFragment : Fragment()
         {
             if(mCurrentSeriesType === SeriesType.LEVEL)
             {
-
-                mMainStoryFragmentDataObserver.onClickStoryLevelsItem(seriesInformationResult, selectView)
+                factoryViewModel.onClickStoryLevelsItem(seriesInformationResult, selectView)
             }
             else
             {
-                mMainStoryFragmentDataObserver.onClickStoryCategoriesItem(seriesInformationResult, selectView)
+                factoryViewModel.onClickStoryCategoriesItem(seriesInformationResult, selectView)
             }
         }
     }

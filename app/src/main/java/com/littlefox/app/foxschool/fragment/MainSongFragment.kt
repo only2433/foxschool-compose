@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -19,12 +18,10 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.adapter.SeriesCardViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.SeriesCardItemListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.enumerate.SeriesType
 import com.littlefox.app.foxschool.view.decoration.GridSpacingItemDecoration
-import com.littlefox.app.foxschool.viewmodel.MainPresenterDataObserver
-import com.littlefox.app.foxschool.viewmodel.MainSongFragmentDataObserver
 import com.littlefox.logmonitor.Log
 import java.util.*
 
@@ -45,9 +42,8 @@ class MainSongFragment : Fragment()
     private lateinit var mSeriesCardViewAdapter : SeriesCardViewAdapter
     private var mUnbinder : Unbinder? = null
     private var mCurrentSeriesBaseResultList : ArrayList<SeriesInformationResult>? = null
-    private lateinit var mMainSongFragmentDataObserver : MainSongFragmentDataObserver
-    private lateinit var mMainPresenterDataObserver : MainPresenterDataObserver
 
+    private val factoryViewModel : MainFactoryViewModel by activityViewModels()
 
     override fun onAttach(context : Context)
     {
@@ -108,10 +104,7 @@ class MainSongFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mMainSongFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainSongFragmentDataObserver::class.java)
-        mMainPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(MainPresenterDataObserver::class.java)
-
-        mMainPresenterDataObserver.updateSongData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
+        factoryViewModel.updateSongData.observe(viewLifecycleOwner, Observer<Any> { mainInformationResult ->
             updateData(mainInformationResult as MainInformationResult)
         })
     }
@@ -163,7 +156,7 @@ class MainSongFragment : Fragment()
     {
         override fun onClickItem(seriesInformationResult : SeriesInformationResult, selectView : View)
         {
-            mMainSongFragmentDataObserver.onClickSongCategoriesItem(
+            factoryViewModel.onClickSongCategoriesItem(
                 seriesInformationResult,
                 selectView
             )

@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.api.viewmodel.factory
 
 import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,12 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorLoginData
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.login.SchoolItemDataResult
 import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
-import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
+import com.littlefox.app.foxschool.api.viewmodel.api.LoginApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginFactoryViewModel @Inject constructor(private val apiViewModel : IntroApiViewModel) : BaseFactoryViewModel()
+class LoginFactoryViewModel @Inject constructor(private val apiViewModel : LoginApiViewModel) : BaseFactoryViewModel()
 {
     private val _schoolList = MutableLiveData<ArrayList<SchoolItemDataResult>>()
     val schoolList : LiveData<ArrayList<SchoolItemDataResult>> get() = _schoolList
@@ -170,11 +170,16 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Intro
 
                     Log.f("status : ${result.status}, message : ${result.message} , code : $code")
 
-                    if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
+                    if(result.isAuthenticationBroken)
                     {
                         Log.f("== isAuthenticationBroken ==")
                         (mContext as AppCompatActivity).finish()
                         IntentManagementFactory.getInstance().initScene()
+                    }
+                    else if (result.isNetworkError)
+                    {
+                        Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
+                        (mContext as AppCompatActivity).finish()
                     }
                     else
                     {
