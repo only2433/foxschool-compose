@@ -29,6 +29,11 @@ abstract class BaseApiViewModel : ViewModel()
         _isLoading.value = Pair(code, isLoading)
     }
 
+    fun enqueueCommandStart(code: RequestCode, vararg objects : Any?)
+    {
+        enqueueCommandStart(code, 0L, objects)
+    }
+
     fun enqueueCommandStart(code: RequestCode, duration: Long = 0L, vararg objects : Any?)
     {
         Log.f("code : $code , _isLoading.value?.second : $_isLoading.value?.second")
