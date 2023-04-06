@@ -1,9 +1,8 @@
 package com.littlefox.app.foxschool.api.base
 
 import com.google.gson.annotations.SerializedName
-import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.common.Common
-import com.littlefox.logmonitor.Log
+import kotlin.random.Random
 
 data class BaseResponse<T>(
     @SerializedName("status")
@@ -33,4 +32,19 @@ data class BaseResponse<T>(
             }
         }
 
+    /**
+     * 통신 응답으로 동일한 메세지가 연속적으로 떨어지는 경우
+     * 화면에 메세지가 표시되지 않는 현상이 발생하여 추가된 부분
+     * equal 부분을 false로 강제 변경
+     * (ex) 로그인 실패, 코멘트 등록, 수정, 삭제 등을 반복적으로 진행했을 때)
+     */
+    override fun equals(other : Any?) : Boolean
+    {
+        return false
+    }
+
+    override fun hashCode() : Int
+    {
+        return Random.nextInt()
+    }
 }

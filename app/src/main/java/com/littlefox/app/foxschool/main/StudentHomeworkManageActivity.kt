@@ -1,20 +1,22 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Message
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -22,26 +24,29 @@ import butterknife.OnClick
 import butterknife.Optional
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
-import com.littlefox.app.foxschool.main.contract.StudentHomeworkContract
-import com.littlefox.app.foxschool.main.presenter.StudentHomeworkManagePresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.Field
 
 /**
  * 학생용 숙제관리 화면
  * @author 김태은
  */
-class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, StudentHomeworkContract.View
+@AndroidEntryPoint
+class StudentHomeworkManageActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -67,11 +72,12 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
     @BindView(R.id._homeworkViewpager)
     lateinit var _HomeworkViewPager : SwipeDisableViewPager
 
-    private lateinit var mStudentHomeworkManagePresenter : StudentHomeworkManagePresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
-    /** LifeCycle **/
+    private val factoryViewModel : StudentHomeworkFactoryViewModel by viewModels()
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -89,26 +95,31 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         }
 
         ButterKnife.bind(this)
-        mStudentHomeworkManagePresenter = StudentHomeworkManagePresenter(this)
-        mStudentHomeworkManagePresenter.onAddActivityResultLaunchers(mStatusActivityResult)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this)
+        factoryViewModel.onAddResultLaunchers(mStatusActivityResult)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mStudentHomeworkManagePresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mStudentHomeworkManagePresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mStudentHomeworkManagePresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -119,22 +130,72 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
     /** LifeCycle end **/
 
     /** Init **/
-    override fun initView()
+    private fun initView()
     {
         settingLayoutColor()
         setTitleView(Common.PAGE_HOMEWORK_CALENDAR)
     }
 
-    override fun initFont()
+    private fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
-    override fun initViewPager(mHomeworkPagerAdapter : HomeworkPagerAdapter)
+    private fun initViewPager(mHomeworkPagerAdapter : HomeworkPagerAdapter)
     {
         _HomeworkViewPager.adapter = mHomeworkPagerAdapter
         _HomeworkViewPager.addOnPageChangeListener(mOnPageChangeListener)
         settingViewPagerController()
+    }
+
+    private fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
+            if (loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> {message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> {message ->
+            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> {message ->
+            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.settingViewPager.observe(this, Observer<HomeworkPagerAdapter> {adapter ->
+            initViewPager(adapter)
+        })
+
+        factoryViewModel.currentViewPage.observe(this, Observer<Pair<Int, HomeworkCommentType?>> {pair ->
+            // ViewPager 페이지 변경
+            val position = pair.first
+            val commentType = pair.second
+
+            _HomeworkViewPager.currentItem = position
+            setTitleView(position, commentType)
+        })
+
+        factoryViewModel.showRecordPermissionDialog.observe(this, Observer {
+            // 마이크 권한 허용 요청 다이얼로그 - 녹음기 기능 사용을 위해
+            mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+                setMessage(resources.getString(R.string.message_record_permission))
+                setButtonType(DialogButtonType.BUTTON_2)
+                setButtonText(resources.getString(R.string.text_cancel), resources.getString(R.string.text_change_permission))
+                setDialogListener(mPermissionDialogListener)
+                show()
+            }
+        })
     }
 
     /**
@@ -162,15 +223,6 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         {
             e.printStackTrace()
         }
-    }
-
-    /**
-     * ViewPager 페이지 변경
-     */
-    override fun setCurrentViewPage(position : Int, commentType : HomeworkCommentType?)
-    {
-        _HomeworkViewPager.currentItem = position
-        setTitleView(position, commentType)
     }
 
     /**
@@ -238,21 +290,6 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         mMaterialLoadingDialog = null
     }
 
-    override fun showSuccessMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun showErrorMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun handlerMessage(message : Message)
-    {
-        mStudentHomeworkManagePresenter.sendMessageEvent(message)
-    }
-
     override fun onBackPressed()
     {
         CommonUtils.getInstance(this).hideKeyboard()
@@ -262,7 +299,7 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         }
         else
         {
-            mStudentHomeworkManagePresenter.onClickBackButton()
+            factoryViewModel.onClickBackButton()
         }
     }
 
@@ -309,7 +346,7 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._backButtonRect -> mStudentHomeworkManagePresenter.onClickBackButton()
+            R.id._backButtonRect -> factoryViewModel.onClickBackButton()
         }
     }
 
@@ -320,14 +357,36 @@ class StudentHomeworkManageActivity : BaseActivity(), MessageHandlerCallback, St
         override fun onPageSelected(position : Int)
         {
             Log.f("Homework Page Change : $position")
-            mStudentHomeworkManagePresenter.onPageChanged(position)
+            factoryViewModel.onPageChanged(position)
         }
 
         override fun onPageScrollStateChanged(state : Int) { }
     }
 
+    private val mPermissionDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(messageType : Int) {}
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, messageType : Int)
+        {
+            when(buttonType)
+            {
+                DialogButtonType.BUTTON_1 ->
+                {
+                    // [취소] 컨텐츠 사용 불가 메세지 표시
+                    factoryViewModel.onRecordPermissionCancel()
+                }
+                DialogButtonType.BUTTON_2 ->
+                {
+                    // [권한 변경하기] 앱 정보 화면으로 이동
+                    factoryViewModel.onRecordPermissionChange()
+                }
+            }
+        }
+    }
+
     private val mStatusActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
-        mStudentHomeworkManagePresenter.onActivityResultStatus()
+        factoryViewModel.onActivityResultStatus()
     }
 }

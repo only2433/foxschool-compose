@@ -4,6 +4,7 @@ import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
 import com.littlefox.app.foxschool.api.viewmodel.api.LoginApiViewModel
 import com.littlefox.app.foxschool.api.viewmodel.api.MainApiViewModel
+import com.littlefox.app.foxschool.api.viewmodel.api.StudentHomeworkApiViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +34,12 @@ object Injection
     @Provides
     fun provideMainApiViewModel() : MainApiViewModel {
         return MainApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
+    fun provideStudentHomeworkApiViewModel() : StudentHomeworkApiViewModel
+    {
+        return StudentHomeworkApiViewModel(provideFoxSchoolRepository())
     }
 
 }

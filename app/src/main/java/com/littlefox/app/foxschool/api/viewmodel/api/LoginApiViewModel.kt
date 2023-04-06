@@ -5,7 +5,6 @@ import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.login.SchoolItemDataResult
 import com.littlefox.app.foxschool.api.base.BaseApiViewModel
 import com.littlefox.app.foxschool.api.base.BaseResponse
-import com.littlefox.app.foxschool.api.base.ErrorResponse
 import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.di.FoxSchoolRepository
@@ -49,7 +48,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_SCHOOL_LIST)
+                    _errorReport.value = Pair(result, RequestCode.CODE_SCHOOL_LIST)
                 }
             }
         }
@@ -70,7 +69,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_LOGIN)
+                    _errorReport.value = Pair(result, RequestCode.CODE_LOGIN)
                 }
             }
         }
@@ -91,7 +90,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_PASSWORD_CHANGE)
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE)
                 }
             }
         }
@@ -112,7 +111,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
                 }
             }
         }
@@ -134,7 +133,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                 }
             }
         }

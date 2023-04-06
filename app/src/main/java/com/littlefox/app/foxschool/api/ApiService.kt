@@ -1,6 +1,8 @@
 package com.littlefox.app.foxschool.api
 
 import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBaseListPagingResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.login.SchoolItemDataResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
@@ -62,6 +64,39 @@ interface ApiService
         @Field("password") password : String,
         @Field("school_id") schoolCode : String
     ) : Response<BaseResponse<LoginInformationResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/student")
+    suspend fun studentHomeworkCalendarAsync(
+        @Query("year") id : String,
+        @Query("month") password : String
+    ) : Response<BaseResponse<HomeworkCalendarBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/student/list/{hw_no}")
+    suspend fun studentHomeworkListAsync(
+        @Path("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<HomeworkDetailBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @PUT("homeworks/student")
+    suspend fun studentCommentRegisterAsync(
+        @Query("comment") comment : String,
+        @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @POST("homeworks/student")
+    suspend fun studentCommentUpdateAsync(
+        @Query("comment") comment : String,
+        @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @DELETE("homeworks/student")
+    suspend fun studentCommentDeleteAsync(
+        @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
 
     @Headers("Content-Type: application/json")
     @GET("forum/board/news")

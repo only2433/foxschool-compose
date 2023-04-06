@@ -3,7 +3,6 @@ package com.littlefox.app.foxschool.api.viewmodel.api
 import androidx.lifecycle.viewModelScope
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.api.base.BaseApiViewModel
-import com.littlefox.app.foxschool.api.base.ErrorResponse
 import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.di.FoxSchoolRepository
@@ -35,7 +34,7 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = ErrorResponse(result, RequestCode.CODE_MAIN)
+                    _errorReport.value = Pair(result, RequestCode.CODE_MAIN)
                 }
             }
         }

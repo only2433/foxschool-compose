@@ -13,10 +13,9 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
@@ -26,14 +25,12 @@ import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.CalendarImageType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
-import com.littlefox.app.foxschool.viewmodel.HomeworkCalendarFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -111,9 +108,6 @@ class HomeworkCalendarFragment : Fragment()
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
 
-    private lateinit var mHomeworkCalendarFragmentObserver : HomeworkCalendarFragmentObserver
-    private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
-
     private var mHomeworkCalendarBaseResult : HomeworkCalendarBaseResult? = null    // 통신에서 응답받은 달력 데이터
     private var mCalendarItemViewAdapter : CalendarItemViewAdapter? = null          // 숙제관리 리스트 Adapter
     private var mCalendarItemList : ArrayList<CalendarData> = ArrayList<CalendarData>()
@@ -124,6 +118,8 @@ class HomeworkCalendarFragment : Fragment()
     private var mClassNameList : Array<String>? = null      // 통신에서 응답받은 학급 리스트
     private var mClassIndex : Int = 0                       // 선택한 학급 인덱스
     // ----------------------------------------------
+
+    private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -248,24 +244,21 @@ class HomeworkCalendarFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mHomeworkCalendarFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkCalendarFragmentObserver::class.java)
-        mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
-
         // 달력 아이템
-        mHomeworkManagePresenterObserver.setCalendarData.observe(viewLifecycleOwner, Observer { result ->
+        factoryViewModel.calendarData.observe(viewLifecycleOwner, Observer {result ->
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
         })
 
-        // 학급 데이터
-        mHomeworkManagePresenterObserver.setClassData.observe(viewLifecycleOwner, { classData ->
-            mClassNameList = Array<String>(classData!!.size) { index ->
-                classData[index].getClassName()
-            }
-            setClassName(mClassNameList!![mClassIndex])
-        })
+        // 학급 데이터 TODO Teacher
+//        factoryViewModel.classData.observe(viewLifecycleOwner, {classData ->
+//            mClassNameList = Array<String>(classData!!.size) { index ->
+//                classData[index].getClassName()
+//            }
+//            setClassName(mClassNameList!![mClassIndex])
+//        })
     }
 
     /**
@@ -353,7 +346,7 @@ class HomeworkCalendarFragment : Fragment()
         _CalendarView.layoutManager = gridLayoutManager
         mCalendarItemViewAdapter!!.setParentLayout(_CalendarListLayout)
         _CalendarView.adapter = mCalendarItemViewAdapter
-        mHomeworkCalendarFragmentObserver.onCompletedCalendarSet()
+        factoryViewModel.onCompletedCalendarSet()
     }
 
     /**
@@ -434,7 +427,7 @@ class HomeworkCalendarFragment : Fragment()
             dialog.dismiss()
             mClassIndex = index
             setClassName(mClassNameList!!.get(mClassIndex))
-            mHomeworkCalendarFragmentObserver.onClickClassPicker(mClassIndex)
+//            factoryViewModel.onClickClassPicker(mClassIndex) // TODO Teacher
         })
 
         val dialog : AlertDialog = builder.show()
@@ -457,11 +450,11 @@ class HomeworkCalendarFragment : Fragment()
         {
             R.id._beforeButtonRect ->
             {
-                mHomeworkCalendarFragmentObserver.onClickCalendarBefore()
+                factoryViewModel.onClickCalendarBefore()
             }
             R.id._afterButtonRect ->
             {
-                mHomeworkCalendarFragmentObserver.onClickCalendarAfter()
+                factoryViewModel.onClickCalendarAfter()
             }
 
             // [선생님] 클래스 선택
@@ -484,7 +477,7 @@ class HomeworkCalendarFragment : Fragment()
             if (mCalendarItemList[position].hasHomework())
             {
                 mLastClickTime = SystemClock.elapsedRealtime()
-                mHomeworkCalendarFragmentObserver.onClickCalendarItem(mCalendarItemList[position].getHomeworkPosition())
+                factoryViewModel.onClickCalendarItem(mCalendarItemList[position].getHomeworkPosition())
                 _ScrollView.scrollTo(0, 0)
             }
         }

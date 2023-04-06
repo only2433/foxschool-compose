@@ -165,8 +165,8 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.errorReport.collect { data ->
                 data?.let {
-                    val result = data.result
-                    val code = data.code
+                    val result = data.first
+                    val code = data.second
 
                     Log.f("status : ${result.status}, message : ${result.message} , code : $code")
 
@@ -248,7 +248,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
         Log.f("")
         apiViewModel.enqueueCommandStart(
             RequestCode.CODE_PASSWORD_CHANGE,
-            0L,
             mPassword,
             mNewPassword,
             mConfirmPassword)

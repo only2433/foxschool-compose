@@ -1,12 +1,9 @@
 package com.littlefox.app.foxschool.api.base
 
-import android.content.Context
-import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.common.Common
-import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.logmonitor.Log
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,7 +26,14 @@ suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>) : ResultData<
                 {
                     if(temp.isSuccess)
                     {
-                        result = ResultData.Success(temp.data as T)
+                        if (temp.data != null)
+                        {
+                            result = ResultData.Success(temp.data as T)
+                        }
+                        else
+                        {
+                            result = ResultData.Success(temp)
+                        }
                     }
                     else
                     {

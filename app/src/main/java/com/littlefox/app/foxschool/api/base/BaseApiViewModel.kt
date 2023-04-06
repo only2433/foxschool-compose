@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.api.base
 
 import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.api.data.QueueData
+import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.logmonitor.Log
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,8 +13,8 @@ abstract class BaseApiViewModel : ViewModel()
     private val _isLoading = MutableStateFlow<Pair<RequestCode,Boolean>?>(null)
     val isLoading: MutableStateFlow<Pair<RequestCode,Boolean>?> get() = _isLoading
 
-    protected val _errorReport = MutableStateFlow<ErrorResponse?>(null)
-    val errorReport : MutableStateFlow<ErrorResponse?> = _errorReport
+    protected val _errorReport = MutableStateFlow<Pair<ResultData.Fail, RequestCode>?>(null)
+    val errorReport : MutableStateFlow<Pair<ResultData.Fail, RequestCode>?> = _errorReport
 
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false
@@ -31,7 +32,7 @@ abstract class BaseApiViewModel : ViewModel()
 
     fun enqueueCommandStart(code: RequestCode, vararg objects : Any?)
     {
-        enqueueCommandStart(code, 0L, objects)
+        enqueueCommandStart(code, 0L, *objects)
     }
 
     fun enqueueCommandStart(code: RequestCode, duration: Long = 0L, vararg objects : Any?)

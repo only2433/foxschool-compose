@@ -70,6 +70,41 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         remote.loginAsync(id, password, schoolCode)
     }
 
+    /**
+     * 학생 - 숙제관리(달력) 정보 가져오기
+     */
+    suspend fun getStudentHomeworkCalendar(year : String, month : String) = safeApiCall {
+        remote.studentHomeworkCalendarAsync(year, month)
+    }
+
+    /**
+     * 학생 - 숙제현황(리스트) 정보 가져오기
+     */
+    suspend fun getStudentHomeworkList(homeworkNumber : Int) = safeApiCall {
+        remote.studentHomeworkListAsync(homeworkNumber)
+    }
+
+    /**
+     * 학생 - 학습자 한마디 등록
+     */
+    suspend fun setStudentCommentRegister(comment : String, homeworkNumber : Int) = safeApiCall {
+        remote.studentCommentRegisterAsync(comment, homeworkNumber)
+    }
+
+    /**
+     * 학생 - 학습자 한마디 수정
+     */
+    suspend fun setStudentCommentUpdate(comment : String, homeworkNumber : Int) = safeApiCall {
+        remote.studentCommentUpdateAsync(comment, homeworkNumber)
+    }
+
+    /**
+     * 학생 - 학습자 한마디 삭제
+     */
+    suspend fun setStudentCommentDelete(homeworkNumber : Int) = safeApiCall {
+        remote.studentCommentDeleteAsync(homeworkNumber)
+    }
+
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
     {
         return Pager(

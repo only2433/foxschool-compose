@@ -1,24 +1,22 @@
 package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -26,8 +24,6 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
-import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
-import com.littlefox.app.foxschool.viewmodel.HomeworkCommentFragmentObserver
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -75,13 +71,12 @@ class HomeworkCommentFragment : Fragment()
     private lateinit var mUnbinder : Unbinder
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
-    private lateinit var mHomeworkCommentFragmentObserver : HomeworkCommentFragmentObserver
-    private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
-
     private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
     private var isCompleted : Boolean = false           // 최종평가 여부
     private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
+
+    private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -182,16 +177,13 @@ class HomeworkCommentFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mHomeworkCommentFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkCommentFragmentObserver::class.java)
-        mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
-
         // 코멘트 적용
-        mHomeworkManagePresenterObserver.setCommentData.observe(viewLifecycleOwner, { comment ->
+        factoryViewModel.commentData.observe(viewLifecycleOwner, { comment ->
             mComment = comment
         })
 
         // 페이지 세팅
-        mHomeworkManagePresenterObserver.setPageType.observe(viewLifecycleOwner, { pair ->
+        factoryViewModel.settingCommentPage.observe(viewLifecycleOwner, { pair ->
             clearScreenData() // 화면 초기화
             isCompleted = pair.second
             settingPageType(pair.first)
@@ -466,8 +458,8 @@ class HomeworkCommentFragment : Fragment()
 
         when(view.id)
         {
-            R.id._commentRegisterButton -> mHomeworkCommentFragmentObserver.onClickRegisterButton(_CommentEditText.text.toString())
-            R.id._commentUpdateButton -> mHomeworkCommentFragmentObserver.onClickUpdateButton(_CommentEditText.text.toString())
+            R.id._commentRegisterButton -> factoryViewModel.onClickRegisterButton(_CommentEditText.text.toString())
+            R.id._commentUpdateButton -> factoryViewModel.onClickUpdateButton(_CommentEditText.text.toString())
             R.id._commentDeleteButton -> showCommentDeleteDialog()
         }
     }
@@ -526,7 +518,7 @@ class HomeworkCommentFragment : Fragment()
                     DialogButtonType.BUTTON_2 ->
                     {
                         // 코멘트 삭제 통신 요청
-                        mHomeworkCommentFragmentObserver.onClickDeleteButton()
+                        factoryViewModel.onClickDeleteButton()
                     }
                 }
             }

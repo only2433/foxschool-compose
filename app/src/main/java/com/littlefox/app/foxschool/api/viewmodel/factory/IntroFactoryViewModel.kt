@@ -263,8 +263,8 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.errorReport.collect { data ->
                 data?.let {
-                    val result = data.result
-                    val code = data.code
+                    val result = data.first
+                    val code = data.second
 
                     Log.f("status : ${result.status}, message : ${result.message} , code : $code")
 
