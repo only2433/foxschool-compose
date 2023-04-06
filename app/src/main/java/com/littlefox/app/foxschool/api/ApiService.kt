@@ -9,6 +9,8 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -64,6 +66,28 @@ interface ApiService
         @Field("password") password : String,
         @Field("school_id") schoolCode : String
     ) : Response<BaseResponse<LoginInformationResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("contents/player/{data}")
+    suspend fun authContentsPlayAsync(
+        @Path("data") requestData: String
+    ) : Response<BaseResponse<PlayItemResult>>
+
+
+    @FormUrlEncoded
+    @POST("contents/player/save")
+    suspend fun savePlayerStudyAsync(
+        @Field("content_id") contentsID: String,
+        @Field("play_type") playType: String,
+        @Field("play_time") playTime: String
+    ) : Response<BaseResponse<Nothing>>
+
+    @FormUrlEncoded
+    @POST("contents/bookshelves/{data}/contents")
+    suspend fun addBookshelfContentsAsync(
+        @Path("data") bookshelfID: String,
+        @FieldMap queryMap : Map<String, String>
+    ) : Response<BaseResponse<MyBookshelfResult>>
 
     @Headers("Content-Type: application/json")
     @GET("homeworks/student")

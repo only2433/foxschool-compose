@@ -785,12 +785,6 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
             }
         }
-
-        override fun onErrorMessage(message : String)
-        {
-            Log.f("message : $message")
-            mStoryDetailListContractView.showErrorMessage(message)
-        }
     }
 
     private val mBookAddListener : BookAddListener = object : BookAddListener

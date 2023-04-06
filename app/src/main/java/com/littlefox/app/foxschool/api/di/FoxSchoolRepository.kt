@@ -8,8 +8,10 @@ import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.base.safeApiCall
 import com.littlefox.app.foxschool.api.paging.ForumPagingSource
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONObject
+import java.util.ArrayList
 import javax.inject.Inject
 
 class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
@@ -103,6 +105,31 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
      */
     suspend fun setStudentCommentDelete(homeworkNumber : Int) = safeApiCall {
         remote.studentCommentDeleteAsync(homeworkNumber)
+    }
+
+    suspend fun getAuthContentPlay(contentID: String, isHighRevoluation: Boolean) = safeApiCall {
+        if(isHighRevoluation)
+        {
+            remote.authContentsPlayAsync(contentID +"/Y")
+        }
+        else
+        {
+            remote.authContentsPlayAsync(contentID)
+        }
+    }
+
+    suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String) = safeApiCall {
+        remote.savePlayerStudyAsync(contentID, playType, playTime)
+    }
+
+    suspend fun addBookshelfContents(bookshelfID: String, contentsList: ArrayList<ContentsBaseResult>) = safeApiCall {
+        var queryMap = mutableMapOf<String, String>()
+        for(i in contentsList.indices)
+        {
+            queryMap["content_ids[$i]"] = contentsList.get(i).getID()
+        }
+
+        remote.addBookshelfContentsAsync(bookshelfID, queryMap)
     }
 
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>

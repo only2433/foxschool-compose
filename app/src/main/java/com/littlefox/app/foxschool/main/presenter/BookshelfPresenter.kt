@@ -624,12 +624,6 @@ class BookshelfPresenter : BookshelfContract.Presenter
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
             }
         }
-
-        override fun onErrorMessage(message : String)
-        {
-            Log.f("message : $message")
-            mBookshelfContractView.showErrorMessage(message)
-        }
     }
 
     private val mDialogListener : DialogListener = object : DialogListener

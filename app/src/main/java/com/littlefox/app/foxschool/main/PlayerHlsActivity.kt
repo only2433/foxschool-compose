@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
@@ -10,16 +11,16 @@ import android.os.Bundle
 import android.os.Message
 import android.provider.Settings
 import android.text.Html
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.view.View.OnTouchListener
-import android.view.Window
-import android.view.WindowManager
 import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.activity.viewModels
 import androidx.annotation.Nullable
+import androidx.lifecycle.Observer
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.BindViews
@@ -30,14 +31,22 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.PlayerListAdapter
 import com.littlefox.app.foxschool.adapter.PlayerSpeedListAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.common.listener.OrientationChangeListener
+import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
+import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.BookAddListener
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
-import com.littlefox.app.foxschool.main.contract.PlayerContract
 import com.littlefox.app.foxschool.main.presenter.PlayerHlsPresenter
-import com.littlefox.library.system.handler.WeakReferenceHandler
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
+import com.littlefox.app.foxschool.`object`.data.player.PlayerEndViewData
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.library.view.controller.FadeAnimationController
 import com.littlefox.library.view.controller.FadeAnimationInformation
@@ -46,12 +55,18 @@ import com.littlefox.library.view.dialog.ProgressWheel
 import com.littlefox.library.view.layoutmanager.LinearLayoutScrollerManager
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
  * Created by only340 on 2018-03-19.
  */
-class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContract.View, OrientationChangeListener
+@AndroidEntryPoint
+class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainContentLayout : CoordinatorLayout
@@ -101,7 +116,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     @BindView(R.id._playerPlayButtonLayout)
     lateinit var _PlayerPlayButtonLayout : ScalableLayout
 
-    @Nullable
     @BindView(R.id._playerEndBaseLayout)
     lateinit var _PlayerEndBaseLayout : RelativeLayout
 
@@ -277,21 +291,13 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         private const val BOTTOM_LAYOUT_HEIGHT : Int            = 234
         private const val BOTTOM_LAYOUT_EXCEPT_CAPTION : Int    = 150
 
-        private const val MESSAGE_ORIENTATION_INIT : Int        = 11
-        private const val MESSAGE_LOCK_MODE_SET : Int           = 12
-        private const val MESSAGE_VIDEO_LOADING_COMPLETE : Int  = 13
-        private const val MESSAGE_INIT_LIST_SCROLL : Int        = 14
-        private const val MESSAGE_AUTO_MENU_GONE : Int          = 15
-
         private const val PORTRAIT_DISPLAY_WIDTH : Int          = 1080
         private const val LANDSCAPE_DISPLAY_WIDTH : Int         = 1920
         private const val PAGE_MAX_VISIBLE_COUNT : Int          = 5
     }
 
-    private lateinit var mPlayerContractPresenter : PlayerContract.Presenter
-    private lateinit var mWeakReferenceHandler : WeakReferenceHandler
     private lateinit var mFadeAnimationController : FadeAnimationController
-    private var isLockMode = false
+
     private var mCurrentLayoutMode = LAYOUT_TYPE.PLAY
     private var isNextMovieVisibleFromEndView = false
     private var mCurrentSeekProgress = 0
@@ -321,6 +327,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     private var mBottomHeightExceptCaption = 0
     private var isBottomLayoutAnimationing = false
 
+    private var mAutoMenuGoneJob: Job? = null
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+    private var mBottomContentItemOptionDialog: BottomContentItemOptionDialog? = null
+    private var mBottomBookAddDialog: BottomBookAddDialog? = null
+    private val factoryViewModel: PlayerFactoryViewModel by viewModels()
+
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
     {
@@ -340,8 +352,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         setContentView(R.layout.activity_player_hls)
         ButterKnife.bind(this)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        mWeakReferenceHandler = WeakReferenceHandler(this)
-        mPlayerContractPresenter = PlayerHlsPresenter(this, _PlayerView, mCurrentOrientation)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this, _PlayerView, mCurrentOrientation)
 
         mOrientationManager = OrientationManager.getInstance(this)
         mOrientationManager?.setOrientationChangedListener(this)
@@ -362,7 +378,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         if(mCurrentOrientation != newConfig.orientation)
         {
             mCurrentOrientation = newConfig.orientation
-            mPlayerContractPresenter!!.onChangeOrientation(mCurrentOrientation)
+            if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
+            {
+                hideBottomDialog()
+            }
+            factoryViewModel.onChangeOrientation(mCurrentOrientation)
             changeLayout()
         }
     }
@@ -370,7 +390,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     override fun onResume()
     {
         super.onResume()
-        mPlayerContractPresenter!!.resume()
+        factoryViewModel.resume()
     }
 
     override fun onStop()
@@ -382,13 +402,13 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     override fun onPause()
     {
         super.onPause()
-        mPlayerContractPresenter!!.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mPlayerContractPresenter!!.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun onBackPressed()
@@ -396,21 +416,21 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         super.onBackPressed()
     }
 
-    override fun initView()
+    private fun initView()
     {
         initFadeControllerView()
         changeLayout()
-        _PlayerTopBaseLayout!!.setOnTouchListener {v, event -> true}
-        _PlayerBottomBaseLayout!!.setOnTouchListener {v, event -> true}
-        _PlayerListBaseLayout!!.setOnTouchListener {v, event -> true}
-        _PlayerSpeedListBaseLayout!!.setOnTouchListener {v, event -> true}
-        _PlayerEndBaseLayout!!.setOnTouchListener {v, event -> true}
-        _PlayerView!!.setOnTouchListener(mDisplayTouchListener)
-        initLockText()
+        _PlayerTopBaseLayout.setOnTouchListener {v, event -> true}
+        _PlayerBottomBaseLayout.setOnTouchListener {v, event -> true}
+        _PlayerListBaseLayout.setOnTouchListener {v, event -> true}
+        _PlayerSpeedListBaseLayout.setOnTouchListener {v, event -> true}
+        _PlayerEndBaseLayout.setOnTouchListener {v, event -> true}
+        _PlayerView.setOnTouchListener(mDisplayTouchListener)
+
         initSeekbar()
     }
 
-    override fun initFont()
+    private fun initFont()
     {
         _PlayerTopTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayerCaptionTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
@@ -424,27 +444,283 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerSpeedText.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _LockCountTimeText.setTypeface(Font.getInstance(this).getTypefaceBold())
         _LockInfoText.setTypeface(Font.getInstance(this).getTypefaceMedium())
-        for(i in _PageTextList!!.indices)
+        for(i in _PageTextList.indices)
         {
-            _PageTextList!![i].setTypeface(Font.getInstance(this).getTypefaceBold())
+            _PageTextList[i].setTypeface(Font.getInstance(this).getTypefaceBold())
         }
     }
 
-    private fun initLockText()
+    private fun setupObserverViewModel()
     {
-        if(Locale.getDefault().toString().contains(Locale.ENGLISH.toString()))
-        {
-            _PlayerLockInfoLayout.moveChildView(_LockInfoText, 1266f, 10f, 526f, 100f)
-        }
-        else if(Locale.getDefault().toString().contains(Locale.JAPAN.toString()))
-        {
-            _PlayerLockInfoLayout.moveChildView(_LockInfoText, 1266f, 20f, 610f, 80f)
-        }
-        else if((Locale.getDefault().toString().contains(Locale.SIMPLIFIED_CHINESE.toString()) || Locale.getDefault().toString().contains(Locale.TRADITIONAL_CHINESE.toString())))
-        {
-            _PlayerLockInfoLayout.moveChildView(_LockInfoText, 1266f, 20f, 300f, 80f)
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            showSuccessMessage(message)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+            showErrorMessage(message)
+        })
+
+        factoryViewModel.showMovieLoading.observe(this, Observer<Void> {
+            showMovieLoading()
+        })
+
+        factoryViewModel.hideMovieLoading.observe(this, Observer<Void> {
+            hideMovieLoading()
+        })
+
+        factoryViewModel.initPlayListView.observe(this, Observer<Pair<PlayerListAdapter, Int>> {data ->
+            initPlayListView(data.first, data.second)
+        })
+
+        factoryViewModel.initPlaySpeedListView.observe(this, Observer<PlayerSpeedListAdapter> { adapter ->
+            initPlaySpeedListView(adapter)
+        })
+
+        factoryViewModel.initMovieLayout.observe(this, Observer<Void> {
+            initMovieLayout()
+        })
+
+        factoryViewModel.settingSpeedTextLayout.observe(this, Observer<Pair<Int, Boolean>> {data ->
+            settingSpeedTextLayout(data.first, data.second)
+        })
+
+        factoryViewModel.settingCoachmarkView.observe(this, Observer<String> { type ->
+            settingCoachmarkView(type)
+        })
+
+        factoryViewModel.initCaptionText.observe(this, Observer<Void> {
+            initCaptionText()
+        })
+
+        factoryViewModel.setMovieTitle.observe(this, Observer<String> { data ->
+            setMovieTitle(data)
+        })
+
+        factoryViewModel.setCaptionText.observe(this, Observer<String> { data ->
+            setCaptionText(data)
+        })
+
+        factoryViewModel.setRemainMovieTime.observe(this, Observer<String> { text ->
+            setRemainMovieTime(text)
+        })
+
+        factoryViewModel.setCurrentMovieTime.observe(this, Observer<String> { text ->
+            setCurrentMovieTime(text)
+        })
+
+        factoryViewModel.setSeekProgress.observe(this, Observer<Int> { progress ->
+            setSeekProgress(progress)
+        })
+
+        factoryViewModel.setMaxProgress.observe(this, Observer<Int> { progress ->
+            setMaxProgress(progress)
+        })
+
+        factoryViewModel.enablePlayMovie.observe(this, Observer<Boolean> { enable ->
+            enablePlayMovie(enable)
+        })
+
+        factoryViewModel.showPlayerStartView.observe(this, Observer<Void> {
+            showPlayerStartView()
+        })
+
+        factoryViewModel.showPlayerEndView.observe(this, Observer<Void> {
+            showPlayerEndView()
+        })
+
+        factoryViewModel.settingPlayerEndView.observe(this, Observer<PlayerEndViewData> { data ->
+            settingPlayerEndView(data)
+        })
+
+        factoryViewModel.playFirstIndexMovie.observe(this, Observer<Void> {
+            playFirstIndexMovie()
+        })
+
+        factoryViewModel.playNormalIndexMovie.observe(this, Observer<Void> {
+            playNormalIndexMovie()
+        })
+
+        factoryViewModel.playLastIndexMovie.observe(this, Observer<Void> {
+            playLastIndexMovie()
+        })
+
+        factoryViewModel.playOneItemMovie.observe(this, Observer<Void> {
+            playOneItemMovie()
+        })
+
+        factoryViewModel.checkSupportCaptionView.observe(this, Observer<Boolean> { support ->
+            checkSupportCaptionView(support)
+        })
+
+        factoryViewModel.settingCaptionOption.observe(this, Observer<Pair<Boolean, Boolean>> { data ->
+            settingCaptionOption(data.first, data.second)
+        })
+
+        factoryViewModel.enableRepeatView.observe(this, Observer<Boolean> { enable ->
+            enableRepeatView(enable)
+        })
+
+        factoryViewModel.scrollPosition.observe(this, Observer<Int> { position ->
+            scrollPosition(position)
+        })
+
+        factoryViewModel.setCurrentPageLine.observe(this, Observer<Pair<Int, Int>> { data ->
+            settingCurrentPageLine(data.first, data.second)
+        })
+
+        factoryViewModel.setCurrentPage.observe(this, Observer<Int>{ data ->
+            enableCurrentPage(data)
+        })
+
+        factoryViewModel.activatePageView.observe(this, Observer<Boolean> { activate ->
+            Log.f("isActivate : $activate")
+            activatePageView(activate)
+        })
+
+        factoryViewModel.enableSpeedButton.observe(this, Observer<Boolean> { enable ->
+            if(enable)
+            {
+                enableSpeedButton()
+            }
+            else
+            {
+                disableSpeedButton()
+            }
+        })
+
+
+        factoryViewModel.enablePortraitOptionButton.observe(this, Observer<Boolean> { enable ->
+            if(enable)
+            {
+                enablePortraitOptionButton()
+            }
+            else
+            {
+                disablePortraitOptionButton()
+            }
+        })
+
+        factoryViewModel.availableMovieOptionButton.observe(this, Observer<Boolean> { available ->
+            availableMovieOptionButton(available)
+        })
+
+        factoryViewModel.dialogBottomOption.observe(this, Observer<ContentsBaseResult> { data ->
+            showBottomItemOptionDialog(data)
+        })
+
+        factoryViewModel.dialogBottomBookshelfContentAdd.observe(this, Observer<ArrayList<MyBookshelfResult>> { data ->
+            showBottomBookAddDialog(data)
+        })
+
+        factoryViewModel.dialogWarningRecordPermission.observe(this, Observer<Void> {
+            showChangeRecordPermissionDialog()
+        })
+
+        factoryViewModel.dialogWarningAPIException.observe(this, Observer<String> { message ->
+            showWarningAPIExceptionDialog(message)
+        })
+
+        factoryViewModel.dialogWarningWatchingMovie.observe(this, Observer<Void> {
+            showWarningWatchingMovieDialog()
+        })
+    }
+
+    private fun showWarningAPIExceptionDialog(message: String)
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(message)
+            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_API_EXCEPTION)
+            setButtonText(
+                resources.getString(R.string.text_retry),
+                resources.getString(R.string.text_close))
+            setDialogListener(mDialogListener)
+            show()
         }
     }
+
+    private fun showWarningWatchingMovieDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_longtime_play_warning))
+            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_WATCH_MOVIE)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_record_permission))
+            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(
+                resources.getString(R.string.text_cancel),
+                resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showBottomItemOptionDialog(result : ContentsBaseResult)
+    {
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(this ,result)
+        mBottomContentItemOptionDialog
+            ?.setFullName()
+            ?.setFullScreen()
+            ?.disableBookshelf()
+            ?.setItemOptionListener(mItemOptionListener)
+            ?.setView()
+            ?.setOnCancelListener(object : DialogInterface.OnCancelListener
+            {
+                override fun onCancel(dialog : DialogInterface)
+                {
+                    factoryViewModel.onClickBottomOptionDialogCancel()
+                }
+            })
+        mBottomContentItemOptionDialog?.show()
+    }
+
+    private fun showBottomBookAddDialog(list: ArrayList<MyBookshelfResult>)
+    {
+        mBottomBookAddDialog = BottomBookAddDialog(this)?.apply {
+            setCancelable(true)
+            setBookshelfData(list)
+            setFullScreen()
+            setBookSelectListener(mBookAddListener)
+            setOnCancelListener(object : DialogInterface.OnCancelListener
+            {
+                override fun onCancel(dialog : DialogInterface)
+                {
+                    factoryViewModel.onClickBottomOptionDialogCancel()
+                }
+            })
+            show()
+        }
+    }
+
+    private fun hideBottomDialog()
+    {
+        mBottomContentItemOptionDialog?.cancel()
+        mBottomBookAddDialog?.cancel()
+    }
+
 
     private fun initSeekbar()
     {
@@ -559,50 +835,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    /**
-     * 20200324 LOCK 기능 삭제. 나중에 되살려야 될지도 몰라서 일딴 내비둠.
-     */
-    private fun setLockModeUI()
-    {
-        if(isLockMode)
-        {
-            _PlayerListButton.visibility = View.INVISIBLE
-            _PlayerRepeatButton.visibility = View.INVISIBLE
-            if(isSupportCaption)
-            {
-                _PlayerCaptionButton.visibility = View.INVISIBLE
-                _PlayerPageByPageLayout.visibility = View.INVISIBLE
-            }
-            _PlayerCloseButton.visibility = View.INVISIBLE
-            _PlayerCurrentPlayTime.visibility = View.INVISIBLE
-            _SeekbarPlayBar.visibility = View.INVISIBLE
-            _PlayerRemainPlayTime.visibility = View.INVISIBLE
-            _PlayerSpeedButton.visibility = View.INVISIBLE
-            _PlayerSpeedText.visibility = View.INVISIBLE
-            _PlayerPageByPageButton.visibility = View.INVISIBLE
-            if(CommonUtils.getInstance(this).checkTablet == false)
-                _PlayerChangePortraitButton.visibility = View.INVISIBLE
-        }
-        else
-        {
-            _PlayerListButton.visibility = View.VISIBLE
-            _PlayerRepeatButton.visibility = View.VISIBLE
-            if(isSupportCaption)
-            {
-                _PlayerCaptionButton.visibility = View.VISIBLE
-                _PlayerPageByPageLayout.visibility = View.VISIBLE
-            }
-            _PlayerCloseButton.visibility = View.VISIBLE
-            _PlayerCurrentPlayTime.visibility = View.VISIBLE
-            _SeekbarPlayBar.visibility = View.VISIBLE
-            _PlayerRemainPlayTime.visibility = View.VISIBLE
-            _PlayerSpeedButton.visibility = View.VISIBLE
-            _PlayerSpeedText.visibility = View.VISIBLE
-            _PlayerPageByPageButton.visibility = View.VISIBLE
-            if(CommonUtils.getInstance(this).checkTablet == false)
-                _PlayerChangePortraitButton.visibility = View.VISIBLE
-        }
-    }
 
     /**
      * Rotate가 될 시에 해당 orientation에 맞게 Layout을 세팅
@@ -777,16 +1009,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            _PlayerBottomBaseLayout!!.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), BOTTOM_LAYOUT_HEIGHT_PORTRAIT.toFloat())
-            baseLayoutParams = _SeekbarPortraitPlayBar!!.layoutParams as RelativeLayout.LayoutParams
+            _PlayerBottomBaseLayout.setScaleSize(PORTRAIT_DISPLAY_WIDTH.toFloat(), BOTTOM_LAYOUT_HEIGHT_PORTRAIT.toFloat())
+            baseLayoutParams = _SeekbarPortraitPlayBar.layoutParams as RelativeLayout.LayoutParams
             baseLayoutParams.topMargin = CommonUtils.getInstance(this).getPixel(602) - _SeekbarPortraitPlayBar!!.layoutParams.height / 2
-            _SeekbarPortraitPlayBar!!.layoutParams = baseLayoutParams
-            _PlayerBottomBaseLayout!!.moveChildView(_PlayerRepeatButton, 47f, 15f, 58f, 62f)
+            _SeekbarPortraitPlayBar.layoutParams = baseLayoutParams
+            _PlayerBottomBaseLayout.moveChildView(_PlayerRepeatButton, 47f, 15f, 58f, 62f)
         }
         else if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
-            _PlayerBottomBaseLayout!!.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), BOTTOM_LAYOUT_HEIGHT.toFloat())
-            _PlayerBottomBaseLayout!!.moveChildView(_PlayerRepeatButton, 48f, 0f, 71f, 70f)
+            _PlayerBottomBaseLayout.setScaleSize(LANDSCAPE_DISPLAY_WIDTH.toFloat(), BOTTOM_LAYOUT_HEIGHT.toFloat())
+            _PlayerBottomBaseLayout.moveChildView(_PlayerRepeatButton, 48f, 0f, 71f, 70f)
         }
         if(isMenuVisible)
         {
@@ -959,23 +1191,24 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         ViewAnimator.animate(_PlayerBottomBaseLayout).translationY(start.toFloat(), desc.toFloat())
                 .duration(duration)
                 .onStop {
-                    _PlayerBottomBaseLayout!!.visibility = View.GONE
+                    _PlayerBottomBaseLayout.visibility = View.GONE
                     isBottomLayoutAnimationing = false}
                 .start()
     }
 
-    override fun initPlayListView(adapter : PlayerListAdapter, position : Int)
+    private fun initPlayListView(adapter : PlayerListAdapter, position : Int)
     {
         Log.f("position : $position")
         _PlayerListView.layoutManager = LinearLayoutScrollerManager(this)
         _PlayerListView.adapter = adapter
-        val message = Message.obtain()
-        message.what = MESSAGE_INIT_LIST_SCROLL
-        message.arg1 = position
-        mWeakReferenceHandler.sendMessageDelayed(message, Common.DURATION_NORMAL)
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_NORMAL)
+            forceScrollView(position)
+        }
     }
 
-    override fun initPlaySpeedListView(adapter : PlayerSpeedListAdapter)
+    private fun initPlaySpeedListView(adapter : PlayerSpeedListAdapter)
     {
         Log.f("")
         _PlayerSpeedListView.layoutManager = LinearLayoutScrollerManager(this)
@@ -994,17 +1227,17 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         mMaterialLoadingDialog = null
     }
 
-    override fun showMovieLoading()
+    private fun showMovieLoading()
     {
         _ProgressWheelLayout.visibility = View.VISIBLE
     }
 
-    override fun hideMovieLoading()
+    private fun hideMovieLoading()
     {
         _ProgressWheelLayout.visibility = View.GONE
     }
 
-    override fun initMovieLayout()
+    private fun initMovieLayout()
     {
         Log.f("")
         mCurrentLayoutMode = LAYOUT_TYPE.INIT
@@ -1022,7 +1255,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         isTitleMovieEnd = false
     }
 
-    override fun settingSpeedTextLayout(speedIndex : Int, isMenuHide : Boolean)
+    private fun settingSpeedTextLayout(speedIndex : Int, isMenuHide : Boolean)
     {
         if(isMenuHide)
         {
@@ -1036,7 +1269,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerSpeedText.text = data.get(speedIndex)
     }
 
-    override fun settingCoachmarkView(type : String)
+    private fun settingCoachmarkView(type : String)
     {
         Log.f("type : $type")
         if((type == Common.CONTENT_TYPE_STORY))
@@ -1053,23 +1286,23 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             override fun onClick(v : View)
             {
                 _PlayerCoachmarkImage.visibility = View.GONE
-                mPlayerContractPresenter?.onCoachMarkNeverSeeAgain(type)
+                factoryViewModel.onCoachMarkNeverSeeAgain(type)
             }
         })
     }
 
-    override fun initCaptionText()
+    private fun initCaptionText()
     {
         _PlayerCaptionTitle.text = ""
     }
 
-    override fun setMovieTitle(title : String)
+    private fun setMovieTitle(title : String)
     {
         _PlayerPortraitTitleText.text = title
         _PlayerTopTitle.text = title
     }
 
-    override fun setCaptionText(text : String)
+    private fun setCaptionText(text : String)
     {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
@@ -1081,17 +1314,17 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun setRemainMovieTime(remainTime : String)
+    private fun setRemainMovieTime(remainTime : String)
     {
         _PlayerRemainPlayTime.text = remainTime
     }
 
-    override fun setCurrentMovieTime(currentTime : String)
+    private fun setCurrentMovieTime(currentTime : String)
     {
         _PlayerCurrentPlayTime.text = currentTime
     }
 
-    override fun setSeekProgress(progress : Int)
+    private fun setSeekProgress(progress : Int)
     {
         if(mCurrentOrientation == Configuration.ORIENTATION_LANDSCAPE)
         {
@@ -1103,64 +1336,19 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun setDownloadProgress(progress : Int)
-    {
-    }
-
-    override fun setMaxProgress(maxProgress : Int)
+    private fun setMaxProgress(maxProgress : Int)
     {
         _SeekbarPlayBar.max = maxProgress
         _SeekbarPortraitPlayBar.max = maxProgress
     }
 
-    override fun enablePlayMovie(isPlaying : Boolean)
+    private fun enablePlayMovie(isPlaying : Boolean)
     {
         isMoviePlaying = isPlaying
         setPlayIconDrawable()
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
-    override fun enableLockMenu(newLockMode : Boolean)
-    {
-        isLockMode = newLockMode
-        enableMenuAnimation(false)
-        enablePageByPageAnimation(true)
-        enableBackgroudAnimation(false)
-        if(isLockMode)
-        {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        }
-        else
-        {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-        }
-        mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_LOCK_MODE_SET, Common.DURATION_NORMAL)
-    }
-
-    override fun setLockCountTime(second : Int)
-    {
-        if(second == 0)
-        {
-            _PlayerLockInfoLayout.visibility = View.GONE
-            _LockCountTimeText.visibility = View.GONE
-        }
-        else
-        {
-            if(isLockMode)
-            {
-                _LockInfoText.setText(R.string.message_lock_off)
-            }
-            else
-            {
-                _LockInfoText.setText(R.string.message_lock_on)
-            }
-            _PlayerLockInfoLayout.visibility = View.VISIBLE
-            _LockCountTimeText.visibility = View.VISIBLE
-            _LockCountTimeText.text = second.toString()
-        }
-    }
-
-    override fun showPlayerStartView()
+    private fun showPlayerStartView()
     {
         Log.f("")
         mCurrentLayoutMode = LAYOUT_TYPE.PLAY
@@ -1172,14 +1360,13 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         enablePageByPageAnimation(true)
         changeModeBottomLayout()
         changeModePlayEndLayout()
-        if(isLockMode)
-        {
-            setLockModeUI()
+        lifecycleScope.launch(Dispatchers.Main){
+            delay(Common.DURATION_NORMAL)
+            _PlayerBackground.visibility = View.INVISIBLE
         }
-        mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_VIDEO_LOADING_COMPLETE, Common.DURATION_NORMAL)
     }
 
-    override fun showPlayerEndView()
+    private fun showPlayerEndView()
     {
         Log.f("")
         hideMenuAndList()
@@ -1194,12 +1381,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         showPlayerEndLayoutAnimation()
     }
 
-    override fun settingPlayerEndView(isEbookAvailable : Boolean, isQuizAvailable : Boolean, isVocabularyAvailable : Boolean, isFlashcardAvailable : Boolean, isStarwordsAvailable : Boolean, isCrosswordAvailable : Boolean, isTranslateAvailable : Boolean, isNextButtonVisible : Boolean)
+    private fun settingPlayerEndView(data : PlayerEndViewData)
     {
         mPlayEndStudyOptionIconList.clear()
-        isNextMovieVisibleFromEndView = isNextButtonVisible
+        isNextMovieVisibleFromEndView = data.isNextButtonVisible
 
-        if(isEbookAvailable)
+        if(data.isEbookAvailable)
         {
             mPlayEndStudyOptionIconList.add(_EbookButtonImage)
         }
@@ -1208,7 +1395,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _EbookButtonImage!!.visibility = View.GONE
         }
 
-        if(isQuizAvailable)
+        if(data.isQuizAvailable)
         {
             mPlayEndStudyOptionIconList.add(_QuizButtonImage)
         }
@@ -1217,7 +1404,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _QuizButtonImage!!.visibility = View.GONE
         }
 
-        if(isVocabularyAvailable)
+        if(data.isVocabularyAvailable)
         {
             mPlayEndStudyOptionIconList.add(_VocabulraryButtonImage)
         }
@@ -1226,7 +1413,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _VocabulraryButtonImage!!.visibility = View.GONE
         }
 
-        if(isFlashcardAvailable)
+        if(data.isFlashcardAvailable)
         {
             mPlayEndStudyOptionIconList.add(_FlashcardButtonImage)
         }
@@ -1235,7 +1422,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _FlashcardButtonImage!!.visibility = View.GONE
         }
 
-        if(isStarwordsAvailable)
+        if(data.isStarwordsAvailable)
         {
             mPlayEndStudyOptionIconList.add(_StarwordsButtonImage)
         }
@@ -1244,7 +1431,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _StarwordsButtonImage!!.visibility = View.GONE
         }
 
-        if(isCrosswordAvailable)
+        if(data.isCrosswordAvailable)
         {
             mPlayEndStudyOptionIconList.add(_CrosswordButtonImage)
         }
@@ -1253,7 +1440,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _CrosswordButtonImage!!.visibility = View.GONE
         }
 
-        if(isTranslateAvailable)
+        if(data.isTranslateAvailable)
         {
             mPlayEndStudyOptionIconList.add(_OriginalTranslateButtonImage)
         }
@@ -1262,7 +1449,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             _OriginalTranslateButtonImage!!.visibility = View.GONE
         }
 
-        if(isNextButtonVisible)
+        if(data.isNextButtonVisible)
         {
             _NextButtonBoxImage!!.visibility = View.VISIBLE
             _NextButtonIconImage!!.visibility = View.VISIBLE
@@ -1280,33 +1467,33 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         settingPlayEndButtonLayout(isNextMovieVisibleFromEndView, mPlayEndStudyOptionIconList)
     }
 
-    override fun PlayFirstIndexMovie()
+    private fun playFirstIndexMovie()
     {
         Log.f("")
-        _PlayerPrevButton!!.visibility = View.INVISIBLE
+        _PlayerPrevButton.visibility = View.INVISIBLE
     }
 
-    override fun PlayNormalIndexMovie()
+    private fun playNormalIndexMovie()
     {
         Log.f("")
-        _PlayerPrevButton!!.visibility = View.VISIBLE
-        _PlayerNextButton!!.visibility = View.VISIBLE
+        _PlayerPrevButton.visibility = View.VISIBLE
+        _PlayerNextButton.visibility = View.VISIBLE
     }
 
-    override fun PlayLastIndexMovie()
+    private fun playLastIndexMovie()
     {
         Log.f("")
-        _PlayerNextButton!!.visibility = View.INVISIBLE
+        _PlayerNextButton.visibility = View.INVISIBLE
     }
 
-    override fun PlayOneItemMovie()
+    private fun playOneItemMovie()
     {
         Log.f("")
-        _PlayerPrevButton!!.visibility = View.INVISIBLE
-        _PlayerNextButton!!.visibility = View.INVISIBLE
+        _PlayerPrevButton.visibility = View.INVISIBLE
+        _PlayerNextButton.visibility = View.INVISIBLE
     }
 
-    override fun checkSupportCaptionView(isSupport : Boolean)
+    private fun checkSupportCaptionView(isSupport : Boolean)
     {
         Log.f("isSupport : $isSupport")
         isSupportCaption = isSupport
@@ -1322,7 +1509,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun settingCaptionOption(isEnableCaption : Boolean, isEnablePage : Boolean)
+    private fun settingCaptionOption(isEnableCaption : Boolean, isEnablePage : Boolean)
     {
         Log.f("isEnableCaption : $isEnableCaption, isEnablePage : $isEnablePage")
         this.isEnableCaption = isEnableCaption
@@ -1331,7 +1518,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         enablePageByPageView(isEnablePage)
     }
 
-    override fun enableRepeatView(isOn : Boolean)
+    private fun enableRepeatView(isOn : Boolean)
     {
         if(isOn)
         {
@@ -1343,7 +1530,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun scrollPosition(position : Int)
+    private fun scrollPosition(position : Int)
     {
         Log.f("position : $position")
         mCurrentPlayPosition = position
@@ -1356,12 +1543,17 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         })
     }
 
-    override fun showErrorMessage(message : String)
+    private fun showSuccessMessage(message : String)
+    {
+        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainContentLayout, message)
+    }
+
+    private fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainContentLayout, message)
     }
 
-    override fun settingCurrentPageLine(startIndex : Int, maxPageCount : Int)
+    private fun settingCurrentPageLine(startIndex : Int, maxPageCount : Int)
     {
         Log.f("startIndex : $startIndex,  maxPageCount : $maxPageCount")
         var index = 0
@@ -1403,7 +1595,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun enableCurrentPage(page : Int)
+    private fun enableCurrentPage(page : Int)
     {
         for(i in 0 until PAGE_MAX_VISIBLE_COUNT)
         {
@@ -1425,7 +1617,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun activatePageView(isActivate : Boolean)
+    private fun activatePageView(isActivate : Boolean)
     {
         Log.f("isActivate : $isActivate")
         if(isActivate)
@@ -1442,7 +1634,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun enableSpeedButton()
+    private fun enableSpeedButton()
     {
         _PlayerSpeedButton.isEnabled = true
         _PlayerSpeedText.isEnabled = true
@@ -1450,7 +1642,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerSpeedText.alpha = 1.0f
     }
 
-    override fun disableSpeedButton()
+    private fun disableSpeedButton()
     {
         _PlayerSpeedButton.isEnabled = false
         _PlayerSpeedText.isEnabled = false
@@ -1458,17 +1650,17 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         _PlayerSpeedText.alpha = 0.0f
     }
 
-    override fun disablePortraitOptionButton()
+    private fun disablePortraitOptionButton()
     {
         _PlayerPortraitTitleOption.isEnabled = false
     }
 
-    override fun enablePortraitOptionButton()
+    private fun enablePortraitOptionButton()
     {
         _PlayerPortraitTitleOption.isEnabled = true
     }
 
-    override fun availableMovieOptionButton(isAvailable : Boolean)
+    private fun availableMovieOptionButton(isAvailable : Boolean)
     {
         if(isAvailable)
         {
@@ -1478,11 +1670,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             _PlayerPortraitTitleOption.visibility = View.GONE
         }
-    }
-
-    override fun showSuccessMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainContentLayout, message)
     }
 
     private val coachmarkStoryDrawable : Int
@@ -1754,11 +1941,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     {
         if(isEnable)
         {
-            _PlayerPageByPageButton!!.setImageResource(R.drawable.player__repeat_on)
+            _PlayerPageByPageButton.setImageResource(R.drawable.player__repeat_on)
         }
         else
         {
-            _PlayerPageByPageButton!!.setImageResource(R.drawable.player__repeat_off)
+            _PlayerPageByPageButton.setImageResource(R.drawable.player__repeat_off)
         }
         adjustPageByPageLayout(isEnableCaption)
     }
@@ -1784,12 +1971,12 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         if(isEnable)
         {
             Log.f("caption enable")
-            _PlayerCaptionButton!!.setImageResource(R.drawable.player__caption_on)
+            _PlayerCaptionButton.setImageResource(R.drawable.player__caption_on)
         }
         else
         {
             Log.f("caption disable")
-            _PlayerCaptionButton!!.setImageResource(R.drawable.player__caption_off)
+            _PlayerCaptionButton.setImageResource(R.drawable.player__caption_off)
         }
     }
 
@@ -1837,7 +2024,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun enablePageByPageAnimation(isVisible : Boolean)
     {
-        if((isLockMode == false) && isSupportCaption && isEnablePageByPage && isTitleMovieEnd)
+        if(isSupportCaption && isEnablePageByPage && isTitleMovieEnd)
         {
             if(mCurrentLayoutMode != LAYOUT_TYPE.INIT)
             {
@@ -1905,16 +2092,25 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
     private fun startMenuGoneTimer()
     {
-        if(mWeakReferenceHandler.hasMessages(MESSAGE_AUTO_MENU_GONE))
+        removeMenuGoneTimer()
+        if(mAutoMenuGoneJob?.isActive == true)
         {
-            mWeakReferenceHandler.removeMessages(MESSAGE_AUTO_MENU_GONE)
+            mAutoMenuGoneJob?.cancel()
+            mAutoMenuGoneJob = null
         }
-        mWeakReferenceHandler.sendEmptyMessageDelayed(MESSAGE_AUTO_MENU_GONE, DURATION_MENU_GONE.toLong())
+        mAutoMenuGoneJob = lifecycleScope.launch(Dispatchers.Main){
+            delay(DURATION_MENU_GONE.toLong())
+            forceMenuGone()
+        }
     }
 
     private fun removeMenuGoneTimer()
     {
-        mWeakReferenceHandler.removeMessages(MESSAGE_AUTO_MENU_GONE)
+        if(mAutoMenuGoneJob?.isActive == true)
+        {
+            mAutoMenuGoneJob?.cancel()
+            mAutoMenuGoneJob = null
+        }
     }
 
     private fun setFullPlayEndLayout()
@@ -2128,11 +2324,11 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
     {
         if(isCaptionVisible)
         {
-            _PlayerPageByPageLayout!!.scaleHeight = 279f
+            _PlayerPageByPageLayout.scaleHeight = 279f
         }
         else
         {
-            _PlayerPageByPageLayout!!.scaleHeight = 139f
+            _PlayerPageByPageLayout.scaleHeight = 139f
         }
     }
 
@@ -2169,25 +2365,6 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         }
     }
 
-    override fun handlerMessage(message : Message)
-    {
-        when(message.what)
-        {
-            MESSAGE_ORIENTATION_INIT -> requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
-            MESSAGE_LOCK_MODE_SET ->
-            {
-                setLockModeUI()
-                enableMenuAnimation(true)
-                enablePageByPageAnimation(false)
-                enableBackgroudAnimation(true)
-            }
-            MESSAGE_VIDEO_LOADING_COMPLETE -> _PlayerBackground!!.visibility = View.INVISIBLE
-            MESSAGE_INIT_LIST_SCROLL -> forceScrollView(message.arg1)
-            MESSAGE_AUTO_MENU_GONE -> forceMenuGone()
-        }
-        mPlayerContractPresenter.sendMessageEvent(message)
-    }
-
     @SuppressLint("SourceLockedOrientationActivity")
     @OnClick(
         R.id._playerPlayButton, R.id._playerPrevButton, R.id._playerNextButton, R.id._playerCaptionButton, R.id._playerCloseButton, R.id._playerListButton,
@@ -2204,16 +2381,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
         {
             R.id._playerPlayButton ->
             {
-                mPlayerContractPresenter.onHandlePlayButton()
+                factoryViewModel.onHandlePlayButton()
                 startMenuGoneTimer()
             }
-            R.id._playerPrevButton -> mPlayerContractPresenter.onPrevButton()
-            R.id._playerNextButton -> mPlayerContractPresenter.onNextButton()
+            R.id._playerPrevButton -> factoryViewModel.onPrevButton()
+            R.id._playerNextButton -> factoryViewModel.onNextButton()
             R.id._playerPageByPageButton ->
             {
                 isEnablePageByPage = !isEnablePageByPage
                 enablePageByPageView(isEnablePageByPage)
-                mPlayerContractPresenter.onClickPageByPageButton(isEnablePageByPage)
+                factoryViewModel.onClickPageByPageButton(isEnablePageByPage)
                 startMenuGoneTimer()
             }
             R.id._playerCaptionButton ->
@@ -2223,16 +2400,16 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 enableCaptionAnimation(isEnableCaption)
                 adjustBottomControlLayout(isEnableCaption)
                 adjustPageByPageLayout(isEnableCaption)
-                mPlayerContractPresenter.onClickCaptionButton(isEnableCaption)
+                factoryViewModel.onClickCaptionButton(isEnableCaption)
                 startMenuGoneTimer()
             }
-            R.id._playerCloseButton, R.id._playerEndCloseButton -> mPlayerContractPresenter.onCloseButton()
+            R.id._playerCloseButton, R.id._playerEndCloseButton -> factoryViewModel.onCloseButton()
             R.id._playerListButton ->
             {
                 Log.f("_playerListButton Click")
                 scrollPosition(mCurrentPlayPosition)
                 enableMenuAnimation(false)
-                mFadeAnimationController!!.promptViewStatus(_PlayerPageByPageLayout, false)
+                mFadeAnimationController.promptViewStatus(_PlayerPageByPageLayout, false)
                 enablePlayListAnimation(true)
             }
             R.id._playListCloseButtonRect ->
@@ -2246,7 +2423,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                 Log.f("_playerSpeedButton Click")
                 scrollPosition(mCurrentPlayPosition)
                 enableMenuAnimation(false)
-                mFadeAnimationController!!.promptViewStatus(_PlayerPageByPageLayout, false)
+                mFadeAnimationController.promptViewStatus(_PlayerPageByPageLayout, false)
                 enablePlaySpeedListAnimation(true)
             }
             R.id._playSpeedListCloseButtonRect ->
@@ -2272,25 +2449,25 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
                     _PlayerEndBaseLayout.clearAnimation()
                     _PlayerEndBaseLayout.visibility = View.GONE
                 }
-                mPlayerContractPresenter.onReplayButton()
+                factoryViewModel.onReplayButton()
             }
-            R.id._playerRepeatButton -> mPlayerContractPresenter.onRepeatButton()
-            R.id._playerPortraitTitleOption -> mPlayerContractPresenter.onClickCurrentMovieOptionButton()
-            R.id._nextButtonBoxImage -> mPlayerContractPresenter.onNextMovieButton()
-            R.id._ebookButtonImage -> mPlayerContractPresenter.onClickCurrentMovieEbookButton()
-            R.id._quizButtonImage -> mPlayerContractPresenter.onClickCurrentMovieQuizButton()
-            R.id._vocabularyButtonImage -> mPlayerContractPresenter.onClickCurrentMovieVocabularyButton()
-            R.id._translateButtonImage -> mPlayerContractPresenter.onClickCurrentMovieTranslateButton()
-            R.id._starwordsButtonImage -> mPlayerContractPresenter.onClickCurrentMovieStarwordsButton()
-            R.id._crosswordButtonImage -> mPlayerContractPresenter.onClickCurrentMovieCrosswordButton()
-            R.id._flashcardButtonImage -> mPlayerContractPresenter.onClickCurrentMovieFlashcardButton()
-            R.id._player1PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
-            R.id._player2PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
-            R.id._player3PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
-            R.id._player4PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
-            R.id._player5PageButton -> mPlayerContractPresenter.onPageByPageIndex((view.tag as Int))
-            R.id._playerPrevPageButton -> mPlayerContractPresenter.onMovePrevPage(_PageButtonList!![0].tag as Int)
-            R.id._playerNextPageButton -> mPlayerContractPresenter.onMoveNextPage(_PageButtonList!![4].tag as Int)
+            R.id._playerRepeatButton -> factoryViewModel.onRepeatButton()
+            R.id._playerPortraitTitleOption -> factoryViewModel.onClickMovieOptionButton()
+            R.id._nextButtonBoxImage -> factoryViewModel.onNextMovieButton()
+            R.id._ebookButtonImage -> factoryViewModel.onClickEbookButton()
+            R.id._quizButtonImage -> factoryViewModel.onClickQuizButton()
+            R.id._vocabularyButtonImage -> factoryViewModel.onClickVocabularyButton()
+            R.id._translateButtonImage -> factoryViewModel.onClickTranslateButton()
+            R.id._starwordsButtonImage -> factoryViewModel.onClickStarwordsButton()
+            R.id._crosswordButtonImage -> factoryViewModel.onClickCrosswordButton()
+            R.id._flashcardButtonImage -> factoryViewModel.onClickFlashcardButton()
+            R.id._player1PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
+            R.id._player2PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
+            R.id._player3PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
+            R.id._player4PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
+            R.id._player5PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
+            R.id._playerPrevPageButton -> factoryViewModel.onMovePrevPage(_PageButtonList[0].tag as Int)
+            R.id._playerNextPageButton -> factoryViewModel.onMoveNextPage(_PageButtonList[4].tag as Int)
         }
     }
 
@@ -2364,21 +2541,7 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
             return true
         }
     }
-    private val mLockButtonTouchListener : OnTouchListener = object : OnTouchListener
-    {
-        override fun onTouch(v : View, event : MotionEvent) : Boolean
-        {
-            if(event.action == MotionEvent.ACTION_DOWN)
-            {
-                mPlayerContractPresenter!!.onActivateLockButton()
-            }
-            else if(event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_OUTSIDE)
-            {
-                mPlayerContractPresenter!!.onUnActivateLockButton()
-            }
-            return true
-        }
-    }
+
     private val mOnSeekBarListener : OnSeekBarChangeListener = object : OnSeekBarChangeListener
     {
         override fun onProgressChanged(seekBar : SeekBar, progress : Int, fromUser : Boolean)
@@ -2388,13 +2551,13 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
 
         override fun onStartTrackingTouch(seekBar : SeekBar)
         {
-            mPlayerContractPresenter.onStartTrackingSeek()
+            factoryViewModel.onStartTrackingSeek()
             removeMenuGoneTimer()
         }
 
         override fun onStopTrackingTouch(seekBar : SeekBar)
         {
-            mPlayerContractPresenter.onStopTrackingSeek(seekBar.progress)
+            factoryViewModel.onStopTrackingSeek(seekBar.progress)
             startMenuGoneTimer()
         }
     }
@@ -2406,14 +2569,81 @@ class PlayerHlsActivity() : BaseActivity(), MessageHandlerCallback, PlayerContra
          */
         if(Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) == 1)
         {
-            if(isLockMode == false)
+            if(mCurrentOrientation != newOrientation)
             {
-                if(mCurrentOrientation != newOrientation)
-                {
-                    Log.f("newOrientation : $newOrientation")
-                    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_USER
-                }
+                Log.f("newOrientation : $newOrientation")
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_USER
             }
         }
     }
+
+    private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
+    {
+        override fun onClickQuiz()
+        {
+            factoryViewModel.onClickQuizButton()
+        }
+
+        override fun onClickTranslate()
+        {
+            factoryViewModel.onClickTranslateButton()
+        }
+
+        override fun onClickVocabulary()
+        {
+            factoryViewModel.onClickVocabularyButton()
+        }
+
+        override fun onClickBookshelf()
+        {
+            factoryViewModel.onClickAddBookshelf()
+        }
+
+        override fun onClickEbook()
+        {
+            factoryViewModel.onClickEbookButton()
+        }
+
+        override fun onClickGameStarwords()
+        {
+            factoryViewModel.onClickStarwordsButton()
+        }
+
+        override fun onClickGameCrossword()
+        {
+            factoryViewModel.onClickCrosswordButton()
+        }
+
+        override fun onClickFlashCard()
+        {
+            factoryViewModel.onClickFlashcardButton()
+        }
+
+        override fun onClickRecordPlayer()
+        {
+            factoryViewModel.onClickRecordPlayerButton()
+        }
+    }
+
+    private val mBookAddListener : BookAddListener = object : BookAddListener
+    {
+        override fun onClickBook(index : Int)
+        {
+            factoryViewModel.onDialogAddBookshelfClick(index)
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            factoryViewModel.onDialogClick(eventType)
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            factoryViewModel.onDialogChoiceClick(buttonType, eventType)
+        }
+    }
+
 }

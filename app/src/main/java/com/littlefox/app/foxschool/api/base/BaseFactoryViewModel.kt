@@ -25,12 +25,14 @@ abstract class BaseFactoryViewModel : ViewModel()
     protected val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    abstract fun init(context: Context)
+
     abstract fun setupViewModelObserver()
     abstract fun resume()
     abstract fun pause()
     abstract fun destroy()
 
+
+    open fun init(context: Context){}
     open fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?){}
     open fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray){}
     open fun onActivityResult(code: ResultLauncherCode){}

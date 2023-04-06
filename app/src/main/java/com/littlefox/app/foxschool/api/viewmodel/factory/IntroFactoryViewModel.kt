@@ -39,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -60,10 +61,10 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
 
-    private val _bottomViewType = MutableLiveData<IntroViewMode>()
+    private val _bottomViewType = SingleLiveEvent<IntroViewMode>()
     val bottomViewType: LiveData<IntroViewMode> get() = _bottomViewType
 
-    private val _progressPercent = MutableLiveData<Pair<Float, Float>>()
+    private val _progressPercent = SingleLiveEvent<Pair<Float, Float>>()
     val progressPercent: LiveData<Pair<Float, Float>> get() = _progressPercent
 
     private val _dialogSelectUpdate = SingleLiveEvent <Void>()
@@ -75,7 +76,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
     private val _dialogFilePermission = SingleLiveEvent <Void>()
     val dialogFilePermission: LiveData<Void> get() = _dialogFilePermission
 
-    private val _showDialogPasswordChange = MutableLiveData<PasswordGuideType>()
+    private val _showDialogPasswordChange = SingleLiveEvent<PasswordGuideType>()
     val showDialogPasswordChange: LiveData<PasswordGuideType> get() = _showDialogPasswordChange
 
     private val _hideDialogPasswordChange = SingleLiveEvent <Void>()

@@ -1268,9 +1268,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             mStudyLogSaveCoroutine?.cancel()
             mStudyLogSaveCoroutine = null
         }
-        catch(e : Exception)
-        {
-        }
+        catch(e : Exception) { }
     }
 
     private fun requestAuthContentPlay()
@@ -1848,14 +1846,6 @@ class PlayerHlsPresenter : PlayerContract.Presenter
             {
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
             }
-        }
-
-        override fun onErrorMessage(message : String)
-        {
-            Log.f("message : $message")
-            resumePlayer()
-            enableTimer(true)
-            mPlayerContractView.showErrorMessage(message)
         }
     }
     private val mBookAddListener : BookAddListener = object : BookAddListener
