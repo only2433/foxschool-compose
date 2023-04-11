@@ -38,7 +38,6 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
             }
         }
-        enqueueCommandEnd()
     }
 
     override fun pullNext(data : QueueData)

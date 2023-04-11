@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
@@ -18,6 +19,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
+import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
 import com.littlefox.library.view.dialog.ProgressWheel
 import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
@@ -35,7 +37,7 @@ class QuizIntroFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private lateinit var mQuizFragmentDataObserver : QuizFragmentDataObserver
+    private val factoryViewModel: QuizFactoryViewModel by activityViewModels()
 
     fun getInstance() : QuizIntroFragment
     {
@@ -65,7 +67,7 @@ class QuizIntroFragment : Fragment()
     override fun onViewCreated(view : View, savedInstanceState : Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        setupObserverViewModel()
     }
 
     override fun onStart()
@@ -101,15 +103,20 @@ class QuizIntroFragment : Fragment()
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    private fun initView()
-    {
-        mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
-    }
-
     private fun initFont()
     {
         _MainTitleText.typeface = (Font.getInstance(mContext).getTypefaceMedium())
         _QuizPlayButton.typeface = (Font.getInstance(mContext).getTypefaceMedium())
+    }
+    private fun setupObserverViewModel()
+    {
+        factoryViewModel.loadingComplete.observe(viewLifecycleOwner) {
+            loadingComplete()
+        }
+
+        factoryViewModel.setTitle.observe(viewLifecycleOwner) {data ->
+            setTitle(data.first, data.second)
+        }
     }
     /** ========== Init ========== */
 
@@ -147,6 +154,6 @@ class QuizIntroFragment : Fragment()
     @OnClick(R.id._quizIntroPlayButton)
     fun onClickView(view : View?)
     {
-        mQuizFragmentDataObserver.onGoNext()
+        factoryViewModel.onGoNext()
     }
 }

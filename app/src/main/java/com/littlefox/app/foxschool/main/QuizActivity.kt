@@ -3,13 +3,17 @@ package com.littlefox.app.foxschool.main
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.os.Message
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import butterknife.BindView
@@ -17,12 +21,16 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.QuizSelectionPagerAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.Common.Companion.DURATION_NORMAL
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.main.contract.QuizContract
@@ -33,9 +41,11 @@ import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.Field
 
-class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
+@AndroidEntryPoint
+class QuizActivity : BaseActivity()
 {
     @BindView(R.id._quizTitlelayout)
     lateinit var _QuizTitleLayout : ImageView
@@ -79,11 +89,11 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     @BindView(R.id._quizAniLayout)
     lateinit var _AniAnswerLayout : ScalableLayout
 
-    private lateinit var mQuizPresenter : QuizPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
-
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
     private var mCurrentPageIndex : Int = 0
+
+    private val factoryViewModel: QuizFactoryViewModel by viewModels()
 
     /** ========== LifeCycle ========== */
     override fun onCreate(savedInstanceState : Bundle?)
@@ -92,26 +102,29 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_quiz)
         ButterKnife.bind(this)
-        mQuizPresenter = QuizPresenter(this)
+        initView()
+        initFont()
+        setupObserverViewModel()
+        factoryViewModel.init(this)
         Log.f("")
     }
 
     override fun onResume()
     {
         super.onResume()
-        mQuizPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mQuizPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mQuizPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -122,7 +135,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    override fun initView()
+    fun initView()
     {
         settingLayoutColor()
         settingTaskBoxLayout()
@@ -140,7 +153,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         }
     }
 
-    override fun initFont()
+    fun initFont()
     {
         _QuizTitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _QuizTimerTitle.typeface = Font.getInstance(this).getTypefaceMedium()
@@ -148,6 +161,68 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         _QuizAnswerCountTitle.typeface = Font.getInstance(this).getTypefaceMedium()
         _QuizAnswerCountText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
+
+    fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            showSuccessMessage(message)
+        })
+        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+            showErrorMessage(message)
+        })
+        factoryViewModel.showPagerView.observe(this, Observer<QuizSelectionPagerAdapter> { adapter ->
+            showPagerView(adapter)
+        })
+        factoryViewModel.forceChangePageView.observe(this, Observer<Int> { page ->
+            forceChangePageView(page)
+        })
+        factoryViewModel.nextPageView.observe(this, Observer<Void>{
+            nextPageView()
+        })
+        factoryViewModel.enableTaskBoxLayout.observe(this, Observer<Boolean> { enable ->
+            if(enable)
+            {
+                showTaskBoxLayout()
+            }
+            else
+            {
+                hideTaskBoxLayout()
+            }
+        })
+        factoryViewModel.showPlayTime.observe(this, Observer<String>{ data ->
+            showPlayTime(data)
+        })
+        factoryViewModel.showCorrectAnswerCount.observe(this, Observer<String> { data ->
+            showCorrectAnswerCount(data)
+        })
+        factoryViewModel.showCorrectAnswerView.observe(this, Observer<Void> {
+            showCorrectAnswerView()
+        })
+        factoryViewModel.showInCorrectAnswerView.observe(this, Observer<Void> {
+            showInCorrectAnswerView()
+        })
+        factoryViewModel.hideAnswerView.observe(this, Observer<Void> {
+            hideAnswerView()
+        })
+        factoryViewModel.dialogWarningText.observe(this, Observer<String> { message ->
+            showMessageAlertDialog(message)
+        })
+
+    }
+
     /** ========== Init ========== */
 
     /** 상단바 색상 설정 */
@@ -175,82 +250,62 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
             }
         }
     }
-
-    override fun handlerMessage(message : Message)
-    {
-        mQuizPresenter.sendMessageEvent(message)
-    }
-
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
-
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
-    override fun showSuccessMessage(message : String)
+    private fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun showErrorMessage(message : String)
+    private fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
     }
 
     /** 퀴즈 뷰페이저 표시 */
-    override fun showPagerView(quizSelectionPagerAdapter : QuizSelectionPagerAdapter?)
+    private fun showPagerView(quizSelectionPagerAdapter : QuizSelectionPagerAdapter?)
     {
+        Log.f("")
         _QuizDisplayPager.adapter = quizSelectionPagerAdapter
         _QuizDisplayPager.addOnPageChangeListener(mOnPageChangeListener)
     }
 
     /** 강제로 페이지 변경 */
-    override fun forceChangePageView(pageIndex : Int)
+    private fun forceChangePageView(pageIndex : Int)
     {
         _QuizDisplayPager.setCurrentItem(pageIndex, true)
     }
 
     /** 다음 페이지로 변경 */
-    override fun nextPageView()
+    private fun nextPageView()
     {
         _QuizDisplayPager.setCurrentItem(mCurrentPageIndex + 1, true)
     }
 
     /** 상단 박스 표시 (플레이시간, 정답수) */
-    override fun showTaskBoxLayout()
+    private fun showTaskBoxLayout()
     {
         _QuizTaskBoxLayout.visibility = View.VISIBLE
     }
 
     /** 상단 박스 비표시 (플레이시간, 정답수) */
-    override fun hideTaskBoxLayout()
+    private  fun hideTaskBoxLayout()
     {
         _QuizTaskBoxLayout.visibility = View.GONE
     }
 
     /** 플레이 시간 텍스트 변경 */
-    override fun showPlayTime(time : String?)
+    private fun showPlayTime(time : String?)
     {
         _QuizTimerText.text = time
     }
 
     /**  정답 수 텍스트 변경 */
-    override fun showCorrectAnswerCount(message : String?)
+    private fun showCorrectAnswerCount(message : String?)
     {
         _QuizAnswerCountText.text = message
     }
 
     /** O 이미지 표시 */
-    override fun showCorrectAnswerView()
+    private fun showCorrectAnswerView()
     {
         _AniAnswerView.visibility = View.VISIBLE
         _AniAnswerView.setImageResource(R.drawable.img_correct)
@@ -258,7 +313,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     }
 
     /** X 이미지 표시 */
-    override fun showInCorrectAnswerView()
+    private fun showInCorrectAnswerView()
     {
         _AniAnswerView.visibility = View.VISIBLE
         _AniAnswerView.setImageResource(R.drawable.img_incorrect)
@@ -266,7 +321,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
     }
 
     /** O, X 이미지 비표시 */
-    override fun hideAnswerView()
+    private fun hideAnswerView()
     {
         _AniAnswerView.visibility = View.GONE
     }
@@ -277,6 +332,16 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         val animatorRotation = ObjectAnimator.ofFloat(_AniAnswerView, "rotationY", 360f)
         animatorRotation.duration = 500
         animatorRotation.start()
+    }
+
+    private fun showMessageAlertDialog(message : String)
+    {
+        TemplateAlertDialog(this).apply {
+            setMessage(message)
+            setDialogEventType(TemplateAlertDialog.DIALOG_EVENT_DEFAULT)
+            setButtonType(DialogButtonType.BUTTON_1)
+            show()
+        }
     }
 
     @OnClick(R.id._quizCloseButton)
@@ -299,7 +364,7 @@ class QuizActivity : BaseActivity(), MessageHandlerCallback, QuizContract.View
         override fun onPageSelected(position : Int)
         {
             mCurrentPageIndex = position
-            mQuizPresenter.onQuizPageSelected()
+            factoryViewModel.onQuizPageSelected()
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

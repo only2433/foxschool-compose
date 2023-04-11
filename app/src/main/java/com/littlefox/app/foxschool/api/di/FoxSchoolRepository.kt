@@ -3,13 +3,17 @@ package com.littlefox.app.foxschool.api.di
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.google.gson.JsonObject
 import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBasePagingResult
 import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.base.safeApiCall
 import com.littlefox.app.foxschool.api.paging.ForumPagingSource
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizStudyRecordData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import kotlinx.coroutines.flow.Flow
+import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.ArrayList
 import javax.inject.Inject
@@ -130,6 +134,50 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         }
 
         remote.addBookshelfContentsAsync(bookshelfID, queryMap)
+    }
+
+    suspend fun getQuizInformation(contentID: String) = safeApiCall {
+        remote.quizInformationAsync(contentID)
+    }
+
+    suspend fun saveQuizRecord(answerData: QuizStudyRecordData, homeworkNumber: Int = 0) = safeApiCall {
+        var remoteObject: JsonObject = JsonObject()
+        var answerDataArray: JSONArray = JSONArray()
+        var itemObject: JSONObject
+        for(i in 0 until answerData.getQuizResultInformationList().size)
+        {
+            itemObject = JSONObject()
+            try
+            {
+                itemObject.put(
+                    "chosen_number",
+                    java.lang.String.valueOf(answerData.getQuizResultInformationList()[i].getChosenNumber())
+                )
+                itemObject.put(
+                    "correct_number",
+                    answerData.getQuizResultInformationList()[i].getCorrectNumber()
+                )
+                itemObject.put(
+                    "question_numbers",
+                    java.lang.String.valueOf(answerData.getQuizResultInformationList()[i].getQuestionSequence())
+                )
+            }
+            catch(e : JSONException)
+            {
+                e.printStackTrace()
+            }
+            answerDataArray.put(itemObject)
+        }
+        remoteObject.addProperty("results_json", answerDataArray.toString())
+        if(homeworkNumber != 0)
+        {
+            remoteObject.addProperty("hw_no", homeworkNumber)
+        }
+
+        remote.quizSaveRecordAsync(
+            answerData.getContentId(),
+            remoteObject)
+
     }
 
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>

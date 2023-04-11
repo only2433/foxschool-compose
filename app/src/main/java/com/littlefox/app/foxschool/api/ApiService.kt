@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.api
 
+import com.google.gson.JsonObject
 import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBaseListPagingResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
@@ -11,7 +12,9 @@ import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
+import com.littlefox.app.foxschool.`object`.result.quiz.QuizInformationResult
 import okhttp3.OkHttpClient
+import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -120,6 +123,19 @@ interface ApiService
     @DELETE("homeworks/student")
     suspend fun studentCommentDeleteAsync(
         @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @GET ("contents/quiz/{content_id}")
+    suspend fun quizInformationAsync(
+        @Path("content_id") contentsID : String
+    ) : Response<BaseResponse<QuizInformationResult>>
+
+    @Headers("Content-Type: application/json")
+    @POST("contents/quiz/{content_id}/result")
+    suspend fun quizSaveRecordAsync(
+        @Path("content_id") contentsID : String,
+        @Body data: JsonObject
     ) : Response<BaseResponse<Nothing>>
 
     @Headers("Content-Type: application/json")

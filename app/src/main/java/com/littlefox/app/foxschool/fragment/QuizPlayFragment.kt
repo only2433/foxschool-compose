@@ -12,12 +12,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizPictureData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizTextData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizUserInteractionData
@@ -82,13 +84,13 @@ class QuizPlayFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private lateinit var mQuizFragmentDataObserver : QuizFragmentDataObserver
 
     private lateinit var mQuizPictureData : QuizPictureData
     private lateinit var mQuizTextData : QuizTextData
 
     private var mCurrentQuestionType : String               = ""
     private var isQuestionEnd : Boolean                     = false
+    private val factoryViewModel: QuizFactoryViewModel by activityViewModels()
 
     fun getInstance() : QuizPlayFragment
     {
@@ -177,7 +179,6 @@ class QuizPlayFragment : Fragment()
 
     private fun initView()
     {
-        mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
         when(mCurrentQuestionType)
         {
             // 이미지형 퀴즈
@@ -429,12 +430,12 @@ class QuizPlayFragment : Fragment()
                 {
                     return
                 }
-                mQuizFragmentDataObserver.onGoNext()
+                factoryViewModel.onGoNext()
             }
             R.id._questionPlayButton ->
             {
                 // 문제 사운드 재생 버튼 탭
-                mQuizFragmentDataObserver.onPlaySound()
+                factoryViewModel.onPlaySound()
             }
         }
     }
@@ -459,7 +460,7 @@ class QuizPlayFragment : Fragment()
             }
         }
 
-        mQuizFragmentDataObserver.onChoiceItem(
+        factoryViewModel.onChoiceItem(
             QuizUserInteractionData(
                 isCorrect,
                 questionSequence,
@@ -477,7 +478,7 @@ class QuizPlayFragment : Fragment()
     private fun sendUserSelectTextInformation(isCorrect : Boolean, selectIndex : Int)
     {
         val questionSequence = mQuizTextData.getRecordQuizIndex().toString()
-        mQuizFragmentDataObserver.onChoiceItem(
+        factoryViewModel.onChoiceItem(
             QuizUserInteractionData(
                 isCorrect,
                 questionSequence,
@@ -510,7 +511,7 @@ class QuizPlayFragment : Fragment()
 
         if(isCorrect)
         {
-            mQuizFragmentDataObserver.onChoiceItem(
+            factoryViewModel.onChoiceItem(
                 QuizUserInteractionData(
                     true,
                     questionSequence,
@@ -530,7 +531,7 @@ class QuizPlayFragment : Fragment()
                 incorrectIndexString = mQuizPictureData.getRecordQuizInCorrectIndex().toString()
             }
 
-            mQuizFragmentDataObserver.onChoiceItem(
+            factoryViewModel.onChoiceItem(
                 QuizUserInteractionData(
                     false,
                     questionSequence,

@@ -1,11 +1,7 @@
 package com.littlefox.app.foxschool.api.di
 
 import com.littlefox.app.foxschool.api.ApiService
-import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
-import com.littlefox.app.foxschool.api.viewmodel.api.LoginApiViewModel
-import com.littlefox.app.foxschool.api.viewmodel.api.MainApiViewModel
-import com.littlefox.app.foxschool.api.viewmodel.api.StudentHomeworkApiViewModel
-import com.littlefox.app.foxschool.api.viewmodel.api.PlayerApiViewModel
+import com.littlefox.app.foxschool.api.viewmodel.api.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +40,12 @@ object Injection
     fun providePlayerApiViewModel() : PlayerApiViewModel
     {
         return PlayerApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
+    fun provideQuizApiViewModel() : QuizApiViewModel
+    {
+        return QuizApiViewModel(provideFoxSchoolRepository())
     }
 
     @Provides

@@ -10,12 +10,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizResultViewData
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
@@ -73,11 +75,10 @@ class QuizResultFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private lateinit var mQuizPresenterDataObserver : QuizPresenterDataObserver
-    private lateinit var mQuizFragmentDataObserver : QuizFragmentDataObserver
 
     private var mQuizTotalCount : Int   = -1
     private var mQuizCorrectCount : Int = -1
+    private val factoryViewModel: QuizFactoryViewModel by activityViewModels()
 
     fun getInstance() : QuizResultFragment
     {
@@ -118,11 +119,6 @@ class QuizResultFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
         initView()
-    }
-
-    override fun onActivityCreated(savedInstanceState : Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -176,12 +172,13 @@ class QuizResultFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mQuizFragmentDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizFragmentDataObserver::class.java)
-        mQuizPresenterDataObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(QuizPresenterDataObserver::class.java)
-        mQuizPresenterDataObserver.resultData.observe(viewLifecycleOwner, { quizResultViewData ->
-            Log.f("getViewLifecycleOwner().getLifecycle().getCurrentState() : ${this.lifecycle.currentState}")
-            setResultInformation(quizResultViewData)
-        })
+        factoryViewModel.resultData.observe(viewLifecycleOwner) { data ->
+            setResultInformation(data)
+        }
+        factoryViewModel.enableSaveButton.observe(viewLifecycleOwner) {
+            enableSaveButton()
+        }
+        factoryViewModel
     }
 
     /** 결과 */
@@ -202,14 +199,13 @@ class QuizResultFragment : Fragment()
     private fun setResult()
     {
         Log.f("CorrectCount : $mQuizCorrectCount, InCorrectCount : ${(mQuizTotalCount - mQuizCorrectCount)}")
-
         setResultTitleText(mQuizTotalCount, mQuizCorrectCount)
         _CorrectCountText.text = mQuizCorrectCount.toString()
         _InCorrectCountText.text = (mQuizTotalCount - mQuizCorrectCount).toString()
     }
 
     /** 결과 상단 타이틀 이미지 */
-    fun setResultTitleText(quizCount : Int, correctCount : Int)
+    private fun setResultTitleText(quizCount : Int, correctCount : Int)
     {
         when(CommonUtils.getInstance(mContext).getMyGrade(quizCount, correctCount))
         {
@@ -234,14 +230,14 @@ class QuizResultFragment : Fragment()
             R.id._quizSaveButton ->
             {
                 // 결과 저장 버튼
-                mQuizFragmentDataObserver.onSaveStudyInformation()
+                factoryViewModel.onSaveStudyInformation()
                 _QuizSaveButton.alpha = 0.5f
                 _QuizSaveButton.isEnabled = false
             }
             R.id._quizReplayButton ->
             {
                 // 퀴즈 재시작 버튼
-                mQuizFragmentDataObserver.onGoReplay()
+                factoryViewModel.onGoReplay()
                 _QuizReplayButton.alpha = 0.5f
                 _QuizReplayButton.isEnabled = false
             }
