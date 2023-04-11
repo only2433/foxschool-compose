@@ -131,37 +131,26 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.isLoading.collect {data ->
                 data?.let {
-                    if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST)
-                    {
-                        if(data.second)
-                        {
-                            // CLASS 리스트 -> 달력 정보 순으로 연달아 데이터를 가져오는 경우
-                            // CLASS 리스트 (로딩 ON), 달력 정보 (로딩 OFF)를 한다.
-                            _isLoading.postValue(true)
-                        }
-                    }
-                    else if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR ||
-                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST ||
-                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS)
-                    {
-                        // 달력 정보는 CLASS 리스트 응답 후 연달아 호출하는 경우 로딩을 표시하면 안되기 때문에 여기에서는 닫기 기능만 적용하며
-                        // 달력 통신할 때 로딩 다이얼로그를 표시하는 기능은 requestClassCalendar 에서 수동으로 처리한다.
-
-                        // 숙제 현황 상세 보기, 숙제 내용 화면에서는 리스트의 로딩을 사용하기 때문에 전체 로딩 다이얼로그를 표시하지 않는다.
-                        // 하지만 "숙제 내용" 화면에서 다른 Activity로 이동했다가 돌아오는 경우에는 Loading을 사용하기 때문에
-                        // 따라서 여기에서는 닫기 기능만 적용한다. (로딩 ON은 onActivityResultHomeworkDetail 에서 따로 처리한다.)
-                        if(data.second == false)
-                        {
-                            _isLoading.postValue(false)
-                        }
-                    }
-                    else if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
+                    if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST ||
+                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR ||
+                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
                     {
                         if(data.second)
                         {
                             _isLoading.postValue(true)
                         }
                         else
+                        {
+                            _isLoading.postValue(false)
+                        }
+                    }
+                    else if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST ||
+                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS)
+                    {
+                        // 숙제 현황 상세 보기, 숙제 내용 화면에서는 리스트의 로딩을 사용하기 때문에 전체 로딩 다이얼로그를 표시하지 않는다.
+                        // 하지만 "숙제 내용" 화면에서 다른 Activity로 이동했다가 돌아오는 경우에는 Loading을 사용하기 때문에
+                        // 따라서 여기에서는 닫기 기능만 적용한다. (로딩 ON은 onActivityResultHomeworkDetail 에서 따로 처리한다.)
+                        if(data.second == false)
                         {
                             _isLoading.postValue(false)
                         }
@@ -178,8 +167,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                     mClassListBaseResult = items
                     _classData.value = mClassListBaseResult!!
 
-                    // 학급 정보를 가져온 뒤 바로 호출되는 달력 정보는 loading 다이얼로그를 표시하지 않도록 한다.
-                    requestClassCalendar(false)
+                    requestClassCalendar() // 클래스 달력 통신 요청
                 }
             }
         }
@@ -302,13 +290,9 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         )
     }
 
-    private fun requestClassCalendar(showLoading : Boolean = true)
+    private fun requestClassCalendar()
     {
         Log.f("")
-        if (showLoading)
-        {
-            _isLoading.postValue(true)
-        }
         apiViewModel.enqueueCommandStart(
             RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR,
             mClassListBaseResult!!.get(mClassIndex).getClassID().toString(),
