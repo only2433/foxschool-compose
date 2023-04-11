@@ -265,6 +265,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                 }
             }
         }
+
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.authContentData.collect{ data ->
                 data?.let {
@@ -274,18 +275,10 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                     isAuthorizationComplete = true
                     Log.f("AuthContentPlay result OK")
                     startMovie()
+                }
+            }
+        }
 
-                    apiViewModel.enqueueCommandEnd()
-                }
-            }
-        }
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.savePlayerStudyLogData.collect { data ->
-                data?.let {
-                    apiViewModel.enqueueCommandEnd()
-                }
-            }
-        }
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.addBookshelfContentsData.collect{ data ->
                 data?.let {
@@ -294,12 +287,11 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                         _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                     }
                     resumePlayer()
-
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
 
         }
+
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.errorReport.collect{ data ->
                 data?.let {
@@ -349,7 +341,6 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                             }
                         }
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }

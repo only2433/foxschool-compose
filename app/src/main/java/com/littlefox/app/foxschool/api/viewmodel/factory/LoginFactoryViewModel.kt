@@ -94,8 +94,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                     val items = ArrayList<SchoolItemDataResult>()
                     items.addAll(data)
                     _schoolList.value = items
-
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -120,7 +118,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                     {
                         _finishActivity.call()
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -137,7 +134,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                         _hideDialogPasswordChange.call()
                         _finishActivity.call()
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -148,8 +144,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                     // 다음에 변경
                     _hideDialogPasswordChange.call()
                     _finishActivity.call()
-
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -164,7 +158,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                         _hideDialogPasswordChange.call()
                         _finishActivity.call()
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -215,7 +208,6 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                             (mContext as AppCompatActivity).finish()
                         }
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }

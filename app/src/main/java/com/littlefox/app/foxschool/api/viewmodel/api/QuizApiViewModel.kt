@@ -50,6 +50,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun saveQuizRecord(answerData: QuizStudyRecordData, homeworkNumber: Int = 0)
@@ -70,6 +71,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     private fun downloadQuizResource(urlList: ArrayList<String>, savePathList: ArrayList<String>)
@@ -106,6 +108,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 status = 200,
             )
         }
+        enqueueCommandEnd()
     }
 
 

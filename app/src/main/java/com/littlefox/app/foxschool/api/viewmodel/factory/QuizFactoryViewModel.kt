@@ -228,8 +228,6 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                     _setTitle.value = Pair(
                         mQuizInformationResult!!.getTitle(),
                         mQuizInformationResult!!.getSubTitle())
-
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -239,7 +237,6 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                     viewModelScope.launch(Dispatchers.Main) {
                         makePictureQuestion(PLAY_INIT)
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -248,8 +245,6 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                 data?.let {
                     _hideAnswerView.call()
                     _dialogWarningText.value = mContext.resources.getString(R.string.message_quiz_save_record_success)
-
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -303,7 +298,6 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                            _dialogWarningText.value = result.message
                         }
                     }
-                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }

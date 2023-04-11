@@ -57,6 +57,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun getAuthMe()
@@ -77,6 +78,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun getMain()
@@ -97,6 +99,8 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
+
     }
 
     private suspend fun changePassword(currentPassword: String, changePassword: String, changePasswordConfirm: String)
@@ -117,6 +121,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun changePasswordToDoNext()
@@ -137,6 +142,8 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
+
     }
 
     private suspend fun changePasswordToKeep()
@@ -157,6 +164,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
             }
         }
+        enqueueCommandEnd()
     }
 
     override fun pullNext(data : QueueData)
