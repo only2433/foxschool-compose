@@ -2,34 +2,36 @@ package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Rect
 import android.os.Bundle
-import android.os.Message
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.lifecycle.Observer
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkCheckingFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.TeacherHomeworkCheckingContract
-import com.littlefox.app.foxschool.main.presenter.TeacherHomeworkCheckingPresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
-class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, TeacherHomeworkCheckingContract.View
+@AndroidEntryPoint
+class TeacherHomeworkCheckingActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -70,9 +72,10 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
     @BindView(R.id._checkingCancelButton)
     lateinit var _CheckingCancelButton : TextView
 
-    private lateinit var mTeacherHomeworkCheckingPresenter : TeacherHomeworkCheckingPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private var mSelected : Int = 1
+
+    private val factoryViewModel : TeacherHomeworkCheckingFactoryViewModel by viewModels()
     
     /** LifeCycle **/
     @SuppressLint("SourceLockedOrientationActivity")
@@ -92,25 +95,30 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         }
 
         ButterKnife.bind(this)
-        mTeacherHomeworkCheckingPresenter = TeacherHomeworkCheckingPresenter(this)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mTeacherHomeworkCheckingPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mTeacherHomeworkCheckingPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mTeacherHomeworkCheckingPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -121,7 +129,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
     /** LifeCycle end **/
 
     /** Init **/
-    override fun initView()
+    private fun initView()
     {
         settingLayoutColor()
         _TitleText.text = resources.getString(R.string.text_homework_check)
@@ -130,7 +138,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         _CommentEditText.addTextChangedListener(mEditTextChangeListener)
     }
 
-    override fun initFont()
+    private fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _HomeworkEvalTextList.forEach {
@@ -149,15 +157,39 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
         _TitleBaselayout.setBackgroundColor(resources.getColor(R.color.color_29c8e6))
     }
 
-    /** Init end **/
-
-    override fun setBeforeData(index : Int, comment : String)
+    private fun setupObserverViewModel()
     {
-        setViewChecked(index)
-        if (comment != "") _CommentEditText.setText(comment)
-        _CheckingRegisterButton.setText(resources.getString(R.string.text_change))
-        setCommentCountText()
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
+            if (loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> {message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> {message ->
+            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> {message ->
+            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        })
+
+        factoryViewModel.settingBeforeData.observe(this, Observer<Pair<Int, String>> {pair ->
+            setViewChecked(pair.first)
+            if (pair.second != "") _CommentEditText.setText(pair.second)
+            _CheckingRegisterButton.setText(resources.getString(R.string.text_change))
+            setCommentCountText()
+        })
     }
+    /** Init end **/
 
     private fun setViewChecked(index : Int)
     {
@@ -189,21 +221,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
     {
         mMaterialLoadingDialog?.dismiss()
         mMaterialLoadingDialog = null
-    }
-
-    override fun showSuccessMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun showErrorMessage(message : String)
-    {
-        CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun handlerMessage(message : Message)
-    {
-        mTeacherHomeworkCheckingPresenter.sendMessageEvent(message)
     }
 
     override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
@@ -260,7 +277,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity(), MessageHandlerCallback, 
             R.id._checkingRegisterButton ->
             {
                 // 평가 등록/수정
-                mTeacherHomeworkCheckingPresenter.onClickRegisterButton(mSelected, _CommentEditText.text.toString())
+                factoryViewModel.onClickRegisterButton(mSelected, _CommentEditText.text.toString())
             }
 
             // [평가1] 참 잘했어요

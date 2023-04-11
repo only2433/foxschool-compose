@@ -3,10 +3,7 @@ package com.littlefox.app.foxschool.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.littlefox.app.foxschool.fragment.HomeworkCalendarFragment
-import com.littlefox.app.foxschool.fragment.HomeworkCommentFragment
-import com.littlefox.app.foxschool.fragment.TeacherHomeworkListFragment
-import com.littlefox.app.foxschool.fragment.TeacherHomeworkStatusFragment
+import com.littlefox.app.foxschool.fragment.*
 import java.util.ArrayList
 
 /**
@@ -24,10 +21,10 @@ class TeacherHomeworkPagerAdapter : FragmentStatePagerAdapter
 
     fun setFragment()
     {
-        mHomeworkFragmentList!!.add(HomeworkCalendarFragment())
+        mHomeworkFragmentList!!.add(TeacherHomeworkCalendarFragment())
         mHomeworkFragmentList!!.add(TeacherHomeworkStatusFragment())
         mHomeworkFragmentList!!.add(TeacherHomeworkListFragment())
-        mHomeworkFragmentList!!.add(HomeworkCommentFragment())
+        mHomeworkFragmentList!!.add(TeacherHomeworkCommentFragment())
         notifyDataSetChanged()
     }
 

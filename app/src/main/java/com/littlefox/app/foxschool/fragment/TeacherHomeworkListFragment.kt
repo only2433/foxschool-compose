@@ -13,9 +13,8 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -27,6 +26,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -34,8 +34,6 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.HomeworkDetailType
 import com.littlefox.app.foxschool.enumerate.HomeworkType
-import com.littlefox.app.foxschool.viewmodel.HomeworkListFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
 import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -141,9 +139,6 @@ class TeacherHomeworkListFragment : Fragment()
     private lateinit var mUnbinder : Unbinder
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
-    private lateinit var mHomeworkListFragmentObserver : HomeworkListFragmentObserver
-    private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
-
     private var mHomeworkDetailBaseResult : HomeworkDetailBaseResult? = null // 통신 응답받은 데이터
     private var mHomeworkItemViewAdapter : HomeworkItemViewAdapter? = null // 숙제현황 리스트 Adapter
     private var mHomeworkItemDetail : ArrayList<HomeworkDetailItemData> = ArrayList<HomeworkDetailItemData>() // 숙제현황 리스트에 표시되는 숙제목록 아이템
@@ -156,6 +151,8 @@ class TeacherHomeworkListFragment : Fragment()
 
     private var mOneCommentType : Int = -1              // 버튼1개 코멘트 영역 타입
     private var isListAnimationEffect : Boolean = true  // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
+
+    private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -256,17 +253,14 @@ class TeacherHomeworkListFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mHomeworkListFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkListFragmentObserver::class.java)
-        mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
-
         // 숙제현황||숙제내용 데이터
-        mHomeworkManagePresenterObserver.updateHomeworkListData.observe(viewLifecycleOwner, { item ->
+        factoryViewModel.updateHomeworkListData.observe(viewLifecycleOwner, { item ->
             mHomeworkDetailBaseResult = item
             updateHomeworkListData()
         })
 
         // 숙제현황||숙제내용 화면 초기화
-        mHomeworkManagePresenterObserver.clearHomeworkList.observe(viewLifecycleOwner, { allClear ->
+        factoryViewModel.clearHomeworkList.observe(viewLifecycleOwner, { allClear ->
             clearScreenData(allClear)
         })
     }
@@ -675,22 +669,22 @@ class TeacherHomeworkListFragment : Fragment()
 
                 if (mOneCommentType == COMMENT_ONLY_STUDENT)
                 {
-                    mHomeworkListFragmentObserver.onClickStudentCommentButton()
+                    factoryViewModel.onClickStudentCommentButton()
                 }
                 else if (mOneCommentType == COMMENT_ONLY_TEACHER)
                 {
-                    mHomeworkListFragmentObserver.onClickTeacherCommentButton()
+                    factoryViewModel.onClickTeacherCommentButton()
                 }
             }
             R.id._homeworkStudentCommentButton ->
             {
                 isListAnimationEffect = false
-                mHomeworkListFragmentObserver.onClickStudentCommentButton()
+                factoryViewModel.onClickStudentCommentButton()
             }
             R.id._homeworkTeacherCommentButton ->
             {
                 isListAnimationEffect = false
-                mHomeworkListFragmentObserver.onClickTeacherCommentButton()
+                factoryViewModel.onClickTeacherCommentButton()
             }
             R.id._homeworkInfoButton ->
             {
@@ -708,7 +702,7 @@ class TeacherHomeworkListFragment : Fragment()
         override fun onItemClick(position : Int)
         {
             isListAnimationEffect = false
-            mHomeworkListFragmentObserver.onClickHomeworkItem(mHomeworkItemDetail[position])
+            factoryViewModel.onClickHomeworkItem(mHomeworkItemDetail[position])
         }
     }
 }

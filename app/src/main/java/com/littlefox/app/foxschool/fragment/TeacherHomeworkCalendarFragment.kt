@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.fragment
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.annotation.Nullable
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -22,7 +25,7 @@ import com.littlefox.app.foxschool.`object`.data.homework.CalendarData
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
-import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -32,10 +35,10 @@ import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
 /**
- * 숙제관리 달력 화면 (학생용)
+ * 숙제관리 달력 화면 (선생님용)
  * @author 김태은
  */
-class HomeworkCalendarFragment : Fragment()
+class TeacherHomeworkCalendarFragment : Fragment()
 {
     @BindView(R.id._mainBackgroundView)
     lateinit var _MainBackgroundView : ScalableLayout
@@ -43,18 +46,32 @@ class HomeworkCalendarFragment : Fragment()
     @BindView(R.id._scrollView)
     lateinit var _ScrollView : ScrollView
 
+    // [선생님] 학급 선택 -----------------------------
+    @Nullable
+    @BindView(R.id._calendarClassLayout)
+    lateinit var _CalendarClassLayout : ScalableLayout
+
+    @Nullable
+    @BindView(R.id._textClassName)
+    lateinit var _TextClassName : TextView
+
+    @Nullable
+    @BindView(R.id._calendarClassBackground)
+    lateinit var _CalendarClassBackground : ImageView
+    // ----------------------------------------------
+
     @BindView(R.id._homeworkPickLayout)
     lateinit var _HomeworkPickLayout : ScalableLayout
 
     @BindView(R.id._beforeButton)
     lateinit var _BeforeButton : ImageView
-    
+
     @BindView(R.id._beforeButtonRect)
     lateinit var _BeforeButtonRect : ImageView
 
     @BindView(R.id._afterButton)
     lateinit var _AfterButton : ImageView
-    
+
     @BindView(R.id._afterButtonRect)
     lateinit var _AfterButtonRect : ImageView
 
@@ -97,7 +114,12 @@ class HomeworkCalendarFragment : Fragment()
 
     private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
-    private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
+    // [선생님] 학급 선택 -----------------------------
+    private var mClassNameList : Array<String>? = null      // 통신에서 응답받은 학급 리스트
+    private var mClassIndex : Int = 0                       // 선택한 학급 인덱스
+    // ----------------------------------------------
+
+    private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -185,6 +207,12 @@ class HomeworkCalendarFragment : Fragment()
     {
         if (CommonUtils.getInstance(mContext).checkTablet)
         {
+            if (CommonUtils.getInstance(mContext).isTeacherMode)
+            {
+                // 선생님 모드일 때만 학급 선택 영역 표시
+                _CalendarClassLayout.visibility = View.VISIBLE
+            }
+
             if (CommonUtils.getInstance(mContext).getTabletDisplayRadio() == DisplayTabletType.RADIO_4_3)
             {
                 // 태블릿 4:3 모델 대응
@@ -207,6 +235,10 @@ class HomeworkCalendarFragment : Fragment()
         _TextThursday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         _TextFriday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
         _TextSaturday.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        if (CommonUtils.getInstance(mContext).isTeacherMode)
+        {
+            _TextClassName.setTypeface(Font.getInstance(mContext).getTypefaceMedium())
+        }
     }
     /** ========== Init ========== */
 
@@ -218,6 +250,14 @@ class HomeworkCalendarFragment : Fragment()
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
+        })
+
+        // 학급 데이터
+        factoryViewModel.classData.observe(viewLifecycleOwner, Observer {classData ->
+            mClassNameList = Array<String>(classData!!.size) { index ->
+                classData[index].getClassName()
+            }
+            setClassName(mClassNameList!![mClassIndex])
         })
     }
 
@@ -325,6 +365,11 @@ class HomeworkCalendarFragment : Fragment()
         }
     }
 
+    private fun setClassName(className : String)
+    {
+        _TextClassName.text = className
+    }
+
     /**
      * 달력 이전/다음 화살표 버튼 설정
      */
@@ -373,8 +418,26 @@ class HomeworkCalendarFragment : Fragment()
         _AfterButtonRect.visibility = View.GONE
     }
 
+    private fun showClassSelectDialog()
+    {
+        Log.f("")
+        val builder = AlertDialog.Builder(mContext)
+        builder.setSingleChoiceItems(mClassNameList, mClassIndex, DialogInterface.OnClickListener {dialog, index ->
+            Log.f("Class Filter Selected : ${mClassNameList!![index]} ")
+            dialog.dismiss()
+            mClassIndex = index
+            setClassName(mClassNameList!!.get(mClassIndex))
+            factoryViewModel.onClickClassPicker(mClassIndex)
+        })
+
+        val dialog : AlertDialog = builder.show()
+        dialog.show()
+    }
+
     @Optional
-    @OnClick(R.id._beforeButtonRect, R.id._afterButtonRect)
+    @OnClick(
+        R.id._beforeButtonRect, R.id._afterButtonRect,
+        R.id._calendarClassBackground, R.id._textClassName)
     fun onClickView(view : View)
     {
         // 중복이벤트 방지
@@ -393,6 +456,12 @@ class HomeworkCalendarFragment : Fragment()
             R.id._afterButtonRect ->
             {
                 factoryViewModel.onClickCalendarAfter()
+            }
+
+            // [선생님] 클래스 선택
+            R.id._calendarClassBackground, R.id._textClassName ->
+            {
+                showClassSelectDialog()
             }
         }
     }

@@ -204,25 +204,15 @@ class HomeworkCommentFragment : Fragment()
         {
             // 학생용 한마디 화면
             _CommentInputCountText.visibility = View.VISIBLE
-            if (CommonUtils.getInstance(mContext).isTeacherMode == false)
+            if (CommonUtils.getInstance(mContext).checkTablet)
             {
-                // 학생모드
-                if (CommonUtils.getInstance(mContext).checkTablet)
-                {
-                    boxTop = if (isCompleted == true) 42f else 96f
-                    textTop = if (isCompleted == true) 73f else 125f
-                }
-                else
-                {
-                    boxTop = if (isCompleted == true) 60f else 140f
-                    textTop = if (isCompleted == true) 105f else 195f
-                }
+                boxTop = if (isCompleted == true) 42f else 96f
+                textTop = if (isCompleted == true) 73f else 125f
             }
             else
             {
-                // 선생님모드
-                boxTop = if (CommonUtils.getInstance(mContext).checkTablet) 42f else 60f
-                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 73f else 105f
+                boxTop = if (isCompleted == true) 60f else 140f
+                textTop = if (isCompleted == true) 105f else 195f
             }
 
             _CommentInputLayout.moveChildView(_CommentBoxImage, boxLeft, boxTop)
@@ -234,19 +224,8 @@ class HomeworkCommentFragment : Fragment()
         {
             // 선생님 한마디 화면
             _CommentInputCountText.visibility = View.GONE
-            if (CommonUtils.getInstance(mContext).isTeacherMode == false)
-            {
-                // 학생 모드
-                boxTop = if (   CommonUtils.getInstance(mContext).checkTablet) 42f else 60f
-                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 73f else 105f
-            }
-            else
-            {
-                // 선생님 모드
-                _CommentTeacherMessage.visibility = View.VISIBLE
-                boxTop = if (CommonUtils.getInstance(mContext).checkTablet) 76f else 116f
-                textTop = if (CommonUtils.getInstance(mContext).checkTablet) 106f else 171f
-            }
+            boxTop = if (   CommonUtils.getInstance(mContext).checkTablet) 42f else 60f
+            textTop = if (CommonUtils.getInstance(mContext).checkTablet) 73f else 105f
 
             _CommentInputLayout.moveChildView(_CommentBoxImage, boxLeft, boxTop)
             _CommentInputLayout.moveChildView(_CommentEditText, textLeft, textTop)

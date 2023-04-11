@@ -49,20 +49,20 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     private val _currentViewPage = SingleLiveEvent<Pair<Int, HomeworkCommentType?>>()
     val currentViewPage: LiveData<Pair<Int, HomeworkCommentType?>> get() = _currentViewPage
 
+    private val _updateHomeworkListData = SingleLiveEvent<HomeworkDetailBaseResult>()
+    val updateHomeworkListData: LiveData<HomeworkDetailBaseResult> get() = _updateHomeworkListData
+
+    private val _commentData =  SingleLiveEvent<String>()
+    val commentData: LiveData<String> get() = _commentData
+
+    private val _settingCommentPage = SingleLiveEvent<Pair<HomeworkCommentType, Boolean>>()
+    val settingCommentPage: LiveData<Pair<HomeworkCommentType, Boolean>> get() = _settingCommentPage
+
     private val _clearHomeworkList = SingleLiveEvent<Boolean>()
     val clearHomeworkList: LiveData<Boolean> get() = _clearHomeworkList
 
     private val _calendarData = SingleLiveEvent<HomeworkCalendarBaseResult>()
     val calendarData: LiveData<HomeworkCalendarBaseResult> get() = _calendarData
-
-    private val _commentData =  SingleLiveEvent<String>()
-    val commentData: LiveData<String> get() = _commentData
-
-    private val _updateHomeworkListData = SingleLiveEvent<HomeworkDetailBaseResult>()
-    val updateHomeworkListData: LiveData<HomeworkDetailBaseResult> get() = _updateHomeworkListData
-
-    private val _settingCommentPage = SingleLiveEvent<Pair<HomeworkCommentType, Boolean>>()
-    val settingCommentPage: LiveData<Pair<HomeworkCommentType, Boolean>> get() = _settingCommentPage
 
     private val _showRecordPermissionDialog = SingleLiveEvent<Void>()
     val showRecordPermissionDialog: LiveData<Void> get() = _showRecordPermissionDialog
@@ -109,7 +109,10 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.isLoading.collect {data ->
                 data?.let {
-                    if (data.first == RequestCode.CODE_STUDENT_HOMEWORK_CALENDAR)
+                    if (data.first == RequestCode.CODE_STUDENT_HOMEWORK_CALENDAR ||
+                        data.first == RequestCode.CODE_STUDENT_COMMENT_REGISTER ||
+                        data.first == RequestCode.CODE_STUDENT_COMMENT_UPDATE ||
+                        data.first == RequestCode.CODE_STUDENT_COMMENT_DELETE)
                     {
                         if(data.second)
                         {
@@ -122,6 +125,8 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                     }
                     else if (data.first == RequestCode.CODE_STUDENT_HOMEWORK_DETAIL_LIST)
                     {
+                        // 숙제 리스트의 경우 숙제를 학습하고 돌아왔을 때에만 로딩 다이얼로그 표시한다.
+                        // 따라서 여기에서는 닫기 기능만 적용한다. (로딩 ON은 onActivityResultStatus 에서 따로 처리한다.)
                         if (data.second == false)
                         {
                             _isLoading.postValue(false)

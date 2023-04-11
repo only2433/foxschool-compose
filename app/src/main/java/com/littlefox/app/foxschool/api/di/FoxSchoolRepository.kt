@@ -107,6 +107,55 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         remote.studentCommentDeleteAsync(homeworkNumber)
     }
 
+    /**
+     * 선생님 - 학급 리스트 가져오기
+     */
+    suspend fun getTeacherHomeworkClassList() = safeApiCall {
+        remote.teacherHomeworkClassListAsync()
+    }
+
+    /**
+     * 선생님 - 숙제관리(달력) 정보 가져오기
+     */
+    suspend fun getTeacherHomeworkCalendar(classID: String, year : String, month : String) = safeApiCall {
+        remote.teacherHomeworkCalendarAsync(classID, year, month)
+    }
+
+    /**
+     * 선생님 - 숙제현황 정보 가져오기
+     */
+    suspend fun getTeacherHomeworkStatus(classID : Int, homeworkNumber : Int) = safeApiCall {
+        remote.teacherHomeworkStatusAsync(classID, homeworkNumber)
+    }
+
+    /**
+     * 선생님 - 숙제현황 상세보기 정보 가져오기
+     */
+    suspend fun getTeacherHomeworkDetail(classID : Int, homeworkNumber : Int, userID : String) = safeApiCall {
+        remote.teacherHomeworkDetailAsync(classID, homeworkNumber, userID)
+    }
+
+    /**
+     * 선생님 - 숙제내용 정보 가져오기
+     */
+    suspend fun getTeacherHomeworkContents(classID : Int, homeworkNumber : Int) = safeApiCall {
+        remote.teacherHomeworkContentsAsync(classID, homeworkNumber)
+    }
+
+    /**
+     * 선생님 - 숙제검사
+     */
+    suspend fun setTeacherHomeworkChecking(homeworkNumber : Int, classID : Int, userID : String, evaluationState : String, evaluationComment : String) = safeApiCall {
+        if (evaluationComment != "")
+        {
+            remote.teacherHomeworkCheckingAsync(homeworkNumber, classID, userID, evaluationState, evaluationComment)
+        }
+        else
+        {
+            remote.teacherHomeworkCheckingAsync(homeworkNumber, classID, userID, evaluationState)
+        }
+    }
+
     suspend fun getAuthContentPlay(contentID: String, isHighRevoluation: Boolean) = safeApiCall {
         if(isHighRevoluation)
         {

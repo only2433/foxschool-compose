@@ -3,6 +3,8 @@ package com.littlefox.app.foxschool.api
 import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBaseListPagingResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBaseResult
 import com.littlefox.app.foxschool.`object`.result.homework.HomeworkDetailBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.HomeworkStatusBaseResult
+import com.littlefox.app.foxschool.`object`.result.homework.TeacherClassItemData
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.login.SchoolItemDataResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
@@ -120,6 +122,59 @@ interface ApiService
     @DELETE("homeworks/student")
     suspend fun studentCommentDeleteAsync(
         @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/teacher/class")
+    suspend fun teacherHomeworkClassListAsync() : Response<BaseResponse<ArrayList<TeacherClassItemData>>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/teacher/{school_class_id}")
+    suspend fun teacherHomeworkCalendarAsync(
+        @Path("school_class_id") classId : String,
+        @Query("year") id : String,
+        @Query("month") password : String
+    ) : Response<BaseResponse<HomeworkCalendarBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/teacher/state/{school_class_id}/{hw_no}")
+    suspend fun teacherHomeworkStatusAsync(
+        @Path("school_class_id") classId : Int,
+        @Path("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<HomeworkStatusBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/teacher/list/{school_class_id}/{hw_no}/{fu_id}")
+    suspend fun teacherHomeworkDetailAsync(
+        @Path("school_class_id") classId : Int,
+        @Path("hw_no") homeworkNumber : Int,
+        @Path("fu_id") userID : String
+    ) : Response<BaseResponse<HomeworkDetailBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @GET("homeworks/teacher/show/{school_class_id}/{hw_no}")
+    suspend fun teacherHomeworkContentsAsync(
+        @Path("school_class_id") classId : Int,
+        @Path("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<HomeworkDetailBaseResult>>
+
+    @Headers("Content-Type: application/json")
+    @POST("homeworks/teacher")
+    suspend fun teacherHomeworkCheckingAsync(
+        @Query("hw_no") homeworkNumber : Int,
+        @Query("school_class_id") classId : Int,
+        @Query("fu_id") userID : String,
+        @Query("eval") evaluationState : String
+    ) : Response<BaseResponse<Nothing>>
+
+    @Headers("Content-Type: application/json")
+    @POST("homeworks/teacher")
+    suspend fun teacherHomeworkCheckingAsync(
+        @Query("hw_no") homeworkNumber : Int,
+        @Query("school_class_id") classId : Int,
+        @Query("fu_id") userID : String,
+        @Query("eval") evaluationState : String,
+        @Query("eval_comment") evaluationComment : String,
     ) : Response<BaseResponse<Nothing>>
 
     @Headers("Content-Type: application/json")

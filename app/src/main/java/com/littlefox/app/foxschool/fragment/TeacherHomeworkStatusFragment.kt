@@ -8,9 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
@@ -19,11 +18,10 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkStatusBaseRe
 import com.littlefox.app.foxschool.`object`.result.homework.status.HomeworkStatusItemData
 import com.littlefox.app.foxschool.adapter.HomeworkStatusItemListAdapter
 import com.littlefox.app.foxschool.adapter.listener.HomeworkStatusItemListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.viewmodel.HomeworkManagePresenterObserver
-import com.littlefox.app.foxschool.viewmodel.TeacherHomeworkStatusFragmentObserver
 import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -61,9 +59,6 @@ class TeacherHomeworkStatusFragment : Fragment()
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
 
-    private lateinit var mTeacherHomeworkStatusFragmentObserver : TeacherHomeworkStatusFragmentObserver
-    private lateinit var mHomeworkManagePresenterObserver : HomeworkManagePresenterObserver
-
     private var mHomeworkStatusBaseResult : HomeworkStatusBaseResult? = null            // 통신 응답받은 데이터
     private var mHomeworkStatusItemListAdapter : HomeworkStatusItemListAdapter? = null  // 학생 리스트 Adapter
     private var mHomeworkStatusList : ArrayList<HomeworkStatusItemData> = ArrayList()   // 리스트 아이템
@@ -72,6 +67,8 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private var mClassName : String = ""                // 학급명
     private var mHomeworkDate : String = ""             // 숙제기간
+
+    private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -160,14 +157,11 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        mTeacherHomeworkStatusFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(TeacherHomeworkStatusFragmentObserver::class.java)
-        mHomeworkManagePresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(HomeworkManagePresenterObserver::class.java)
-
-        mHomeworkManagePresenterObserver.setClassName.observe(viewLifecycleOwner, { className ->
+        factoryViewModel.updateClassNameData.observe(viewLifecycleOwner, { className ->
             mClassName = className
         })
 
-        mHomeworkManagePresenterObserver.setStatusListData.observe(viewLifecycleOwner, { item ->
+        factoryViewModel.updateHomeworkStatusData.observe(viewLifecycleOwner, { item ->
             mHomeworkStatusBaseResult = item
             mHomeworkStatusList.clear()
             mHomeworkStatusList.addAll(mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!)
@@ -175,7 +169,7 @@ class TeacherHomeworkStatusFragment : Fragment()
         })
 
         // 화면 초기화
-        mHomeworkManagePresenterObserver.clearStatusList.observe(viewLifecycleOwner, {
+        factoryViewModel.clearStatusList.observe(viewLifecycleOwner, {
             clearScreenData()
         })
     }
@@ -271,7 +265,7 @@ class TeacherHomeworkStatusFragment : Fragment()
                 data.add(it.getUserID())
             }
         }
-        mTeacherHomeworkStatusFragmentObserver.onClickHomeworkBundleChecking(data)
+        factoryViewModel.onClickHomeworkBundleChecking(data)
     }
 
     private fun setAllCheckDrawable(isAllCheck : Boolean)
@@ -323,7 +317,7 @@ class TeacherHomeworkStatusFragment : Fragment()
             R.id._homeworkContentText ->
             {
                 // [숙제 내용]
-                mTeacherHomeworkStatusFragmentObserver.onClickHomeworkContents()
+                factoryViewModel.onClickHomeworkContents()
             }
         }
     }
@@ -347,13 +341,13 @@ class TeacherHomeworkStatusFragment : Fragment()
         override fun onClickShowDetail(index : Int)
         {
             // [숙제 현황 상세 보기] 클릭 이벤트
-            mTeacherHomeworkStatusFragmentObserver.onClickShowDetailButton(index)
+            factoryViewModel.onClickShowDetailButton(index)
         }
 
         override fun onClickHomeworkChecking(index : Int)
         {
             // [숙제 검사] [검사 수정] 클릭 이벤트
-            mTeacherHomeworkStatusFragmentObserver.onClickHomeworkChecking(index)
+            factoryViewModel.onClickHomeworkChecking(index)
         }
     }
 }
