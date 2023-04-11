@@ -49,7 +49,6 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
             }
         }
-        enqueueCommandEnd()
     }
 
     private suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String)
@@ -70,7 +69,6 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
             }
         }
-        enqueueCommandEnd()
     }
 
     private suspend fun addBookshelfContents(bookshelfID: String, contentsList: ArrayList<ContentsBaseResult>)
@@ -91,7 +89,6 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
             }
         }
-        enqueueCommandEnd()
     }
 
 

@@ -178,6 +178,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     {
                         startAPIProcess()
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -199,6 +200,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -214,6 +216,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                         delay(Common.DURATION_SHORT_LONG)
                         startMainActivity()
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -231,6 +234,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -242,6 +246,8 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     _hideDialogPasswordChange.call()
                     mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                     enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -257,6 +263,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
@@ -289,6 +296,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                             (mContext as AppCompatActivity).finish()
                         }
                     }
+                    apiViewModel.enqueueCommandEnd()
                 }
             }
         }
