@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Message
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -24,7 +23,6 @@ import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
 import com.littlefox.app.foxschool.enumerate.Grade
 import com.littlefox.app.foxschool.enumerate.QuizStatus
-import com.littlefox.app.foxschool.main.presenter.QuizPresenter
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorQuizImageNotHaveData
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
@@ -176,7 +174,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.isLoading.collect { data ->
                 data?.let {
-                    if(data.first == RequestCode.CODE_SAVE_QUIZ_RECORD)
+                    if(data.first == RequestCode.CODE_QUIZ_RECORD_SAVE)
                     {
                         if(data.second)
                         {
@@ -291,7 +289,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                                 CrashlyticsHelper.getInstance(mContext).sendCrashlytics(data)
                             }
                         }
-                        else if(code == RequestCode.CODE_SAVE_QUIZ_RECORD)
+                        else if(code == RequestCode.CODE_QUIZ_RECORD_SAVE)
                         {
                             Log.f("FAIL ASYNC_CODE_QUIZ_SAVE_RECORD")
                             _enableSaveButton.postValue(Unit)
@@ -364,7 +362,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
     private fun requestQuizSaveRecord()
     {
         apiViewModel.enqueueCommandStart(
-            RequestCode.CODE_SAVE_QUIZ_RECORD,
+            RequestCode.CODE_QUIZ_RECORD_SAVE,
             mQuizRequestObject,
             mQuizIntentParamsObject.getHomeworkNumber()
         )

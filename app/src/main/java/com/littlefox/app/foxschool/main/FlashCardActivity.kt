@@ -3,28 +3,42 @@ package com.littlefox.app.foxschool.main
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Message
+import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.FlashcardSelectionPagerAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
+import com.littlefox.app.foxschool.dialog.BottomFlashcardIntervalSelectDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.BookAddListener
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.IntervalSelectListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.FlashcardStatus
 import com.littlefox.app.foxschool.main.contract.FlashcardContract
 import com.littlefox.app.foxschool.main.presenter.FlashcardPresenter
+import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
@@ -32,8 +46,10 @@ import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
-class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandlerCallback
+@AndroidEntryPoint
+class FlashCardActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -83,11 +99,16 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
     @BindView(R.id._autoModeStudyTimeText)
     lateinit var _AutoModeStudyTimeText : TextView
 
-    private lateinit var mFlashcardPresenter : FlashcardPresenter
-    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
+
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
     private var mCurrentPageIndex : Int = 0
     private var isSoundOff : Boolean = false
+    private var mBottomFlashcardIntervalSelectDialog : BottomFlashcardIntervalSelectDialog? = null
+    private var mBottomBookAddDialog : BottomBookAddDialog? = null
+    private var mTempleteAlertDialog : TemplateAlertDialog? = null
+    private var mCurrentIntervalSecond: Int = 0
+
+    private val factoryViewModel: FlashcardFactoryViewModel by viewModels()
 
     /** ========== LifeCycle ========== */
     override fun onCreate(savedInstanceState : Bundle?)
@@ -100,25 +121,29 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         setContentView(R.layout.activity_flash_card)
         ButterKnife.bind(this)
 
-        mFlashcardPresenter = FlashcardPresenter(this)
+        initView()
+        initFont()
+        setupObserverViewModel()
+
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mFlashcardPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mFlashcardPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mFlashcardPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -129,7 +154,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    override fun initView()
+    fun initView()
     {
         settingCoachMarkImage()
         _FlashcardBaseViewPager.isSaveFromParentEnabled = false
@@ -147,7 +172,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun initFont()
+    fun initFont()
     {
         _SoundOffMessageText.typeface = Font.getInstance(this).getTypefaceRegular()
         _AutoModeText.typeface = Font.getInstance(this).getTypefaceRegular()
@@ -155,39 +180,115 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         _AutoModeStudyTimeText.typeface = Font.getInstance(this).getTypefaceRegular()
         _ShuffleModeText.typeface = Font.getInstance(this).getTypefaceRegular()
     }
+
+    fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        })
+
+        factoryViewModel.toast.observe(this, Observer<String> { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+            showSuccessMessage(message)
+        })
+
+        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+            showErrorMessage(message)
+        })
+
+        factoryViewModel.showPagerView.observe(this, Observer<FlashcardSelectionPagerAdapter> { adapter ->
+            showPagerView(adapter)
+        })
+
+        factoryViewModel.settingSoundButton.observe(this, Observer<Boolean> { enable ->
+            settingSoundButton(enable)
+        })
+
+        factoryViewModel.settingAutoPlayInterval.observe(this, Observer<Int> { interval ->
+            settingAutoPlayInterval(interval)
+        })
+
+        factoryViewModel.settingBaseControlView.observe(this, Observer<FlashcardStatus> { status ->
+            settingBaseControlView(status)
+        })
+
+        factoryViewModel.checkAutoplayBox.observe(this, Observer<Pair<FlashcardStatus, Boolean>> { data ->
+            checkAutoplayBox(data.first, data.second)
+        })
+
+        factoryViewModel.checkShuffleBox.observe(this, Observer<Boolean> { enable ->
+            checkShuffleBox(enable)
+        })
+
+        factoryViewModel.showCoachMarkView.observe(this, Observer<Void> {
+            showCoachMarkView()
+        })
+
+        factoryViewModel.prevPageView.observe(this, Observer<Void> {
+            prevPageView()
+        })
+
+        factoryViewModel.nextPageView.observe(this, Observer<Void> {
+            nextPageView()
+        })
+
+        factoryViewModel.enableBottomViewLayout.observe(this, Observer<Boolean> { enable ->
+            if(enable)
+            {
+                showBottomViewLayout()
+            }
+            else
+            {
+                hideBottomViewLayout()
+            }
+        })
+
+        factoryViewModel.forceChangePageView.observe(this, Observer<Int> { position ->
+            forceChangePageView(position)
+        })
+
+        factoryViewModel.dialogEmptyBookmark.observe(this, Observer<Void> {
+            showBookmarkEmptyDialog()
+        })
+
+        factoryViewModel.dialogReplayWarningBookmark.observe(this, Observer<Void> {
+            showBookmarkWarningDialog(FlashcardFactoryViewModel.DIALOG_BOOKMARK_INIT)
+        })
+
+        factoryViewModel.dialogCloseWarningBookmark.observe(this, Observer<Void> {
+            showBookmarkWarningDialog(FlashcardFactoryViewModel.DIALOG_CLOSE_APP)
+        })
+
+        factoryViewModel.dialogBottomVocabularyContentAdd.observe(this, Observer<ArrayList<MyVocabularyResult>> { list ->
+            showBottomVocabularyAddDialog(list)
+        })
+    }
     /** ========== Init ========== */
 
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
 
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
-    override fun showSuccessMessage(message : String)
+    fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun showErrorMessage(message : String)
+    fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun handlerMessage(message : Message)
-    {
-        mFlashcardPresenter.sendMessageEvent(message)
-    }
 
-    override fun showPagerView(adapter : FlashcardSelectionPagerAdapter?)
+
+    fun showPagerView(adapter : FlashcardSelectionPagerAdapter?)
     {
         Log.f("")
         _FlashcardBaseViewPager.adapter = adapter
@@ -206,7 +307,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun settingSoundButton(isEnable : Boolean)
+    fun settingSoundButton(isEnable : Boolean)
     {
         Log.f("isEnable : $isEnable")
         if(isEnable)
@@ -223,15 +324,16 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun settingAutoPlayInterval(second : Int)
+    fun settingAutoPlayInterval(second : Int)
     {
         Log.f("second : $second")
+        mCurrentIntervalSecond = second
         val timeText = "$second${resources.getString(R.string.text_second)}"
         _AutoModeTimeText.text = timeText
         _AutoModeStudyTimeText.text = timeText
     }
 
-    override fun settingBaseControlView(status : FlashcardStatus)
+    fun settingBaseControlView(status : FlashcardStatus)
     {
         Log.f("status : $status")
         settingBottomView(status)
@@ -296,7 +398,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun checkAutoplayBox(status : FlashcardStatus, isEnable : Boolean)
+    fun checkAutoplayBox(status : FlashcardStatus, isEnable : Boolean)
     {
         Log.f("status : $status, isEnable : $isEnable")
         when(status)
@@ -327,7 +429,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun checkShuffleBox(isEnable : Boolean?)
+    fun checkShuffleBox(isEnable : Boolean?)
     {
         Log.f("isEnable : $isEnable")
         if(isEnable!!)
@@ -340,16 +442,16 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun showCoachMarkView()
+    fun showCoachMarkView()
     {
         _CoachmarkImage.visibility = View.VISIBLE
         _CoachmarkImage.setOnClickListener {
             _CoachmarkImage.visibility = View.GONE
-            mFlashcardPresenter.onCoachMarkNeverSeeAgain()
+            factoryViewModel.onCoachMarkNeverSeeAgain()
         }
     }
 
-    override fun showBottomViewLayout()
+    fun showBottomViewLayout()
     {
         ViewAnimator.animate(_BottomViewLayout)
             .fadeIn()
@@ -358,7 +460,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
             .start()
     }
 
-    override fun hideBottomViewLayout()
+    fun hideBottomViewLayout()
     {
         ViewAnimator.animate(_BottomViewLayout)
             .fadeOut()
@@ -389,21 +491,77 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         }
     }
 
-    override fun prevPageView()
+    fun prevPageView()
     {
         _FlashcardBaseViewPager.setCurrentItem(mCurrentPageIndex - 1, true)
     }
 
-    override fun nextPageView()
+    fun nextPageView()
     {
         _FlashcardBaseViewPager.setCurrentItem(mCurrentPageIndex + 1, true)
     }
 
-    override fun forceChangePageView(position : Int)
+    fun forceChangePageView(position : Int)
     {
         mCurrentPageIndex = position
         _FlashcardBaseViewPager.setCurrentItem(mCurrentPageIndex, true)
     }
+
+    /**
+     * 자동재생 시간 선택 다이얼로그 표시
+     */
+    private fun showBottomIntervalDialog()
+    {
+        mBottomFlashcardIntervalSelectDialog = BottomFlashcardIntervalSelectDialog(this, mCurrentIntervalSecond).apply {
+            setOnIntervalSelectListener(mIntervalSelectListener)
+            show()
+        }
+    }
+
+    /**
+     * 책장에 담기 다이얼로그 표시
+     */
+    private fun showBottomVocabularyAddDialog(list: ArrayList<MyVocabularyResult>)
+    {
+        mBottomBookAddDialog = BottomBookAddDialog(this).apply {
+            setCancelable(true)
+            setLandScapeMode()
+            setVocabularyData(list)
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
+    }
+
+    /**
+     * 찜단어가 사라진다 라는 Alert 메세지 다이얼로그
+     */
+    private fun showBookmarkWarningDialog( dialogType : Int)
+    {
+        Log.f("")
+        mTempleteAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_warning_bookmark_init))
+            setDialogEventType(dialogType)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setGravity(Gravity.LEFT)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    /**
+     * 찜단어가 없다라는 메세지 다이얼로그
+     */
+    private fun showBookmarkEmptyDialog()
+    {
+        Log.f("")
+        mTempleteAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_warning_bookmark_empty))
+            setButtonType(DialogButtonType.BUTTON_1)
+            setGravity(Gravity.LEFT)
+            show()
+        }
+    }
+
 
     @OnClick(R.id._soundCheckButton, R.id._closeButton, R.id._autoModeCheckButton, R.id._autoModeStudyBackground,
         R.id._shuffleModeCheckButton, R.id._autoModeTimeText, R.id._backButton)
@@ -411,13 +569,50 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
     {
         when(view.id)
         {
-            R.id._soundCheckButton -> mFlashcardPresenter.onClickSound()
-            R.id._closeButton -> mFlashcardPresenter.onClickClose()
-            R.id._autoModeCheckButton, R.id._autoModeStudyBackground -> mFlashcardPresenter.onCheckAutoPlay()
-            R.id._shuffleModeCheckButton -> mFlashcardPresenter.onCheckShuffle()
-            R.id._autoModeTimeText -> mFlashcardPresenter.onClickAutoPlayInterval()
-            R.id._backButton -> mFlashcardPresenter.onClickHelpViewBack()
+            R.id._soundCheckButton -> factoryViewModel.onClickSound()
+            R.id._closeButton -> factoryViewModel.onClickClose()
+            R.id._autoModeCheckButton, R.id._autoModeStudyBackground -> factoryViewModel.onCheckAutoPlay()
+            R.id._shuffleModeCheckButton -> factoryViewModel.onCheckShuffle()
+            R.id._autoModeTimeText -> showBottomIntervalDialog()
+            R.id._backButton -> factoryViewModel.onClickHelpViewBack()
         }
+    }
+
+    /**
+     * 자동 넘기기 시간 선택 다이얼로그 Listener
+     */
+    private val mIntervalSelectListener : IntervalSelectListener = object : IntervalSelectListener
+    {
+        override fun onClickIntervalSecond(second : Int)
+        {
+            factoryViewModel.onClickIntervalSecond(second)
+        }
+
+    }
+    /**
+     * 책장에 추가 다이얼로그 Listener
+     */
+    private val mBookAddListener : BookAddListener = object : BookAddListener
+    {
+        override fun onClickBook(index : Int)
+        {
+            factoryViewModel.onClickVocabularyBook(index)
+        }
+
+    }
+
+    /**
+     * 다이얼로그 Listener
+     */
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int) {}
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            factoryViewModel.onDialogChoiceClick(buttonType, eventType)
+        }
+
     }
 
     private val mOnPageChangeListener : ViewPager.OnPageChangeListener = object : ViewPager.OnPageChangeListener
@@ -428,7 +623,7 @@ class FlashCardActivity : BaseActivity(), FlashcardContract.View, MessageHandler
         {
             Log.f("position :$position")
             mCurrentPageIndex = position
-            mFlashcardPresenter.onFlashCardPageSelected(position)
+            factoryViewModel.onFlashCardPageSelected(position)
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

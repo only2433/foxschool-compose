@@ -7,23 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
-import com.littlefox.app.foxschool.viewmodel.FlashcardIntroFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
 import com.littlefox.library.view.animator.ViewAnimator
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -72,8 +69,8 @@ class FlashCardIntroFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private var mFlashcardIntroFragmentObserver : FlashcardIntroFragmentObserver? = null
-    private var mFlashcardPresenterObserver : FlashcardPresenterObserver? = null
+
+    private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
 
     fun getInstance() : FlashCardIntroFragment
     {
@@ -112,11 +109,6 @@ class FlashCardIntroFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initFont()
-    }
-
-    override fun onActivityCreated(savedInstanceState : Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
 
@@ -193,14 +185,12 @@ class FlashCardIntroFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        mFlashcardIntroFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardIntroFragmentObserver::class.java]
-        mFlashcardPresenterObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardPresenterObserver::class.java]
-        mFlashcardPresenterObserver!!.introTitleData.observe(viewLifecycleOwner, { flashcardDataObject ->
-            setTitle(flashcardDataObject)
-        })
-        mFlashcardPresenterObserver!!.closeHelpViewData.observe(viewLifecycleOwner, {
+        factoryViewModel.introTitle.observe(viewLifecycleOwner){data ->
+            setTitle(data)
+        }
+        factoryViewModel.closeHelpView.observe(viewLifecycleOwner){
             hideHelpView()
-        })
+        }
     }
 
     /** 타이틀 세팅 */
@@ -270,11 +260,11 @@ class FlashCardIntroFragment : Fragment()
     {
         when(view.id)
         {
-            R.id._startWordButton -> mFlashcardIntroFragmentObserver!!.onClickStartWordStudy()
-            R.id._startMeaningButton -> mFlashcardIntroFragmentObserver!!.onClickStartMeaningStudy()
+            R.id._startWordButton -> factoryViewModel.onClickStartWordStudy()
+            R.id._startMeaningButton -> factoryViewModel.onClickStartMeaningStudy()
             R.id._infoButton ->
             {
-                mFlashcardIntroFragmentObserver!!.onClickInformation()
+                factoryViewModel.onClickInformation()
                 showHelpView()
             }
         }

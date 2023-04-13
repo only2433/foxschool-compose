@@ -67,7 +67,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_SAVE_QUIZ_RECORD)
+                    _errorReport.value = Pair(result, RequestCode.CODE_QUIZ_RECORD_SAVE)
                 }
             }
         }
@@ -176,7 +176,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                         data.objects[0] as String)
                 }
             }
-            RequestCode.CODE_SAVE_QUIZ_RECORD ->
+            RequestCode.CODE_QUIZ_RECORD_SAVE ->
             {
                 mJob = viewModelScope.launch(Dispatchers.IO){
                     delay(data.duration)

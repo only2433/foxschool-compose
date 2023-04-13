@@ -17,25 +17,22 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ViewFlipper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
 import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.enumerate.FlashcardStudyType
-import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
-import com.littlefox.app.foxschool.viewmodel.FlashcardStudyFragmentObserver
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import java.util.*
@@ -118,8 +115,6 @@ class FlashCardStudyDataFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private var mFlashcardStudyFragmentObserver : FlashcardStudyFragmentObserver? = null
-    private var mFlashcardPresenterObserver : FlashcardPresenterObserver? = null
 
     private lateinit var mTopInAnimatorSet : AnimatorSet
     private lateinit var mBottomOutAnimatorSet : AnimatorSet
@@ -135,6 +130,8 @@ class FlashCardStudyDataFragment : Fragment()
     private var mCurrentCardIndex : Int = 0
     private var mBeforeCardIndex : Int = 0
 
+    private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
+
     var mMainHandler : Handler = object : Handler()
     {
         override fun handleMessage(msg : Message)
@@ -145,7 +142,7 @@ class FlashCardStudyDataFragment : Fragment()
                 {
                     // 사운드 재생
                     enableControllerButton(true)
-                    mFlashcardStudyFragmentObserver!!.onActionAutoSound(mDataList[mCurrentCardIndex].getID())
+                    factoryViewModel.onActionAutoSound(mDataList[mCurrentCardIndex].getID())
                 }
                 MESSAGE_INIT_FLIP ->
                 {
@@ -443,15 +440,11 @@ class FlashCardStudyDataFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        mFlashcardStudyFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardStudyFragmentObserver::class.java]
-        mFlashcardPresenterObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardPresenterObserver::class.java]
+        factoryViewModel.notifyListUpdate.observe(viewLifecycleOwner){data ->
+            setData(data)
+        }
 
-        mFlashcardPresenterObserver!!.notifyListUpdateData.observe(viewLifecycleOwner, { flashCardDataResults ->
-            Log.f("Notify Data")
-            setData(flashCardDataResults)
-        })
-
-        mFlashcardPresenterObserver!!.initStudySettingData.observe(viewLifecycleOwner, { type ->
+        factoryViewModel.initStudySetting.observe(viewLifecycleOwner){type ->
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             Log.f("mCurrentFlashcardStudyType : $type")
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.STARTED)
@@ -466,16 +459,16 @@ class FlashCardStudyDataFragment : Fragment()
                 settingCardView(ITEM_1_TAG)
                 mMainHandler.sendEmptyMessageDelayed(MESSAGE_SOUND_PLAY, Common.DURATION_NORMAL)
             }
-        })
+        }
 
-        mFlashcardPresenterObserver!!.nextCardData.observe(viewLifecycleOwner, {
+        factoryViewModel.nextCardData.observe(viewLifecycleOwner){
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED)
             {
                 Log.f("AUTO PLAY NEXT CARD : " + (mCurrentCardIndex + 1))
                 showNextStudyCard()
             }
-        })
+        }
     }
 
     /** 학습모드에 따른 카드 세팅 (앞/뒤) */
@@ -853,7 +846,7 @@ class FlashCardStudyDataFragment : Fragment()
         if(mCurrentCardIndex >= mDataList.size - 1)
         {
             mMainHandler.sendEmptyMessageDelayed(MESSAGE_INIT_FLIP, Common.DURATION_NORMAL)
-            mFlashcardStudyFragmentObserver!!.onEndStudyFlashCard()
+            factoryViewModel.onEndStudyFlashCard()
             return
         } 
         else
@@ -889,7 +882,7 @@ class FlashCardStudyDataFragment : Fragment()
         if((mCurrentFlashcardStudyType == FlashcardStudyType.WORD_START && mDataList[mCurrentCardIndex].isBackVisible() == false) || 
             (mCurrentFlashcardStudyType == FlashcardStudyType.MEANING_START && mDataList[mCurrentCardIndex].isBackVisible() == true))
         {
-            mFlashcardStudyFragmentObserver!!.onClickSound(mDataList[mCurrentCardIndex].getID())
+            factoryViewModel.onClickSound(mDataList[mCurrentCardIndex].getID())
         }
     }
 
@@ -913,7 +906,7 @@ class FlashCardStudyDataFragment : Fragment()
             return
         }
 
-        mFlashcardStudyFragmentObserver!!.onActionStudyCard()
+        factoryViewModel.onActionStudyCard()
         when(view.id)
         {
             R.id._flipButton ->
@@ -939,7 +932,7 @@ class FlashCardStudyDataFragment : Fragment()
             return@OnClickListener
         }
 
-        mFlashcardStudyFragmentObserver!!.onActionStudyCard()
+        factoryViewModel.onActionStudyCard()
         when(v.id)
         {
             R.id._itemFrontBookmarkButtonRect,
@@ -965,7 +958,7 @@ class FlashCardStudyDataFragment : Fragment()
                     )
                 }
 
-                mFlashcardStudyFragmentObserver!!.onClickBookmark(
+                factoryViewModel.onClickBookmark(
                     mDataList[mCurrentCardIndex].getID(),
                     mDataList[mCurrentCardIndex].isBookmarked()
                 )

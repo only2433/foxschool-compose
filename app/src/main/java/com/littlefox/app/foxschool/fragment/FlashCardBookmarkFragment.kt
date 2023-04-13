@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
@@ -21,6 +22,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.adapter.FlashcardBookmarkItemAdapter
 import com.littlefox.app.foxschool.adapter.listener.BookmarkItemListener
+import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
@@ -85,11 +87,12 @@ class FlashCardBookmarkFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private var mFlashcardBookmarkFragmentObserver : FlashcardBookmarkFragmentObserver? = null
 
     private var mDataList : ArrayList<FlashCardDataResult>? = null
     private var mFlashcardBookmarkItemAdapter : FlashcardBookmarkItemAdapter? = null
     private var mVocabularyType : VocabularyType = VocabularyType.VOCABULARY_CONTENTS
+
+    private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
 
     fun getInstance() : FlashCardBookmarkFragment
     {
@@ -128,7 +131,6 @@ class FlashCardBookmarkFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initFont()
-        setupObserverViewModel()
     }
 
     override fun onStart()
@@ -220,11 +222,6 @@ class FlashCardBookmarkFragment : Fragment()
     }
     /** ========== Init ========== */
 
-    /** ViewModel 옵저버 세팅 */
-    private fun setupObserverViewModel()
-    {
-        mFlashcardBookmarkFragmentObserver = ViewModelProviders.of((mContext as AppCompatActivity))[FlashcardBookmarkFragmentObserver::class.java]
-    }
 
     /** 북마크 갯수 화면에 세팅 */
     private fun settingBookmarkedCount()
@@ -295,9 +292,9 @@ class FlashCardBookmarkFragment : Fragment()
     {
         when(view.id)
         {
-            R.id._saveMyBooksButton -> mFlashcardBookmarkFragmentObserver?.onClickSaveVocabulary()
-            R.id._startWordButton -> mFlashcardBookmarkFragmentObserver?.onClickStartWordStudyData()
-            R.id._startMeaningButton -> mFlashcardBookmarkFragmentObserver?.onClickStartMeaningStudyData()
+            R.id._saveMyBooksButton -> factoryViewModel.onClickSaveVocabulary()
+            R.id._startWordButton -> factoryViewModel.onClickStartWordStudyBookmark()
+            R.id._startMeaningButton -> factoryViewModel.onClickStartMeaningStudyBookmark()
         }
     }
 
@@ -309,7 +306,7 @@ class FlashCardBookmarkFragment : Fragment()
             val isBookmarked = mDataList!![position].isBookmarked()
             mDataList!![position].enableBookmark(!isBookmarked)
             settingBookmarkedCount()
-            mFlashcardBookmarkFragmentObserver!!.onClickBookmark(
+            factoryViewModel.onClickBookmark(
                 mDataList!![position].getID(), mDataList!![position].isBookmarked()
             )
             mFlashcardBookmarkItemAdapter!!.notifyDataSetChanged()

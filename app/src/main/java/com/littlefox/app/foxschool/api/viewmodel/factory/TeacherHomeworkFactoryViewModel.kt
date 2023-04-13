@@ -131,29 +131,22 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.isLoading.collect {data ->
                 data?.let {
-                    if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST ||
-                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR ||
-                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
+                    if(data.second)
                     {
-                        if(data.second)
-                        {
-                            _isLoading.postValue(true)
-                        }
-                        else
-                        {
-                            _isLoading.postValue(false)
-                        }
-                    }
-                    else if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST ||
-                        data.first == RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS)
-                    {
+                        // RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST, data.first == RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS
                         // 숙제 현황 상세 보기, 숙제 내용 화면에서는 리스트의 로딩을 사용하기 때문에 전체 로딩 다이얼로그를 표시하지 않는다.
                         // 하지만 "숙제 내용" 화면에서 다른 Activity로 이동했다가 돌아오는 경우에는 Loading을 사용하기 때문에
                         // 따라서 여기에서는 닫기 기능만 적용한다. (로딩 ON은 onActivityResultHomeworkDetail 에서 따로 처리한다.)
-                        if(data.second == false)
+                        if (data.first == RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST ||
+                            data.first == RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR ||
+                            data.first == RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
                         {
-                            _isLoading.postValue(false)
+                            _isLoading.postValue(true)
                         }
+                    }
+                    else
+                    {
+                        _isLoading.postValue(false)
                     }
                 }
             }

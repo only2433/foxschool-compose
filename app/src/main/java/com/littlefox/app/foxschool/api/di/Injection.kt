@@ -50,6 +50,12 @@ object Injection
     }
 
     @Provides
+    fun provideFlashcardApiViewModel() : FlashcardApiViewModel
+    {
+        return FlashcardApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun provideStudentHomeworkApiViewModel() : StudentHomeworkApiViewModel
     {
         return StudentHomeworkApiViewModel(provideFoxSchoolRepository())

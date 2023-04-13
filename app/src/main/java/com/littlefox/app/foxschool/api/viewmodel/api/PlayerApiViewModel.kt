@@ -7,7 +7,6 @@ import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.di.FoxSchoolRepository
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
-import com.littlefox.app.foxschool.`object`.result.PlayerDataBaseObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
@@ -66,7 +65,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_SAVE_PLAY_CONTENTS_LOG)
+                    _errorReport.value = Pair(result, RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE)
                 }
             }
         }
@@ -87,7 +86,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_ADD_BOOKSHELF_CONTENTS)
+                    _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                 }
             }
         }
@@ -111,7 +110,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                     )
                 }
             }
-            RequestCode.CODE_SAVE_PLAY_CONTENTS_LOG ->
+            RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE ->
             {
                 mJob = viewModelScope.launch(Dispatchers.IO) {
                     delay(data.duration)
@@ -122,7 +121,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                     )
                 }
             }
-            RequestCode.CODE_ADD_BOOKSHELF_CONTENTS ->
+            RequestCode.CODE_BOOKSHELF_CONTENTS_ADD ->
             {
                 mJob = viewModelScope.launch(Dispatchers.IO) {
                     delay(data.duration)

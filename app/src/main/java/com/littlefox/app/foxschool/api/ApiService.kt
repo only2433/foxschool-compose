@@ -13,10 +13,11 @@ import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
 import com.littlefox.app.foxschool.`object`.result.quiz.QuizInformationResult
+import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import okhttp3.OkHttpClient
-import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,7 +28,6 @@ import java.util.concurrent.TimeUnit
 interface ApiService
 {
     @FormUrlEncoded
-    @Headers("Content-Type: application/json")
     @POST("app/version")
     suspend fun initAsync(
         @Field("device_id") device_id: String,
@@ -35,16 +35,13 @@ interface ApiService
         @Field("push_on") push_on: String
     ) : Response<BaseResponse<VersionDataResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("auth/me")
     suspend fun authMeAsync() : Response<BaseResponse<LoginInformationResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("app/main")
     suspend fun mainAsync() : Response<BaseResponse<MainInformationResult>>
 
     @FormUrlEncoded
-    @Headers("Content-Type: application/json")
     @POST("users/password/update")
     suspend fun passwordChangeAsync(
         @Field("password_check") currentPassword: String,
@@ -52,15 +49,12 @@ interface ApiService
         @Field("password_confirm") changePasswordConfirm: String
     ) : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
     @GET("users/password/next")
     suspend fun passwordChangeNextAsync() : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
     @GET("users/password/keep")
     suspend fun passwordChangeKeepAsync() : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
     @GET("users/school")
     suspend fun schoolListAsync() : Response<BaseResponse<ArrayList<SchoolItemDataResult>>>
 
@@ -72,7 +66,6 @@ interface ApiService
         @Field("school_id") schoolCode : String
     ) : Response<BaseResponse<LoginInformationResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("contents/player/{data}")
     suspend fun authContentsPlayAsync(
         @Path("data") requestData: String
@@ -94,40 +87,6 @@ interface ApiService
         @FieldMap queryMap : Map<String, String>
     ) : Response<BaseResponse<MyBookshelfResult>>
 
-    @Headers("Content-Type: application/json")
-    @GET("homeworks/student")
-    suspend fun studentHomeworkCalendarAsync(
-        @Query("year") id : String,
-        @Query("month") password : String
-    ) : Response<BaseResponse<HomeworkCalendarBaseResult>>
-
-    @Headers("Content-Type: application/json")
-    @GET("homeworks/student/list/{hw_no}")
-    suspend fun studentHomeworkListAsync(
-        @Path("hw_no") homeworkNumber : Int
-    ) : Response<BaseResponse<HomeworkDetailBaseResult>>
-
-    @Headers("Content-Type: application/json")
-    @PUT("homeworks/student")
-    suspend fun studentCommentRegisterAsync(
-        @Query("comment") comment : String,
-        @Query("hw_no") homeworkNumber : Int
-    ) : Response<BaseResponse<Nothing>>
-
-    @Headers("Content-Type: application/json")
-    @POST("homeworks/student")
-    suspend fun studentCommentUpdateAsync(
-        @Query("comment") comment : String,
-        @Query("hw_no") homeworkNumber : Int
-    ) : Response<BaseResponse<Nothing>>
-
-    @Headers("Content-Type: application/json")
-    @DELETE("homeworks/student")
-    suspend fun studentCommentDeleteAsync(
-        @Query("hw_no") homeworkNumber : Int
-    ) : Response<BaseResponse<Nothing>>
-
-    @Headers("Content-Type: application/json")
     @GET ("contents/quiz/{content_id}")
     suspend fun quizInformationAsync(
         @Path("content_id") contentsID : String
@@ -135,16 +94,62 @@ interface ApiService
 
     @Headers("Content-Type: application/json")
     @POST("contents/quiz/{content_id}/result")
-    suspend fun quizSaveRecordAsync(
+    suspend fun saveQuizRecordAsync(
         @Path("content_id") contentsID : String,
         @Body data: JsonObject
     ) : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
+
+    @GET("contents/vocabularies/{content_id}")
+    suspend fun getVocabularyContentsList(
+        @Path("content_id") contentsID : String
+    ) : Response<BaseResponse<ArrayList<VocabularyDataResult>>>
+
+    @FormUrlEncoded
+    @PUT("contents/vocabularies/{vocabulary_id}/words")
+    suspend fun addVocabularyContents(
+        @Path("vocabulary_id") vocabularyID: String,
+        @FieldMap queryMap : Map<String, String>
+    ) : Response<BaseResponse<MyVocabularyResult>>
+
+    @GET("contents/flashcard/{content_id}")
+    suspend fun saveFlashcardRecordAsync(
+        @Path("content_id") contentsID : String
+    ) : Response<BaseResponse<Nothing>>
+
+    @GET("homeworks/student")
+    suspend fun studentHomeworkCalendarAsync(
+        @Query("year") id : String,
+        @Query("month") password : String
+    ) : Response<BaseResponse<HomeworkCalendarBaseResult>>
+
+    @GET("homeworks/student/list/{hw_no}")
+    suspend fun studentHomeworkListAsync(
+        @Path("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<HomeworkDetailBaseResult>>
+
+    @PUT("homeworks/student")
+    suspend fun studentCommentRegisterAsync(
+        @Query("comment") comment : String,
+        @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+
+    @FormUrlEncoded
+    @POST("homeworks/student")
+    suspend fun studentCommentUpdateAsync(
+        @Field("comment") comment : String,
+        @Field("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
+    @DELETE("homeworks/student")
+    suspend fun studentCommentDeleteAsync(
+        @Query("hw_no") homeworkNumber : Int
+    ) : Response<BaseResponse<Nothing>>
+
     @GET("homeworks/teacher/class")
     suspend fun teacherHomeworkClassListAsync() : Response<BaseResponse<ArrayList<TeacherClassItemData>>>
 
-    @Headers("Content-Type: application/json")
     @GET("homeworks/teacher/{school_class_id}")
     suspend fun teacherHomeworkCalendarAsync(
         @Path("school_class_id") classId : String,
@@ -152,14 +157,12 @@ interface ApiService
         @Query("month") password : String
     ) : Response<BaseResponse<HomeworkCalendarBaseResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("homeworks/teacher/state/{school_class_id}/{hw_no}")
     suspend fun teacherHomeworkStatusAsync(
         @Path("school_class_id") classId : Int,
         @Path("hw_no") homeworkNumber : Int
     ) : Response<BaseResponse<HomeworkStatusBaseResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("homeworks/teacher/list/{school_class_id}/{hw_no}/{fu_id}")
     suspend fun teacherHomeworkDetailAsync(
         @Path("school_class_id") classId : Int,
@@ -167,33 +170,33 @@ interface ApiService
         @Path("fu_id") userID : String
     ) : Response<BaseResponse<HomeworkDetailBaseResult>>
 
-    @Headers("Content-Type: application/json")
     @GET("homeworks/teacher/show/{school_class_id}/{hw_no}")
     suspend fun teacherHomeworkContentsAsync(
         @Path("school_class_id") classId : Int,
         @Path("hw_no") homeworkNumber : Int
     ) : Response<BaseResponse<HomeworkDetailBaseResult>>
 
-    @Headers("Content-Type: application/json")
+
+    @FormUrlEncoded
     @POST("homeworks/teacher")
     suspend fun teacherHomeworkCheckingAsync(
-        @Query("hw_no") homeworkNumber : Int,
-        @Query("school_class_id") classId : Int,
-        @Query("fu_id") userID : String,
-        @Query("eval") evaluationState : String
+        @Field("hw_no") homeworkNumber : Int,
+        @Field("school_class_id") classId : Int,
+        @Field("fu_id") userID : String,
+        @Field("eval") evaluationState : String
     ) : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
+
+    @FormUrlEncoded
     @POST("homeworks/teacher")
     suspend fun teacherHomeworkCheckingAsync(
-        @Query("hw_no") homeworkNumber : Int,
-        @Query("school_class_id") classId : Int,
-        @Query("fu_id") userID : String,
-        @Query("eval") evaluationState : String,
-        @Query("eval_comment") evaluationComment : String,
+        @Field("hw_no") homeworkNumber : Int,
+        @Field("school_class_id") classId : Int,
+        @Field("fu_id") userID : String,
+        @Field("eval") evaluationState : String,
+        @Field("eval_comment") evaluationComment : String,
     ) : Response<BaseResponse<Nothing>>
 
-    @Headers("Content-Type: application/json")
     @GET("forum/board/news")
     suspend fun forumListAsync(
         @Query("per_page") pageCount: Int,

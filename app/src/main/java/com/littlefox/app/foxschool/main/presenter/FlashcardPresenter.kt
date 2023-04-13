@@ -341,7 +341,7 @@ class FlashcardPresenter : FlashcardContract.Presenter
     }
 
     /**
-     * 학습 준비
+     * 학습 준비6t5
      *  - 단어장 화면에서 넘어온 경우 플래시카드 아이템 생성
      *  - 컨텐츠 화면에서 넘어온 경우 단어장 통신 요청
      */

@@ -7,21 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
-import com.littlefox.app.foxschool.viewmodel.FlashcardPresenterObserver
-import com.littlefox.app.foxschool.viewmodel.FlashcardResultFragmentObserver
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 
@@ -62,8 +59,7 @@ class FlashCardResultFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private var mFlashcardResultFragmentObserver : FlashcardResultFragmentObserver? = null
-    private var mFlashcardPresenterObserver : FlashcardPresenterObserver? = null
+    private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
 
     fun getInstance() : FlashCardResultFragment
     {
@@ -166,13 +162,9 @@ class FlashCardResultFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        mFlashcardResultFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity)[FlashcardResultFragmentObserver::class.java]
-        mFlashcardPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity)[FlashcardPresenterObserver::class.java]
-
-        mFlashcardPresenterObserver!!.settingBookmarkButtonData.observe(viewLifecycleOwner, {isBookmarked ->
-            // 북마크 유/무에 따라 결과 화면 세팅
-            settingResultView(isBookmarked)
-        })
+        factoryViewModel.settingBookmarkButton.observe(viewLifecycleOwner){isBookmark ->
+            settingResultView(isBookmark)
+        }
     }
 
     /**
@@ -235,8 +227,8 @@ class FlashCardResultFragment : Fragment()
     {
         when(view.id)
         {
-            R.id._replayButton -> mFlashcardResultFragmentObserver!!.onClickReplayStudy()
-            R.id._bookmarkButton -> mFlashcardResultFragmentObserver!!.onClickBookmarkStudy()
+            R.id._replayButton -> factoryViewModel.onClickReplayStudy()
+            R.id._bookmarkButton -> factoryViewModel.onClickBookmarkStudy()
         }
     }
 }

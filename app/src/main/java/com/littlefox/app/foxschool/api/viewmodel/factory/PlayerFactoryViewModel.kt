@@ -3,7 +3,6 @@ package com.littlefox.app.foxschool.api.viewmodel.factory
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
@@ -35,7 +34,6 @@ import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.main.PlayerHlsActivity
-import com.littlefox.app.foxschool.main.presenter.PlayerHlsPresenter
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -251,7 +249,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
             apiViewModel.isLoading.collect {data ->
                 data?.let {
-                    if(data.first == RequestCode.CODE_ADD_BOOKSHELF_CONTENTS)
+                    if(data.first == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                     {
                         if(data.second)
                         {
@@ -332,7 +330,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                                 CrashlyticsHelper.getInstance(mContext).sendCrashlytics(errorData)
                             }
                         }
-                        else if(code == RequestCode.CODE_ADD_BOOKSHELF_CONTENTS)
+                        else if(code == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                         {
                             Log.f("FAIL ASYNC_CODE_BOOKSHELF_CONTENTS_ADD")
                             viewModelScope.launch(Dispatchers.Main){
@@ -1205,7 +1203,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     private fun requestBookshelfContentsAdd(data : ArrayList<ContentsBaseResult>)
     {
         apiViewModel.enqueueCommandStart(
-            RequestCode.CODE_ADD_BOOKSHELF_CONTENTS,
+            RequestCode.CODE_BOOKSHELF_CONTENTS_ADD,
             mCurrentBookshelfAddResult.getID(),
             data
         )
@@ -1227,7 +1225,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         val studyLogSeconds = Math.round(mCurrentStudyLogMilliSeconds / Common.DURATION_LONG.toFloat())
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
         apiViewModel.enqueueCommandStart(
-            RequestCode.CODE_SAVE_PLAY_CONTENTS_LOG,
+            RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE,
             mPlayInformationList[mCurrentSaveLogIndex].getID(),
             autoPlay,
             studyLogSeconds.toString(),

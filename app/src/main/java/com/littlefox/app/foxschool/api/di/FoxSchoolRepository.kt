@@ -11,6 +11,7 @@ import com.littlefox.app.foxschool.api.paging.ForumPagingSource
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizStudyRecordData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONArray
 import org.json.JSONException
@@ -223,10 +224,31 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
             remoteObject.addProperty("hw_no", homeworkNumber)
         }
 
-        remote.quizSaveRecordAsync(
+        remote.saveQuizRecordAsync(
             answerData.getContentId(),
             remoteObject)
 
+    }
+
+    suspend fun getVocabularyContentsList(contentID : String) = safeApiCall {
+        remote.getVocabularyContentsList(contentID)
+    }
+
+    suspend fun addVocabularyContents(contentID : String, vocabularyID : String, itemList : ArrayList<VocabularyDataResult>) = safeApiCall {
+        var queryMap = mutableMapOf<String, String>()
+        queryMap["content_id"] =  contentID
+        for(i in itemList.indices)
+        {
+            queryMap["word_ids[$i]"] = itemList[i].getID()
+        }
+        remote.addVocabularyContents(
+            vocabularyID,
+            queryMap
+        )
+    }
+
+    suspend fun flashcardSaveAsync(contentID : String) = safeApiCall{
+        remote.saveFlashcardRecordAsync(contentID)
     }
 
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
