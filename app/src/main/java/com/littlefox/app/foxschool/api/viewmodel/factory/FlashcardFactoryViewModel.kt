@@ -14,6 +14,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.FlashcardSelectionPagerAdapter
 import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
+import com.littlefox.app.foxschool.api.viewmodel.fragment.FlashcardFragmentViewModel
 import com.littlefox.app.foxschool.api.viewmodel.api.FlashcardApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -27,17 +28,14 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.FlashcardStatus
 import com.littlefox.app.foxschool.enumerate.FlashcardStudyType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
-import com.littlefox.app.foxschool.main.presenter.FlashcardPresenter
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
-import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.observer.MainObserver
-import com.littlefox.app.foxschool.viewmodel.*
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.logmonitor.Log
@@ -92,26 +90,6 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
     private val _forceChangePageView = SingleLiveEvent<Int>()
     val forceChangePageView : LiveData<Int> = _forceChangePageView
 
-    //-------------- Fragment
-    private val _introTitle = MutableLiveData<FlashcardDataObject>()
-    val introTitle : LiveData<FlashcardDataObject> = _introTitle
-
-    private val _settingBookmarkButton = MutableLiveData<Boolean>()
-    val settingBookmarkButton : LiveData<Boolean> = _settingBookmarkButton
-
-    private val _nextCard = MutableLiveData<Void?>()
-    val nextCardData : LiveData<Void?> = _nextCard
-
-    private val _initStudySetting = MutableLiveData<FlashcardStudyType>()
-    val initStudySetting : LiveData<FlashcardStudyType> = _initStudySetting
-
-    private val _notifyListUpdate = MutableLiveData<ArrayList<FlashCardDataResult>>()
-    val notifyListUpdate : LiveData<ArrayList<FlashCardDataResult>> = _notifyListUpdate
-
-    private val _closeHelpView = MutableLiveData<Void?>()
-    val closeHelpView : LiveData<Void?> = _closeHelpView
-    // ----------------------------------------//
-
     private val _dialogReplayWarningBookmark = SingleLiveEvent<Void>()
     val dialogReplayWarningBookmark : LiveData<Void> = _dialogReplayWarningBookmark
 
@@ -133,11 +111,6 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
 
     // Fragment 관련 변수
     private var mCurrentFlashcardStatus : FlashcardStatus = FlashcardStatus.INTRO
-
-    // 다이얼로그
-    private var mBottomFlashcardIntervalSelectDialog : BottomFlashcardIntervalSelectDialog? = null
-    private var mBottomBookAddDialog : BottomBookAddDialog? = null
-    private var mTempleteAlertDialog : TemplateAlertDialog? = null
 
     // 플래시카드 데이터 변수
     private lateinit var mFlashcardDataObject : FlashcardDataObject
@@ -161,11 +134,13 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
     private var mCurrentUserID : String = ""
     private var mCurrentPageIndex : Int = 0
     private var mAutoPlayJob: Job? = null
-
+    private lateinit var fragmentViewModel: FlashcardFragmentViewModel
 
     override fun init(context : Context)
     {
         mContext = context
+        fragmentViewModel = ViewModelProviders.of(mContext as AppCompatActivity).get(
+            FlashcardFragmentViewModel::class.java)
         setupViewModelObserver()
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao()
@@ -394,7 +369,7 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                 }
             }
         }
-        _introTitle.value = mFlashcardDataObject
+        fragmentViewModel.onSetIntroTitle(mFlashcardDataObject)
     }
 
     /**
@@ -776,7 +751,7 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                         mFlashcardSelectionPagerAdapter.addFragment(FlashcardStatus.RESULT)
                     } else
                     {
-                        _notifyListUpdate.value = mCurrentStudyCardList!!
+                        fragmentViewModel.onSetFlashcardData(mCurrentStudyCardList!!)
                     }
                 } else
                 {
@@ -790,13 +765,15 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                     mFlashcardSelectionPagerAdapter.addStudyDataFragment(mCurrentBookmarkCardList!!)
                 }
                 _settingBaseControlView.value = mCurrentFlashcardStatus
-                _initStudySetting.value = mCurrentFlashcardStudyType!!
+                fragmentViewModel.onSettingFlashcardView(mCurrentFlashcardStudyType!!)
                 _nextPageView.call()
             }
 
             FlashcardStatus.RESULT ->
             {
-                _settingBookmarkButton.value = isHaveBookmarkedItem()
+                fragmentViewModel.onSettingBookmarkButton(
+                    isHaveBookmarkedItem()
+                )
                 _settingBaseControlView.value = mCurrentFlashcardStatus
                 _nextPageView.call()
                 requestFlashcardSaveAsync()
@@ -811,7 +788,7 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
             mAutoPlayJob?.cancel()
             mAutoPlayJob  = viewModelScope.launch(Dispatchers.Default) {
                 delay((mCurrentIntervalSecond * Common.SECOND).toLong())
-                _nextCard.postValue(null)
+                fragmentViewModel.onShowNextCard()
             }
         }
         else
@@ -885,15 +862,13 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
             }
             else -> {}
         }
-
-
         (mContext as AppCompatActivity).finish()
     }
     
     fun onClickHelpViewBack()
     {
         _enableBottomViewLayout.value = true
-        _closeHelpView.postValue(null)
+        fragmentViewModel.onCloseHelpView()
     }
     
     fun onFlashCardPageSelected(pageIndex : Int)

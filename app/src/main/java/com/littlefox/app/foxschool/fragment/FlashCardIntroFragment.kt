@@ -14,6 +14,7 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.fragment.FlashcardFragmentViewModel
 import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.common.Common
@@ -71,7 +72,7 @@ class FlashCardIntroFragment : Fragment()
     private lateinit var mUnbinder : Unbinder
 
     private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
-
+    private val fragmentViewModel : FlashcardFragmentViewModel by activityViewModels()
     fun getInstance() : FlashCardIntroFragment
     {
         return FlashCardIntroFragment()
@@ -185,10 +186,10 @@ class FlashCardIntroFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        factoryViewModel.introTitle.observe(viewLifecycleOwner){data ->
+        fragmentViewModel.introTitle.observe(viewLifecycleOwner){data ->
             setTitle(data)
         }
-        factoryViewModel.closeHelpView.observe(viewLifecycleOwner){
+        fragmentViewModel.closeHelpView.observe(viewLifecycleOwner){
             hideHelpView()
         }
     }

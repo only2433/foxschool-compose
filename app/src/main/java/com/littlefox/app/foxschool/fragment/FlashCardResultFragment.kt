@@ -15,6 +15,7 @@ import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.FlashcardFragmentViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.DisplayPhoneType
@@ -60,6 +61,7 @@ class FlashCardResultFragment : Fragment()
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
     private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : FlashcardFragmentViewModel by activityViewModels()
 
     fun getInstance() : FlashCardResultFragment
     {
@@ -162,7 +164,7 @@ class FlashCardResultFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        factoryViewModel.settingBookmarkButton.observe(viewLifecycleOwner){isBookmark ->
+        fragmentViewModel.settingBookmarkButton.observe(viewLifecycleOwner){ isBookmark ->
             settingResultView(isBookmark)
         }
     }

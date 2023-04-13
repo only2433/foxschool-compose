@@ -23,6 +23,7 @@ import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.adapter.FlashcardBookmarkItemAdapter
 import com.littlefox.app.foxschool.adapter.listener.BookmarkItemListener
 import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.FlashcardFragmentViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font

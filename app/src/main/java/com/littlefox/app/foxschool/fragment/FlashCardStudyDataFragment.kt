@@ -26,6 +26,7 @@ import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.FlashcardFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.FlashcardFragmentViewModel
 import com.littlefox.app.foxschool.`object`.result.flashcard.FlashCardDataResult
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -131,6 +132,7 @@ class FlashCardStudyDataFragment : Fragment()
     private var mBeforeCardIndex : Int = 0
 
     private val factoryViewModel : FlashcardFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : FlashcardFragmentViewModel by activityViewModels()
 
     var mMainHandler : Handler = object : Handler()
     {
@@ -440,11 +442,11 @@ class FlashCardStudyDataFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        factoryViewModel.notifyListUpdate.observe(viewLifecycleOwner){data ->
+        fragmentViewModel.setFlashcardData.observe(viewLifecycleOwner){data ->
             setData(data)
         }
 
-        factoryViewModel.initStudySetting.observe(viewLifecycleOwner){type ->
+        fragmentViewModel.settingFlashcardView.observe(viewLifecycleOwner){type ->
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             Log.f("mCurrentFlashcardStudyType : $type")
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.STARTED)
@@ -461,7 +463,7 @@ class FlashCardStudyDataFragment : Fragment()
             }
         }
 
-        factoryViewModel.nextCardData.observe(viewLifecycleOwner){
+        fragmentViewModel.nextCardData.observe(viewLifecycleOwner){
             Log.f("LifeCycle : " + viewLifecycleOwner.lifecycle.currentState)
             if(viewLifecycleOwner.lifecycle.currentState == Lifecycle.State.RESUMED)
             {
