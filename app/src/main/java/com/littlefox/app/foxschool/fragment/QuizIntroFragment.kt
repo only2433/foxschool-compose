@@ -20,6 +20,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.viewmodel.QuizFragmentDataObserver
 import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.QuizFragmentViewModel
 import com.littlefox.library.view.dialog.ProgressWheel
 import com.littlefox.library.view.text.SeparateTextView
 import com.littlefox.logmonitor.Log
@@ -38,6 +39,7 @@ class QuizIntroFragment : Fragment()
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
     private val factoryViewModel: QuizFactoryViewModel by activityViewModels()
+    private val fragmentViewModel: QuizFragmentViewModel by activityViewModels()
 
     fun getInstance() : QuizIntroFragment
     {
@@ -110,11 +112,11 @@ class QuizIntroFragment : Fragment()
     }
     private fun setupObserverViewModel()
     {
-        factoryViewModel.loadingComplete.observe(viewLifecycleOwner) {
+        fragmentViewModel.loadingComplete.observe(viewLifecycleOwner) {
             loadingComplete()
         }
 
-        factoryViewModel.setTitle.observe(viewLifecycleOwner) {data ->
+        fragmentViewModel.setTitle.observe(viewLifecycleOwner) {data ->
             setTitle(data.first, data.second)
         }
     }

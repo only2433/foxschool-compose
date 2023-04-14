@@ -139,7 +139,7 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
     override fun init(context : Context)
     {
         mContext = context
-        fragmentViewModel = ViewModelProviders.of(mContext as AppCompatActivity).get(
+        fragmentViewModel = ViewModelProvider(mContext as AppCompatActivity).get(
             FlashcardFragmentViewModel::class.java)
         setupViewModelObserver()
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
@@ -764,8 +764,8 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                     initBookmarkFlashcard()
                     mFlashcardSelectionPagerAdapter.addStudyDataFragment(mCurrentBookmarkCardList!!)
                 }
-                _settingBaseControlView.value = mCurrentFlashcardStatus
                 fragmentViewModel.onSettingFlashcardView(mCurrentFlashcardStudyType!!)
+                _settingBaseControlView.value = mCurrentFlashcardStatus
                 _nextPageView.call()
             }
 

@@ -17,6 +17,7 @@ import com.littlefox.app.foxschool.adapter.QuizSelectionPagerAdapter
 import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.QuizApiViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.QuizFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
@@ -90,18 +91,6 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
     private val _dialogWarningText = SingleLiveEvent<String>()
     val dialogWarningText: LiveData<String> get() = _dialogWarningText
 
-    //Fragment
-    private val _setTitle = MutableLiveData<Pair<String, String>>()
-    val setTitle: LiveData<Pair<String, String>> = _setTitle
-
-    private val _loadingComplete = MutableLiveData<Unit>()
-    val loadingComplete: LiveData<Unit> = _loadingComplete
-
-    private val _resultData = MutableLiveData<QuizResultViewData>()
-    val resultData: LiveData<QuizResultViewData> = _resultData
-
-    private val _enableSaveButton = MutableLiveData<Unit>()
-    val enableSaveButton: LiveData<Unit> = _enableSaveButton
 
     private lateinit var mContext : Context
 
@@ -151,10 +140,13 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
     private var mAudioAttributes : AudioAttributes? = null
     private var mMainExampleSoundIndex : Int = 0
     private var mQuizPlayTimerJob: Job? = null
+    private lateinit var fragmentViewModel: QuizFragmentViewModel
 
     override fun init(context : Context)
     {
         mContext = context
+        fragmentViewModel = ViewModelProvider(mContext as AppCompatActivity).get(
+            QuizFragmentViewModel::class.java)
         mQuizIntentParamsObject = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_QUIZ_PARAMS)!!
         mQuizUserSelectObjectList = ArrayList()
         mQuizSelectionPagerAdapter = QuizSelectionPagerAdapter(
@@ -223,9 +215,10 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                             Log.f("Main Example Text Question - " + mQuizInformationResult!!.getTitle())
                         }
                     }
-                    _setTitle.value = Pair(
+                    fragmentViewModel.onSetTitle(
                         mQuizInformationResult!!.getTitle(),
-                        mQuizInformationResult!!.getSubTitle())
+                        mQuizInformationResult!!.getSubTitle()
+                    )
                 }
             }
         }
@@ -292,7 +285,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                         else if(code == RequestCode.CODE_QUIZ_RECORD_SAVE)
                         {
                             Log.f("FAIL ASYNC_CODE_QUIZ_SAVE_RECORD")
-                            _enableSaveButton.postValue(Unit)
+                            fragmentViewModel.onShowSaveButton()
                            _dialogWarningText.value = result.message
                         }
                     }
@@ -782,7 +775,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
      */
     private fun readyToPlay()
     {
-        _loadingComplete.postValue(Unit)
+        fragmentViewModel.onLoadingComplete()
         initTaskBoxInformation()
     }
 
@@ -826,7 +819,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
         else if(mCurrentQuizPageIndex == mQuizPlayingCount)
         {
             enableTimer(false)
-            _resultData.value = QuizResultViewData(mQuizPlayingCount, mCorrectAnswerCount)
+            fragmentViewModel.onSetResultData(
+                QuizResultViewData(mQuizPlayingCount, mCorrectAnswerCount)
+            )
             viewModelScope.launch(Dispatchers.Main) {
                 delay(Common.DURATION_NORMAL)
                 playResultByQuizCorrect()
@@ -854,7 +849,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
             enableTimer(false)
             Log.f("Quiz End Not All Solved. Limit Time")
             _hideAnswerView.call()
-            _resultData.value = QuizResultViewData(mQuizPlayingCount, mCorrectAnswerCount)
+            fragmentViewModel.onSetResultData(
+                QuizResultViewData(mQuizPlayingCount, mCorrectAnswerCount)
+            )
             _forceChangePageView.value = mQuizDisplayFragmentList.size - 1
             viewModelScope.launch(Dispatchers.Main) {
                 delay(Common.DURATION_NORMAL)

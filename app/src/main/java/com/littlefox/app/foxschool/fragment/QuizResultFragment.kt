@@ -18,6 +18,7 @@ import butterknife.OnClick
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.QuizFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.QuizFragmentViewModel
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizResultViewData
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
@@ -79,6 +80,7 @@ class QuizResultFragment : Fragment()
     private var mQuizTotalCount : Int   = -1
     private var mQuizCorrectCount : Int = -1
     private val factoryViewModel: QuizFactoryViewModel by activityViewModels()
+    private val fragmentViewModel: QuizFragmentViewModel by activityViewModels()
 
     fun getInstance() : QuizResultFragment
     {
@@ -172,13 +174,12 @@ class QuizResultFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        factoryViewModel.resultData.observe(viewLifecycleOwner) { data ->
+        fragmentViewModel.resultData.observe(viewLifecycleOwner) { data ->
             setResultInformation(data)
         }
-        factoryViewModel.enableSaveButton.observe(viewLifecycleOwner) {
+        fragmentViewModel.showSaveButton.observe(viewLifecycleOwner) {
             enableSaveButton()
         }
-        factoryViewModel
     }
 
     /** 결과 */
