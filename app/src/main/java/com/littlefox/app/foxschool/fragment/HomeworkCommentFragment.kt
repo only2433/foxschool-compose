@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import butterknife.*
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -77,6 +78,7 @@ class HomeworkCommentFragment : Fragment()
     private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
 
     private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -178,12 +180,12 @@ class HomeworkCommentFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 코멘트 적용
-        factoryViewModel.commentData.observe(viewLifecycleOwner, { comment ->
+        fragmentViewModel.commentData.observe(viewLifecycleOwner, { comment ->
             mComment = comment
         })
 
         // 페이지 세팅
-        factoryViewModel.settingCommentPage.observe(viewLifecycleOwner, { pair ->
+        fragmentViewModel.settingStudentCommentPage.observe(viewLifecycleOwner, { pair ->
             clearScreenData() // 화면 초기화
             isCompleted = pair.second
             settingPageType(pair.first)

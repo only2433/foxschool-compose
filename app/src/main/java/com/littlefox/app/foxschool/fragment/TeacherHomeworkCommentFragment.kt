@@ -157,7 +157,7 @@ class TeacherHomeworkCommentFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 페이지 세팅
-        fragmentViewModel.settingCommentPage.observe(viewLifecycleOwner) { pair ->
+        fragmentViewModel.settingTeacherCommentPage.observe(viewLifecycleOwner) {pair ->
             val commentType = pair.first
             val comment = pair.second
 

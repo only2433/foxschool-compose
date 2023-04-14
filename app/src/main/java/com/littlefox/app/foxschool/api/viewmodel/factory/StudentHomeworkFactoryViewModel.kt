@@ -51,15 +51,6 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     private val _currentViewPage = SingleLiveEvent<Pair<Int, HomeworkCommentType?>>()
     val currentViewPage: LiveData<Pair<Int, HomeworkCommentType?>> get() = _currentViewPage
 
-    private val _commentData =  SingleLiveEvent<String>()
-    val commentData: LiveData<String> get() = _commentData
-
-    private val _settingCommentPage = SingleLiveEvent<Pair<HomeworkCommentType, Boolean>>()
-    val settingCommentPage: LiveData<Pair<HomeworkCommentType, Boolean>> get() = _settingCommentPage
-
-    private val _calendarData = SingleLiveEvent<HomeworkCalendarBaseResult>()
-    val calendarData: LiveData<HomeworkCalendarBaseResult> get() = _calendarData
-
     private val _showRecordPermissionDialog = SingleLiveEvent<Void>()
     val showRecordPermissionDialog: LiveData<Void> get() = _showRecordPermissionDialog
 
@@ -140,7 +131,7 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 data?.let {
                     val items = data as HomeworkCalendarBaseResult
                     mHomeworkCalendarBaseResult = items
-                    _calendarData.value = items
+                    fragmentViewModel.onSettingCalendarData(items)
                 }
             }
         }
@@ -402,22 +393,22 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     /** ===================== [숙제 현황] 리스트 ======================== */
     fun onClickStudentCommentButton()
     {
-        Log.f("onClick Student Comment")
+        Log.f("onClick Student Comment - 학생용 ( 학생 코멘트 보기 )")
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_STUDENT
         _currentViewPage.value = Pair(mPagePosition, mCommentType)
-        _commentData.value = mHomeworkDetailBaseResult!!.getStudentComment()
-        _settingCommentPage.value = Pair(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+        fragmentViewModel.onSetCommentData(mHomeworkDetailBaseResult!!.getStudentComment())
+        fragmentViewModel.onSettingStudentCommentPage(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
     }
 
     fun onClickTeacherCommentButton()
     {
-        Log.f("onClick Teacher Comment")
+        Log.f("onClick Teacher Comment - 학생용 ( 선생님 코멘트 보기 )")
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_TEACHER
         _currentViewPage.value = Pair(mPagePosition, mCommentType)
-        _commentData.value = mHomeworkDetailBaseResult!!.getTeacherComment()
-        _settingCommentPage.value = Pair(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
+        fragmentViewModel.onSetCommentData(mHomeworkDetailBaseResult!!.getTeacherComment())
+        fragmentViewModel.onSettingStudentCommentPage(mCommentType, mHomeworkDetailBaseResult!!.isEvaluationComplete())
     }
 
     fun onClickHomeworkItem(item : HomeworkDetailItemData)

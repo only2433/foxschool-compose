@@ -23,6 +23,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBase
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -98,6 +99,7 @@ class HomeworkCalendarFragment : Fragment()
     private var mLastClickTime : Long = 0L              // 중복클릭 방지용
 
     private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -213,7 +215,7 @@ class HomeworkCalendarFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 달력 아이템
-        factoryViewModel.calendarData.observe(viewLifecycleOwner, Observer {result ->
+        fragmentViewModel.calendarData.observe(viewLifecycleOwner, Observer {result ->
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()

@@ -498,7 +498,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_STUDENT
         _currentViewCommentPage.value = Pair(mPagePosition, mCommentType)
-        fragmentViewModel.onSettingCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getStudentComment())
+        fragmentViewModel.onSettingTeacherCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getStudentComment())
     }
 
     fun onClickTeacherCommentButton()
@@ -508,7 +508,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_TEACHER
         _currentViewCommentPage.value = Pair(mPagePosition, mCommentType)
-        fragmentViewModel.onSettingCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getTeacherComment())
+        fragmentViewModel.onSettingTeacherCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getTeacherComment())
     }
 
     // 숙제목록 클릭 이벤트 (컨텐츠 이동)
