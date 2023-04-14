@@ -154,7 +154,7 @@ class FlashCardActivity : BaseActivity()
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    fun initView()
+    override fun initView()
     {
         settingCoachMarkImage()
         _FlashcardBaseViewPager.isSaveFromParentEnabled = false
@@ -172,7 +172,7 @@ class FlashCardActivity : BaseActivity()
         }
     }
 
-    fun initFont()
+    override fun initFont()
     {
         _SoundOffMessageText.typeface = Font.getInstance(this).getTypefaceRegular()
         _AutoModeText.typeface = Font.getInstance(this).getTypefaceRegular()
@@ -181,7 +181,7 @@ class FlashCardActivity : BaseActivity()
         _ShuffleModeText.typeface = Font.getInstance(this).getTypefaceRegular()
     }
 
-    fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if(loading)

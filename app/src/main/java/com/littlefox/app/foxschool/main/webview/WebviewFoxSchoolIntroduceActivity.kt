@@ -104,7 +104,7 @@ class WebviewFoxSchoolIntroduceActivity : BaseActivity()
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    private fun initView()
+    override fun initView()
     {
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_1fb77c))
         _TitleBaseLayout.setBackgroundColor(resources.getColor(R.color.color_23cc8a))

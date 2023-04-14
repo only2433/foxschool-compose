@@ -100,7 +100,7 @@ class WebviewPolicyTermsActivity : BaseActivity()
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    private fun initView()
+    override fun initView()
     {
         settingLayoutColor()
         _CloseButton.visibility = View.VISIBLE

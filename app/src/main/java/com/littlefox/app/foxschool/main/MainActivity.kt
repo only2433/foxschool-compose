@@ -207,7 +207,7 @@ class MainActivity() : BaseActivity()
         factoryViewModel.destroy()
     }
 
-    private fun initView()
+    override fun initView()
     {
         setStatusBarColor()
         setIndicatorBarColor()
@@ -238,7 +238,7 @@ class MainActivity() : BaseActivity()
         }
     }
 
-    private fun initFont()
+    override fun initFont()
     {
         _UserNameText.typeface = Font.getInstance(this).getTypefaceMedium()
         _UserInfoButtonText.typeface = Font.getInstance(this).getTypefaceMedium()
@@ -273,7 +273,7 @@ class MainActivity() : BaseActivity()
         }
     }
 
-    private fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if (loading)

@@ -416,7 +416,7 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
         super.onBackPressed()
     }
 
-    private fun initView()
+    override fun initView()
     {
         initFadeControllerView()
         changeLayout()
@@ -430,7 +430,7 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
         initSeekbar()
     }
 
-    private fun initFont()
+    override fun initFont()
     {
         _PlayerTopTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
         _PlayerCaptionTitle.setTypeface(Font.getInstance(this).getTypefaceMedium())
@@ -450,7 +450,7 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
         }
     }
 
-    private fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if(loading)

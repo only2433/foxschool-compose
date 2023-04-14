@@ -8,8 +8,10 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.viewModels
 import butterknife.*
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.AppUseGuideFactoryViewModel
 import com.littlefox.app.foxschool.`object`.result.main.CompanyInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -20,8 +22,10 @@ import com.littlefox.app.foxschool.main.contract.AppUseGuideContract
 import com.littlefox.app.foxschool.main.presenter.AppUseGuidePresenter
 import com.littlefox.library.view.text.SeparateTextView
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
-class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
+@AndroidEntryPoint
+class AppUseGuideActivity : BaseActivity()
 {
     @BindView(R.id._titleBaselayout)
     lateinit var _TitleBaselayout : ScalableLayout
@@ -87,7 +91,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
     )
     lateinit var _KoreaCompanyInformationNameTextList : List<@JvmSuppressWildcards TextView>
 
-    private lateinit var mAppUseGuidePresenter : AppUseGuidePresenter
+    private val factoryViewModel : AppUseGuideFactoryViewModel by viewModels()
 
     /** ========== LifeCycle ========== */
     @SuppressLint("SourceLockedOrientationActivity")
@@ -106,25 +110,28 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         }
         ButterKnife.bind(this)
 
-        mAppUseGuidePresenter = AppUseGuidePresenter(this)
+        initView()
+        initFont()
+        setupObserverViewModel()
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mAppUseGuidePresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mAppUseGuidePresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mAppUseGuidePresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -162,6 +169,17 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         }
     }
 
+    override fun setupObserverViewModel()
+    {
+        factoryViewModel.appVersion.observe(this){ data ->
+            setAppVersion(data)
+        }
+
+        factoryViewModel.companyInformation.observe(this){ data ->
+            setCompanyInformationLayout(data)
+        }
+    }
+
     /**
      * 상단바 색상 설정
      */
@@ -175,7 +193,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
 
     /** ========== Init end ========== */
 
-    override fun setCompanyInformationLayout(result : CompanyInformationResult?)
+    fun setCompanyInformationLayout(result : CompanyInformationResult?)
     {
         if(result != null)
         {
@@ -190,7 +208,7 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         }
     }
 
-    override fun setAppVersion(result : VersionDataResult?)
+    fun setAppVersion(result : VersionDataResult?)
     {
         _VersionText.setSeparateText(
             resources.getString(R.string.text_version),
@@ -199,22 +217,6 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
                 resources.getColor(R.color.color_444444),
                 resources.getColor(R.color.color_29c8e6)
             ).showView()
-    }
-
-    override fun showLoading()
-    {
-    }
-
-    override fun hideLoading()
-    {
-    }
-
-    override fun showSuccessMessage(message : String)
-    {
-    }
-
-    override fun showErrorMessage(message : String)
-    {
     }
 
     @Optional
@@ -228,8 +230,8 @@ class AppUseGuideActivity : BaseActivity(), AppUseGuideContract.View
         when(view.id)
         {
             R.id._closeButtonRect -> super.onBackPressed()
-            R.id._termsOfServiceButton -> mAppUseGuidePresenter.onClickTermsOfService()
-            R.id._privacyPolicyButton -> mAppUseGuidePresenter.onClickPrivacyPolicy()
+            R.id._termsOfServiceButton -> factoryViewModel.onClickTermsOfService()
+            R.id._privacyPolicyButton -> factoryViewModel.onClickPrivacyPolicy()
         }
     }
 

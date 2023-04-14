@@ -145,12 +145,12 @@ class IntroActivity : BaseActivity()
         stopFrameAnimation()
     }
 
-    fun initView()
+    override fun initView()
     {
         _IntroLogoTextImage.setOnTouchListener(mLogoTouchListener)
     }
 
-    fun initFont()
+    override fun initFont()
     {
         _IntroTitleText.setTypeface(Font.getInstance(this).getTypefaceBold())
         _IntroProgressText.setTypeface(Font.getInstance(this).getTypefaceBold())
@@ -158,7 +158,7 @@ class IntroActivity : BaseActivity()
         _LoginTextButton.setTypeface(Font.getInstance(this).getTypefaceBold())
     }
 
-    fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if(loading)

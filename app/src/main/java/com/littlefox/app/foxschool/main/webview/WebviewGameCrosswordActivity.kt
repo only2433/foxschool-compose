@@ -112,7 +112,7 @@ class WebviewGameCrosswordActivity : BaseActivity(), MessageHandlerCallback
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    private fun initView()
+    override fun initView()
     {
         CommonUtils.getInstance(this).setStatusBar(resources.getColor(R.color.color_000000))
         _TitleBaseLayout.visibility = View.GONE

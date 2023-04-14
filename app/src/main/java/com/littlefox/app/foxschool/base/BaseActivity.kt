@@ -58,4 +58,9 @@ open class BaseActivity : AppCompatActivity()
         mMaterialLoadingDialog = null
     }
 
+    open fun initView() {}
+    open fun initFont() {}
+
+    open fun setupObserverViewModel(){}
+
 }

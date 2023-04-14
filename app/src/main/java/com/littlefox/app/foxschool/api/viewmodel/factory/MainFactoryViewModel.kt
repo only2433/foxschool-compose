@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.data.iac.AwakeItemData
@@ -30,6 +31,9 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -289,28 +293,38 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     fun onClickMenuMyInformation()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.MY_INFORMATION)
-            .setData("N")
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.MY_INFORMATION)
+                .setData("N")
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION).startActivity()
+        }
     }
 
     fun onClickMenuLearningLog()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.WEBVIEW_LEARNING_LOG)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_LEARNING_LOG)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+
     }
 
     fun onClickRecordHistory()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.RECORD_HISTORY)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.RECORD_HISTORY)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
     }
 
     fun onClickMenuHomeworkManage()
@@ -322,10 +336,13 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
             if(mLoginInformationResult!!.getSchoolInformation().isHaveClass())
             {
                 // 학급정보 있는 경우 화면 이동
-                IntentManagementFactory.getInstance()
-                    .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
-                    .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-                    .startActivity()
+                viewModelScope.launch(Dispatchers.Main) {
+                    delay(Common.DURATION_SHORT)
+                    IntentManagementFactory.getInstance()
+                        .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
+                        .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                        .startActivity()
+                }
             }
             else
             {
@@ -338,10 +355,13 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
             if(mLoginInformationResult!!.getUserInformation().isHaveClass())
             {
                 // 학급정보 있는 경우 화면 이동
-                IntentManagementFactory.getInstance()
-                    .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
-                    .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-                    .startActivity()
+                viewModelScope.launch(Dispatchers.Main) {
+                    delay(Common.DURATION_SHORT)
+                    IntentManagementFactory.getInstance()
+                        .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
+                        .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                        .startActivity()
+                }
             }
             else
             {
@@ -353,37 +373,49 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     fun onClickFoxschoolNews()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.FOXSCHOOL_NEWS)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.FOXSCHOOL_NEWS)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
     }
 
     fun onClickMenuFAQ()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.FAQS)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.FAQS)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
     }
 
     fun onClickMenu1On1Ask()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.INQUIRE)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.INQUIRE)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
     }
 
     fun onClickMenuAppUseGuide()
     {
         Log.f("")
-        IntentManagementFactory.getInstance()
-            .readyActivityMode(ActivityMode.APP_USE_GUIDE)
-            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .startActivity()
+        viewModelScope.launch(Dispatchers.Main) {
+            delay(Common.DURATION_SHORT)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.APP_USE_GUIDE)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
     }
 
     fun onClickMenuTeacherManual()

@@ -135,7 +135,7 @@ class QuizActivity : BaseActivity()
     /** ========== LifeCycle ========== */
 
     /** ========== Init ========== */
-    fun initView()
+    override fun initView()
     {
         settingLayoutColor()
         settingTaskBoxLayout()
@@ -153,7 +153,7 @@ class QuizActivity : BaseActivity()
         }
     }
 
-    fun initFont()
+    override fun initFont()
     {
         _QuizTitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _QuizTimerTitle.typeface = Font.getInstance(this).getTypefaceMedium()
@@ -162,7 +162,7 @@ class QuizActivity : BaseActivity()
         _QuizAnswerCountText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
 
-    fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if(loading)

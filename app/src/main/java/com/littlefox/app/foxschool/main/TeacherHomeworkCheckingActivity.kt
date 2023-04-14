@@ -129,7 +129,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
     /** LifeCycle end **/
 
     /** Init **/
-    private fun initView()
+    override fun initView()
     {
         settingLayoutColor()
         _TitleText.text = resources.getString(R.string.text_homework_check)
@@ -138,7 +138,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
         _CommentEditText.addTextChangedListener(mEditTextChangeListener)
     }
 
-    private fun initFont()
+    override fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _HomeworkEvalTextList.forEach {
@@ -157,7 +157,7 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
         _TitleBaselayout.setBackgroundColor(resources.getColor(R.color.color_29c8e6))
     }
 
-    private fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
             if (loading)

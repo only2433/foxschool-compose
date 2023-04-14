@@ -121,7 +121,7 @@ class WebviewLearningLogActivity : BaseActivity(), MessageHandlerCallback
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    private fun initView()
+    override fun initView()
     {
         settingLayoutColor()
         _CloseButton.visibility = View.VISIBLE

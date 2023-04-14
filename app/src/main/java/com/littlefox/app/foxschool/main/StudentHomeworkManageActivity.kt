@@ -130,13 +130,13 @@ class StudentHomeworkManageActivity : BaseActivity()
     /** LifeCycle end **/
 
     /** Init **/
-    private fun initView()
+    override fun initView()
     {
         settingLayoutColor()
         setTitleView(Common.PAGE_HOMEWORK_CALENDAR)
     }
 
-    private fun initFont()
+    override fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
@@ -148,7 +148,7 @@ class StudentHomeworkManageActivity : BaseActivity()
         settingViewPagerController()
     }
 
-    private fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
             if (loading)

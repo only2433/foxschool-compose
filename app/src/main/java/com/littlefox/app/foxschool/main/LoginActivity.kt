@@ -198,7 +198,7 @@ class LoginActivity : BaseActivity()
     /** ========== LifeCycle end ========== */
 
     /** ========== Init ========== */
-    private fun initView()
+    override fun initView()
     {
         _TitleText.text = resources.getString(R.string.text_login)
         _CloseButton.visibility = View.VISIBLE
@@ -213,7 +213,7 @@ class LoginActivity : BaseActivity()
         _InputPasswordEditText.setOnEditorActionListener(mEditKeyActionListener)
     }
 
-    private fun initFont()
+    override fun initFont()
     {
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
         _InputIdEditText.typeface = Font.getInstance(this).getTypefaceRegular()
@@ -227,7 +227,7 @@ class LoginActivity : BaseActivity()
         _CustomerCenterInfoText.typeface = Font.getInstance(this).getTypefaceMedium()
     }
 
-    private fun setupObserverViewModel()
+    override fun setupObserverViewModel()
     {
         factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
             if (loading)
