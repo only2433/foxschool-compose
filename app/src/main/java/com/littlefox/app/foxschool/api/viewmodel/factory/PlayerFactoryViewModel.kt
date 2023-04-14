@@ -371,7 +371,8 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)!!
         mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
-        Log.f("list size : " + mPlayInformationList.size + ", isOptionDisable :" + mPlayInformationList[0].isOptionDisable())
+        Log.f("list size : ${mPlayInformationList.size} , isOptionDisable : ${mPlayInformationList[0].isOptionDisable()} " +
+                ", homeworkNumber : ${mPlayerIntentParamsObject.getHomeworkNumber()}")
         mCurrentPlayMovieIndex = 0
 
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()

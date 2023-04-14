@@ -172,8 +172,16 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         }
     }
 
-    suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String) = safeApiCall {
-        remote.savePlayerStudyAsync(contentID, playType, playTime)
+    suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String, homeworkNumber : Int) = safeApiCall {
+        if(homeworkNumber != 0)
+        {
+            remote.savePlayerStudyAsync(contentID, playType, playTime, homeworkNumber)
+        }
+        else
+        {
+            remote.savePlayerStudyAsync(contentID, playType, playTime)
+        }
+
     }
 
     suspend fun addBookshelfContents(bookshelfID: String, contentsList: ArrayList<ContentsBaseResult>) = safeApiCall {

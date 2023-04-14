@@ -7,9 +7,7 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
@@ -23,6 +21,7 @@ import com.littlefox.app.foxschool.adapter.TeacherHomeworkPagerAdapter
 import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.TeacherHomeworkApiViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.*
@@ -53,30 +52,6 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
 
     private val _currentViewCommentPage = SingleLiveEvent<Pair<Int, HomeworkCommentType?>>()
     val currentViewCommentPage: LiveData<Pair<Int, HomeworkCommentType?>> get() = _currentViewCommentPage
-
-    private val _classData = SingleLiveEvent<ArrayList<TeacherClassItemData>>()
-    val classData: LiveData<ArrayList<TeacherClassItemData>> get() = _classData
-
-    private val _calendarData = SingleLiveEvent<HomeworkCalendarBaseResult>()
-    val calendarData: LiveData<HomeworkCalendarBaseResult> get() = _calendarData
-
-    private val _updateClassNameData = SingleLiveEvent<String>()
-    val updateClassNameData: LiveData<String> get() = _updateClassNameData
-
-    private val _updateHomeworkStatusData = SingleLiveEvent<HomeworkStatusBaseResult>()
-    val updateHomeworkStatusData: LiveData<HomeworkStatusBaseResult> get() = _updateHomeworkStatusData
-
-    private val _updateHomeworkListData = SingleLiveEvent<HomeworkDetailBaseResult>()
-    val updateHomeworkListData: LiveData<HomeworkDetailBaseResult> get() = _updateHomeworkListData
-
-    private val _settingCommentPage = SingleLiveEvent<Pair<HomeworkCommentType, String>>()
-    val settingCommentPage: LiveData<Pair<HomeworkCommentType, String>> get() = _settingCommentPage
-
-    private val _clearStatusList = SingleLiveEvent<Void>()
-    val clearStatusList: LiveData<Void> get() = _clearStatusList
-
-    private val _clearHomeworkList = SingleLiveEvent<Boolean>()
-    val clearHomeworkList: LiveData<Boolean> get() = _clearHomeworkList
 
     private val _showAudioPlayDialog = SingleLiveEvent<HomeworkDetailItemData>()
     val showAudioPlayDialog: LiveData<HomeworkDetailItemData> get() = _showAudioPlayDialog
@@ -112,10 +87,13 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     private var mMonth : String = ""
 
     private lateinit var mResultLauncherList : ArrayList<ActivityResultLauncher<Intent?>?>
+    private lateinit var fragmentViewModel : HomeworkFragmentViewModel
 
     override fun init(context : Context)
     {
         mContext = context
+        fragmentViewModel = ViewModelProvider(mContext as AppCompatActivity).get(
+            HomeworkFragmentViewModel::class.java)
         setupViewModelObserver()
 
         // set ViewPager
@@ -158,7 +136,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 data?.let {
                     val items = data as ArrayList<TeacherClassItemData>
                     mClassListBaseResult = items
-                    _classData.value = mClassListBaseResult!!
+                    fragmentViewModel.onSettingClassData(mClassListBaseResult!!)
 
                     requestClassCalendar() // 클래스 달력 통신 요청
                 }
@@ -171,7 +149,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 data?.let {
                     val items = data as HomeworkCalendarBaseResult
                     mHomeworkCalendarBaseResult = items
-                    _calendarData.value = items
+                    fragmentViewModel.onSettingCalendarData(items)
                 }
             }
         }
@@ -182,8 +160,8 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 data?.let {
                     val items = data as HomeworkStatusBaseResult
                     mHomeworkStatusBaseResult = items
-                    _updateClassNameData.value = mClassListBaseResult!![mClassIndex].getClassName()
-                    _updateHomeworkStatusData.value = mHomeworkStatusBaseResult!!
+                    fragmentViewModel.onUpdateClassName(mClassListBaseResult!![mClassIndex].getClassName())
+                    fragmentViewModel.onUpdateHomeworkStatusListScene(mHomeworkStatusBaseResult!!)
                 }
             }
         }
@@ -198,7 +176,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                         setFragmentTitle("$name 학생")
                         setFragmentType(mDetailType)
                     }
-                    _updateHomeworkListData.value = mHomeworkDetailBaseResult!!
+                    fragmentViewModel.onUpdateHomeworkListScene(mHomeworkDetailBaseResult!!)
                 }
             }
         }
@@ -212,7 +190,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                         setFragmentTitle(mClassListBaseResult!!.get(mClassIndex).getClassName())
                         setFragmentType(mDetailType)
                     }
-                    _updateHomeworkListData.value = mHomeworkDetailBaseResult!!
+                    fragmentViewModel.onUpdateHomeworkListScene(mHomeworkDetailBaseResult!!)
                 }
             }
         }
@@ -343,15 +321,13 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 Common.PAGE_HOMEWORK_CALENDAR ->
                 {
                     // 화면에 표시되는 데이터 초기화
-                    _clearStatusList.call()
-
+                    fragmentViewModel.onClearHomeworkStatusListScene()
                     requestClassList() // 클래스 리스트 통신 요청
                 }
                 Common.PAGE_HOMEWORK_STATUS ->
                 {
                     // 숙제 리스트 초기화
-                    _clearHomeworkList.value = true
-
+                    fragmentViewModel.onClearHomeworkListScene(true)
                     requestStatusList() // 숙제 현황 통신 요청
                 }
                 Common.PAGE_HOMEWORK_DETAIL ->
@@ -522,7 +498,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_STUDENT
         _currentViewCommentPage.value = Pair(mPagePosition, mCommentType)
-        _settingCommentPage.value = Pair(mCommentType, mHomeworkDetailBaseResult!!.getStudentComment())
+        fragmentViewModel.onSettingCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getStudentComment())
     }
 
     fun onClickTeacherCommentButton()
@@ -532,7 +508,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mPagePosition = Common.PAGE_HOMEWORK_COMMENT
         mCommentType = HomeworkCommentType.COMMENT_TEACHER
         _currentViewCommentPage.value = Pair(mPagePosition, mCommentType)
-        _settingCommentPage.value = Pair(mCommentType, mHomeworkDetailBaseResult!!.getTeacherComment())
+        fragmentViewModel.onSettingCommentPage(mCommentType, mHomeworkDetailBaseResult!!.getTeacherComment())
     }
 
     // 숙제목록 클릭 이벤트 (컨텐츠 이동)

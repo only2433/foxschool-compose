@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import butterknife.*
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
@@ -60,7 +60,7 @@ class TeacherHomeworkCommentFragment : Fragment()
 
     private var mComment : String = ""                  // 통신에서 응답받은 학습자/선생님 한마디
 
-    private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -157,14 +157,14 @@ class TeacherHomeworkCommentFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 페이지 세팅
-        factoryViewModel.settingCommentPage.observe(viewLifecycleOwner, { pair ->
+        fragmentViewModel.settingCommentPage.observe(viewLifecycleOwner) { pair ->
             val commentType = pair.first
             val comment = pair.second
 
             mComment = comment
             clearScreenData() // 화면 초기화
             settingPageType(commentType)
-        })
+        }
     }
 
     /**

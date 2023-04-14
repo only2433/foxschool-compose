@@ -15,7 +15,6 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.*
@@ -26,6 +25,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.HomeworkCalendarBase
 import com.littlefox.app.foxschool.adapter.CalendarItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -120,6 +120,7 @@ class TeacherHomeworkCalendarFragment : Fragment()
     // ----------------------------------------------
 
     private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -245,20 +246,20 @@ class TeacherHomeworkCalendarFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 달력 아이템
-        factoryViewModel.calendarData.observe(viewLifecycleOwner, Observer {result ->
+        fragmentViewModel.calendarData.observe(viewLifecycleOwner){ result ->
             mHomeworkCalendarBaseResult = result
             makeCalendarItemList()
             setCalendarTitle()
             setCalendarButton()
-        })
+        }
 
         // 학급 데이터
-        factoryViewModel.classData.observe(viewLifecycleOwner, Observer {classData ->
+        fragmentViewModel.classData.observe(viewLifecycleOwner){ classData ->
             mClassNameList = Array<String>(classData!!.size) { index ->
                 classData[index].getClassName()
             }
             setClassName(mClassNameList!![mClassIndex])
-        })
+        }
     }
 
     /**

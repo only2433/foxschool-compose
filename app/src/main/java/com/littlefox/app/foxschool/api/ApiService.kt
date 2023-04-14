@@ -77,7 +77,8 @@ interface ApiService
     suspend fun savePlayerStudyAsync(
         @Field("content_id") contentsID: String,
         @Field("play_type") playType: String,
-        @Field("play_time") playTime: String
+        @Field("play_time") playTime: String,
+        @Field("hw_no") homeworkNumber : Int? = null
     ) : Response<BaseResponse<Nothing>>
 
     @FormUrlEncoded

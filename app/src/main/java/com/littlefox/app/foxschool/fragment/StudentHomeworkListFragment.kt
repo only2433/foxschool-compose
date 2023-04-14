@@ -27,6 +27,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetai
 import com.littlefox.app.foxschool.adapter.HomeworkItemViewAdapter
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -141,6 +142,7 @@ class StudentHomeworkListFragment : Fragment()
     private var isListAnimationEffect : Boolean = true  // 숙제현황 리스트 애니메이션 활성 플래그 || 디폴트 : 애니메이션 활성화
 
     private val factoryViewModel : StudentHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -243,15 +245,15 @@ class StudentHomeworkListFragment : Fragment()
     private fun setupObserverViewModel()
     {
         // 숙제현황 데이터
-        factoryViewModel.updateHomeworkListData.observe(viewLifecycleOwner, { item ->
+        fragmentViewModel.updateHomeworkListData.observe(viewLifecycleOwner) { item ->
             mHomeworkDetailBaseResult = item
             updateHomeworkListData()
-        })
+        }
 
         // 숙제 현황 화면 초기화
-        factoryViewModel.clearHomeworkList.observe(viewLifecycleOwner, { allClear ->
+        fragmentViewModel.clearHomeworkListData.observe(viewLifecycleOwner) { allClear ->
             clearScreenData(allClear)
-        })
+        }
     }
 
     /**

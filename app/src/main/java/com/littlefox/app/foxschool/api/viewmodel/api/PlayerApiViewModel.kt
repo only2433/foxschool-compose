@@ -51,9 +51,9 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
         enqueueCommandEnd()
     }
 
-    private suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String)
+    private suspend fun savePlayerStudyLog(contentID: String, playType: String, playTime: String, homeworkNumber: Int)
     {
-        val result = repository.savePlayerStudyLog(contentID, playType, playTime)
+        val result = repository.savePlayerStudyLog(contentID, playType, playTime, homeworkNumber)
         withContext(Dispatchers.Main)
         {
             when(result)
@@ -117,8 +117,9 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                     savePlayerStudyLog(
                         data.objects[0] as String,
                         data.objects[1] as String,
-                        data.objects[2] as String
-                    )
+                        data.objects[2] as String,
+                        data.objects[3] as Int
+                     )
                 }
             }
             RequestCode.CODE_BOOKSHELF_CONTENTS_ADD ->

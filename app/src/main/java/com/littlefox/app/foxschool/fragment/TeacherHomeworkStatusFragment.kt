@@ -19,6 +19,7 @@ import com.littlefox.app.foxschool.`object`.result.homework.status.HomeworkStatu
 import com.littlefox.app.foxschool.adapter.HomeworkStatusItemListAdapter
 import com.littlefox.app.foxschool.adapter.listener.HomeworkStatusItemListener
 import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
@@ -69,6 +70,7 @@ class TeacherHomeworkStatusFragment : Fragment()
     private var mHomeworkDate : String = ""             // 숙제기간
 
     private val factoryViewModel : TeacherHomeworkFactoryViewModel by activityViewModels()
+    private val fragmentViewModel : HomeworkFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -157,21 +159,21 @@ class TeacherHomeworkStatusFragment : Fragment()
 
     private fun setupObserverViewModel()
     {
-        factoryViewModel.updateClassNameData.observe(viewLifecycleOwner, { className ->
+        fragmentViewModel.updateClassNameData.observe(viewLifecycleOwner) { className ->
             mClassName = className
-        })
+        }
 
-        factoryViewModel.updateHomeworkStatusData.observe(viewLifecycleOwner, { item ->
+        fragmentViewModel.updateHomeworkStatusListData.observe(viewLifecycleOwner) { item ->
             mHomeworkStatusBaseResult = item
             mHomeworkStatusList.clear()
             mHomeworkStatusList.addAll(mHomeworkStatusBaseResult!!.getStudentStatusItemList()!!)
             updateStatusListData()
-        })
+        }
 
         // 화면 초기화
-        factoryViewModel.clearStatusList.observe(viewLifecycleOwner, {
+        fragmentViewModel.clearHomeworkStatusListData.observe(viewLifecycleOwner) {
             clearScreenData()
-        })
+        }
     }
 
     private fun setClassNameText()

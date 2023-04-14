@@ -186,7 +186,7 @@ class FlashCardIntroFragment : Fragment()
     /** ViewModel 옵저버 세팅 */
     private fun setupObserverViewModel()
     {
-        fragmentViewModel.introTitle.observe(viewLifecycleOwner){data ->
+        fragmentViewModel.introTitle.observe(viewLifecycleOwner){ data ->
             setTitle(data)
         }
         fragmentViewModel.closeHelpView.observe(viewLifecycleOwner){
