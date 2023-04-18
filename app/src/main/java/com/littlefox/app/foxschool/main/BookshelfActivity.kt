@@ -66,17 +66,17 @@ class BookshelfActivity : BaseActivity()
     @BindView(R.id._loadingProgressLayout)
     lateinit var _LoadingProgressLayout : ScalableLayout
 
-    @Nullable
+    @JvmField
     @BindView(R.id._fabToolbar)
-    lateinit var _FabToolbarLayout : FABToolbarLayout
+    var _FabToolbarLayout : FABToolbarLayout? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._floatingMenuButtonLayout)
-    lateinit var _FloatingMenuButtonLayout : RelativeLayout
+    var _FloatingMenuButtonLayout : RelativeLayout? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._floatingMenuButton)
-    lateinit var _FloatingMenuButton : FloatingActionButton
+    var _FloatingMenuButton : FloatingActionButton? = null
 
     @BindView(R.id._floatingMenuBarLayout)
     lateinit var _FloatingMenuBarLayout : ScalableLayout

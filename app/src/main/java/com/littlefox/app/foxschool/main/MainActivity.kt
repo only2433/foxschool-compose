@@ -49,9 +49,9 @@ class MainActivity() : BaseActivity()
     @BindView(R.id._mainContent)
     lateinit var _MainContentCoordinatorLayout : CoordinatorLayout
 
-    @Nullable
+    @JvmField
     @BindView(R.id._mainAppbarLayout)
-    lateinit var _MainAppbarLayout : AppBarLayout
+    var _MainAppbarLayout : AppBarLayout? = null
 
     @BindView(R.id._mainBackgroundView)
     lateinit var _MainBackgroundView : ImageView
@@ -59,21 +59,21 @@ class MainActivity() : BaseActivity()
     @BindView(R.id._mainBackgroundAnimationLayout)
     lateinit var _MainBackgroundAnimationLayout : FrameLayout
 
-    @Nullable
+    @JvmField
     @BindView(R.id._topMenuSetting)
-    lateinit var _TopMenuSetting : ImageView
+    var _TopMenuSetting : ImageView? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._topMenuSearch)
-    lateinit var _TopMenuSearch : ImageView
+    var _TopMenuSearch : ImageView? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._topMenuSchoolName)
-    lateinit var _TopMenuSchoolName : TextView
+    var _TopMenuSchoolName : TextView? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._mainToolBar)
-    lateinit var _MainToolbar : Toolbar
+    var _MainToolbar : Toolbar? = null
 
     @BindView(R.id._mainTabLayout)
     lateinit var _MainTabsLayout : TabLayout
@@ -247,7 +247,7 @@ class MainActivity() : BaseActivity()
         _HomeworkManageText.typeface = Font.getInstance(this).getTypefaceMedium()
         if (CommonUtils.getInstance(this).checkTablet)
         {
-            _TopMenuSchoolName.typeface = Font.getInstance(this).getTypefaceBold()
+            _TopMenuSchoolName?.typeface = Font.getInstance(this).getTypefaceBold()
         }
     }
 
@@ -433,7 +433,7 @@ class MainActivity() : BaseActivity()
 
         if (CommonUtils.getInstance(this).checkTablet)
         {
-            _TopMenuSchoolName.setText(schoolName)
+            _TopMenuSchoolName?.setText(schoolName)
         }
         else
         {
@@ -557,19 +557,21 @@ class MainActivity() : BaseActivity()
 
     private fun checkToolbarAnimationLayoutSize()
     {
-        _MainToolbar.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
+        _MainToolbar?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener
         {
             override fun onGlobalLayout()
             {
-                _MainToolbar.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                Log.f("Toolbar Height :${_MainToolbar.height}, _MainTabsLayout height : ${_MainTabsLayout.measuredHeight}")
-                var params : RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, _MainToolbar.height)
-                _MainBackgroundView.layoutParams = params
-                params = RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    _MainToolbar.height
-                )
-                _MainBackgroundAnimationLayout.layoutParams = params
+                _MainToolbar?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+                Log.f("Toolbar Height :${_MainToolbar?.height}, _MainTabsLayout height : ${_MainTabsLayout.measuredHeight}")
+                _MainToolbar?.let {
+                    var params : RelativeLayout.LayoutParams = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, it.height)
+                    _MainBackgroundView.layoutParams = params
+                    params = RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        it.height
+                    )
+                    _MainBackgroundAnimationLayout.layoutParams = params
+                }
             }
         })
     }
