@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.adapter.listener.ForumItemListener
 import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -25,7 +26,7 @@ import java.util.ArrayList
 class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
 {
     private var mDataList : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
-    private var mOnItemViewClickListener : OnItemViewClickListener? = null
+    private var mOnItemViewClickListener : ForumItemListener? = null
     private lateinit var mContext : Context
     private var mForumType : ForumType
 
@@ -40,7 +41,7 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         mDataList = dataList
     }
 
-    fun setOnItemViewClickListener(onItemViewClickListener : OnItemViewClickListener?)
+    fun setOnItemViewClickListener(onItemViewClickListener : ForumItemListener?)
     {
         mOnItemViewClickListener = onItemViewClickListener
     }
@@ -86,18 +87,18 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         {
             if (mDataList[position].isShowNewIcon())
             {
-                holder._NewItemImage.visibility = View.VISIBLE
+                holder._NewItemImage?.visibility = View.VISIBLE
             }
             else
             {
-                holder._NewItemImage.visibility = View.GONE
+                holder._NewItemImage?.visibility = View.GONE
             }
 
-            holder._DateText.setText(mDataList[position].getRegisterDate())
+            holder._DateText?.setText(mDataList[position].getRegisterDate())
         }
         holder._TitleText.setText(mDataList[position].getTitle())
         holder._BackgroundImage.setOnClickListener {
-            mOnItemViewClickListener?.onItemClick(position)
+            mOnItemViewClickListener?.onItemClick(mDataList[position].getForumId())
         }
     }
 
@@ -111,16 +112,16 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
         @BindView(R.id._backgroundImage)
         lateinit var _BackgroundImage : ImageView
 
-        @Nullable
+        @JvmField
         @BindView(R.id._newItemImage)
-        lateinit var _NewItemImage : ImageView
+        var _NewItemImage : ImageView? = null
 
         @BindView(R.id._titleText)
         lateinit var _TitleText : TextView
 
-        @Nullable
+        @JvmField
         @BindView(R.id._dateText)
-        lateinit var _DateText : TextView
+        var _DateText : TextView? = null
 
         constructor(view : View) : super(view)
         {
@@ -134,7 +135,7 @@ class ForumListAdapter : RecyclerView.Adapter<ForumListAdapter.ViewHolder?>
             // [팍스스쿨 소식]에서만 보이는 항목
             if (mForumType == ForumType.FOXSCHOOL_NEWS)
             {
-                _DateText.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
+                _DateText?.setTypeface(Font.getInstance(mContext).getTypefaceRegular())
             }
         }
     }

@@ -27,7 +27,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/_forumListView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
         </com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 

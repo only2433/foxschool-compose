@@ -31,6 +31,7 @@ import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
 import com.littlefox.app.foxschool.api.viewmodel.ForumListViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ForumType
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
 import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
 import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
@@ -54,7 +55,8 @@ class ForumListFragment : Fragment()
     @BindView(R.id._forumListView)
     lateinit var _ForumListView : RecyclerView
 
-
+    @BindView(R.id._progressWheelLayout)
+    lateinit var _ProgressWheelLayout: ScalableLayout
 
     companion object
     {
@@ -104,7 +106,6 @@ class ForumListFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initForumListView()
-        getForumList()
     }
 
     override fun onActivityCreated(savedInstanceState : Bundle?)
@@ -153,9 +154,10 @@ class ForumListFragment : Fragment()
             params.addRule(RelativeLayout.CENTER_HORIZONTAL)
             _ForumSwipeRefreshLayout.setLayoutParams(params)
         }
+        _ProgressWheelLayout.visibility = View.VISIBLE
     }
 
-   /* private fun initRecyclerView()
+   private fun initRecyclerView()
     {
         if(mForumListAdapter == null)
         {
@@ -176,47 +178,20 @@ class ForumListFragment : Fragment()
             Log.f("mTextNormalItemListAdapter  notifyDataSetChanged")
             mForumListAdapter?.notifyDataSetChanged()
         }
-    }*/
+    }
 
     private fun initForumListView()
     {
         mForumListPagingAdapter = ForumListPagingAdapter(mContext ,mForumType)
         mForumListPagingAdapter.setOnItemViewClickListener(mForumListItemListener)
-        mForumListPagingAdapter.addLoadStateListener { loadState ->
-
-          /*  _ForumSwipeRefreshLayout.isRefreshing = loadState.refresh == LoadState.Loading
-
-            if(loadState.refresh is LoadState.Loading)
-            {
-                _ForumSwipeRefreshLayout.isRefreshing = true
-            }
-            else
-            {
-                _ForumSwipeRefreshLayout.isRefreshing = false
-            }*/
-
-            if(loadState.refresh is LoadState.Loading ||
-                loadState.append is LoadState.Loading ||
-                loadState.prepend is LoadState.Loading)
-            {
-                _ForumSwipeRefreshLayout.setRefreshing(true)
-            }
-            else
-            {
-                _ForumSwipeRefreshLayout.setRefreshing(false)
-            }
-
-            Log.f("isEndReached : " + loadState.append.endOfPaginationReached+", loadState.refresh : "+loadState.refresh)
-
-        }
-
         val linearLayoutManager = LinearLayoutManager(mContext)
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL)
         _ForumListView.setLayoutManager(linearLayoutManager)
+        _ForumListView.setAdapter(mForumListPagingAdapter)
 
         val animationController : LayoutAnimationController = AnimationUtils.loadLayoutAnimation(mContext, R.anim.listview_layoutanimation)
-        _ForumListView.setLayoutAnimation(animationController)
-        _ForumListView.setAdapter(mForumListPagingAdapter)
+        _ForumListView.layoutAnimation = animationController
+        _ForumListView.scheduleLayoutAnimation()
 
     }
 
@@ -239,17 +214,17 @@ class ForumListFragment : Fragment()
             mForumType = type
         })
 
-       /* mForumPresenterObserver.settingForumListData.observe(viewLifecycleOwner, Observer<Any> { newsListBaseObject ->
+        mForumPresenterObserver.settingForumListData.observe(viewLifecycleOwner, Observer<Any> { newsListBaseObject ->
             setData(newsListBaseObject as ForumListBaseObject)
         })
 
         // 재조회 취소
         mForumPresenterObserver.cancelRefreshData.observe(viewLifecycleOwner, Observer<Boolean?> {
             cancelRefreshData()
-        })*/
+        })
     }
 
-   /* private fun setData(result : ForumListBaseObject)
+    private fun setData(result : ForumListBaseObject)
     {
         Log.f("setData size : " + result.getData().getNewsList().size)
         if(_ForumSwipeRefreshLayout.isRefreshing())
@@ -262,7 +237,7 @@ class ForumListFragment : Fragment()
         }
         mTotalDataList.addAll(result.getData().getNewsList())
         initRecyclerView()
-    }*/
+    }
 
     /**
      * 재조회 취소
@@ -287,13 +262,13 @@ class ForumListFragment : Fragment()
             /**
              * 메인으로 전달하여 API 통신 시도
              */
-            //mForumFragmentObserver.onRequestRefresh()
+            mForumFragmentObserver.onRequestRefresh()
 
             if(_ForumSwipeRefreshLayout.isRefreshing())
             {
                 _ForumSwipeRefreshLayout.setRefreshing(false)
             }
-            mForumListPagingAdapter.notifyDataSetChanged()
+
         }
     }
 

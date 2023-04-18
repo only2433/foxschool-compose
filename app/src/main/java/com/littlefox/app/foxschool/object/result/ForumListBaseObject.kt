@@ -6,7 +6,7 @@ import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBaseListPag
 
 class ForumListBaseObject : BaseResult()
 {
-    private val data : ForumBaseListPagingResult? = null
+    private val data : ForumBaseListResult? = null
 
-    fun getData() : ForumBaseListPagingResult = data!!
+    fun getData() : ForumBaseListResult = data!!
 }
