@@ -3,16 +3,13 @@ package com.littlefox.app.foxschool.main
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Message
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,21 +22,28 @@ import com.github.fafaldo.fabtoolbar.widget.FABToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.BookshelfFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.BookshelfContract
-import com.littlefox.app.foxschool.main.presenter.BookshelfPresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
+import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 책장 화면
  */
-class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContract.View
+@AndroidEntryPoint
+class BookshelfActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -104,10 +108,12 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     @BindView(R.id._menuCancelText)
     lateinit var _MenuCancelText : TextView
 
-    private lateinit var mBookshelfPresenter : BookshelfPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
-
     private var isListSettingComplete : Boolean = false
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+    private var mBottomContentItemOptionDialog: BottomContentItemOptionDialog? = null
+
+    private val factoryViewModel : BookshelfFactoryViewModel by viewModels()
 
     /** LifeCycle **/
     @SuppressLint("SourceLockedOrientationActivity")
@@ -124,28 +130,31 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             setContentView(R.layout.activity_bookshelf_detail_list)
         }
-
         ButterKnife.bind(this)
-        mBookshelfPresenter = BookshelfPresenter(this)
-        mBookshelfPresenter.onAddActivityResultLaunchers(mBookAddActivityResult)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+        factoryViewModel.init(this)
+        factoryViewModel.onAddResultLaunchers(mBookAddActivityResult)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mBookshelfPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mBookshelfPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mBookshelfPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -182,6 +191,77 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
         _MenuCancelText.setTypeface(Font.getInstance(this).getTypefaceMedium())
     }
 
+    override fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this){ loading ->
+            if(loading)
+            {
+                showLoading()
+            } else
+            {
+                hideLoading()
+            }
+        }
+
+        factoryViewModel.toast.observe(this){ message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
+        factoryViewModel.successMessage.observe(this){ message ->
+            showSuccessMessage(message)
+        }
+
+        factoryViewModel.errorMessage.observe(this){ message ->
+            showErrorMessage(message)
+        }
+
+        factoryViewModel.setTitle.observe(this){ title ->
+            setTitle(title)
+        }
+
+        factoryViewModel.showBookshelfDetailListView.observe(this){ adapter ->
+            showBookshelfDetailListView(adapter)
+        }
+
+        factoryViewModel.enableContentListLoading.observe(this){ enable ->
+            if(enable)
+            {
+                showContentListLoading()
+            }
+            else
+            {
+                hideContentListLoading()
+            }
+        }
+
+        factoryViewModel.enableFloatingToolbarLayout.observe(this){ enable ->
+            if(enable)
+            {
+                showFloatingToolbarLayout()
+            }
+            else
+            {
+                hideFloatingToolbarLayout()
+            }
+        }
+
+        factoryViewModel.setFloatingToolbarPlayCount.observe(this){ count ->
+            setFloatingToolbarPlayCount(count)
+        }
+
+        factoryViewModel.dialogBottomOption.observe(this){ data ->
+            showBottomBookshelfItemDialog(data)
+        }
+
+        factoryViewModel.dialogBookshelfContentsDelete.observe(this){
+            showBookshelfContentsDeleteDialog()
+        }
+
+        factoryViewModel.dialogWarningRecordPermission.observe(this){
+            showChangeRecordPermissionDialog()
+        }
+    }
+
     /**
      * 상단바 색상 설정
      */
@@ -196,7 +276,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     /**
      * 타이틀 설정
      */
-    override fun setTitle(title : String?)
+    fun setTitle(title : String?)
     {
         _TitleText.setText(title)
     }
@@ -204,7 +284,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     /**
      * 아이템 선택한 갯수에 따른 뷰 세팅
      */
-    override fun setFloatingToolbarPlayCount(count : Int)
+    fun setFloatingToolbarPlayCount(count : Int)
     {
         Log.f("count : $count")
         val isTablet : Boolean = CommonUtils.getInstance(this).checkTablet
@@ -249,7 +329,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     /**
      * 리스트뷰
      */
-    override fun showBookshelfDetailListView(adapter : DetailListItemAdapter)
+    fun showBookshelfDetailListView(adapter : DetailListItemAdapter)
     {
         isListSettingComplete = true
         _DetailInformationList.visibility = View.VISIBLE
@@ -266,20 +346,20 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     /**
      * 하단 툴바 표시 (모바일)
      */
-    override fun showFloatingToolbarLayout()
+    fun showFloatingToolbarLayout()
     {
         if(CommonUtils.getInstance(this).checkTablet) return
 
-        if(_FabToolbarLayout.isToolbar == false)
+        if(_FabToolbarLayout?.isToolbar == false)
         {
-            _FabToolbarLayout.show()
+            _FabToolbarLayout?.show()
         }
     }
 
     /**
      * 하단 툴바 숨김
      */
-    override fun hideFloatingToolbarLayout()
+    fun hideFloatingToolbarLayout()
     {
         if(CommonUtils.getInstance(this).checkTablet)
         {
@@ -287,19 +367,62 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
             return
         }
 
-        if(_FabToolbarLayout.isToolbar == true)
+        if(_FabToolbarLayout?.isToolbar == true)
         {
             _MenuSelectCountText.visibility = View.GONE
-            _FabToolbarLayout.hide()
+            _FabToolbarLayout?.hide()
         }
     }
 
-    override fun showContentListLoading()
+    /**
+     * ================ 다이얼로그 ================
+     */
+    private fun showBottomBookshelfItemDialog(data : ContentsBaseResult)
+    {
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(this, data)
+        mBottomContentItemOptionDialog!!
+            .setDeleteMode()
+            .setFullName()
+            .setItemOptionListener(mItemOptionListener)
+            .setView()
+        mBottomContentItemOptionDialog!!.show()
+    }
+
+    private fun showBookshelfContentsDeleteDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_question_delete_contents_in_bookshelf))
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogEventType(BookshelfFactoryViewModel.DIALOG_EVENT_DELETE_BOOKSHELF_CONTENTS)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    /**
+     * 마이크 권한 허용 요청 다이얼로그
+     * - 녹음기 기능 사용을 위해
+     */
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_record_permission))
+            setDialogEventType(BookshelfFactoryViewModel.DIALOG_EVENT_WARNING_RECORD_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(
+                resources.getString(R.string.text_cancel),
+                resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    fun showContentListLoading()
     {
         _LoadingProgressLayout.visibility = View.VISIBLE
     }
 
-    override fun hideContentListLoading()
+    fun hideContentListLoading()
     {
         _LoadingProgressLayout.visibility = View.GONE
     }
@@ -319,20 +442,16 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
         mMaterialLoadingDialog = null
     }
 
-    override fun showSuccessMessage(message : String)
+    fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun showErrorMessage(message : String)
+    fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun handlerMessage(message : Message)
-    {
-        mBookshelfPresenter.sendMessageEvent(message)
-    }
 
     @Optional
     @OnClick(
@@ -350,7 +469,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                 // 전체선택
                 if (isListSettingComplete)
                 {
-                    mBookshelfPresenter.onClickSelectAll()
+                    factoryViewModel.onClickSelectAll()
                 }
             }
             R.id._menuSelectPlayImage, R.id._menuSelectPlayText ->
@@ -358,7 +477,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                 // 선택재생
                 if(isListSettingComplete)
                 {
-                    mBookshelfPresenter.onClickSelectPlay()
+                    factoryViewModel.onClickSelectPlay()
                 }
             }
             R.id._menuRemoveBookshelfImage, R.id._menuRemoveBookshelfText ->
@@ -366,7 +485,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                 // 삭제
                 if(isListSettingComplete)
                 {
-                    mBookshelfPresenter.onClickRemoveBookshelf()
+                    factoryViewModel.onClickRemoveBookshelf()
                 }
             }
             R.id._menuCancelImage, R.id._menuCancelText ->
@@ -375,10 +494,10 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                 if(isListSettingComplete)
                 {
                     _MenuSelectCountText.visibility = View.GONE
-                    mBookshelfPresenter.onClickCancel()
+                    factoryViewModel.onClickCancel()
                     if(CommonUtils.getInstance(this).checkTablet == false)
                     {
-                        _FabToolbarLayout.hide()
+                        _FabToolbarLayout?.hide()
                     }
                 }
             }
@@ -387,7 +506,7 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
                 // 플로팅 버튼
                 if(isListSettingComplete)
                 {
-                    _FabToolbarLayout.show()
+                    _FabToolbarLayout?.show()
                 }
             }
         }
@@ -397,7 +516,68 @@ class BookshelfActivity : BaseActivity(), MessageHandlerCallback, BookshelfContr
     { result ->
         if(result.resultCode == RESULT_OK)
         {
-            mBookshelfPresenter.onActivityResultUpdateBookshelf(result.data)
+            factoryViewModel.onActivityResult(intent = result.data)
+        }
+    }
+
+    private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
+    {
+        override fun onClickQuiz()
+        {
+            factoryViewModel.onClickQuizButton()
+        }
+
+        override fun onClickTranslate()
+        {
+            factoryViewModel.onClickTranslateButton()
+        }
+
+        override fun onClickVocabulary()
+        {
+            factoryViewModel.onClickVocabularyButton()
+        }
+
+        override fun onClickBookshelf()
+        {
+            factoryViewModel.onClickBookshelfButton()
+        }
+
+        override fun onClickEbook()
+        {
+            factoryViewModel.onClickEbookButton()
+        }
+
+        override fun onClickGameStarwords()
+        {
+            factoryViewModel.onClickStarwordsButton()
+        }
+
+        override fun onClickGameCrossword()
+        {
+            factoryViewModel.onClickCrosswordButton()
+        }
+
+        override fun onClickFlashCard()
+        {
+            factoryViewModel.onClickFlashcardButton()
+        }
+
+        override fun onClickRecordPlayer()
+        {
+            factoryViewModel.onClickRecordPlayerButton()
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            factoryViewModel.onDialogClick(eventType)
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            factoryViewModel.onDialogChoiceClick(buttonType, eventType)
         }
     }
 }

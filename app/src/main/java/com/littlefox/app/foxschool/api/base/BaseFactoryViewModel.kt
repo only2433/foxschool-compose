@@ -3,7 +3,6 @@ package com.littlefox.app.foxschool.api.base
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.ViewModel
-import android.os.Message
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,7 +34,7 @@ abstract class BaseFactoryViewModel : ViewModel()
     open fun init(context: Context){}
     open fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?){}
     open fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray){}
-    open fun onActivityResult(code: ResultLauncherCode){}
-    open fun onDialogClick(eventType: Int){}
-    open fun onDialogChoiceClick(buttonType: DialogButtonType, eventType: Int){}
+    open fun onActivityResult(code : ResultLauncherCode = ResultLauncherCode.DEFAULT, intent : Intent? = null){}
+    open fun onDialogClick(eventType : Int){}
+    open fun onDialogChoiceClick(buttonType : DialogButtonType, eventType: Int){}
 }

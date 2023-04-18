@@ -312,6 +312,24 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mResultLauncherList.add(launchers.get(INDEX_HOMEWORK_STATUS))
     }
 
+    override fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
+    {
+        when(code)
+        {
+            ResultLauncherCode.HOMEWORK_DETAIL ->
+            {
+                Log.f("ResultLauncherCode.HOMEWORK_DETAIL")
+                _isLoading.postValue(true)
+                onPageChanged(Common.PAGE_HOMEWORK_DETAIL)
+            }
+            ResultLauncherCode.HOMEWORK_STATUS ->
+            {
+                Log.f("ResultLauncherCode.HOMEWORK_STATUS")
+                onPageChanged(Common.PAGE_HOMEWORK_STATUS)
+            }
+        }
+    }
+
     fun onPageChanged(position : Int)
     {
         viewModelScope.launch(Dispatchers.Main) {
@@ -365,19 +383,6 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
             mPagePosition -= 1
             _currentViewListPage.value = Pair(mPagePosition, null)
         }
-    }
-
-    fun onActivityResultHomeworkDetail()
-    {
-        Log.f("")
-        _isLoading.postValue(true)
-        onPageChanged(Common.PAGE_HOMEWORK_DETAIL)
-    }
-
-    fun onActivityResultHomeworkStatus()
-    {
-        Log.f("")
-        onPageChanged(Common.PAGE_HOMEWORK_STATUS)
     }
 
     fun onRecordPermissionCancel()

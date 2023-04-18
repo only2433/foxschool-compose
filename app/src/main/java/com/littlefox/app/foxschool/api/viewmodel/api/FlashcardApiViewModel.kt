@@ -26,8 +26,6 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
     private val _saveFlashcardData = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val saveFlashcardData : MutableStateFlow<BaseResponse<Nothing>?> = _saveFlashcardData
 
-    private var mJob: Job? = null
-
     private suspend fun getVocabularyContentsList(contentID : String)
     {
         val result = repository.getVocabularyContentsList(contentID)
@@ -95,7 +93,6 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_VOCABULARY_CONTENTS_LIST ->

@@ -5,6 +5,7 @@ import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.logmonitor.Log
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.LinkedList
 
@@ -19,9 +20,17 @@ abstract class BaseApiViewModel : ViewModel()
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false
 
+    protected var mJob: Job? = null
+
     init
     {
         setIsLoading(RequestCode.CODE_DEFAULT, false)
+    }
+
+    override fun onCleared()
+    {
+        mJob?.cancel()
+        super.onCleared()
     }
 
     fun setIsLoading(code: RequestCode, isLoading: Boolean)
@@ -86,5 +95,9 @@ abstract class BaseApiViewModel : ViewModel()
         }
     }
 
-    open fun pullNext(data: QueueData) {}
+    open fun pullNext(data: QueueData)
+    {
+        mJob?.cancel()
+    }
+
 }

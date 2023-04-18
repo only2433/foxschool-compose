@@ -33,8 +33,6 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
     private val _teacherHomeworkContentsData = MutableStateFlow<HomeworkDetailBaseResult?>(null)
     val teacherHomeworkContentsData : MutableStateFlow<HomeworkDetailBaseResult?> = _teacherHomeworkContentsData
 
-    private var mJob: Job? = null
-
     private suspend fun getTeacherHomeworkClassList()
     {
         val result = repository.getTeacherHomeworkClassList()
@@ -144,7 +142,6 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST ->

@@ -1,10 +1,8 @@
 package com.littlefox.app.foxschool.main
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Message
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -23,9 +21,7 @@ import butterknife.OnClick
 import butterknife.Optional
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.homework.detail.HomeworkDetailItemData
-import com.littlefox.app.foxschool.adapter.HomeworkPagerAdapter
 import com.littlefox.app.foxschool.adapter.TeacherHomeworkPagerAdapter
-import com.littlefox.app.foxschool.api.viewmodel.factory.StudentHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.api.viewmodel.factory.TeacherHomeworkFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
@@ -37,9 +33,7 @@ import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
 import com.littlefox.app.foxschool.enumerate.HomeworkDetailType
-import com.littlefox.app.foxschool.main.contract.TeacherHomeworkContract
-import com.littlefox.app.foxschool.main.presenter.TeacherHomeworkManagePresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
+import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
@@ -397,11 +391,11 @@ class TeacherHomeworkManageActivity : BaseActivity()
 
     private val mHomeworkDetailActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
-        factoryViewModel.onActivityResultHomeworkDetail()
+        factoryViewModel.onActivityResult(ResultLauncherCode.HOMEWORK_DETAIL)
     }
 
     private val mHomeworkStatusActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
-        factoryViewModel.onActivityResultHomeworkStatus()
+        factoryViewModel.onActivityResult(ResultLauncherCode.HOMEWORK_STATUS)
     }
 }

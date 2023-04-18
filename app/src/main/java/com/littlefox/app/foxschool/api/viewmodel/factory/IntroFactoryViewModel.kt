@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseApp
@@ -39,7 +38,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -545,7 +543,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
         }
     }
 
-    override fun onActivityResult(code : ResultLauncherCode)
+    override fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
     {
         _bottomViewType.value = IntroViewMode.PROGRESS
         viewModelScope.launch{

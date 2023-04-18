@@ -28,10 +28,7 @@ import com.littlefox.app.foxschool.api.viewmodel.api.StudentHomeworkApiViewModel
 import com.littlefox.app.foxschool.api.viewmodel.fragment.HomeworkFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.enumerate.ActivityMode
-import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.enumerate.HomeworkCommentType
-import com.littlefox.app.foxschool.enumerate.HomeworkType
+import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
@@ -292,6 +289,13 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         mResultLauncherList.add(launchers.get(0))
     }
 
+    override fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
+    {
+        Log.f("")
+        _isLoading.postValue(true)
+        onPageChanged(Common.PAGE_HOMEWORK_STATUS)
+    }
+
     fun onPageChanged(position : Int)
     {
         viewModelScope.launch(Dispatchers.Main) {
@@ -328,13 +332,6 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
             mPagePosition = Common.PAGE_HOMEWORK_STATUS
             _currentViewPage.value = Pair(mPagePosition, null)
         }
-    }
-
-    fun onActivityResultStatus()
-    {
-        Log.f("")
-        _isLoading.postValue(true)
-        onPageChanged(Common.PAGE_HOMEWORK_STATUS)
     }
 
     fun onRecordPermissionCancel()

@@ -30,8 +30,6 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
     private val _downloadQuizResource = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val downloadQuizResource: MutableStateFlow<BaseResponse<Nothing>?> = _downloadQuizResource
 
-    private var mJob: Job? = null
-
     private suspend fun getQuizInformation(contentID: String)
     {
         val result = repository.getQuizInformation(contentID)
@@ -165,7 +163,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
     override fun pullNext(data : QueueData)
     {
         super.pullNext(data)
-        mJob?.cancel()
+
         when(data.requestCode)
         {
             RequestCode.CODE_QUIZ_INFORMATION ->
@@ -197,11 +195,5 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
             }
         }
-    }
-
-    override fun onCleared()
-    {
-        mJob?.cancel()
-        super.onCleared()
     }
 }

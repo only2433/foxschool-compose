@@ -259,6 +259,21 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         remote.saveFlashcardRecordAsync(contentID)
     }
 
+    suspend fun getBookshelfContentsList(bookshelfID : String) = safeApiCall {
+        remote.getBookshelfContentsList(bookshelfID)
+    }
+
+    suspend fun deleteBookshelfContents(bookshelfID : String, list: ArrayList<ContentsBaseResult>) = safeApiCall {
+        var queryMap = mutableMapOf<String, String>()
+        for(i in list.indices)
+        {
+            queryMap["content_ids[$i]"] = list[i].getID()
+        }
+        remote.deleteBookshelfContents(
+            bookshelfID,
+            queryMap)
+    }
+
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
     {
         return Pager(

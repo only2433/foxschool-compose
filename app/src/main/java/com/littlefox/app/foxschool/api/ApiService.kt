@@ -12,6 +12,7 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
@@ -100,7 +101,6 @@ interface ApiService
         @Body data: JsonObject
     ) : Response<BaseResponse<Nothing>>
 
-
     @GET("contents/vocabularies/{content_id}")
     suspend fun getVocabularyContentsList(
         @Path("content_id") contentsID : String
@@ -112,6 +112,17 @@ interface ApiService
         @Path("vocabulary_id") vocabularyID: String,
         @FieldMap queryMap : Map<String, String>
     ) : Response<BaseResponse<MyVocabularyResult>>
+
+    @GET("contents/bookshelves/{bookshelf_id}")
+    suspend fun getBookshelfContentsList(
+        @Path("bookshelf_id") bookshelfID : String
+    ) : Response<BaseResponse<ArrayList<ContentsBaseResult>>>
+
+    @DELETE("contents/bookshelves/{bookshelf_id}/contents")
+    suspend fun deleteBookshelfContents(
+        @Path("bookshelf_id") bookshelfID : String,
+        @QueryMap queryMap : Map<String, String>
+    ) : Response<BaseResponse<MyBookshelfResult>>
 
     @GET("contents/flashcard/{content_id}")
     suspend fun saveFlashcardRecordAsync(

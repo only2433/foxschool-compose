@@ -28,8 +28,6 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
     private val _addBookshelfContentsData = MutableStateFlow<MyBookshelfResult?>(null)
     val addBookshelfContentsData: MutableStateFlow<MyBookshelfResult?> = _addBookshelfContentsData
 
-    private var mJob: Job? = null
-
     private suspend fun getAuthContentPlayData(contentID: String, isHighRevoluation: Boolean)
     {
         val result = repository.getAuthContentPlay(contentID, isHighRevoluation)

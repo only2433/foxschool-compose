@@ -32,8 +32,6 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
     private val _studentCommentDeleteData = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val studentCommentDeleteData : MutableStateFlow<BaseResponse<Nothing>?> = _studentCommentDeleteData
 
-    private var mJob: Job? = null
-
     private suspend fun getStudentHomeworkCalendar(year : String, month : String)
     {
         val result = repository.getStudentHomeworkCalendar(year, month)
@@ -143,7 +141,6 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_STUDENT_HOMEWORK_CALENDAR ->

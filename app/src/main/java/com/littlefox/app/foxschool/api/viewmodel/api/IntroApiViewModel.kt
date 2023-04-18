@@ -36,8 +36,6 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     private val _changePasswordKeepData = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val changePasswordKeepData : MutableStateFlow<BaseResponse<Nothing>?> = _changePasswordKeepData
 
-    private var mJob: Job? = null
-
 
     private suspend fun getVersion(deviceID : String, pushAddress : String, pushOn : String)
     {
@@ -171,7 +169,6 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_VERSION ->
@@ -227,9 +224,4 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
         }
     }
 
-    override fun onCleared()
-    {
-        mJob?.cancel()
-        super.onCleared()
-    }
 }

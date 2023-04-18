@@ -56,6 +56,12 @@ object Injection
     }
 
     @Provides
+    fun provideBookshelfApiViewModel() : BookshelfApiViewModel
+    {
+        return BookshelfApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun provideStudentHomeworkApiViewModel() : StudentHomeworkApiViewModel
     {
         return StudentHomeworkApiViewModel(provideFoxSchoolRepository())

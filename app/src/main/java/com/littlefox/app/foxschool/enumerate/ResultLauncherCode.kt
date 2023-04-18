@@ -2,5 +2,9 @@ package com.littlefox.app.foxschool.enumerate
 
 enum class ResultLauncherCode
 {
-    LOGIN
+    DEFAULT,
+    LOGIN,
+    BOOKSHELF,
+    HOMEWORK_STATUS,
+    HOMEWORK_DETAIL
 }

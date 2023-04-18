@@ -36,7 +36,6 @@ import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
-import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 
 @AndroidEntryPoint
 class IntroActivity : BaseActivity()
@@ -417,7 +416,7 @@ class IntroActivity : BaseActivity()
     { result ->
         if(result.resultCode == RESULT_OK)
         {
-            factoryViewModel.onActivityResult(ResultLauncherCode.LOGIN)
+            factoryViewModel.onActivityResult()
         }
     }
 }

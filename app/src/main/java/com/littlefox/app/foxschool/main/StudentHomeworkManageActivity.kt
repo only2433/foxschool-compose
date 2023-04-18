@@ -387,6 +387,6 @@ class StudentHomeworkManageActivity : BaseActivity()
 
     private val mStatusActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
     { result ->
-        factoryViewModel.onActivityResultStatus()
+        factoryViewModel.onActivityResult()
     }
 }

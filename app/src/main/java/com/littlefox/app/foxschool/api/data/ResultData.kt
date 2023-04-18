@@ -58,6 +58,7 @@ sealed class ResultData<out T: Any>
                 else
                     return false
             }
+
     }
 
     override fun toString(): String

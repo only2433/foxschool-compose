@@ -18,8 +18,6 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
     private val _mainData = MutableStateFlow<MainInformationResult?>(null)
     val mainData : MutableStateFlow<MainInformationResult?> = _mainData
 
-    private var mJob: Job? = null
-
     private suspend fun getMain()
     {
         val result = repository.getMain()
@@ -45,7 +43,6 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_MAIN ->
@@ -56,11 +53,5 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
             }
         }
-    }
-
-    override fun onCleared()
-    {
-        mJob?.cancel()
-        super.onCleared()
     }
 }

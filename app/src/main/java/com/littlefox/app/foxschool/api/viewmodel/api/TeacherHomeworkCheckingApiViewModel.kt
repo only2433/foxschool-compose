@@ -18,8 +18,6 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
     private val _teacherHomeworkChecking = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val teacherHomeworkChecking : MutableStateFlow<BaseResponse<Nothing>?> = _teacherHomeworkChecking
 
-    private var mJob: Job? = null
-
     private suspend fun setTeacherHomeworkChecking(homeworkNumber : Int, classID : Int, userID : String, evaluationState : String, evaluationComment : String)
     {
         val result = repository.setTeacherHomeworkChecking(homeworkNumber, classID, userID, evaluationState, evaluationComment)
@@ -45,7 +43,6 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
     {
         super.pullNext(data)
 
-        mJob?.cancel()
         when(data.requestCode)
         {
             RequestCode.CODE_TEACHER_HOMEWORK_CHECKING ->
@@ -62,11 +59,5 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
                 }
             }
         }
-    }
-
-    override fun onCleared()
-    {
-        mJob?.cancel()
-        super.onCleared()
     }
 }
