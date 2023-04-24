@@ -9,20 +9,18 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.api.viewmodel.factory.ForumFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.ForumFragmentViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
-import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -37,8 +35,9 @@ class ForumWebviewFragment : Fragment()
 
     private lateinit var mContext : Context
     private lateinit var mUnbinder : Unbinder
-    private lateinit var mForumPresenterObserver : ForumPresenterObserver
-    private lateinit var mForumFragmentObserver : ForumFragmentObserver
+
+    private val factoryViewModel : ForumFactoryViewModel by activityViewModels()
+    private val fragementViewModel : ForumFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -96,11 +95,9 @@ class ForumWebviewFragment : Fragment()
     /** ========== Init ========== */
     private fun initDataObserver()
     {
-        mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
-        mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
-        mForumPresenterObserver.articleIDData.observe(viewLifecycleOwner, Observer<String> {articleID ->
+        fragementViewModel.articleUrlData.observe(viewLifecycleOwner) { articleID ->
             setData(articleID)
-        })
+        }
     }
     /** ========== Init ========== */
 
@@ -129,7 +126,7 @@ class ForumWebviewFragment : Fragment()
 
         override fun onPageFinished(view : WebView, url : String)
         {
-            mForumFragmentObserver.onPageLoadComplete()
+            factoryViewModel.onPageLoadComplete()
             _WebView.setAlpha(1.0f)
             super.onPageFinished(view, url)
         }
@@ -151,7 +148,7 @@ class ForumWebviewFragment : Fragment()
         {
             _WebView.postDelayed(Runnable {
                 Log.f("seriesID : $seriesID")
-                mForumFragmentObserver.onSeriesShow(seriesID)
+
             }, Common.DURATION_SHORTER)
         }
     }

@@ -8,14 +8,8 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
@@ -27,21 +21,17 @@ import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseResult
 import com.littlefox.app.foxschool.adapter.ForumListAdapter
 import com.littlefox.app.foxschool.adapter.ForumListPagingAdapter
 import com.littlefox.app.foxschool.adapter.listener.ForumItemListener
-import com.littlefox.app.foxschool.adapter.listener.base.OnItemViewClickListener
-import com.littlefox.app.foxschool.api.viewmodel.ForumListViewModel
+import com.littlefox.app.foxschool.api.viewmodel.factory.ForumFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.fragment.ForumFragmentViewModel
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ForumType
 import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
-import com.littlefox.app.foxschool.viewmodel.ForumFragmentObserver
-import com.littlefox.app.foxschool.viewmodel.ForumPresenterObserver
 import com.littlefox.logmonitor.Log
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection
 import com.ssomai.android.scalablelayout.ScalableLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 /**
  * [팍스스쿨 소식], [자주 묻는 질문] List Fragment
@@ -64,7 +54,6 @@ class ForumListFragment : Fragment()
             get() = ForumListFragment()
     }
 
-    private val viewModel : ForumListViewModel by viewModels()
     private var mJob: Job? = null
 
     private lateinit var mContext : Context
@@ -73,10 +62,10 @@ class ForumListFragment : Fragment()
     private lateinit var mForumListPagingAdapter : ForumListPagingAdapter
     private val mTotalDataList : ArrayList<ForumBaseResult> = ArrayList<ForumBaseResult>()
 
-    private lateinit var mForumFragmentObserver : ForumFragmentObserver
-    private lateinit var mForumPresenterObserver : ForumPresenterObserver
-
     private var mForumType : ForumType = ForumType.FOXSCHOOL_NEWS
+
+    private val factoryViewModel : ForumFactoryViewModel by activityViewModels()
+    private val framentVieModel : ForumFragmentViewModel by activityViewModels()
 
     /** ========== LifeCycle ========== */
     override fun onAttach(context : Context)
@@ -106,13 +95,9 @@ class ForumListFragment : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initView()
         initForumListView()
-    }
-
-    override fun onActivityCreated(savedInstanceState : Bundle?)
-    {
-        super.onActivityCreated(savedInstanceState)
         setupObserverViewModel()
     }
+
 
     override fun onResume()
     {
@@ -195,7 +180,7 @@ class ForumListFragment : Fragment()
 
     }
 
-    private fun getForumList()
+    /*private fun getForumList()
     {
         mJob?.cancel()
         mJob = lifecycleScope.launch {
@@ -203,30 +188,28 @@ class ForumListFragment : Fragment()
                 mForumListPagingAdapter.submitData(it)
             }
         }
-    }
+    }*/
+
     /** ========== Init ========== */
     private fun setupObserverViewModel()
     {
-        mForumFragmentObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumFragmentObserver::class.java)
-        mForumPresenterObserver = ViewModelProviders.of(mContext as AppCompatActivity).get(ForumPresenterObserver::class.java)
 
-        mForumPresenterObserver.setForumType.observe(viewLifecycleOwner, { type ->
+        framentVieModel.forumTypeData.observe(viewLifecycleOwner) { type ->
             mForumType = type
-        })
+        }
 
-        mForumPresenterObserver.settingForumListData.observe(viewLifecycleOwner, Observer<Any> { newsListBaseObject ->
-            setData(newsListBaseObject as ForumListBaseObject)
-        })
+        framentVieModel.forumListData.observe(viewLifecycleOwner) { data ->
+            setData(data as ForumBaseListResult)
+        }
 
-        // 재조회 취소
-        mForumPresenterObserver.cancelRefreshData.observe(viewLifecycleOwner, Observer<Boolean?> {
+        framentVieModel.cancelRefreshData.observe(viewLifecycleOwner) { enable ->
             cancelRefreshData()
-        })
+        }
     }
 
-    private fun setData(result : ForumListBaseObject)
+    private fun setData(result : ForumBaseListResult)
     {
-        Log.f("setData size : " + result.getData().getNewsList().size)
+        Log.f("setData size : " + result.getNewsList().size)
         if(_ForumSwipeRefreshLayout.isRefreshing())
         {
             _ForumSwipeRefreshLayout.setRefreshing(false)
@@ -235,7 +218,7 @@ class ForumListFragment : Fragment()
         {
             _ProgressWheelLayout.setVisibility(View.GONE)
         }
-        mTotalDataList.addAll(result.getData().getNewsList())
+        mTotalDataList.addAll(result.getNewsList())
         initRecyclerView()
     }
 
@@ -262,7 +245,7 @@ class ForumListFragment : Fragment()
             /**
              * 메인으로 전달하여 API 통신 시도
              */
-            mForumFragmentObserver.onRequestRefresh()
+            factoryViewModel.onRequestRefresh()
 
             if(_ForumSwipeRefreshLayout.isRefreshing())
             {
@@ -279,7 +262,7 @@ class ForumListFragment : Fragment()
     {
         override fun onItemClick(articleId : String)
         {
-            mForumFragmentObserver.onShowWebView(articleId)
+            factoryViewModel.onShowWebView(articleId)
         }
     }
 }

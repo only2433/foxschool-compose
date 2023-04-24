@@ -23,7 +23,7 @@ class ForumPagingSource(private val service: ApiService) : PagingSource<Int, For
             val pageSize = params.loadSize.coerceAtMost(Common.PAGE_LOAD_COUNT)
 
             Log.f("page : $page , pageSize : $pageSize")
-            when(val result = safeApiCall {service.forumListAsync(pageSize, page)})
+            when(val result = safeApiCall {service.forumPagingListAsync(pageSize, page)})
             {
                 is ResultData.Success ->
                 {

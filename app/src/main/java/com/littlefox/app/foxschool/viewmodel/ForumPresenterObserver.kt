@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.viewmodel
 import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.`object`.result.ForumListBaseObject
 import com.littlefox.app.foxschool.enumerate.ForumType
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 
 class ForumPresenterObserver : ViewModel()

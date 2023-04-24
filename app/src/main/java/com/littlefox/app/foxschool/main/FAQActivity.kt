@@ -2,10 +2,11 @@ package com.littlefox.app.foxschool.main
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.os.Message
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.viewpager.widget.ViewPager
@@ -15,21 +16,19 @@ import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.MainFragmentSelectionPagerAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.ForumFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
-import com.littlefox.app.foxschool.main.contract.ForumContract
-import com.littlefox.app.foxschool.main.presenter.FAQPresenter
-import com.littlefox.library.system.handler.callback.MessageHandlerCallback
-import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.app.foxschool.enumerate.ForumType
 import com.littlefox.library.view.extra.SwipeDisableViewPager
 import com.littlefox.library.view.scroller.FixedSpeedScroller
 import com.ssomai.android.scalablelayout.ScalableLayout
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
+class FAQActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -55,9 +54,8 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
     @BindView(R.id._forumViewpager)
     lateinit var _ForumViewpager : SwipeDisableViewPager
 
-    private lateinit var mFAQPresenter : FAQPresenter
-    private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private lateinit var mFixedSpeedScroller : FixedSpeedScroller
+    private val factoryViewModel : ForumFactoryViewModel by viewModels()
 
     /** ========== LifeCycle ========== */
     override fun onCreate(savedInstanceState : Bundle?)
@@ -74,27 +72,30 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_forum)
         }
-
         ButterKnife.bind(this)
-        mFAQPresenter = FAQPresenter(this)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+        factoryViewModel.init(this, ForumType.FAQ)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mFAQPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mFAQPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mFAQPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -118,7 +119,45 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
         _TitleText.typeface = Font.getInstance(this).getTypefaceBold()
     }
 
-    override fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter?)
+    override fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this) { loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        }
+
+        factoryViewModel.toast.observe(this) { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+
+        factoryViewModel.successMessage.observe(this) { message ->
+            showSuccessMessage(message)
+        }
+
+        factoryViewModel.errorMessage.observe(this) { message ->
+            showErrorMessage(message)
+        }
+
+        factoryViewModel.initViewPager.observe(this) { adapter ->
+            initViewPager(adapter)
+        }
+
+        factoryViewModel.setCurrentPage.observe(this) { page ->
+            setCurrentViewPage(page)
+        }
+
+        factoryViewModel.setBackButton.observe(this) { enable ->
+            setBackButton(enable)
+        }
+    }
+
+    fun initViewPager(mainFragmentSelectionPagerAdapter : MainFragmentSelectionPagerAdapter?)
     {
         _ForumViewpager.adapter = mainFragmentSelectionPagerAdapter
         _ForumViewpager.addOnPageChangeListener(mOnPageChangeListener)
@@ -149,12 +188,12 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
         _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
 
-    override fun setCurrentViewPage(position : Int)
+    fun setCurrentViewPage(position : Int)
     {
         _ForumViewpager.currentItem = position
     }
 
-    override fun setBackButton(isVisible : Boolean)
+    fun setBackButton(isVisible : Boolean)
     {
         if(isVisible)
         {
@@ -172,34 +211,15 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
         }
     }
 
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
 
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
-    override fun showSuccessMessage(message : String)
+    fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun showErrorMessage(message : String)
+    fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
-    }
-
-    override fun handlerMessage(message : Message)
-    {
-        mFAQPresenter.sendMessageEvent(message)
     }
 
     /**
@@ -213,7 +233,7 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
         }
         else
         {
-            _ForumViewpager.setCurrentItem(Common.PAGE_FORUM_LIST)
+            _ForumViewpager.currentItem  = Common.PAGE_FORUM_LIST
         }
     }
 
@@ -222,7 +242,7 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
     {
         when(view.id)
         {
-            R.id._backButtonRect -> _ForumViewpager.setCurrentItem(Common.PAGE_FORUM_LIST)
+            R.id._backButtonRect -> _ForumViewpager.currentItem = Common.PAGE_FORUM_LIST
             R.id._closeButtonRect -> super.onBackPressed()
         }
     }
@@ -233,7 +253,7 @@ class FAQActivity : BaseActivity(), ForumContract.View, MessageHandlerCallback
 
         override fun onPageSelected(position : Int)
         {
-            mFAQPresenter.onPageSelected(position)
+            factoryViewModel.onPageSelected(position)
         }
 
         override fun onPageScrollStateChanged(state : Int) { }

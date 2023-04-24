@@ -274,6 +274,13 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
             queryMap)
     }
 
+    suspend fun getForumFAQList(pageCount : Int, currentPage : Int) = safeApiCall {
+        remote.forumFAQListAsync(pageCount, currentPage)
+    }
+    suspend fun getForumNewsList(pageCount : Int, currentPage : Int) = safeApiCall {
+        remote.forumNewsListAsync(pageCount, currentPage)
+    }
+
     fun getForumListStream() : Flow<PagingData<ForumBasePagingResult>>
     {
         return Pager(

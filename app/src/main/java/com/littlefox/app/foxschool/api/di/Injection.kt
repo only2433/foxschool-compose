@@ -15,7 +15,8 @@ object Injection
 {
     @Singleton
     @Provides
-    fun provideFoxSchoolRepository() : FoxSchoolRepository{
+    fun provideFoxSchoolRepository() : FoxSchoolRepository
+    {
         return FoxSchoolRepository(ApiService.create())
     }
 
@@ -59,6 +60,12 @@ object Injection
     fun provideBookshelfApiViewModel() : BookshelfApiViewModel
     {
         return BookshelfApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
+    fun provideForumApiViewModel() : ForumApiViewModel
+    {
+        return ForumApiViewModel(provideFoxSchoolRepository())
     }
 
     @Provides

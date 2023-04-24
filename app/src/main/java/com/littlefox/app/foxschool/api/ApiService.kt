@@ -13,6 +13,7 @@ import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
@@ -129,6 +130,24 @@ interface ApiService
         @Path("content_id") contentsID : String
     ) : Response<BaseResponse<Nothing>>
 
+    @GET("forum/board/faq")
+    suspend fun forumFAQListAsync(
+        @Query("per_page") pageCount: Int,
+        @Query("page") currentPage: Int
+    ) : Response<BaseResponse<ForumBaseListResult>>
+
+    @GET("forum/board/news")
+    suspend fun forumNewsListAsync(
+        @Query("per_page") pageCount: Int,
+        @Query("page") currentPage: Int
+    ) : Response<BaseResponse<ForumBaseListResult>>
+
+    @GET("forum/board/news")
+    suspend fun forumPagingListAsync(
+        @Query("per_page") pageCount: Int,
+        @Query("page") currentPage: Int
+    ) : Response<BaseResponse<ForumBaseListPagingResult>>
+
     @GET("homeworks/student")
     suspend fun studentHomeworkCalendarAsync(
         @Query("year") id : String,
@@ -208,12 +227,6 @@ interface ApiService
         @Field("eval") evaluationState : String,
         @Field("eval_comment") evaluationComment : String,
     ) : Response<BaseResponse<Nothing>>
-
-    @GET("forum/board/news")
-    suspend fun forumListAsync(
-        @Query("per_page") pageCount: Int,
-        @Query("page") currentPage: Int
-    ) : Response<BaseResponse<ForumBaseListPagingResult>>
 
     companion object
     {
