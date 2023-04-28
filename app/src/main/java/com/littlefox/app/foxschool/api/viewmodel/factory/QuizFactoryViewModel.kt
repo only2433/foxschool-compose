@@ -267,7 +267,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                             Log.f("FAIL code : $code")
                             Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
                             viewModelScope.launch(Dispatchers.Main) {
-                                delay(Common.DURATION_LONG)
+                                withContext(Dispatchers.IO){
+                                    delay(Common.DURATION_LONG)
+                                }
                                 (mContext as Activity).finish()
                             }
                             if(Feature.IS_ENABLE_FIREBASE_CRASHLYTICS)
@@ -823,7 +825,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
                 QuizResultViewData(mQuizPlayingCount, mCorrectAnswerCount)
             )
             viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_NORMAL)
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_NORMAL)
+                }
                 playResultByQuizCorrect()
             }
             mCurrentQuizPageIndex = -1
@@ -854,7 +858,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
             )
             _forceChangePageView.value = mQuizDisplayFragmentList.size - 1
             viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_NORMAL)
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_NORMAL)
+                }
                 playResultByQuizCorrect()
             }
         }
@@ -883,7 +889,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
             mQuizPlayTimerJob = viewModelScope.launch(Dispatchers.Default) {
                 while(true)
                 {
-                    delay(Common.DURATION_LONG)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_LONG)
+                    }
                     viewModelScope.launch(Dispatchers.Main) {
                         setQuestionTaskInformation()
                     }
@@ -919,7 +927,9 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
             Common.QUIZ_CODE_SOUND_TEXT ->
             {
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(Common.DURATION_NORMAL)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_NORMAL)
+                    }
                     playQuestionSound(mCurrentQuizPageIndex)
                 }
             }

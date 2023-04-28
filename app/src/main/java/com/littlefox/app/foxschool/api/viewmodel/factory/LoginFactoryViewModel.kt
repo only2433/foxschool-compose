@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -130,7 +131,9 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                     changeUserLoginData()
                     _toast.value = mContext.getString(R.string.message_password_change_complete)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_LONG)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_LONG)
+                        }
                         _hideDialogPasswordChange.call()
                         _finishActivity.call()
                     }
@@ -154,7 +157,9 @@ class LoginFactoryViewModel @Inject constructor(private val apiViewModel : Login
                     // 현재 비밀번호 유지
                     _toast.value = mContext.getString(R.string.message_password_change_complete)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_LONG)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_LONG)
+                        }
                         _hideDialogPasswordChange.call()
                         _finishActivity.call()
                     }

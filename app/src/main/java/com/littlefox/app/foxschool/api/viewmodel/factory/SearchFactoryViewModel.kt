@@ -48,13 +48,10 @@ import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import java.util.ArrayList
 
@@ -142,7 +139,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
                 data?.let {
                     updateBookshelfData(data)
                     viewModelScope.launch(Dispatchers.Main){
-                        delay(Common.DURATION_NORMAL)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_NORMAL)
+                        }
                         _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                     }
                 }
@@ -447,7 +446,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startQuizActivity()
         }
     }
@@ -456,7 +457,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startOriginTranslateActivity()
         }
     }
@@ -465,7 +468,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startVocabularyActivity()
         }
     }
@@ -486,7 +491,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startEbookActivity()
         }
     }
@@ -495,7 +502,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameStarwordsActivity()
         }
     }
@@ -504,7 +513,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameCrosswordActivity()
         }
     }
@@ -513,7 +524,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startFlashcardActivity()
         }
     }
@@ -528,7 +541,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         else
         {
             viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_SHORT)
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_SHORT)
+                }
                 startRecordPlayerActivity()
             }
         }
@@ -539,7 +554,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         mCurrentBookshelfAddResult = mMainInformationResult.getBookShelvesList()[index]
         Log.f("Add Item : " + mCurrentBookshelfAddResult!!.getName())
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             requestBookshelfContentsAddAsync(mSendBookshelfAddList)
         }
     }

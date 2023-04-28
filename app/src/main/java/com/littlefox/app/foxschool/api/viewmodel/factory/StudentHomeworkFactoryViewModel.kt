@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -299,7 +300,9 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     fun onPageChanged(position : Int)
     {
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_NORMAL)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
             if (position == Common.PAGE_HOMEWORK_CALENDAR)
             {
                 fragmentViewModel.onClearHomeworkListScene(true)
@@ -356,7 +359,9 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
     {
         Log.f("")
         viewModelScope.launch{
-            delay(Common.DURATION_NORMAL)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
             _isLoading.postValue(false)
         }
     }

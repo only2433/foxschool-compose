@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -73,7 +74,9 @@ class TeacherHomeworkCheckingFactoryViewModel @Inject constructor(private val ap
             apiViewModel.teacherHomeworkChecking.collect { data ->
                 data?.let {
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_NORMAL)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_NORMAL)
+                        }
                         (mContext as AppCompatActivity).finish()
                     }
                 }

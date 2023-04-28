@@ -219,7 +219,9 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                 data?.let {
                     updateVocabularyData(data)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_NORMAL)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_NORMAL)
+                        }
                         _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
                     }
                 }
@@ -261,7 +263,9 @@ class FlashcardFactoryViewModel @Inject constructor(private val apiViewModel : F
                         {
                             Log.f("FAIL ASYNC_CODE_VOCABULARY_CONTENTS_ADD")
                             viewModelScope.launch(Dispatchers.Main) {
-                                delay(Common.DURATION_SHORT)
+                                withContext(Dispatchers.IO){
+                                    delay(Common.DURATION_SHORT)
+                                }
                                 _errorMessage.value = result.message
                             }
                         }

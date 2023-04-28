@@ -34,6 +34,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -294,7 +295,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.MY_INFORMATION)
                 .setData("N")
@@ -306,7 +309,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_LEARNING_LOG)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -319,7 +324,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.RECORD_HISTORY)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -337,7 +344,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
             {
                 // 학급정보 있는 경우 화면 이동
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(Common.DURATION_SHORT)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_SHORT)
+                    }
                     IntentManagementFactory.getInstance()
                         .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
                         .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -356,7 +365,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
             {
                 // 학급정보 있는 경우 화면 이동
                 viewModelScope.launch(Dispatchers.Main) {
-                    delay(Common.DURATION_SHORT)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_SHORT)
+                    }
                     IntentManagementFactory.getInstance()
                         .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
                         .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -374,7 +385,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.FOXSCHOOL_NEWS)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -386,7 +399,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.FAQS)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -398,7 +413,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.INQUIRE)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
@@ -410,7 +427,9 @@ class MainFactoryViewModel @Inject constructor(private val apiViewModel : MainAp
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.APP_USE_GUIDE)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)

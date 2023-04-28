@@ -281,7 +281,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
             apiViewModel.addBookshelfContentsData.collect{ data ->
                 data?.let {
                     viewModelScope.launch(Dispatchers.Main){
-                        delay(Common.DURATION_NORMAL)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_NORMAL)
+                        }
                         _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                     }
                     resumePlayer()
@@ -333,7 +335,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                         {
                             Log.f("FAIL ASYNC_CODE_BOOKSHELF_CONTENTS_ADD")
                             viewModelScope.launch(Dispatchers.Main){
-                                delay(Common.DURATION_NORMAL)
+                                withContext(Dispatchers.IO){
+                                    delay(Common.DURATION_NORMAL)
+                                }
                                 _errorMessage.value = result.message
                             }
                         }
@@ -484,7 +488,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         mPlayListAdapter.setCurrentPlayIndex(mCurrentPlayMovieIndex)
 
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_NORMAL)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
             requestAuthContentPlay()
         }
     }
@@ -1146,7 +1152,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
             mUiUpdateTimerJob = viewModelScope.launch(Dispatchers.Default) {
                 while(true)
                 {
-                    delay(Common.DURATION_SHORTEST)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_SHORTEST)
+                    }
                     viewModelScope.launch(Dispatchers.Main) {
                         updateUI()
                     }
@@ -1158,7 +1166,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
 
                 while(true)
                 {
-                    delay(Common.DURATION_LONG)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_LONG)
+                    }
                     mCurrentWatchingTime += Common.SECOND
                     if(mCurrentWatchingTime >= MAX_WARNING_WATCH_MOVIE_TIME)
                     {
@@ -1475,7 +1485,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startEbookActivity()
         }
     }
@@ -1484,7 +1496,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startQuizAcitiviy()
         }
 
@@ -1494,7 +1508,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startVocabularyActivity()
         }
     }
@@ -1503,7 +1519,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startOriginTranslateActivity()
         }
     }
@@ -1512,7 +1530,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameStarwordsActivity()
         }
     }
@@ -1521,7 +1541,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameCrosswordActivity()
         }
     }
@@ -1530,7 +1552,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startFlashcardActivity()
         }
     }
@@ -1545,7 +1569,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         else
         {
             viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_SHORT)
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_SHORT)
+                }
                 startRecordPlayerActivity()
             }
         }
@@ -1557,7 +1583,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         mSendBookshelfAddList.clear()
         mSendBookshelfAddList.add(mPlayInformationList[mSelectItemOptionIndex])
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             _dialogBottomBookshelfContentAdd.value = mMainInformationResult.getBookShelvesList()
         }
 
@@ -1642,7 +1670,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         Log.f("index : $index")
         mCurrentBookshelfAddResult = mMainInformationResult.getBookShelvesList().get(index)
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             requestBookshelfContentsAdd(mSendBookshelfAddList)
         }
     }

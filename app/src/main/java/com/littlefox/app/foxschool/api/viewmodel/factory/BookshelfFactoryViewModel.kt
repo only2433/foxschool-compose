@@ -37,6 +37,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -153,11 +154,15 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
                     refreshBookshelfItemData()
                     _enableFloatingToolbarLayout.value = false
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_NORMAL)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_NORMAL)
+                        }
                         _successMessage.value = mContext.resources.getString(R.string.message_success_delete_contents)
                         if(mBookItemInformationList!!.size == 0)
                         {
-                            delay(Common.DURATION_NORMAL)
+                            withContext(Dispatchers.IO){
+                                delay(Common.DURATION_NORMAL)
+                            }
                             (mContext as AppCompatActivity).onBackPressed()
                         }
                     }
@@ -197,10 +202,10 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
                         {
                             _enableFloatingToolbarLayout.value = false
                             viewModelScope.launch(Dispatchers.Main) {
-                                delay(Common.DURATION_NORMAL)
+                                withContext(Dispatchers.IO){
+                                    delay(Common.DURATION_NORMAL)
+                                }
                                 _errorMessage.value = result.message
-                              //  delay(Common.DURATION_NORMAL)
-                            //    (mContext as AppCompatActivity).onBackPressed()
                             }
                         }
                     }
@@ -447,7 +452,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startQuizActivity()
         }
     }
@@ -456,7 +463,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startOriginTranslateActivity()
         }
     }
@@ -465,7 +474,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startVocabularyActivity()
         }
     }
@@ -482,7 +493,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startEbookActivity()
         }
     }
@@ -491,7 +504,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameStarwordsActivity()
         }
     }
@@ -500,7 +515,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startGameCrosswordActivity()
         }
     }
@@ -509,7 +526,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     {
         Log.f("")
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             startFlashcardActivity()
         }
     }
@@ -524,7 +543,9 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
         else
         {
             viewModelScope.launch(Dispatchers.Main) {
-                delay(Common.DURATION_SHORT)
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_SHORT)
+                }
                 startRecordPlayerActivity()
             }
         }

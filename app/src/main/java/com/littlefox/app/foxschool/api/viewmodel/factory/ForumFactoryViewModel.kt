@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -185,7 +186,9 @@ class ForumFactoryViewModel @Inject constructor(private val apiViewModel : Forum
         mMainFragmentSelectionPagerAdapter.notifyDataSetChanged()
 
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_SHORT)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
             when(mForumType)
             {
                 ForumType.FAQ ->

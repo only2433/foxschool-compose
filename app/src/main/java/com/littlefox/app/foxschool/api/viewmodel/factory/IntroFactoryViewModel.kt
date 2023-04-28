@@ -34,11 +34,8 @@ import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import com.littlefox.logmonitor.enumItem.MonitorMode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -129,7 +126,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
         setupViewModelObserver()
 
         viewModelScope.launch(Dispatchers.Main) {
-            delay(Common.DURATION_NORMAL)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
             prepare()
         }
     }
@@ -209,7 +208,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
                     enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_SHORT_LONG)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_SHORT_LONG)
+                        }
                         startMainActivity()
                     }
                 }
@@ -224,7 +225,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     changeUserLoginData()
                     _toast.value = mContext.getString(R.string.message_password_change_complete)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_LONG)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_LONG)
+                        }
                         _hideDialogPasswordChange.call()
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
@@ -250,7 +253,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
                     // 현재 비밀번호 유지
                     _toast.value = mContext.getString(R.string.message_password_change_complete)
                     viewModelScope.launch(Dispatchers.Main) {
-                        delay(Common.DURATION_LONG)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_LONG)
+                        }
                         _hideDialogPasswordChange.call()
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
@@ -547,7 +552,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
     {
         _bottomViewType.value = IntroViewMode.PROGRESS
         viewModelScope.launch{
-            delay(Common.DURATION_NORMAL)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
             requestInitAsync()
             requestAutoLoginAsync()
             requestMainInformationAsync()
@@ -612,7 +619,9 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
     {
         Log.f("")
         mEasterEggJob = viewModelScope.launch {
-            delay(Common.DURATION_EASTER_EGG)
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_EASTER_EGG)
+            }
             CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
         }
     }
