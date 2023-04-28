@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.`object`.result.content
 import android.os.Parcel
 import android.os.Parcelable
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
 
 class ContentsBaseResult  : Parcelable
 {
@@ -18,6 +19,18 @@ class ContentsBaseResult  : Parcelable
     private var isOptionDisable = false
 
     constructor() {}
+
+    constructor(data : ContentBasePagingResult)
+    {
+        id = data.id
+        seq = data.seq
+        type = data.type
+        name = data.name
+        sub_name = data.sub_name
+        thumbnail_url = data.thumbnail_url
+        service_info = data.service_info
+        story_chk = data.story_chk
+    }
 
     protected constructor(`in` : Parcel)
     {

@@ -69,6 +69,12 @@ object Injection
     }
 
     @Provides
+    fun provideSearchApiViewModel() : SearchApiViewModel
+    {
+        return SearchApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun provideStudentHomeworkApiViewModel() : StudentHomeworkApiViewModel
     {
         return StudentHomeworkApiViewModel(provideFoxSchoolRepository())

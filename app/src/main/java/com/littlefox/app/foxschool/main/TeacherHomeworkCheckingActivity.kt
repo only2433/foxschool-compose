@@ -208,21 +208,6 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
         _CommentInputCountText.text = text
     }
 
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
-
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
     override fun dispatchTouchEvent(ev : MotionEvent) : Boolean
     {
         if(ev.action == MotionEvent.ACTION_UP)

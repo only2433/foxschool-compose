@@ -3,16 +3,23 @@ package com.littlefox.app.foxschool.api.di
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.google.gson.JsonObject
 import com.littlefox.app.foxschool.`object`.result.forum.paging.ForumBasePagingResult
 import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.base.safeApiCall
 import com.littlefox.app.foxschool.api.paging.ForumPagingSource
+import com.littlefox.app.foxschool.api.paging.SearchPagingSource
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizStudyRecordData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
+import com.littlefox.app.foxschool.`object`.result.search.paging.SearchListPagingResult
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -286,6 +293,14 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         return Pager(
             config = PagingConfig(enablePlaceholders = false, pageSize = Common.PAGE_LOAD_COUNT),
             pagingSourceFactory = { ForumPagingSource(remote)}
+        ).flow
+    }
+
+    fun getSearchListStream(searchType : String = "", keyword: String) : Flow<PagingData<ContentBasePagingResult>>
+    {
+        return Pager(
+            config = PagingConfig(enablePlaceholders = false, pageSize = Common.PAGE_LOAD_COUNT),
+            pagingSourceFactory = {SearchPagingSource(remote, searchType, keyword)}
         ).flow
     }
 }

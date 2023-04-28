@@ -1,21 +1,18 @@
-package com.littlefox.app.foxschool.`object`.result.forum.paging
+package com.littlefox.app.foxschool.`object`.result.search.paging
 
 import com.google.gson.annotations.SerializedName
 import com.littlefox.app.foxschool.`object`.result.common.MetaDataPagingResult
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import java.util.ArrayList
 
-data class ForumBaseListPagingResult(
-    @SerializedName("isnew")
-    val isnew : String = "",
-
+data class SearchListPagingResult(
     @SerializedName("list")
-    val list : ArrayList<ForumBasePagingResult> = ArrayList<ForumBasePagingResult>(),
+    val list : ArrayList<ContentBasePagingResult> = ArrayList<ContentBasePagingResult>(),
 
     @SerializedName("meta")
     val meta : MetaDataPagingResult? = null
 )
 {
-    fun getIsNew() : String = isnew
 
     val currentPageIndex : Int
         get()
@@ -44,7 +41,7 @@ data class ForumBaseListPagingResult(
         {
             if(meta != null)
             {
-                if(meta.current_page === meta.last_page)
+                if(meta.current_page == meta.last_page)
                 {
                     return true
                 }
@@ -52,16 +49,17 @@ data class ForumBaseListPagingResult(
             return false
         }
 
-    val totalItemCount : Int
-        get()
+    fun getSearchList() : ArrayList<ContentBasePagingResult> = list
+
+
+
+    fun getTotalItemCount() : Int
+    {
+        if(meta != null)
         {
-            if(meta != null)
-            {
-                return meta.total
-            }
-            else
-                return 0
+            return meta.total
         }
 
-    fun getNewsList() : List<ForumBasePagingResult> = list
+        return 0
+    }
 }

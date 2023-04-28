@@ -12,28 +12,52 @@ import android.view.Window
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.annotation.Nullable
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 import butterknife.*
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
+import com.littlefox.app.foxschool.adapter.SearchListItemPagingAdapter
+import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
+import com.littlefox.app.foxschool.api.viewmodel.factory.SearchFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Font
+import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
+import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.BookAddListener
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.main.contract.SearchListContract
 import com.littlefox.app.foxschool.main.presenter.SearchListPresenter
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+
 import com.littlefox.library.system.handler.callback.MessageHandlerCallback
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
+import com.littlefox.library.view.scroller.FixedSpeedScroller
+import com.littlefox.library.view.scroller.SmoothListviewScroller
 import com.littlefox.logmonitor.Log
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection
 import com.ssomai.android.scalablelayout.ScalableLayout
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
+import java.util.ArrayList
 
-class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListContract.View
+@AndroidEntryPoint
+class SearchListActivity : BaseActivity()
 {
     @BindView(R.id._mainBaseLayout)
     lateinit var _MainBaseLayout : CoordinatorLayout
@@ -80,13 +104,13 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     @BindView(R.id._searchItemList)
     lateinit var _SearchItemListView : RecyclerView
 
-    @Nullable
+    @JvmField
     @BindView(R.id._searchConfirmIcon)
-    lateinit var _SearchConfirmIcon : ImageView
+    var _SearchConfirmIcon : ImageView? = null
 
-    @Nullable
+    @JvmField
     @BindView(R.id._searchConfirmTabletIcon)
-    lateinit var _SearchConfirmTabletIcon : TextView
+    var _SearchConfirmTabletIcon : TextView? = null
 
     @BindView(R.id._searchEditText)
     lateinit var _SearchEditText : EditText
@@ -94,9 +118,14 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
     @BindView(R.id._progressWheelLayout)
     lateinit var _ProgressWheelLayout : ScalableLayout
 
-    private lateinit var mSearchListPresenter : SearchListPresenter
     private var mMaterialLoadingDialog : MaterialLoadingDialog? = null
     private var isSearching : Boolean = false // 검색중인 상태인지 (통신진행중)
+
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+    private var mBottomContentItemOptionDialog: BottomContentItemOptionDialog? = null
+    private var mBottomBookAddDialog: BottomBookAddDialog? = null
+    private lateinit var mFixedSpeedScroller : SmoothListviewScroller
+    private val factoryViewModel : SearchFactoryViewModel by viewModels()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState : Bundle?)
@@ -114,25 +143,29 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
             setContentView(R.layout.activity_search)
         }
         ButterKnife.bind(this)
-        mSearchListPresenter = SearchListPresenter(this)
+
+        initView()
+        initFont()
+        setupObserverViewModel()
+        factoryViewModel.init(this)
     }
 
     override fun onResume()
     {
         super.onResume()
-        mSearchListPresenter.resume()
+        factoryViewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-        mSearchListPresenter.pause()
+        factoryViewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
-        mSearchListPresenter.destroy()
+        factoryViewModel.destroy()
     }
 
     override fun finish()
@@ -147,6 +180,9 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         _TitleText.text = resources.getString(R.string.text_search)
         _CloseButton.visibility = View.VISIBLE
         _CloseButtonRect.visibility = View.VISIBLE
+
+        mFixedSpeedScroller = SmoothListviewScroller(this)
+        mFixedSpeedScroller.targetPosition = 0
 
         if(CommonUtils.getInstance(this).checkTablet)
         {
@@ -173,7 +209,59 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
 
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            _SearchConfirmTabletIcon.typeface = Font.getInstance(this).getTypefaceMedium()
+            _SearchConfirmTabletIcon?.typeface = Font.getInstance(this).getTypefaceMedium()
+        }
+    }
+
+    override fun setupObserverViewModel()
+    {
+        factoryViewModel.isLoading.observe(this){ loading ->
+            if(loading)
+            {
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
+            }
+        }
+        factoryViewModel.toast.observe(this){ message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+        factoryViewModel.successMessage.observe(this) { message ->
+            showSuccessMessage(message)
+        }
+        factoryViewModel.errorMessage.observe(this){ message ->
+            showErrorMessage(message)
+        }
+        factoryViewModel.showSearchListView.observe(this){ adapter ->
+            showSearchListView(adapter)
+        }
+        factoryViewModel.dialogBottomOption.observe(this){ data ->
+            showBottomContentItemDialog(data)
+        }
+        factoryViewModel.dialogBottomBookshelfContentAdd.observe(this){ list ->
+            showBottomBookAddDialog(list)
+        }
+        factoryViewModel.dialogRecordPermission.observe(this){
+            showChangeRecordPermissionDialog()
+        }
+        factoryViewModel.showContentsLoading.observe(this){
+            showContentsListLoading()
+        }
+        factoryViewModel.hideContentsLoading.observe(this){
+            hideContentsListLoading()
+        }
+
+        factoryViewModel.enableRefreshLoading.observe(this){ enable ->
+            if(enable)
+            {
+                _SearchSwipeRefreshLayout.isRefreshing = true
+            }
+            else
+            {
+                _SearchSwipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 
@@ -188,12 +276,8 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         _TitleBaselayout.setBackgroundColor(resources.getColor(backgroundColor))
     }
 
-    override fun handlerMessage(message : Message)
-    {
-        mSearchListPresenter.sendMessageEvent(message)
-    }
 
-    override fun showContentsListLoading()
+    fun showContentsListLoading()
     {
         if(_ProgressWheelLayout.visibility == View.GONE)
         {
@@ -204,7 +288,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         }
     }
 
-    override fun hideContentsListLoading()
+    fun hideContentsListLoading()
     {
         if(_ProgressWheelLayout.visibility == View.VISIBLE)
         {
@@ -215,35 +299,57 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         }
     }
 
-    override fun showLoading()
-    {
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
 
-    override fun hideLoading()
-    {
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
-    override fun showSuccessMessage(message : String)
+    fun showSuccessMessage(message : String)
     {
         CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message)
     }
 
-    override fun showErrorMessage(message : String)
+    fun showErrorMessage(message : String)
     {
         CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message)
     }
 
+    private fun showChangeRecordPermissionDialog()
+    {
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_record_permission))
+            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(
+                resources.getString(R.string.text_cancel),
+                resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showBottomContentItemDialog(result : ContentsBaseResult)
+    {
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(this, result)
+            ?.setItemOptionListener(mItemOptionListener)
+            ?.setFullName()
+            ?.setView()
+        mBottomContentItemOptionDialog?.show()
+    }
+
+    private fun showBottomBookAddDialog(list: ArrayList<MyBookshelfResult>)
+    {
+        mBottomContentItemOptionDialog?.dismiss()
+
+        mBottomBookAddDialog = BottomBookAddDialog(this).apply {
+            setCancelable(true)
+            setBookshelfData(list)
+            setBookSelectListener(mBookAddListener)
+            show()
+        }
+    }
+
+
     /**
      * 리스트 표시 애니메이션
      */
-    override fun showSearchListView(detailListItemAdapter : DetailListItemAdapter)
+    fun showSearchListView(detailListItemAdapter : SearchListItemPagingAdapter)
     {
         val animationController = AnimationUtils.loadLayoutAnimation(this, R.anim.listview_layoutanimation)
         val linearLayoutManager = LinearLayoutManager(this)
@@ -255,7 +361,7 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         }
     }
 
-    override fun cancelRefreshView()
+    fun cancelRefreshView()
     {
         Log.f("")
         if(_SearchSwipeRefreshLayout.isRefreshing)
@@ -326,17 +432,17 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
             R.id._searchAllRect ->
             {
                 switchSearchTypeIcon(Common.CONTENT_TYPE_ALL)
-                mSearchListPresenter.onClickSearchType(Common.CONTENT_TYPE_ALL)
+                factoryViewModel.onClickSearchType(Common.CONTENT_TYPE_ALL)
             }
             R.id._searchStoryRect ->
             {
                 switchSearchTypeIcon(Common.CONTENT_TYPE_STORY)
-                mSearchListPresenter.onClickSearchType(Common.CONTENT_TYPE_STORY)
+                factoryViewModel.onClickSearchType(Common.CONTENT_TYPE_STORY)
             }
             R.id._searchSongRect ->
             {
                 switchSearchTypeIcon(Common.CONTENT_TYPE_SONG)
-                mSearchListPresenter.onClickSearchType(Common.CONTENT_TYPE_SONG)
+                factoryViewModel.onClickSearchType(Common.CONTENT_TYPE_SONG)
             }
             R.id._searchCancelIcon ->
             {
@@ -344,7 +450,14 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
             }
             R.id._searchConfirmIcon, R.id._searchConfirmTabletIcon ->
             {
-                mSearchListPresenter.onClickSearchExecute(_SearchEditText.text.toString())
+                mFixedSpeedScroller.targetPosition = 0
+                CoroutineScope(Dispatchers.Main).launch {
+                    _SearchItemListView.layoutManager?.startSmoothScroll(mFixedSpeedScroller)
+                    withContext(Dispatchers.IO){
+                        delay(Common.DURATION_SHORT)
+                    }
+                    factoryViewModel.onClickSearchExecute(_SearchEditText.text.toString())
+                }
             }
         }
     }
@@ -382,13 +495,13 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         val alpha = if(isEnable) 1.0f else 0.5f
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            _SearchConfirmTabletIcon.isEnabled = isEnable
-            _SearchConfirmTabletIcon.alpha = alpha
+            _SearchConfirmTabletIcon?.isEnabled = isEnable
+            _SearchConfirmTabletIcon?.alpha = alpha
         }
         else
         {
-            _SearchConfirmIcon.isEnabled = isEnable
-            _SearchConfirmIcon.alpha = alpha
+            _SearchConfirmIcon?.isEnabled = isEnable
+            _SearchConfirmIcon?.alpha = alpha
         }
     }
 
@@ -405,9 +518,16 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
             {
                 EditorInfo.IME_ACTION_SEARCH ->
                 {
-                    mSearchListPresenter.onClickSearchExecute(_SearchEditText.text.toString())
                     CommonUtils.getInstance(this@SearchListActivity).hideKeyboard()
                     _SearchEditText.clearFocus()
+                    mFixedSpeedScroller.targetPosition = 0
+                    CoroutineScope(Dispatchers.Main).launch {
+                        _SearchItemListView.layoutManager?.startSmoothScroll(mFixedSpeedScroller)
+                        withContext(Dispatchers.IO){
+                            delay(Common.DURATION_SHORT)
+                        }
+                        factoryViewModel.onClickSearchExecute(_SearchEditText.text.toString())
+                    }
                 }
             }
             return true
@@ -462,7 +582,76 @@ class SearchListActivity : BaseActivity(), MessageHandlerCallback, SearchListCon
         override fun onRefresh(direction : SwipyRefreshLayoutDirection?)
         {
             Log.f("direction : $direction")
-            mSearchListPresenter.requestRefresh()
+           // mSearchListPresenter.requestRefresh()
+        }
+    }
+
+    private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
+    {
+        override fun onClickQuiz()
+        {
+            factoryViewModel.onClickQuizButton()
+        }
+
+        override fun onClickTranslate()
+        {
+            factoryViewModel.onClickTranslateButton()
+        }
+
+        override fun onClickVocabulary()
+        {
+            factoryViewModel.onClickVocabularyButton()
+        }
+
+        override fun onClickBookshelf()
+        {
+            factoryViewModel.onClickAddBookshelfButton()
+        }
+
+        override fun onClickEbook()
+        {
+            factoryViewModel.onClickEbookButton()
+        }
+
+        override fun onClickGameStarwords()
+        {
+            factoryViewModel.onClickStarwordsButton()
+        }
+
+        override fun onClickGameCrossword()
+        {
+            factoryViewModel.onClickCrosswordButton()
+        }
+
+        override fun onClickFlashCard()
+        {
+            factoryViewModel.onClickFlashcardButton()
+        }
+
+        override fun onClickRecordPlayer()
+        {
+            factoryViewModel.onClickRecordPlayerButton()
+        }
+    }
+
+    private val mBookAddListener : BookAddListener = object : BookAddListener
+    {
+        override fun onClickBook(index : Int)
+        {
+            factoryViewModel.onDialogAddBookshelfClick(index)
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            factoryViewModel.onDialogClick(eventType)
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            factoryViewModel.onDialogChoiceClick(buttonType, eventType)
         }
     }
 }

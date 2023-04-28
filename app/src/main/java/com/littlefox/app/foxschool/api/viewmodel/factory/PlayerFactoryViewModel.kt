@@ -287,7 +287,6 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                     resumePlayer()
                 }
             }
-
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {

@@ -313,23 +313,6 @@ class TeacherHomeworkManageActivity : BaseActivity()
         }
     }
 
-    override fun showLoading()
-    {
-        Log.f("")
-        mMaterialLoadingDialog = MaterialLoadingDialog(
-            this,
-            CommonUtils.getInstance(this).getPixel(Common.LOADING_DIALOG_SIZE)
-        )
-        mMaterialLoadingDialog?.show()
-    }
-
-    override fun hideLoading()
-    {
-        Log.f("")
-        mMaterialLoadingDialog?.dismiss()
-        mMaterialLoadingDialog = null
-    }
-
     override fun onBackPressed()
     {
         CommonUtils.getInstance(this).hideKeyboard()

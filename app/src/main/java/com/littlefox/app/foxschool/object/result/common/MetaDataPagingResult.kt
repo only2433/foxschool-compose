@@ -1,8 +1,8 @@
-package com.littlefox.app.foxschool.`object`.result.forum.paging
+package com.littlefox.app.foxschool.`object`.result.common
 
 import com.google.gson.annotations.SerializedName
 
-data class ForumMetaDataPagingResult(
+data class MetaDataPagingResult(
 
     @SerializedName("current_page")
     var current_page : Int = 0,

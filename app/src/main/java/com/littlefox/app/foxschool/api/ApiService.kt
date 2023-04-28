@@ -18,6 +18,9 @@ import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
 import com.littlefox.app.foxschool.`object`.result.quiz.QuizInformationResult
+import com.littlefox.app.foxschool.`object`.result.search.SearchListResult
+import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
+import com.littlefox.app.foxschool.`object`.result.search.paging.SearchListPagingResult
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -83,12 +86,6 @@ interface ApiService
         @Field("hw_no") homeworkNumber : Int? = null
     ) : Response<BaseResponse<Nothing>>
 
-    @FormUrlEncoded
-    @POST("contents/bookshelves/{data}/contents")
-    suspend fun addBookshelfContentsAsync(
-        @Path("data") bookshelfID: String,
-        @FieldMap queryMap : Map<String, String>
-    ) : Response<BaseResponse<MyBookshelfResult>>
 
     @GET ("contents/quiz/{content_id}")
     suspend fun quizInformationAsync(
@@ -119,6 +116,13 @@ interface ApiService
         @Path("bookshelf_id") bookshelfID : String
     ) : Response<BaseResponse<ArrayList<ContentsBaseResult>>>
 
+    @FormUrlEncoded
+    @PUT("contents/bookshelves/{data}/contents")
+    suspend fun addBookshelfContentsAsync(
+        @Path("data") bookshelfID: String,
+        @FieldMap queryMap : Map<String, String>
+    ) : Response<BaseResponse<MyBookshelfResult>>
+
     @DELETE("contents/bookshelves/{bookshelf_id}/contents")
     suspend fun deleteBookshelfContents(
         @Path("bookshelf_id") bookshelfID : String,
@@ -147,6 +151,14 @@ interface ApiService
         @Query("per_page") pageCount: Int,
         @Query("page") currentPage: Int
     ) : Response<BaseResponse<ForumBaseListPagingResult>>
+
+    @GET("contents/search")
+    suspend fun getSearchList(
+        @Query("type") searchType: String? = null,
+        @Query("keyword") keyword: String,
+        @Query("per_page") pageCount: Int,
+        @Query("page") currentPage: Int
+    ) : Response<BaseResponse<SearchListPagingResult>>
 
     @GET("homeworks/student")
     suspend fun studentHomeworkCalendarAsync(
