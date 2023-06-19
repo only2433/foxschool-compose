@@ -36,7 +36,6 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     private val _changePasswordKeepData = MutableStateFlow<BaseResponse<Nothing>?>(null)
     val changePasswordKeepData : MutableStateFlow<BaseResponse<Nothing>?> = _changePasswordKeepData
 
-
     private suspend fun getVersion(deviceID : String, pushAddress : String, pushOn : String)
     {
         val result = repository.getVersion(deviceID, pushAddress, pushOn)
