@@ -85,12 +85,12 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_homework_checking_tablet)
         }
         else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_homework_checking)
         }
 
@@ -159,35 +159,36 @@ class TeacherHomeworkCheckingActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
-            if (loading)
+        factoryViewModel.isLoading.observe(this) {loading ->
+            if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> {message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.errorMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.settingBeforeData.observe(this, Observer<Pair<Int, String>> {pair ->
+        factoryViewModel.settingBeforeData.observe(this) {pair ->
             setViewChecked(pair.first)
-            if (pair.second != "") _CommentEditText.setText(pair.second)
+            if(pair.second != "") _CommentEditText.setText(pair.second)
             _CheckingRegisterButton.setText(resources.getString(R.string.text_change))
             setCommentCountText()
-        })
+        }
     }
     /** Init end **/
 

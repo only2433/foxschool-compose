@@ -34,6 +34,7 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_MAIN)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -52,6 +53,7 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                     getMain()
                 }
             }
+            else ->{}
         }
     }
 }

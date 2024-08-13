@@ -73,7 +73,7 @@
             android:id="@+id/_contentTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Bat and Friends 1: Hunting for Bugs"
             android:gravity="center_vertical|left"
             android:textColor="@color/color_444444"
             app:scale_left="494"

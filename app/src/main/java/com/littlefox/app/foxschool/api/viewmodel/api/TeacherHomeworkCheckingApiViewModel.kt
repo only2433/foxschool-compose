@@ -34,6 +34,7 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CHECKING)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -58,6 +59,7 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
                     )
                 }
             }
+            else ->{}
         }
     }
 }

@@ -562,6 +562,7 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
                 {
                     requestBookshelfRemoveAsync()
                 }
+                else ->{}
             }
         }
         else if(eventType == DIALOG_EVENT_WARNING_RECORD_PERMISSION)

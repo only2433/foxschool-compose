@@ -49,6 +49,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -70,6 +71,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -91,6 +93,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -112,6 +115,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -133,6 +137,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -196,6 +201,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                     )
                 }
             }
+            else ->{}
         }
     }
 

@@ -172,11 +172,11 @@ class MainActivity() : BaseActivity()
 
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_main_tablet)
         } else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_main)
         }
         ButterKnife.bind(this)
@@ -275,64 +275,65 @@ class MainActivity() : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
-            if (loading)
+        factoryViewModel.isLoading.observe(this) {loading ->
+            if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.errorMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainContentCoordinatorLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.showIACInformationDialog.observe(this, Observer { result ->
+        factoryViewModel.showIACInformationDialog.observe(this) {result ->
             showIACInformationDialog(result)
-        })
+        }
 
-        factoryViewModel.showNoClassStudentDialog.observe(this, Observer {
+        factoryViewModel.showNoClassStudentDialog.observe(this) {
             showStudentNoClassDialog()
-        })
+        }
 
-        factoryViewModel.showNoClassTeacherDialog.observe(this, Observer {
+        factoryViewModel.showNoClassTeacherDialog.observe(this) {
             showTeacherNoClassDialog()
-        })
+        }
 
-        factoryViewModel.showAppEndDialog.observe(this, Observer {
+        factoryViewModel.showAppEndDialog.observe(this) {
             showAppEndDialog()
-        })
+        }
 
-        factoryViewModel.settingViewPager.observe(this, Observer { adapter ->
+        factoryViewModel.settingViewPager.observe(this) {adapter ->
             initViewPager(adapter)
-        })
+        }
 
-        factoryViewModel.settingMenuView.observe(this, Observer { pair ->
+        factoryViewModel.settingMenuView.observe(this) {pair ->
             val isUpdateHomework = pair.first
             val isUpdateNews = pair.second
 
             Log.f("isUpdateHomework : $isUpdateHomework, isUpdateNews : $isUpdateNews")
             initMenuView(isUpdateHomework, isUpdateNews)
-        })
+        }
 
-        factoryViewModel.settingUserInformation.observe(this, Observer { userInformation ->
+        factoryViewModel.settingUserInformation.observe(this) {userInformation ->
             mLoginInformationResult = userInformation
 
             settingUserLayout()
             settingLayoutColor()
             settingSchoolName()
-        })
+        }
     }
 
     private fun showDownloadMessage(message : String)

@@ -164,62 +164,60 @@ class QuizActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+        factoryViewModel.isLoading.observe(this) {loading ->
             if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        }
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+        }
+        factoryViewModel.successMessage.observe(this) {message ->
             showSuccessMessage(message)
-        })
-        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+        }
+        factoryViewModel.errorMessage.observe(this) {message ->
             showErrorMessage(message)
-        })
-        factoryViewModel.showPagerView.observe(this, Observer<QuizSelectionPagerAdapter> { adapter ->
+        }
+        factoryViewModel.showPagerView.observe(this) {adapter ->
             showPagerView(adapter)
-        })
-        factoryViewModel.forceChangePageView.observe(this, Observer<Int> { page ->
+        }
+        factoryViewModel.forceChangePageView.observe(this) {page ->
             forceChangePageView(page)
-        })
-        factoryViewModel.nextPageView.observe(this, Observer<Void>{
+        }
+        factoryViewModel.nextPageView.observe(this) {
             nextPageView()
-        })
-        factoryViewModel.enableTaskBoxLayout.observe(this, Observer<Boolean> { enable ->
+        }
+        factoryViewModel.enableTaskBoxLayout.observe(this) {enable ->
             if(enable)
             {
                 showTaskBoxLayout()
-            }
-            else
+            } else
             {
                 hideTaskBoxLayout()
             }
-        })
-        factoryViewModel.showPlayTime.observe(this, Observer<String>{ data ->
+        }
+        factoryViewModel.showPlayTime.observe(this) {data ->
             showPlayTime(data)
-        })
-        factoryViewModel.showCorrectAnswerCount.observe(this, Observer<String> { data ->
+        }
+        factoryViewModel.showCorrectAnswerCount.observe(this) {data ->
             showCorrectAnswerCount(data)
-        })
-        factoryViewModel.showCorrectAnswerView.observe(this, Observer<Void> {
+        }
+        factoryViewModel.showCorrectAnswerView.observe(this) {
             showCorrectAnswerView()
-        })
-        factoryViewModel.showInCorrectAnswerView.observe(this, Observer<Void> {
+        }
+        factoryViewModel.showInCorrectAnswerView.observe(this) {
             showInCorrectAnswerView()
-        })
-        factoryViewModel.hideAnswerView.observe(this, Observer<Void> {
+        }
+        factoryViewModel.hideAnswerView.observe(this) {
             hideAnswerView()
-        })
-        factoryViewModel.dialogWarningText.observe(this, Observer<String> { message ->
+        }
+        factoryViewModel.dialogWarningText.observe(this) {message ->
             showMessageAlertDialog(message)
-        })
+        }
 
     }
 

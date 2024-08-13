@@ -135,11 +135,11 @@ class LoginActivity : BaseActivity()
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_login_tablet)
         } else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_login)
         }
 
@@ -229,49 +229,51 @@ class LoginActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
-            if (loading)
+        factoryViewModel.isLoading.observe(this) {loading ->
+            if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.errorMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.schoolList.observe(this, Observer<ArrayList<SchoolItemDataResult>> { data ->
+        factoryViewModel.schoolList.observe(this) {data ->
             mBaseSchoolList.addAll(data) // 학교 리스트 세팅
-        })
+        }
 
-        factoryViewModel.inputEmptyMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.inputEmptyMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.showDialogPasswordChange.observe(this, Observer<PasswordGuideType> { type ->
+        factoryViewModel.showDialogPasswordChange.observe(this) {type ->
             showPasswordChangeDialog(type)
-        })
+        }
 
-        factoryViewModel.hideDialogPasswordChange.observe(this, Observer{
+        factoryViewModel.hideDialogPasswordChange.observe(this) {
             hidePasswordChangeDialog()
-        })
+        }
 
-        factoryViewModel.finishActivity.observe(this, Observer{
+        factoryViewModel.finishActivity.observe(this) {
             setResult(Activity.RESULT_OK)
             finish()
-        })
+        }
     }
 
     override fun onNewIntent(intent : Intent?)

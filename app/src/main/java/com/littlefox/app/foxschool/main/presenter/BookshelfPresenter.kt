@@ -642,6 +642,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
                         mBookshelfContractView.showLoading()
                         requestBookshelfRemoveAsync()
                     }
+                    else ->{}
                 }
             }
             else if(eventType == DIALOG_TYPE_WARNING_RECORD_PERMISSION)

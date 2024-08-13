@@ -44,6 +44,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_AUTH_CONTENT_PLAY)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -65,6 +66,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -86,6 +88,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -130,6 +133,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                     )
                 }
             }
+            else ->{}
         }
     }
 

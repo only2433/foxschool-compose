@@ -32,6 +32,7 @@ import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
 import java.io.File
+import java.util.Locale
 
 class WebviewEbookActivity : BaseActivity()
 {
@@ -145,6 +146,11 @@ class WebviewEbookActivity : BaseActivity()
 
         _WebView = WebView(this)
         _WebviewBaseLayout.addView(_WebView, params)
+
+        Log.i("url : ${Common.URL_EBOOK}${mWebviewIntentParamsObject!!.getContentID()}");
+        Log.i("token : ${extraHeaders["Authorization"]}");
+        Log.i("locale : ${extraHeaders["api-locale"]}");
+        Log.i("user-agent : ${extraHeaders["api-user-agent"]}");
 
         _WebView.run {
             webViewClient = DataWebViewClient()

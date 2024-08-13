@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.management.IntentManagementFactory
-import com.littlefox.app.foxschool.receiver.NetworkConnectReceiver
 import com.littlefox.library.view.dialog.MaterialLoadingDialog
 import com.littlefox.logmonitor.ExceptionCheckHandler
 import com.littlefox.logmonitor.Log

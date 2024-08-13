@@ -183,95 +183,93 @@ class FlashCardActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+        factoryViewModel.isLoading.observe(this) {loading ->
             if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+        factoryViewModel.successMessage.observe(this) {message ->
             showSuccessMessage(message)
-        })
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+        factoryViewModel.errorMessage.observe(this) {message ->
             showErrorMessage(message)
-        })
+        }
 
-        factoryViewModel.showPagerView.observe(this, Observer<FlashcardSelectionPagerAdapter> { adapter ->
+        factoryViewModel.showPagerView.observe(this) {adapter ->
             showPagerView(adapter)
-        })
+        }
 
-        factoryViewModel.settingSoundButton.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.settingSoundButton.observe(this) {enable ->
             settingSoundButton(enable)
-        })
+        }
 
-        factoryViewModel.settingAutoPlayInterval.observe(this, Observer<Int> { interval ->
+        factoryViewModel.settingAutoPlayInterval.observe(this) {interval ->
             settingAutoPlayInterval(interval)
-        })
+        }
 
-        factoryViewModel.settingBaseControlView.observe(this, Observer<FlashcardStatus> { status ->
+        factoryViewModel.settingBaseControlView.observe(this) {status ->
             settingBaseControlView(status)
-        })
+        }
 
-        factoryViewModel.checkAutoplayBox.observe(this, Observer<Pair<FlashcardStatus, Boolean>> { data ->
+        factoryViewModel.checkAutoplayBox.observe(this) {data ->
             checkAutoplayBox(data.first, data.second)
-        })
+        }
 
-        factoryViewModel.checkShuffleBox.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.checkShuffleBox.observe(this) {enable ->
             checkShuffleBox(enable)
-        })
+        }
 
-        factoryViewModel.showCoachMarkView.observe(this, Observer<Void> {
+        factoryViewModel.showCoachMarkView.observe(this) {
             showCoachMarkView()
-        })
+        }
 
-        factoryViewModel.prevPageView.observe(this, Observer<Void> {
+        factoryViewModel.prevPageView.observe(this) {
             prevPageView()
-        })
+        }
 
-        factoryViewModel.nextPageView.observe(this, Observer<Void> {
+        factoryViewModel.nextPageView.observe(this) {
             nextPageView()
-        })
+        }
 
-        factoryViewModel.enableBottomViewLayout.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.enableBottomViewLayout.observe(this) {enable ->
             if(enable)
             {
                 showBottomViewLayout()
-            }
-            else
+            } else
             {
                 hideBottomViewLayout()
             }
-        })
+        }
 
-        factoryViewModel.forceChangePageView.observe(this, Observer<Int> { position ->
+        factoryViewModel.forceChangePageView.observe(this) {position ->
             forceChangePageView(position)
-        })
+        }
 
-        factoryViewModel.dialogEmptyBookmark.observe(this, Observer<Void> {
+        factoryViewModel.dialogEmptyBookmark.observe(this) {
             showBookmarkEmptyDialog()
-        })
+        }
 
-        factoryViewModel.dialogReplayWarningBookmark.observe(this, Observer<Void> {
+        factoryViewModel.dialogReplayWarningBookmark.observe(this) {
             showBookmarkWarningDialog(FlashcardFactoryViewModel.DIALOG_BOOKMARK_INIT)
-        })
+        }
 
-        factoryViewModel.dialogCloseWarningBookmark.observe(this, Observer<Void> {
+        factoryViewModel.dialogCloseWarningBookmark.observe(this) {
             showBookmarkWarningDialog(FlashcardFactoryViewModel.DIALOG_CLOSE_APP)
-        })
+        }
 
-        factoryViewModel.dialogBottomVocabularyContentAdd.observe(this, Observer<ArrayList<MyVocabularyResult>> { list ->
+        factoryViewModel.dialogBottomVocabularyContentAdd.observe(this) {list ->
             showBottomVocabularyAddDialog(list)
-        })
+        }
     }
     /** ========== Init ========== */
 

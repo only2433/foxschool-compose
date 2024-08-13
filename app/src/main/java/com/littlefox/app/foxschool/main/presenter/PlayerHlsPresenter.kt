@@ -1742,6 +1742,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 {
                     if(code == Common.COROUTINE_CODE_AUTH_CONTENT_PLAY)
                     {
+
+
                         Log.f("Auth Content data error retry popup")
                         mPlayerContractView.hideMovieLoading()
                         showTemplateAlertDialog(DIALOG_TYPE_WARNING_API_EXCEPTION,

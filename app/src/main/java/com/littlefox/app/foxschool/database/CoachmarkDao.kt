@@ -1,7 +1,8 @@
 package com.littlefox.app.foxschool.database
 
 import androidx.room.*
-import androidx.room.OnConflictStrategy.REPLACE
+
+
 
 @Dao
 interface CoachmarkDao
@@ -12,10 +13,10 @@ interface CoachmarkDao
     @Query("SELECT * FROM coachMark WHERE user_id LIKE :userID LIMIT 1")
     fun getSavedCoachmarkUser(userID : String) : CoachmarkEntity
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItem(coachmarkEntity : CoachmarkEntity)
 
-    @Update(onConflict = REPLACE)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateItem(coachmarkEntity : CoachmarkEntity)
 
     @Delete

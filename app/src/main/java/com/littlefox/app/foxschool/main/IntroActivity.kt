@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -65,7 +66,7 @@ class IntroActivity : BaseActivity()
     lateinit var _FrameAnimationView : ImageView
 
     @BindView(R.id._introItemSelectLayout)
-    lateinit var _IntroItemSelectLayout : ScalableLayout
+    lateinit var _IntroItemSelectLayout : ScalableLayout//
 
     @BindView(R.id._introMessageText)
     lateinit var _IntroTitleText : TextView
@@ -99,11 +100,11 @@ class IntroActivity : BaseActivity()
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).isTabletModel)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_intro_tablet)
         } else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_intro)
         }
         ButterKnife.bind(this)
@@ -121,7 +122,15 @@ class IntroActivity : BaseActivity()
     {
         super.onResume()
         factoryViewModel.resume()
-        registerReceiver(mBroadcastReceiver, mHomeKeyIntentFilter)
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            registerReceiver(mBroadcastReceiver, mHomeKeyIntentFilter, RECEIVER_NOT_EXPORTED)
+        }
+        else
+        {
+            registerReceiver(mBroadcastReceiver, mHomeKeyIntentFilter)
+        }
+
     }
 
     override fun onPause()
@@ -159,71 +168,77 @@ class IntroActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+        factoryViewModel.isLoading.observe(this) {loading ->
             if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.bottomViewType.observe(this, Observer<IntroViewMode> {mode ->
-                when(mode)
+        factoryViewModel.bottomViewType.observe(this) {mode ->
+            when(mode)
+            {
+                IntroViewMode.PROGRESS ->
                 {
-                    IntroViewMode.PROGRESS ->
-                    {
-                        Log.f("------> IntroViewMode.PROGRESS")
-                        _IntroItemSelectLayout.setVisibility(View.GONE)
-                        _ProgressLayout.setVisibility(View.VISIBLE)
-                        _FrameAnimationLayout.setVisibility(View.VISIBLE)
-                        startFrameAnimation()
-                    }
-                    IntroViewMode.SELECT ->
-                    {
-                        Log.f("------> IntroViewMode.SELECT")
-                        _IntroItemSelectLayout.setVisibility(View.VISIBLE)
-                        _ProgressLayout.setVisibility(View.GONE)
-                        _FrameAnimationLayout.setVisibility(View.GONE)
-                    }
+                    Log.f("------> IntroViewMode.PROGRESS")
+                    _IntroItemSelectLayout.setVisibility(View.GONE)
+                    _ProgressLayout.setVisibility(View.VISIBLE)
+                    _FrameAnimationLayout.setVisibility(View.VISIBLE)
+                    startFrameAnimation()
                 }
-            })
+                IntroViewMode.SELECT ->
+                {
+                    Log.f("------> IntroViewMode.SELECT")
+                    _IntroItemSelectLayout.setVisibility(View.VISIBLE)
+                    _ProgressLayout.setVisibility(View.GONE)
+                    _FrameAnimationLayout.setVisibility(View.GONE)
+                }
+                else ->{}
+            }
+        }
 
-        factoryViewModel.progressPercent.observe(this, Observer<Pair<Float, Float>> { progress ->
-            mProgressBarAnimation = ProgressBarAnimation(_IntroProgressPercent, _IntroProgressText, progress.first, progress.second)
+        factoryViewModel.progressPercent.observe(this) {progress ->
+            mProgressBarAnimation = ProgressBarAnimation(
+                _IntroProgressPercent,
+                _IntroProgressText,
+                progress.first,
+                progress.second
+            )
             mProgressBarAnimation.duration = Common.DURATION_SHORT_LONG
             _IntroProgressPercent.startAnimation(mProgressBarAnimation)
-        })
+        }
 
-        factoryViewModel.dialogFilePermission.observe(this, Observer {
+        factoryViewModel.dialogFilePermission.observe(this) {
             showChangeFilePermissionDialog()
-        })
+        }
 
-        factoryViewModel.dialogSelectUpdate.observe(this, Observer {
+        factoryViewModel.dialogSelectUpdate.observe(this) {
             showSelectUpdateDialog()
-        })
+        }
 
-        factoryViewModel.dialogForceUpdate.observe(this, Observer {
+        factoryViewModel.dialogForceUpdate.observe(this) {
             showForceUpdateDialog()
-        })
+        }
 
-        factoryViewModel.showDialogPasswordChange.observe(this, Observer<PasswordGuideType> { type ->
+        factoryViewModel.showDialogPasswordChange.observe(this) {type ->
             showPasswordChangeDialog(type)
-        })
+        }
 
-        factoryViewModel.hideDialogPasswordChange.observe(this, Observer{
+        factoryViewModel.hideDialogPasswordChange.observe(this) {
             hidePasswordChangeDialog()
-        })
+        }
     }
 
 

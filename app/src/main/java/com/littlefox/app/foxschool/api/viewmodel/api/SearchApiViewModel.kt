@@ -45,6 +45,7 @@ class SearchApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -65,6 +66,7 @@ class SearchApiViewModel @Inject constructor(private val repository : FoxSchoolR
                     )
                 }
             }
+            else ->{}
         }
     }
 

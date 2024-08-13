@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -583,8 +584,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
             for(i in 0 until maxQuestionCount)
             {
                 correctQuestionIndex = mQuizItemResultList!![i].getCorrectIndex()
-                randImageIndex = CommonUtils.getInstance(mContext)
-                    .getRandomNumber(maxQuestionCount, correctQuestionIndex)
+                randImageIndex = CommonUtils.getInstance(mContext).getRandomNumber(maxQuestionCount, correctQuestionIndex)
                 mQuizPictureData = QuizPictureData(
                     i,
                     mQuizItemResultList!![i].getTitle(),

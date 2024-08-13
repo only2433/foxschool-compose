@@ -76,12 +76,12 @@ class RecordHistoryActivity : BaseActivity(), MessageHandlerCallback, RecordHist
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_record_history_tablet)
         }
         else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_record_history)
         }
 

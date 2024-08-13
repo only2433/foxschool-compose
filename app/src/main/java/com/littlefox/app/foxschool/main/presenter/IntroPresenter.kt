@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Message
 import android.provider.Settings
 
@@ -129,11 +130,23 @@ class IntroPresenter : IntroContract.Presenter
         CommonUtils.getInstance(mContext).showDeviceInfo()
         CommonUtils.getInstance(mContext).initFeature()
         LittlefoxLocale.setLocale(Locale.getDefault().toString())
-        mPermissionList = ArrayList<String>().apply {
-            add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            add(Manifest.permission.READ_EXTERNAL_STORAGE)
-            add(Manifest.permission.RECORD_AUDIO)
+
+        mPermissionList = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        {
+            ArrayList<String>().apply {
+                add(Manifest.permission.RECORD_AUDIO)
+            }
+        } else
+        {
+            ArrayList<String>().apply {
+                add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                add(Manifest.permission.RECORD_AUDIO)
+            }
         }
+
+        Log.i("size : ${mPermissionList.size}")
+
 
         val autoLoginStatus = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_AUTO_LOGIN_DATA, "N")
 
@@ -345,6 +358,7 @@ class IntroPresenter : IntroContract.Presenter
             {
                 mMainContractView.setProgressPercent(PERCENT_SEQUENCE[2], PERCENT_SEQUENCE[3])
             }
+            else ->{}
         }
     }
 

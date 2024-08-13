@@ -85,12 +85,12 @@ class StudentHomeworkManageActivity : BaseActivity()
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_homework_tablet)
         }
         else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_homework)
         }
 
@@ -150,52 +150,54 @@ class StudentHomeworkManageActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
-            if (loading)
+        factoryViewModel.isLoading.observe(this) {loading ->
+            if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> {message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.errorMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.settingViewPager.observe(this, Observer<HomeworkPagerAdapter> {adapter ->
+        factoryViewModel.settingViewPager.observe(this) {adapter ->
             initViewPager(adapter)
-        })
+        }
 
-        factoryViewModel.currentViewPage.observe(this, Observer<Pair<Int, HomeworkCommentType?>> {pair ->
-            // ViewPager 페이지 변경
+        factoryViewModel.currentViewPage.observe(this) {pair -> // ViewPager 페이지 변경
             val position = pair.first
             val commentType = pair.second
 
             _HomeworkViewPager.currentItem = position
             setTitleView(position, commentType)
-        })
+        }
 
-        factoryViewModel.showRecordPermissionDialog.observe(this, Observer {
-            // 마이크 권한 허용 요청 다이얼로그 - 녹음기 기능 사용을 위해
+        factoryViewModel.showRecordPermissionDialog.observe(this) { // 마이크 권한 허용 요청 다이얼로그 - 녹음기 기능 사용을 위해
             mTemplateAlertDialog = TemplateAlertDialog(this).apply {
                 setMessage(resources.getString(R.string.message_record_permission))
                 setButtonType(DialogButtonType.BUTTON_2)
-                setButtonText(resources.getString(R.string.text_cancel), resources.getString(R.string.text_change_permission))
+                setButtonText(
+                    resources.getString(R.string.text_cancel),
+                    resources.getString(R.string.text_change_permission)
+                )
                 setDialogListener(mPermissionDialogListener)
                 show()
             }
-        })
+        }
     }
 
     /**

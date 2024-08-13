@@ -593,6 +593,7 @@ class MyInfoChangeFragment : Fragment()
             }
             InputDataType.NEW_PASSWORD -> _InputNewPasswordEditBackground.setBackgroundResource(R.drawable.text_box)
             InputDataType.NEW_PASSWORD_CONFIRM -> _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.text_box)
+            else ->{}
         }
 
         if (type == InputDataType.NAME || type == InputDataType.EMAIL || type == InputDataType.PHONE)
@@ -636,6 +637,7 @@ class MyInfoChangeFragment : Fragment()
             {
                 _InputNewPasswordConfirmEditBackground.setBackgroundResource(R.drawable.box_list_error)
             }
+            else ->{}
         }
 
         // 에러니까 버튼은 무조건 비활성화

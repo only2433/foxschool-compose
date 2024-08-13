@@ -452,192 +452,189 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> { loading ->
+        factoryViewModel.isLoading.observe(this) {loading ->
             if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> { message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> { message ->
+        factoryViewModel.successMessage.observe(this) {message ->
             showSuccessMessage(message)
-        })
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> { message ->
+        factoryViewModel.errorMessage.observe(this) {message ->
             showErrorMessage(message)
-        })
+        }
 
-        factoryViewModel.showMovieLoading.observe(this, Observer<Void> {
+        factoryViewModel.showMovieLoading.observe(this) {
             showMovieLoading()
-        })
+        }
 
-        factoryViewModel.hideMovieLoading.observe(this, Observer<Void> {
+        factoryViewModel.hideMovieLoading.observe(this) {
             hideMovieLoading()
-        })
+        }
 
-        factoryViewModel.initPlayListView.observe(this, Observer<Pair<PlayerListAdapter, Int>> {data ->
+        factoryViewModel.initPlayListView.observe(this) {data ->
             initPlayListView(data.first, data.second)
-        })
+        }
 
-        factoryViewModel.initPlaySpeedListView.observe(this, Observer<PlayerSpeedListAdapter> { adapter ->
+        factoryViewModel.initPlaySpeedListView.observe(this) {adapter ->
             initPlaySpeedListView(adapter)
-        })
+        }
 
-        factoryViewModel.initMovieLayout.observe(this, Observer<Void> {
+        factoryViewModel.initMovieLayout.observe(this) {
             initMovieLayout()
-        })
+        }
 
-        factoryViewModel.settingSpeedTextLayout.observe(this, Observer<Pair<Int, Boolean>> {data ->
+        factoryViewModel.settingSpeedTextLayout.observe(this) {data ->
             settingSpeedTextLayout(data.first, data.second)
-        })
+        }
 
-        factoryViewModel.settingCoachmarkView.observe(this, Observer<String> { type ->
+        factoryViewModel.settingCoachmarkView.observe(this) {type ->
             settingCoachmarkView(type)
-        })
+        }
 
-        factoryViewModel.initCaptionText.observe(this, Observer<Void> {
+        factoryViewModel.initCaptionText.observe(this) {
             initCaptionText()
-        })
+        }
 
-        factoryViewModel.setMovieTitle.observe(this, Observer<String> { data ->
+        factoryViewModel.setMovieTitle.observe(this) {data ->
             setMovieTitle(data)
-        })
+        }
 
-        factoryViewModel.setCaptionText.observe(this, Observer<String> { data ->
+        factoryViewModel.setCaptionText.observe(this) {data ->
             setCaptionText(data)
-        })
+        }
 
-        factoryViewModel.setRemainMovieTime.observe(this, Observer<String> { text ->
+        factoryViewModel.setRemainMovieTime.observe(this) {text ->
             setRemainMovieTime(text)
-        })
+        }
 
-        factoryViewModel.setCurrentMovieTime.observe(this, Observer<String> { text ->
+        factoryViewModel.setCurrentMovieTime.observe(this) {text ->
             setCurrentMovieTime(text)
-        })
+        }
 
-        factoryViewModel.setSeekProgress.observe(this, Observer<Int> { progress ->
+        factoryViewModel.setSeekProgress.observe(this) {progress ->
             setSeekProgress(progress)
-        })
+        }
 
-        factoryViewModel.setMaxProgress.observe(this, Observer<Int> { progress ->
+        factoryViewModel.setMaxProgress.observe(this) {progress ->
             setMaxProgress(progress)
-        })
+        }
 
-        factoryViewModel.enablePlayMovie.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.enablePlayMovie.observe(this) {enable ->
             enablePlayMovie(enable)
-        })
+        }
 
-        factoryViewModel.showPlayerStartView.observe(this, Observer<Void> {
+        factoryViewModel.showPlayerStartView.observe(this) {
             showPlayerStartView()
-        })
+        }
 
-        factoryViewModel.showPlayerEndView.observe(this, Observer<Void> {
+        factoryViewModel.showPlayerEndView.observe(this) {
             showPlayerEndView()
-        })
+        }
 
-        factoryViewModel.settingPlayerEndView.observe(this, Observer<PlayerEndViewData> { data ->
+        factoryViewModel.settingPlayerEndView.observe(this) {data ->
             settingPlayerEndView(data)
-        })
+        }
 
-        factoryViewModel.playFirstIndexMovie.observe(this, Observer<Void> {
+        factoryViewModel.playFirstIndexMovie.observe(this) {
             playFirstIndexMovie()
-        })
+        }
 
-        factoryViewModel.playNormalIndexMovie.observe(this, Observer<Void> {
+        factoryViewModel.playNormalIndexMovie.observe(this) {
             playNormalIndexMovie()
-        })
+        }
 
-        factoryViewModel.playLastIndexMovie.observe(this, Observer<Void> {
+        factoryViewModel.playLastIndexMovie.observe(this) {
             playLastIndexMovie()
-        })
+        }
 
-        factoryViewModel.playOneItemMovie.observe(this, Observer<Void> {
+        factoryViewModel.playOneItemMovie.observe(this) {
             playOneItemMovie()
-        })
+        }
 
-        factoryViewModel.checkSupportCaptionView.observe(this, Observer<Boolean> { support ->
+        factoryViewModel.checkSupportCaptionView.observe(this) {support ->
             checkSupportCaptionView(support)
-        })
+        }
 
-        factoryViewModel.settingCaptionOption.observe(this, Observer<Pair<Boolean, Boolean>> { data ->
+        factoryViewModel.settingCaptionOption.observe(this) {data ->
             settingCaptionOption(data.first, data.second)
-        })
+        }
 
-        factoryViewModel.enableRepeatView.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.enableRepeatView.observe(this) {enable ->
             enableRepeatView(enable)
-        })
+        }
 
-        factoryViewModel.scrollPosition.observe(this, Observer<Int> { position ->
+        factoryViewModel.scrollPosition.observe(this) {position ->
             scrollPosition(position)
-        })
+        }
 
-        factoryViewModel.setCurrentPageLine.observe(this, Observer<Pair<Int, Int>> { data ->
+        factoryViewModel.setCurrentPageLine.observe(this) {data ->
             settingCurrentPageLine(data.first, data.second)
-        })
+        }
 
-        factoryViewModel.setCurrentPage.observe(this, Observer<Int>{ data ->
+        factoryViewModel.setCurrentPage.observe(this) {data ->
             enableCurrentPage(data)
-        })
+        }
 
-        factoryViewModel.activatePageView.observe(this, Observer<Boolean> { activate ->
+        factoryViewModel.activatePageView.observe(this) {activate ->
             Log.f("isActivate : $activate")
             activatePageView(activate)
-        })
+        }
 
-        factoryViewModel.enableSpeedButton.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.enableSpeedButton.observe(this) {enable ->
             if(enable)
             {
                 enableSpeedButton()
-            }
-            else
+            } else
             {
                 disableSpeedButton()
             }
-        })
+        }
 
 
-        factoryViewModel.enablePortraitOptionButton.observe(this, Observer<Boolean> { enable ->
+        factoryViewModel.enablePortraitOptionButton.observe(this) {enable ->
             if(enable)
             {
                 enablePortraitOptionButton()
-            }
-            else
+            } else
             {
                 disablePortraitOptionButton()
             }
-        })
+        }
 
-        factoryViewModel.availableMovieOptionButton.observe(this, Observer<Boolean> { available ->
+        factoryViewModel.availableMovieOptionButton.observe(this) {available ->
             availableMovieOptionButton(available)
-        })
+        }
 
-        factoryViewModel.dialogBottomOption.observe(this, Observer<ContentsBaseResult> { data ->
+        factoryViewModel.dialogBottomOption.observe(this) {data ->
             showBottomItemOptionDialog(data)
-        })
+        }
 
-        factoryViewModel.dialogBottomBookshelfContentAdd.observe(this, Observer<ArrayList<MyBookshelfResult>> { data ->
+        factoryViewModel.dialogBottomBookshelfContentAdd.observe(this) {data ->
             showBottomBookAddDialog(data)
-        })
+        }
 
-        factoryViewModel.dialogWarningRecordPermission.observe(this, Observer<Void> {
+        factoryViewModel.dialogWarningRecordPermission.observe(this) {
             showChangeRecordPermissionDialog()
-        })
+        }
 
-        factoryViewModel.dialogWarningAPIException.observe(this, Observer<String> { message ->
+        factoryViewModel.dialogWarningAPIException.observe(this) {message ->
             showWarningAPIExceptionDialog(message)
-        })
+        }
 
-        factoryViewModel.dialogWarningWatchingMovie.observe(this, Observer<Void> {
+        factoryViewModel.dialogWarningWatchingMovie.observe(this) {
             showWarningWatchingMovieDialog()
-        })
+        }
     }
 
     private fun showWarningAPIExceptionDialog(message: String)

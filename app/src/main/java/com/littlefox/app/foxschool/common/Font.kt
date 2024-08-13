@@ -3,7 +3,6 @@ package com.littlefox.app.foxschool.common
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Build
-import java.lang.reflect.Type
 
 class Font (context : Context)
 {
@@ -33,10 +32,10 @@ class Font (context : Context)
         // Android 12 (SDK 31) 부터는 pretendard 폰트 사용
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R)
         {
-            typeFaceBold = Typeface.createFromAsset(mgr, "fonts/Pretendard-Bold.ttf")
-            typeFaceMedium = Typeface.createFromAsset(mgr, "fonts/Pretendard-Medium.ttf")
-            typeFaceRegular = Typeface.createFromAsset(mgr, "fonts/Pretendard-Regular.ttf")
-            typeFaceLight = Typeface.createFromAsset(mgr, "fonts/Pretendard-Light.ttf")
+            typeFaceBold = Typeface.createFromAsset(mgr, "fonts/pretendard_bold.ttf")
+            typeFaceMedium = Typeface.createFromAsset(mgr, "fonts/pretendard_medium.ttf")
+            typeFaceRegular = Typeface.createFromAsset(mgr, "fonts/pretendard_regular.ttf")
+            typeFaceLight = Typeface.createFromAsset(mgr, "fonts/pretendard_light.ttf")
         }
         else
         {

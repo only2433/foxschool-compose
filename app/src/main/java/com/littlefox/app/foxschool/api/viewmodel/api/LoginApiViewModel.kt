@@ -48,6 +48,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_SCHOOL_LIST)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -69,6 +70,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_LOGIN)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -90,6 +92,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -111,6 +114,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -133,6 +137,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -187,6 +192,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                     changePasswordToKeep()
                 }
             }
+            else ->{}
         }
     }
 }

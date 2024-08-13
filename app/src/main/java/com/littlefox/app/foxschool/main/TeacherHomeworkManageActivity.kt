@@ -89,12 +89,12 @@ class TeacherHomeworkManageActivity : BaseActivity()
         super.onCreate(savedInstanceState)
         if(CommonUtils.getInstance(this).checkTablet)
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             setContentView(R.layout.activity_homework_tablet)
         }
         else
         {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             setContentView(R.layout.activity_homework)
         }
 
@@ -154,66 +154,71 @@ class TeacherHomeworkManageActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        factoryViewModel.isLoading.observe(this, Observer<Boolean> {loading ->
-            if (loading)
+        factoryViewModel.isLoading.observe(this) {loading ->
+            if(loading)
             {
                 showLoading()
-            }
-            else
+            } else
             {
                 hideLoading()
             }
-        })
+        }
 
-        factoryViewModel.toast.observe(this, Observer<String> {message ->
+        factoryViewModel.toast.observe(this) {message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        })
+        }
 
-        factoryViewModel.successMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.successMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showSuccessSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.errorMessage.observe(this, Observer<String> {message ->
-            CommonUtils.getInstance(this).showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
-        })
+        factoryViewModel.errorMessage.observe(this) {message ->
+            CommonUtils.getInstance(this)
+                .showErrorSnackMessage(_MainBaseLayout, message, Gravity.CENTER)
+        }
 
-        factoryViewModel.settingViewPager.observe(this, Observer<TeacherHomeworkPagerAdapter> {adapter ->
+        factoryViewModel.settingViewPager.observe(this) {adapter ->
             initViewPager(adapter)
-        })
+        }
 
-        factoryViewModel.currentViewListPage.observe(this, Observer<Pair<Int, HomeworkDetailType?>> {pair ->
-            // ViewPager 페이지 변경
+        factoryViewModel.currentViewListPage.observe(this) {pair -> // ViewPager 페이지 변경
             val position = pair.first
             val detailType = pair.second
 
             setCurrentViewPage(position, detailType, null)
-        })
+        }
 
-        factoryViewModel.currentViewCommentPage.observe(this, Observer<Pair<Int, HomeworkCommentType?>> {pair ->
-            // ViewPager 페이지 변경
+        factoryViewModel.currentViewCommentPage.observe(this) {pair -> // ViewPager 페이지 변경
             val position = pair.first
             val commentType = pair.second
 
             setCurrentViewPage(position, null, commentType)
-        })
+        }
 
-        factoryViewModel.showAudioPlayDialog.observe(this, Observer<HomeworkDetailItemData> { item ->
-            // 학생들 녹음숙제 듣기 다이얼로그
+        factoryViewModel.showAudioPlayDialog.observe(this) {item -> // 학생들 녹음숙제 듣기 다이얼로그
             Log.f("play Record Audio")
-            mAudioPlayDialog = AudioPlayDialog(this, item.getContentsName(), item.getThumbnailUrl(), item.getMp3Path())
+            mAudioPlayDialog = AudioPlayDialog(
+                this,
+                item.getContentsName(),
+                item.getThumbnailUrl(),
+                item.getMp3Path()
+            )
             mAudioPlayDialog!!.show()
-        })
+        }
 
-        factoryViewModel.showRecordPermissionDialog.observe(this, Observer {
-            // 마이크 권한 허용 요청 다이얼로그 - 녹음기 기능 사용을 위해
+        factoryViewModel.showRecordPermissionDialog.observe(this) { // 마이크 권한 허용 요청 다이얼로그 - 녹음기 기능 사용을 위해
             mTemplateAlertDialog = TemplateAlertDialog(this).apply {
                 setMessage(resources.getString(R.string.message_record_permission))
                 setButtonType(DialogButtonType.BUTTON_2)
-                setButtonText(resources.getString(R.string.text_cancel), resources.getString(R.string.text_change_permission))
+                setButtonText(
+                    resources.getString(R.string.text_cancel),
+                    resources.getString(R.string.text_change_permission)
+                )
                 setDialogListener(mPermissionDialogListener)
                 show()
             }
-        })
+        }
     }
 
     /**

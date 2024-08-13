@@ -328,6 +328,7 @@ class TeacherHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
                 Log.f("ResultLauncherCode.HOMEWORK_STATUS")
                 onPageChanged(Common.PAGE_HOMEWORK_STATUS)
             }
+            else ->{}
         }
     }
 

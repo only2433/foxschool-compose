@@ -233,6 +233,7 @@ class InquireActivity : BaseActivity(), MessageHandlerCallback, InquireContract.
             InputDataType.NONE -> _SelectCategoryBg.setBackgroundResource(R.drawable.box_list_error)
             InputDataType.EMAIL -> _InputEmailBg.setBackgroundResource(R.drawable.box_list_error)
             InputDataType.MESSAGE -> _InputMessageBg.setBackgroundResource(R.drawable.box_list_error)
+            else ->{}
         }
     }
 

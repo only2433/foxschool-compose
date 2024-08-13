@@ -46,6 +46,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_QUIZ_INFORMATION)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -67,6 +68,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_QUIZ_RECORD_SAVE)
                 }
+                else ->{}
             }
         }
         enqueueCommandEnd()
@@ -194,6 +196,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                     )
                 }
             }
+            else ->{}
         }
     }
 }

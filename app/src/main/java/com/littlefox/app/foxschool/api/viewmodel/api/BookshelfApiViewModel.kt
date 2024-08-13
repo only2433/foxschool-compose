@@ -42,6 +42,8 @@ class BookshelfApiViewModel @Inject constructor(private val repository : FoxScho
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_LIST)
                 }
+
+                else -> {}
             }
         }
         enqueueCommandEnd()
@@ -64,6 +66,7 @@ class BookshelfApiViewModel @Inject constructor(private val repository : FoxScho
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_DELETE)
                 }
+                else -> {}
             }
         }
         enqueueCommandEnd()
@@ -95,6 +98,7 @@ class BookshelfApiViewModel @Inject constructor(private val repository : FoxScho
                     )
                 }
             }
+            else -> {}
         }
     }
 }

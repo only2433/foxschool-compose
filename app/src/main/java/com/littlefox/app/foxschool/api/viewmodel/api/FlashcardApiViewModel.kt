@@ -42,6 +42,7 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_VOCABULARY_CONTENTS_LIST)
                 }
+                else -> {}
             }
         }
         enqueueCommandEnd()
@@ -63,6 +64,7 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_VOCABULARY_CONTENTS_ADD)
                 }
+                else -> {}
             }
         }
         enqueueCommandEnd()
@@ -84,6 +86,7 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
                 {
                     _errorReport.value = Pair(result, RequestCode.CODE_FLASHCARD_RECORD_SAVE)
                 }
+                else -> {}
             }
         }
         enqueueCommandEnd()
@@ -122,6 +125,7 @@ class FlashcardApiViewModel @Inject constructor(private val repository : FoxScho
                     saveFlashcardRecord(data.objects[0] as String)
                 }
             }
+            else -> {}
         }
     }
 }

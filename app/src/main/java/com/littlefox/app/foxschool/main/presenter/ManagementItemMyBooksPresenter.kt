@@ -381,6 +381,7 @@ class ManagementItemMyBooksPresenter : ManagementItemMyBooksContract.Presenter
             {
                 intent.putExtra(Common.INTENT_MODIFY_VOCABULARY_NAME, name)
             }
+            else ->{}
         }
         (mContext as AppCompatActivity).setResult(Activity.RESULT_OK, intent)
         (mContext as AppCompatActivity).finish()

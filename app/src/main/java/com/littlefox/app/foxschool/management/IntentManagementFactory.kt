@@ -369,6 +369,7 @@ class IntentManagementFactory
                     intent.putExtra(Common.INTENT_FIND_INFORMATION, `object` as FindType?)
                 }
             }
+            else ->{}
         }
         if(addFlag != -1)
         {
