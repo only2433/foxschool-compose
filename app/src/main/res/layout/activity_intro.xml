@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 app:scale_base_width="1080"
                 app:scale_base_height="524"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_alignParentBottom="true">
 
                 <TextView

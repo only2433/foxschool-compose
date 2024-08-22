@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.app.DownloadManager
@@ -37,6 +38,10 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -46,7 +51,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.SnackbarContentLayout
 import com.google.gson.Gson
-import com.littlefox.app.foxschool.BuildConfig
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
@@ -66,6 +70,7 @@ import java.text.DecimalFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 
 /**
@@ -477,6 +482,13 @@ class CommonUtils
                 MainApplication.sDisplayFactor = disPlayMetricsObject!!.heightPixel / 1080.0f
         }
         return value * MainApplication.sDisplayFactor
+    }
+
+    fun getDp(density : Density, value: Int) : Dp
+    {
+        return with(density){
+            getPixel(value).toDp()
+        }
     }
 
     /**
@@ -1136,6 +1148,7 @@ class CommonUtils
         snackbar.show()
     }
 
+
     fun showErrorSnackMessage(
         coordinatorLayout : CoordinatorLayout,
         message : String,
@@ -1150,16 +1163,13 @@ class CommonUtils
         val textView = view.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
         textView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
         textView.setCompoundDrawablesWithIntrinsicBounds(icon, 0, 0, 0)
-        (textView.parent as SnackbarContentLayout).gravity = Gravity.CENTER
+        textView.compoundDrawablePadding = 8  // 아이콘과 텍스트 간의 간격 설정
 
-        if(gravity != -1)
-        {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-                textView.textAlignment = View.TEXT_ALIGNMENT_GRAVITY
-            }
+        if (gravity != -1) {
+            textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textView.gravity = Gravity.CENTER
         }
+
         textView.maxLines = 3
         textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
         textView.setTextColor(color)
@@ -1445,7 +1455,7 @@ class CommonUtils
             i.putExtra(Intent.EXTRA_EMAIL, arrayOf(sendUrl))
             i.putExtra(Intent.EXTRA_TEXT, text)
             val file = File(Log.getLogfilePath())
-            val uri : Uri = FileProvider.getUriForFile(sContext, BuildConfig.APPLICATION_ID, file)
+            val uri : Uri = FileProvider.getUriForFile(sContext, sContext.packageName, file)
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             i.setDataAndType(uri, sContext.contentResolver.getType(uri))
             i.putExtra(Intent.EXTRA_STREAM, uri)

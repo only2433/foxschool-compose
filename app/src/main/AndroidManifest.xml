@@ -40,7 +40,28 @@
         android:networkSecurityConfig="@xml/network_security_config">
         <meta-data android:name="android.max_aspect" android:value="2.1" />
 
-        <activity android:name=".main.IntroActivity"
+<!--        <activity android:name=".main.IntroActivity"
+            android:screenOrientation="sensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/AppTheme_Default"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="main"
+                    android:scheme="foxschool" />
+            </intent-filter>
+        </activity>-->
+
+        <activity android:name=".presentation.screen.intro.IntroActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default"
