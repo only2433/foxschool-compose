@@ -12,7 +12,9 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
 import com.littlefox.app.foxschool.`object`.result.forum.ForumBaseListResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
@@ -76,6 +78,15 @@ interface ApiService
         @Path("data") requestData: String
     ) : Response<BaseResponse<PlayItemResult>>
 
+    @GET("contents/story/series/{data}")
+    suspend fun storyContentsListAsync(
+        @Path("data")  requestData : String
+    ) : Response<BaseResponse<DetailItemInformationResult>>
+
+    @GET("contents/song/series/{data}")
+    suspend fun songContentsListAsync(
+        @Path("data")  requestData : String
+    ) : Response<BaseResponse<DetailItemInformationResult>>
 
     @FormUrlEncoded
     @POST("contents/player/save")

@@ -6,19 +6,32 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
-import com.littlefox.app.foxschool.api.viewmodel.factory.IntroViewModel
+
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
+import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.dialog.listener.DialogListener
+import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 
 import com.littlefox.app.foxschool.presentation.screen.intro.phone.IntroScreenV
+import com.littlefox.app.foxschool.presentation.viewmodel.IntroViewModel
+import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class IntroActivity : BaseActivity()
@@ -29,6 +42,11 @@ class IntroActivity : BaseActivity()
         private const val SYSTEM_DIALOG_REASON_KEY : String         = "reason"
         private const val SYSTEM_DIALOG_REASON_HOME_KEY : String    = "homekey"
     }
+
+    // 비밀번호 변경 안내 관련 변수
+    private var mPasswordChangeDialog : PasswordChangeDialog? = null
+    private lateinit var mTemplateAlertDialog : TemplateAlertDialog
+
 
     private val viewModel: IntroViewModel by viewModels()
     private var mHomeKeyIntentFilter : IntentFilter? = null
@@ -50,9 +68,9 @@ class IntroActivity : BaseActivity()
 
         setContent {
             IntroScreenV(
-                state = viewModel.state,
+                viewModel = viewModel,
                 onEvent = viewModel::onHandleViewEvent
-            )
+                )
         }
     }
 
@@ -111,6 +129,191 @@ class IntroActivity : BaseActivity()
     {
         Log.i("")
         super.onNewIntent(intent)
+    }
+
+    override fun setupObserverViewModel()
+    {
+        lifecycleScope.launch {
+            viewModel.isLoading.collect{ loading ->
+                Log.i("loading : $loading")
+                if(loading)
+                {
+                    showLoading()
+                }
+                else
+                {
+                    hideLoading()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.toast.collect{ message ->
+                Log.i("message : $message")
+                Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.successMessage.collect{ message ->
+
+                Log.i("message : $message")
+                CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect{ message ->
+
+                Log.i("message : $message")
+                CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.dialogSelectUpdate.collect{
+                showSelectUpdateDialog()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.dialogForceUpdate.collect{
+                showForceUpdateDialog()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.dialogFilePermission.collect{
+                showChangeFilePermissionDialog()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.showDialogPasswordChange.collect{ type ->
+                showPasswordChangeDialog(type)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.hideDialogPasswordChange.collect{
+                hidePasswordChangeDialog()
+            }
+        }
+    }
+
+    /**
+     * 파일 권한 허용 요청 다이얼로그
+     * - 로그 파일 저장을 위해
+     */
+    private fun showChangeFilePermissionDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_warning_storage_permission))
+            setDialogEventType(IntroViewModel.DIALOG_TYPE_WARNING_FILE_PERMISSION)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setButtonText(resources.getString(R.string.text_cancel), resources.getString(R.string.text_change_permission))
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showForceUpdateDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_force_update))
+            setDialogEventType(IntroViewModel.DIALOG_TYPE_FORCE_UPDATE)
+            setButtonType(DialogButtonType.BUTTON_1)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showSelectUpdateDialog()
+    {
+        Log.f("")
+        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+            setMessage(resources.getString(R.string.message_need_update))
+            setDialogEventType(IntroViewModel.DIALOG_TYPE_SELECT_UPDATE_CONFIRM)
+            setButtonType(DialogButtonType.BUTTON_2)
+            setDialogListener(mDialogListener)
+            show()
+        }
+    }
+
+    private fun showPasswordChangeDialog(type: PasswordGuideType)
+    {
+        Log.f("")
+        mPasswordChangeDialog = PasswordChangeDialog(this, type).apply {
+            setPasswordChangeListener(mPasswordChangeDialogListener)
+            setCancelable(false)
+            show()
+        }
+    }
+
+    private fun hidePasswordChangeDialog()
+    {
+        mPasswordChangeDialog!!.dismiss()
+    }
+
+    private val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
+    {
+        /**
+         * [비밀번호 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+        {
+            viewModel.onHandleViewEvent(
+                IntroEvent.onClickChangeButton(
+                    oldPassword,
+                    newPassword,
+                    confirmPassword
+                )
+            )
+        }
+
+        /**
+         * [다음에 변경] 버튼 클릭 이벤트
+         */
+        override fun onClickLaterButton()
+        {
+            viewModel.onHandleViewEvent(
+                IntroEvent.onClickLasterButton
+            )
+        }
+
+        /**
+         * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
+         */
+        override fun onClickKeepButton()
+        {
+            viewModel.onHandleViewEvent(
+                IntroEvent.onClickKeepButton
+            )
+        }
+    }
+
+    private val mDialogListener : DialogListener = object : DialogListener
+    {
+        override fun onConfirmButtonClick(eventType : Int)
+        {
+            viewModel.onHandleViewEvent(
+                BaseEvent.DialogClick(
+                    eventType
+                )
+            )
+        }
+
+        override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
+        {
+            viewModel.onHandleViewEvent(
+                BaseEvent.DialogChoiceClick(
+                    buttonType,
+                    eventType
+                )
+            )
+        }
     }
 
     private val mBroadcastReceiver : BroadcastReceiver = object : BroadcastReceiver()

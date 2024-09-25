@@ -40,8 +40,8 @@ import androidx.compose.ui.text.font.FontFamily
 @Composable
 fun IntroProgressBar(
     percent: Float,
-    width: Dp,
-    height: Dp,
+    width: Int,
+    height: Int,
     modifier: Modifier = Modifier,
     progressColor: Color)
 {
@@ -63,12 +63,14 @@ fun IntroProgressBar(
 
     Box(
         modifier = Modifier
-            .width(width)
-            .height(height)
+            .width(
+                getDp(pixel = width)
+            )
+            .height(
+                getDp(pixel = height)
+            )
             .border(
-                width = getDp(pixel = 2),
-                color = progressColor,
-                shape = RoundedCornerShape(
+                width = getDp(pixel = 2), color = progressColor, shape = RoundedCornerShape(
                     getDp(pixel = 25)
                 )
             )
@@ -77,11 +79,14 @@ fun IntroProgressBar(
     {
         Box(
             modifier = Modifier
-                .width(width * animationPercent / 100)
-                .height(height)
+                .width(
+                    getDp(pixel = width) * animationPercent / 100
+                )
+                .height(
+                    getDp(pixel = height)
+                )
                 .background(
-                    color = progressColor,
-                    shape = RoundedCornerShape(
+                    color = progressColor, shape = RoundedCornerShape(
                         getDp(pixel = 25)
                     )
                 )

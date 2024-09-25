@@ -85,6 +85,22 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
     }
 
     /**
+     * 스토리 컨텐츠 리스트 가져오기
+     */
+    suspend fun getStoryContentsList(displayID: String) = safeApiCall {
+        remote.storyContentsListAsync(displayID)
+    }
+
+    /**
+     * 송 컨텐츠 리스트 가져오기
+     */
+    suspend fun getSongContentsList(displayID : String) = safeApiCall {
+        remote.songContentsListAsync(displayID)
+    }
+
+
+
+    /**
      * 학생 - 숙제관리(달력) 정보 가져오기
      */
     suspend fun getStudentHomeworkCalendar(year : String, month : String) = safeApiCall {

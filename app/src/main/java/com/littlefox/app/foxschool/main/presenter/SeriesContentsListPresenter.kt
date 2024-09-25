@@ -100,7 +100,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     {
         Log.f("onCreate")
         mContext = context
-        mCurrentSeriesBaseResult = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_STORY_SERIES_DATA)!!
+        mCurrentSeriesBaseResult = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_STORY_SERIES_DATA)!!
         mMainHandler = WeakReferenceHandler(mContext as MessageHandlerCallback)
         mStoryDetailListContractView = (mContext as SeriesContentsListContract.View).apply {
             initView()
@@ -179,6 +179,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
                 {
                     mStoryDetailListContractView.showSeriesInformationView()
                 }
+
                 if(CommonUtils.getInstance(mContext).checkTablet)
                 {
                     mStoryDetailListContractView.showSeriesInformationIntroduceTablet(
@@ -358,6 +359,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         mStoryDetailItemAdapter.setDetailItemListener(mDetailItemListener)
 
         mStoryDetailListContractView.showStoryDetailListView(mStoryDetailItemAdapter)
+
         if(mDetailItemInformationResult.lastStudyContentID.equals("") === false)
         {
             val mLoginInformationResult : LoginInformationResult =

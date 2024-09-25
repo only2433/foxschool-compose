@@ -252,6 +252,7 @@ class PasswordChangeDialog : Dialog
                 _90buttonLayout.visibility = View.GONE
                 _180buttonLayout.visibility = View.VISIBLE
             }
+            else -> {}
         }
     }
 
@@ -305,6 +306,7 @@ class PasswordChangeDialog : Dialog
                     _ChangeButton180.setBackgroundResource(R.drawable.round_box_gray_84)
                 }
             }
+            else ->{}
         }
     }
 

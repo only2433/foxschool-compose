@@ -1072,6 +1072,30 @@ class CommonUtils
         window.statusBarColor = color
     }
 
+    fun showSuccessMessage(message: String)
+    {
+        var snackbar = Snackbar.make((sContext as AppCompatActivity).findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+        val snackbarView = snackbar.view
+        val textView : TextView = snackbarView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        textView.maxLines = 3
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
+        textView.setTextColor(sContext.resources.getColor(R.color.color_57e2ff))
+        snackbar.show()
+    }
+
+    fun showErrorMessage(message: String)
+    {
+        var snackbar = Snackbar.make((sContext as AppCompatActivity).findViewById(android.R.id.content), message, Snackbar.LENGTH_SHORT)
+        val snackbarView = snackbar.view
+        val textView : TextView = snackbarView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
+        textView.maxLines = 3
+        textView.typeface = Font.getInstance(sContext).getTypefaceMedium()
+        textView.setTextColor(sContext.resources.getColor(R.color.color_f12e45))
+        snackbar.show()
+    }
+
+
+
     fun showErrorSnackMessage(coordinatorLayout : CoordinatorLayout, message : String)
     {
         showErrorSnackMessage(
@@ -1780,6 +1804,23 @@ class CommonUtils
             return BookColor.PINK
         }
         return BookColor.RED
+    }
+
+    fun getLevelResource(level: Int) : Int
+    {
+        return when(level)
+        {
+           1 -> R.drawable.level01
+           2 -> R.drawable.level02
+           3 -> R.drawable.level03
+           4 -> R.drawable.level04
+           5 -> R.drawable.level05
+           6 -> R.drawable.level06
+           7 -> R.drawable.level07
+           8 -> R.drawable.level08
+           9 -> R.drawable.level09
+            else -> R.drawable.level01
+        }
     }
 
     fun getBookResource(color : BookColor?) : Int

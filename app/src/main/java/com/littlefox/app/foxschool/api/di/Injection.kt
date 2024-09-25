@@ -39,6 +39,12 @@ object Injection
     }
 
     @Provides
+    fun provideSeriesContentsApiViewModel() : SeriesContentsListApiViewModel
+    {
+        return SeriesContentsListApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun providePlayerApiViewModel() : PlayerApiViewModel
     {
         return PlayerApiViewModel(provideFoxSchoolRepository())

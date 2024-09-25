@@ -30,6 +30,11 @@ import com.littlefox.app.foxschool.enumerate.FindType
 import com.littlefox.app.foxschool.main.*
 import com.littlefox.app.foxschool.main.webview.*
 import com.littlefox.app.foxschool.observer.MainObserver
+import com.littlefox.app.foxschool.presentation.screen.intro.IntroActivity
+import com.littlefox.app.foxschool.presentation.screen.login.LoginActivity
+import com.littlefox.app.foxschool.presentation.screen.main.MainActivity
+import com.littlefox.app.foxschool.presentation.screen.series_contents_list.SeriesContentsListActivity
+
 import com.littlefox.logmonitor.Log
 
 /**

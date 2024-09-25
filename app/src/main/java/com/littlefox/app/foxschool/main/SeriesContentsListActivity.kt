@@ -378,12 +378,23 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         Glide.with(this).load(thumbnailUrl).apply(options).listener(object : RequestListener<Drawable?>
             {
 
-                override fun onLoadFailed(e : GlideException?, model : Any?, target : Target<Drawable?>?, isFirstResource : Boolean) : Boolean
+                override fun onLoadFailed(
+                    e : GlideException?,
+                    model : Any?,
+                    target : Target<Drawable?>,
+                    isFirstResource : Boolean
+                ) : Boolean
                 {
                     return false
                 }
 
-                override fun onResourceReady(resource : Drawable?, model : Any?, target : Target<Drawable?>?, dataSource : DataSource?, isFirstResource : Boolean) : Boolean
+                override fun onResourceReady(
+                    resource : Drawable,
+                    model : Any,
+                    target : Target<Drawable?>?,
+                    dataSource : DataSource,
+                    isFirstResource : Boolean
+                ) : Boolean
                 {
                     return false
                 }
@@ -450,12 +461,23 @@ class SeriesContentsListActivity : BaseActivity(), MessageHandlerCallback, Serie
         options.override(Target.SIZE_ORIGINAL)
         Glide.with(this).load(thumbnailUrl).apply(options).listener(object : RequestListener<Drawable?>
             {
-                override fun onLoadFailed(e : GlideException?, model : Any?, target : Target<Drawable?>?, isFirstResource : Boolean) : Boolean
+                override fun onLoadFailed(
+                    e : GlideException?,
+                    model : Any?,
+                    target : Target<Drawable?>,
+                    isFirstResource : Boolean
+                ) : Boolean
                 {
                     return false
                 }
 
-                override fun onResourceReady(resource : Drawable?, model : Any?, target : Target<Drawable?>?, dataSource : DataSource?, isFirstResource : Boolean) : Boolean
+                override fun onResourceReady(
+                    resource : Drawable,
+                    model : Any,
+                    target : Target<Drawable?>?,
+                    dataSource : DataSource,
+                    isFirstResource : Boolean
+                ) : Boolean
                 {
                     return false
                 }

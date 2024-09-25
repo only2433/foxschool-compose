@@ -1,5 +1,4 @@
-package com.littlefox.app.foxschool.api.viewmodel.factory
-
+package com.littlefox.app.foxschool.presentation.viewmodel
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -13,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -35,24 +36,24 @@ import com.littlefox.app.foxschool.enc.SimpleCrypto
 import com.littlefox.app.foxschool.enumerate.*
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseState
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.VoidState
 import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroState
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import com.littlefox.logmonitor.enumItem.MonitorMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
 @HiltViewModel
-class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiViewModel, @ApplicationContext mContext : Context) : BaseViewModel()
+class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiViewModel) : BaseViewModel()
 {
     companion object
     {
@@ -66,6 +67,54 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
 
+    private val _bottomType = MutableSharedFlow<IntroViewMode>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val bottomType: SharedFlow<IntroViewMode> = _bottomType
+
+    private val _progressPercent = MutableSharedFlow<Float>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val progressPercent: SharedFlow<Float> = _progressPercent
+
+    private val _dialogSelectUpdate = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogSelectUpdate: SharedFlow<Unit> = _dialogSelectUpdate
+
+    private val _dialogForceUpdate = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogForceUpdate: SharedFlow<Unit> = _dialogForceUpdate
+
+    private val _dialogFilePermission = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogFilePermission: SharedFlow<Unit> = _dialogFilePermission
+
+    private val _showDialogPasswordChange = MutableSharedFlow<PasswordGuideType>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val showDialogPasswordChange: SharedFlow<PasswordGuideType> = _showDialogPasswordChange
+
+    private val _hideDialogPasswordChange = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val hideDialogPasswordChange: SharedFlow<Unit> = _hideDialogPasswordChange
 
     private lateinit var mContext : Context
     private lateinit var mPermissionList : ArrayList<String>
@@ -87,14 +136,10 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
     private var mEasterEggJob: Job? = null
 
-    var state by mutableStateOf(
-        IntroState()
-    )
 
     override fun init(context : Context)
     {
         mContext = context
-
         FirebaseApp.initializeApp(mContext)
         FirebaseMessaging.getInstance().token.addOnCompleteListener {
             try
@@ -123,6 +168,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
             withContext(Dispatchers.IO){
                 delay(Common.DURATION_NORMAL)
             }
+
             prepare()
         }
     }
@@ -183,82 +229,128 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
     override fun onHandleApiObserver()
     {
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.isLoading.collect { data ->
-                data?.let {
-                    if (data.first == RequestCode.CODE_PASSWORD_CHANGE ||
-                        data.first == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
-                        data.first == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
-                    {
-                        if(data.second)
+        (mContext as AppCompatActivity).lifecycleScope.launch  {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                // Your code here
+                apiViewModel.isLoading.collect { data ->
+                    data?.let {
+                        if (data.first == RequestCode.CODE_PASSWORD_CHANGE ||
+                            data.first == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
+                            data.first == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                         {
-                            state = state.copy(
-                                base = BaseState(
-                                    isLoading = true
-                                )
-                            )
-                        }
-                        else
-                        {
-                            state = state.copy(
-                                base = BaseState(
-                                    isLoading = false
-                                )
-                            )
+                            if(data.second)
+                            {
+                                _isLoading.emit(true)
+                            }
+                            else
+                            {
+                                _isLoading.emit(false)
+                            }
                         }
                     }
                 }
             }
         }
 
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.versionData.collect{ data ->
-                data?.let {
-                    mVersionDataResult = data
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
-                    if(mVersionDataResult!!.isNeedUpdate)
-                    {
-                        if(mVersionDataResult!!.isForceUpdate())
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.versionData.collect{ data ->
+                    data?.let {
+                        mVersionDataResult = data
+                        CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_VERSION_INFORMATION, mVersionDataResult)
+                        if(mVersionDataResult!!.isNeedUpdate)
                         {
-
-                            state = state.copy(
-                                dialogSelectUpdate = VoidState()
-                            )
+                            if(mVersionDataResult!!.isForceUpdate())
+                            {
+                                _dialogSelectUpdate.emit(Unit)
+                            }
+                            else
+                            {
+                                _dialogForceUpdate.emit(Unit)
+                            }
                         }
                         else
                         {
-
-                            state = state.copy(
-                                dialogForceUpdate = VoidState()
-                            )
+                            startAPIProcess()
                         }
-                    }
-                    else
-                    {
-                        startAPIProcess()
                     }
                 }
             }
         }
 
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.authMeData.collect{ data ->
-                data?.let {
-                    mUserInformationResult = data
-                    CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
-                    if (mUserInformationResult!!.isNeedChangePassword())
-                    {
-                        // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
-                        mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.authMeData.collect{ data ->
+                    data?.let {
+                        mUserInformationResult = data
+                        CommonUtils.getInstance(mContext).setPreferenceObject(Common.PARAMS_USER_API_INFORMATION, mUserInformationResult)
+                        if (mUserInformationResult!!.isNeedChangePassword())
+                        {
+                            // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
+                            mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
 
-                        state = state.copy(
-                            showDialogPasswordChange = mUserInformationResult!!.getPasswordChangeType()
-                        )
+                            _showDialogPasswordChange.emit(mUserInformationResult!!.getPasswordChangeType())
 
+                        }
+                        else
+                        {
+                            // 자동로그인 완료
+                            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                        }
                     }
-                    else
-                    {
-                        // 자동로그인 완료
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.mainData.collect{ data ->
+                    data?.let {
+                        Log.f("Main data get to API Success")
+                        CommonUtils.getInstance(mContext).saveMainData(data)
+                        mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
+                        enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
+                        viewModelScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.IO){
+                                delay(Common.DURATION_SHORT_LONG)
+                            }
+                            startMainActivity()
+                        }
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.changePasswordData.collect { data ->
+                    data?.let {
+                        // 비밀번호 변경 성공
+                        Log.f("Password Change Complete")
+                        changeUserLoginData()
+
+                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
+                        viewModelScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.IO){
+                                delay(Common.DURATION_LONG)
+                            }
+
+                            _hideDialogPasswordChange.emit(Unit)
+                            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
+                        }
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.changePasswordNextData.collect { data ->
+                    data?.let {
+                        // 다음에 변경
+                        _hideDialogPasswordChange.emit(Unit)
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
@@ -266,117 +358,54 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
             }
         }
 
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.mainData.collect{ data ->
-                data?.let {
-                    Log.f("Main data get to API Success")
-                    CommonUtils.getInstance(mContext).saveMainData(data)
-                    mCurrentIntroProcess = IntroProcess.MAIN_COMPELTE
-                    enableProgressAnimation(IntroProcess.MAIN_COMPELTE)
-                    viewModelScope.launch(Dispatchers.Main) {
-                        withContext(Dispatchers.IO){
-                            delay(Common.DURATION_SHORT_LONG)
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.changePasswordKeepData.collect { data ->
+                    data?.let {
+                        // 현재 비밀번호 유지
+                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
+
+                        viewModelScope.launch(Dispatchers.Main) {
+                            withContext(Dispatchers.IO){
+                                delay(Common.DURATION_LONG)
+                            }
+                            _hideDialogPasswordChange.emit(Unit)
+                            mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
+                            enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                         }
-                        startMainActivity()
                     }
                 }
             }
         }
 
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.changePasswordData.collect { data ->
-                data?.let {
-                    // 비밀번호 변경 성공
-                    Log.f("Password Change Complete")
-                    changeUserLoginData()
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+                apiViewModel.errorReport.collect { data ->
+                    data?.let {
+                        val result = data.first
+                        val code = data.second
 
-                    state = state.copy(
-                        base = BaseState(
-                            toast = mContext.getString(R.string.message_password_change_complete)
-                        )
-                    )
-                    viewModelScope.launch(Dispatchers.Main) {
-                        withContext(Dispatchers.IO){
-                            delay(Common.DURATION_LONG)
-                        }
+                        Log.f("status : ${result.status}, message : ${result.message} , code : $code")
 
-                        state = state.copy(
-                            hideDialogPasswordChange = VoidState()
-                        )
-                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-                    }
-                }
-            }
-        }
-
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.changePasswordNextData.collect { data ->
-                data?.let {
-                    // 다음에 변경
-                    state = state.copy(
-                        hideDialogPasswordChange = VoidState()
-                    )
-                    mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                    enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-                }
-            }
-        }
-
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.changePasswordKeepData.collect { data ->
-                data?.let {
-                    // 현재 비밀번호 유지
-                    state = state.copy(
-                        base = BaseState(
-                            toast = mContext.getString(R.string.message_password_change_complete)
-                        )
-                    )
-
-                    viewModelScope.launch(Dispatchers.Main) {
-                        withContext(Dispatchers.IO){
-                            delay(Common.DURATION_LONG)
-                        }
-                        state = state.copy(
-                            hideDialogPasswordChange = VoidState()
-                        )
-                        mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
-                        enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
-                    }
-                }
-            }
-        }
-
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.errorReport.collect { data ->
-                data?.let {
-                    val result = data.first
-                    val code = data.second
-
-                    Log.f("status : ${result.status}, message : ${result.message} , code : $code")
-
-                    Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
-                    if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
-                    {
-                        Log.f("== isAuthenticationBroken ==")
-                        (mContext as AppCompatActivity).finish()
-                        IntentManagementFactory.getInstance().initScene()
-                    }
-                    else
-                    {
-                        if (code == RequestCode.CODE_PASSWORD_CHANGE ||
-                            code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
-                            code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                        Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
+                        if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
                         {
-                            state = state.copy(
-                                base = BaseState(
-                                    toast = result.message
-                                )
-                            )
-                        }
-                        else
-                        {
+                            Log.f("== isAuthenticationBroken ==")
                             (mContext as AppCompatActivity).finish()
+                            IntentManagementFactory.getInstance().initScene()
+                        }
+                        else
+                        {
+                            if (code == RequestCode.CODE_PASSWORD_CHANGE ||
+                                code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
+                                code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                            {
+                                _toast.emit(result.message)
+                            }
+                            else
+                            {
+                                (mContext as AppCompatActivity).finish()
+                            }
                         }
                     }
                 }
@@ -456,18 +485,19 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, false)
             }
 
-            state = state.copy(
-                bottomType = IntroViewMode.PROGRESS
-            )
+            viewModelScope.launch(Dispatchers.Main) {
+                _bottomType.emit(IntroViewMode.PROGRESS)
+            }
+
             requestInitAsync()
             requestAutoLoginAsync()
             requestMainInformationAsync()
         }
         else
         {
-            state = state.copy(
-                bottomType = IntroViewMode.SELECT
-            )
+            viewModelScope.launch(Dispatchers.Main) {
+                _bottomType.emit(IntroViewMode.SELECT)
+            }
         }
     }
 
@@ -517,21 +547,21 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         {
             IntroProcess.INIT_COMPLETE ->
             {
-                state = state.copy(
-                    progressPercent = PERCENT_SEQUENCE[1]
-                )
+                viewModelScope.launch(Dispatchers.Main) {
+                    _progressPercent.emit(PERCENT_SEQUENCE[1])
+                }
             }
             IntroProcess.LOGIN_COMPLTE ->
             {
-                state = state.copy(
-                    progressPercent = PERCENT_SEQUENCE[2]
-                )
+                viewModelScope.launch(Dispatchers.Main) {
+                    _progressPercent.emit(PERCENT_SEQUENCE[2])
+                }
             }
             IntroProcess.MAIN_COMPELTE ->
             {
-                state = state.copy(
-                    progressPercent = PERCENT_SEQUENCE[3]
-                )
+                viewModelScope.launch(Dispatchers.Main) {
+                    _progressPercent.emit(PERCENT_SEQUENCE[3])
+                }
             }
             else ->{}
         }
@@ -670,9 +700,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
                 if(isAllCheckSuccess == false)
                 {
-                    state = state.copy(
-                        dialogFilePermission = VoidState()
-                    )
+                    viewModelScope.launch(Dispatchers.Main) {
+                        _dialogFilePermission.emit(Unit)
+                    }
                 }
                 else
                 {
@@ -684,10 +714,8 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
     private fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
     {
-        state = state.copy(
-            bottomType = IntroViewMode.PROGRESS
-        )
         viewModelScope.launch{
+            _bottomType.emit(IntroViewMode.PROGRESS)
             withContext(Dispatchers.IO){
                 delay(Common.DURATION_NORMAL)
             }
@@ -697,7 +725,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    private fun onDialogClick(eventType : Int)
+    override fun onDialogClick(eventType : Int)
     {
         if(eventType == DIALOG_TYPE_FORCE_UPDATE)
         {
@@ -706,7 +734,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    private fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
+    override fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
     {
         Log.f("messageType : $eventType, buttonType : $buttonType")
         if(eventType == DIALOG_TYPE_SELECT_UPDATE_CONFIRM)
@@ -751,7 +779,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    fun onActivateEasterEgg()
+    private fun onActivateEasterEgg()
     {
         Log.f("")
         mEasterEggJob = viewModelScope.launch {
@@ -762,13 +790,13 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    fun onDeactiveEasterEgg()
+    private fun onDeactiveEasterEgg()
     {
         Log.f("")
         mEasterEggJob?.cancel()
     }
 
-    fun onClickIntroduce()
+    private fun onClickIntroduce()
     {
         Log.f("")
         if(NetworkUtil.isConnectNetwork(mContext))
@@ -780,16 +808,14 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            state = state.copy(
-                base = BaseState(
-                    toast = mContext.resources.getString(R.string.message_toast_network_error)
-                )
-            )
+            viewModelScope.launch(Dispatchers.Main) {
+                _toast.emit(mContext.resources.getString(R.string.message_toast_network_error))
+            }
             (mContext as AppCompatActivity).finish()
         }
     }
 
-    fun onClickLogin()
+    private fun onClickLogin()
     {
         Log.f("")
         if(NetworkUtil.isConnectNetwork(mContext))
@@ -798,12 +824,14 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            Toast.makeText(mContext, mContext.resources.getString(R.string.message_toast_network_error), Toast.LENGTH_LONG).show()
+            viewModelScope.launch(Dispatchers.Main) {
+                _toast.emit(mContext.resources.getString(R.string.message_toast_network_error))
+            }
             (mContext as AppCompatActivity).finish()
         }
     }
 
-    fun onClickHomeButton()
+    private fun onClickHomeButton()
     {
         (mContext as AppCompatActivity).finish()
     }
@@ -811,7 +839,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
     /**
      * [비밀번호 변경] 버튼 클릭 이벤트
      */
-    fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+    private fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
     {
         mPassword = oldPassword
         mNewPassword = newPassword
@@ -823,7 +851,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
     /**
      * [다음에 변경] 버튼 클릭 이벤트
      */
-    fun onClickLaterButton()
+    private fun onClickLaterButton()
     {
         requestPasswordChangeNext()
     }
@@ -831,7 +859,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
     /**
      * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
      */
-    fun onClickKeepButton()
+    private fun onClickKeepButton()
     {
         requestPasswordChangeKeep()
     }

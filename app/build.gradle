@@ -75,6 +75,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
+    implementation 'androidx.compose.material3:material3-android:1.2.1'
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -109,7 +110,7 @@ dependencies {
     implementation 'com.github.only2433:LittlefoxViewLibrary:1.1.7'
     implementation 'com.ssomai:android.scalablelayout:2.1.6'
     implementation 'com.github.axet:zip4j:1.3.2-2'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+
     implementation 'com.github.fafaldo:fab-toolbar:1.2.0'
     implementation 'com.github.orangegangsters:swipy:1.2.3@aar'
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -141,9 +142,20 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
     implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.animation:animation:$compose_version"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    implementation "androidx.compose.material3:material3-android:1.2.1"
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    // Glide v4 uses this new annotation processor -- see https://bumptech.github.io/glide/doc/generatedapi.html
+    kapt("com.github.bumptech.glide:compiler:4.12.0")
+    // Glide Compose Integration
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    implementation "io.coil-kt:coil-compose:2.1.0" // Coil for Compose
+    implementation "me.onebone:toolbar-compose:2.3.5"
+
     // 테스트를 위한 추가 의존성
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
