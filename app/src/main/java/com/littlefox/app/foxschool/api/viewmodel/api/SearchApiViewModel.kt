@@ -72,8 +72,7 @@ class SearchApiViewModel @Inject constructor(private val repository : FoxSchoolR
 
     fun getPagingData(searchType : String = "", keyword : String) : Flow<PagingData<ContentBasePagingResult>>
     {
-        val result : Flow<PagingData<ContentBasePagingResult>> = repository.getSearchListStream(searchType, keyword).cachedIn(viewModelScope)
-        return result
+        return repository.getSearchListStream(searchType, keyword).cachedIn(viewModelScope)
     }
 
 }

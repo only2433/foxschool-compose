@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.BookType
@@ -59,25 +61,25 @@ fun SubMyBooksScreenV(
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val mainMyBooksInformationResult by viewModel.updateMyBooksData.collectAsState(initial = MainInformationResult())
+    val mainMyBooksInformationResult by viewModel.updateMyBooksData.collectAsStateWithLifecycle(
+        initialValue = MainInformationResult()
+    )
 
     var bookType by remember {
         mutableStateOf(BookType.BOOKSHELF)
     }
 
-    var bookshelfItemList by remember {
-        mutableStateOf(arrayListOf<MyBookshelfResult>())
+    val bookshelfItemList = remember(mainMyBooksInformationResult) {
+        derivedStateOf {
+            mainMyBooksInformationResult.getBookShelvesList()
+        }
     }
 
-    var vocabularyItemList by remember {
-        mutableStateOf(arrayListOf<MyVocabularyResult>())
+    val vocabularyItemList = remember(mainMyBooksInformationResult) {
+        derivedStateOf {
+            mainMyBooksInformationResult.getVocabulariesList()
+        }
     }
-
-    LaunchedEffect(mainMyBooksInformationResult) {
-        bookshelfItemList = mainMyBooksInformationResult.getBookShelvesList()
-        vocabularyItemList = mainMyBooksInformationResult.getVocabulariesList()
-    }
-
 
     Box(
         modifier = Modifier
@@ -124,22 +126,30 @@ fun SubMyBooksScreenV(
             
             if(bookType == BookType.BOOKSHELF)
             {
-                Log.i("size : ${bookshelfItemList.size}")
-                LazyColumn{
-                    items(bookshelfItemList){ item ->
+                Log.i("size : ${bookshelfItemList.value.size}")
 
-                        BuildBookshelfItem(item){
-                            
+                if(bookshelfItemList.value.isNotEmpty())
+                {
+                    LazyColumn{
+                        items(bookshelfItemList.value){ item ->
+
+                            BuildBookshelfItem(item){
+
+                            }
                         }
                     }
                 }
+
             }
             else
             {
-                LazyColumn{
-                    items(vocabularyItemList){ item ->
-                        BuildVocabularyItem(item) {     
-                            
+                if(vocabularyItemList.value.isNotEmpty())
+                {
+                    LazyColumn{
+                        items(vocabularyItemList.value){ item ->
+                            BuildVocabularyItem(item) {
+
+                            }
                         }
                     }
                 }

@@ -141,10 +141,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/search_box1"
-                app:scale_top="1"
+                app:scale_height="120"
                 app:scale_left="98"
-                app:scale_width="764"
-                app:scale_height="120"/>
+                app:scale_top="1"
+                app:scale_width="764" />
 
             <ImageView
                 android:id="@+id/_searchCancelIcon"

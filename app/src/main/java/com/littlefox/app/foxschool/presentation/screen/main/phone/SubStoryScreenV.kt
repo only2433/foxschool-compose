@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +55,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
@@ -81,16 +83,24 @@ fun SubStoryScreenV(
     scrollBehavior: TopAppBarScrollBehavior
 )
 {
-    val mainStoryInformationResult by viewModel.updateStoryData.collectAsState(initial = MainStoryInformationResult())
+    val mainStoryInformationResult by viewModel.updateStoryData.collectAsStateWithLifecycle(
+        initialValue = MainStoryInformationResult()
+    )
 
-    // 데이터 초기화를 조건부로 진행
-    var dataList by remember {
-        mutableStateOf(listOf<SeriesInformationResult>())
+    // switchButtonType 상태를 관리
+    var switchButtonType by remember { mutableStateOf(SwitchButtonType.FIRST_ITEM) }
+
+    // derivedStateOf를 사용하여 dataList를 계산
+    val dataList = remember(mainStoryInformationResult, switchButtonType) {
+        derivedStateOf {
+            if (switchButtonType == SwitchButtonType.FIRST_ITEM) {
+                mainStoryInformationResult.getContentByLevelToList()
+            } else {
+                mainStoryInformationResult.getContentByCategoriesToList()
+            }
+        }
     }
 
-    LaunchedEffect(mainStoryInformationResult) {
-        dataList = mainStoryInformationResult.getContentByLevelToList()
-    }
 
     Box(
         modifier = Modifier
@@ -101,66 +111,61 @@ fun SubStoryScreenV(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            var switchButtonType by remember { mutableStateOf(SwitchButtonType.FIRST_ITEM) }
             SwitchTextButton(
                 firstText = stringResource(id = R.string.text_levels),
-                secondText = stringResource(id = R.string.text_categories)) { switchButtonType ->
+                secondText = stringResource(id = R.string.text_categories)) { type ->
                 Log.i("button Click : $switchButtonType")
-
-                if(switchButtonType == SwitchButtonType.FIRST_ITEM)
-                {
-                    dataList = mainStoryInformationResult.getContentByLevelToList()
-                }
-                else
-                {
-                    dataList = mainStoryInformationResult.getContentByCategoriesToList()
-                }
+                switchButtonType = type
             }
 
+            if(dataList.value.isNotEmpty())
+            {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier
+                        .fillMaxSize(),
 
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize(),
+                    ) {
 
-            ) {
+                    items(dataList.value.size){ index ->
 
-                items(dataList.size){ index ->
-
-                    if(index % 2 == 0)
-                    {
-                        SeriesGridViewItem(
-                            modifier = Modifier
-                                .padding(
-                                    start = getDp(pixel = 26),
-                                    end = getDp(pixel = 12)
-                                ),
-                            data = dataList[index])
+                        if(index % 2 == 0)
                         {
-                            Log.i("item Click")
-                            onEvent(
-                                MainEvent.onClickStoryLevelsItem(
-                                    dataList[index]
+                            SeriesGridViewItem(
+                                modifier = Modifier
+                                    .padding(
+                                        start = getDp(pixel = 26),
+                                        end = getDp(pixel = 12)
+                                    ),
+                                data = dataList.value[index])
+                            {
+                                Log.i("item Click")
+                                onEvent(
+                                    MainEvent.onClickStoryLevelsItem(
+                                        dataList.value[index]
+                                    )
                                 )
-                            )
+                            }
+
                         }
-
-                    }
-                    else
-                    {
-                        SeriesGridViewItem(
-                            modifier = Modifier
-                                .padding(
-                                    start = getDp(pixel = 12),
-                                    end = getDp(pixel = 26)
-                                ),
-                            data = dataList[index])
+                        else
                         {
-                            Log.i("Item Click")
-                            onEvent(
-                                MainEvent.onClickStoryLevelsItem(
-                                    dataList[index]
+                            SeriesGridViewItem(
+                                modifier = Modifier
+                                    .padding(
+                                        start = getDp(pixel = 12),
+                                        end = getDp(pixel = 26)
+                                    ),
+                                data = dataList.value[index])
+                            {
+                                Log.i("Item Click")
+                                onEvent(
+                                    MainEvent.onClickStoryLevelsItem(
+                                        dataList.value[index]
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }

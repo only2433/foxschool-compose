@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,7 +57,7 @@ fun TopBarCloseLayout(
         modifier = Modifier
             .fillMaxWidth()
             .height(
-                getDp(pixel = 144)
+                getDp(pixel = 166)
             )
             .background(
                 color = backgroundColor
@@ -71,7 +72,7 @@ fun TopBarCloseLayout(
             Text(
                 text = title,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 16.sp,
                     color = colorResource(id = R.color.color_ffffff),
                     fontFamily = FontFamily(
                         Font(
@@ -86,10 +87,10 @@ fun TopBarCloseLayout(
         Box(
             modifier = Modifier
                 .width(
-                    getDp(pixel = 144)
+                    getDp(pixel = 166)
                 )
                 .height(
-                    getDp(pixel = 144)
+                    getDp(pixel = 166)
                 )
                 .align(Alignment.CenterEnd) // Box의 오른쪽 끝에 정렬
                 .padding(end = 10.dp)
@@ -131,40 +132,65 @@ fun TopbarMainLayout(
         scrolledContainerColor = colorResource(id = R.color.color_23cc8a)
     )
     CenterAlignedTopAppBar(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(
+                getDp(pixel = 166)
+            ),
         title = {
-            Text(
-                text = title,
-                style = TextStyle(
-                    color = colorResource(id = R.color.color_ffffff),
-                    fontFamily = FontFamily(
-                        Font(
-                            resId = R.font.roboto_medium
-                        )
+            Box(
+                modifier = Modifier
+                    .height(
+                        getDp(pixel = 166)
                     ),
-                    fontSize = 16.sp
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = title, style = TextStyle(
+                        color = colorResource(id = R.color.color_ffffff), fontFamily = FontFamily(
+                            Font(
+                                resId = R.font.roboto_medium
+                            )
+                        ), fontSize = 16.sp
+                    ), textAlign = TextAlign.Center
                 )
-            )
+            }
         },
         colors = colors,
         navigationIcon = {
-            IconButton(onClick = onTabMenu) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_menu),
-                    contentDescription = "Menu Button",
-                    tint = colorResource(id = R.color.color_ffffff)
-                )
+            Box(
+                modifier = Modifier
+                    .height(
+                        getDp(pixel = 166)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(onClick = onTabMenu) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_menu),
+                        contentDescription = "Menu Button",
+                        tint = colorResource(id = R.color.color_ffffff)
+                    )
+                }
             }
 
         },
         actions = {
+            Box(
+                modifier = Modifier
+                    .height(
+                        getDp(pixel = 166)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                IconButton(onClick = onTabSearch) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_search),
+                        contentDescription = "Search Button",
+                        tint = colorResource(id = R.color.color_ffffff)
 
-            IconButton(onClick = onTabSearch) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_search),
-                    contentDescription = "Search Button",
-                    tint = colorResource(id = R.color.color_ffffff)
-
-                )
+                    )
+                }
             }
         },
         scrollBehavior = scrollBehavior
@@ -267,51 +293,4 @@ fun TopbarSeriesContentsLayout(
             }
         }
     }
-
-
-/*
-    val colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = backgroundColor,
-        scrolledContainerColor = backgroundColor
-    )
-
-    CenterAlignedTopAppBar(
-        title = {
-            Text(
-                text = title,
-                style = TextStyle(
-                    color = colorResource(id = R.color.color_ffffff),
-                    fontFamily = FontFamily(
-                        Font(
-                            resId = R.font.roboto_medium
-                        )
-                    ),
-                    fontSize = 16.sp
-                )
-            )
-        },
-        colors = colors,
-        navigationIcon = {
-            IconButton(onClick = onTabBackButton) {
-                Icon(
-                    painter = painterResource(id = R.drawable.top_pre),
-                    contentDescription = "Back Button",
-                    tint = colorResource(id = R.color.color_ffffff)
-                )
-            }
-
-        },
-        actions = {
-            if(isShowSeriesInformation)
-            {
-                IconButton(onClick = onTabSeriesInformationButton) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.info_icon),
-                        contentDescription = "Info Button",
-                    )
-                }
-            }
-        },
-        scrollBehavior = scrollBehavior
-    )*/
 }

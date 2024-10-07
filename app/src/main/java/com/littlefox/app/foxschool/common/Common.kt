@@ -289,7 +289,7 @@ class Common
         const val FAIL_CODE_INTERNAL_SERVER_ERROR                   = 500
         const val SUCCESS_CODE_OK                                   = 200
 
-        const val PAGE_LOAD_COUNT: Int = 10
+        const val PAGE_LOAD_COUNT: Int = 20
     }
 
 }

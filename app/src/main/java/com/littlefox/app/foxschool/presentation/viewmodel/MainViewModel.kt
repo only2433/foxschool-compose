@@ -26,6 +26,7 @@ import com.littlefox.app.foxschool.`object`.result.main.MainSongInformationResul
 import com.littlefox.app.foxschool.`object`.result.main.MainStoryInformationResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
+import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.screen.series_contents_list.SeriesContentsListActivity
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
@@ -175,29 +176,26 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                 checkDrawerMenu(event.menu)
             }
 
+            is MainEvent.onClickSearch -> {
+                startSearchActivity()
+            }
+
             else ->{}
         }
     }
 
     override fun onHandleApiObserver()
-    {
-        TODO("Not yet implemented")
-    }
+    {}
 
     override fun resume()
     {
-        TODO("Not yet implemented")
+        updateUserInformation()
+        updateSubScreen()
     }
 
-    override fun pause()
-    {
-        TODO("Not yet implemented")
-    }
+    override fun pause() {}
 
-    override fun destroy()
-    {
-        TODO("Not yet implemented")
-    }
+    override fun destroy() {}
 
     override fun onDialogClick(eventType : Int)
     {
@@ -219,6 +217,16 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             }
         }
     }
+
+    private fun startSearchActivity()
+    {
+        Log.f("")
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.SEARCH)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
 
     private fun startSeriesContentsActivity(data : SeriesBaseResult)
     {
@@ -398,6 +406,53 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
         )
     }
 
+    private fun updateUserInformation()
+    {
+        Log.f("update Status : " + MainObserver.isUpdateUserStatus())
+        if(MainObserver.isUpdateUserStatus())
+        {
+            mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
+            viewModelScope.launch {
+                mLoginInformationResult?.let {
+                    _settingUserInformation.emit(it)
+                }
+            }
+            viewModelScope.launch {
+                _settingMenuView.emit(Pair(mMainInformationResult.isUpdateHomework, mMainInformationResult.isUpdateNews))
+            }
+            MainObserver.clearUserStatus()
+        }
+    }
+
+    private fun updateSubScreen()
+    {
+        if(MainObserver.getUpdatePageList().isNotEmpty())
+        {
+            mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
+            for(page in MainObserver.getUpdatePageList())
+            {
+                when(page)
+                {
+                    Common.PAGE_STORY ->{
+                        viewModelScope.launch {
+                            _updateStoryData.emit(mMainInformationResult.getMainStoryInformation())
+                        }
+                    }
+                    Common.PAGE_SONG ->{
+                        viewModelScope.launch {
+                            _updateSongData.emit(mMainInformationResult.getMainSongInformationList())
+                        }
+                    }
+                    Common.PAGE_MY_BOOKS ->{
+                        viewModelScope.launch {
+                            _updateMyBooksData.emit(mMainInformationResult)
+                        }
+                    }
+                }
+            }
+            MainObserver.clearAll()
+        }
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.api.di
 import com.littlefox.app.foxschool.api.ApiService
 import com.littlefox.app.foxschool.api.viewmodel.api.*
 import com.littlefox.app.foxschool.api.viewmodel.api.PlayerApiViewModel
+import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

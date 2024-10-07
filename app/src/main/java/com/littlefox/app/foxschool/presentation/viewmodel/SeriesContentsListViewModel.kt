@@ -396,7 +396,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
             val resultIndex = lastStudyMovieIndex
             viewModelScope.launch {
-                _toast.emit(
+                _successMessage.emit(
                     "${loginInformationResult.getUserInformation().getName()}님은 현재 $resultIndex 까지 학습 했어요."
                 )
             }

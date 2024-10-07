@@ -1,8 +1,11 @@
 package com.littlefox.app.foxschool.presentation.widget
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +27,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -36,6 +40,113 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.presentation.common.getDp
+
+@Composable
+fun SearchTextFieldLayout(
+    text: String,
+    hintText : String = stringResource(id = R.string.text_input_search),
+    width: Int,
+    height: Int,
+    onTextChange: (String) -> Unit)
+{
+    val focusRequester = remember { FocusRequester() }
+
+    BasicTextField(
+        value = text,
+        onValueChange = onTextChange,
+        visualTransformation = VisualTransformation.None,
+        modifier = Modifier
+            .width(
+                getDp(pixel = width)
+            )
+            .height(
+                getDp(pixel = height)
+            )
+            .border(
+                width = getDp(pixel = 2),
+                color = colorResource(id = R.color.color_999999),
+                shape = RoundedCornerShape(
+                    topStart = getDp(pixel = 20), bottomStart = getDp(pixel = 20)
+                )
+            )
+            .background(color = colorResource(id = R.color.color_ffffff))
+            .focusRequester(focusRequester),
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            fontFamily = FontFamily(Font(resId = R.font.roboto_light))
+        ),
+        decorationBox = @Composable { innerTextField ->
+            Row(verticalAlignment = Alignment.CenterVertically){
+                Spacer(
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = 30)
+                        )
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = width - 164)
+                        )
+                        .height(
+                            getDp(pixel = height)
+                        ),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    if(text.isEmpty())
+                    {
+                        Text(
+                            text = hintText,
+                            style = TextStyle(
+                                fontSize = 15.sp,
+                                fontFamily = FontFamily(Font(resId = R.font.roboto_light)),
+                                color = Color.Gray
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.CenterStart)
+                        )
+                    }
+                    innerTextField() // This is where the actual text field is rendered
+                    // If you want to include a leading icon:
+                }
+                
+                Spacer(
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = 40)
+                        )
+                )
+                
+                if(text.isNotEmpty())
+                {
+                    Image(
+                        painter = painterResource(id = R.drawable.btn_tex_del),
+                        modifier = Modifier
+                            .width(
+                                getDp(pixel = 60)
+                            )
+                            .height(
+                                getDp(pixel = 60)
+                            )
+                            .clickable(
+                                interactionSource = remember {
+                                    MutableInteractionSource()
+                                },
+                                indication = null,
+                                onClick = {
+                                    onTextChange
+                                }
+                            ),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "삭제 아이콘"
+                    )
+                }
+            }
+        }
+
+    )
+}
 
 @Composable
 fun IconTextFieldLayout(
@@ -66,12 +177,10 @@ fun IconTextFieldLayout(
                 shape = if(isBottomRounded)
                 {
                     RoundedCornerShape(getDp(pixel = 20))
-                }
-                else
+                } else
                 {
                     RoundedCornerShape(
-                        topStart = getDp(pixel = 20),
-                        topEnd = getDp(pixel = 20)
+                        topStart = getDp(pixel = 20), topEnd = getDp(pixel = 20)
                     )
                 }
             )

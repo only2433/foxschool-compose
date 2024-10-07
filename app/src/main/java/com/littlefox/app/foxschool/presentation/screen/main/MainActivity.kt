@@ -41,6 +41,25 @@ class MainActivity : BaseActivity()
         }
     }
 
+    override fun onResume()
+    {
+        super.onResume()
+        viewModel.resume()
+    }
+
+    override fun onPause()
+    {
+        super.onPause()
+        viewModel.pause()
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+        viewModel.destroy()
+    }
+
+
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {

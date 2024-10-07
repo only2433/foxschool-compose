@@ -34,6 +34,7 @@ import com.littlefox.app.foxschool.presentation.screen.intro.IntroActivity
 import com.littlefox.app.foxschool.presentation.screen.login.LoginActivity
 import com.littlefox.app.foxschool.presentation.screen.main.MainActivity
 import com.littlefox.app.foxschool.presentation.screen.series_contents_list.SeriesContentsListActivity
+import com.littlefox.app.foxschool.presentation.screen.search.SearchActivity
 
 import com.littlefox.logmonitor.Log
 
@@ -224,7 +225,7 @@ class IntentManagementFactory
                 }
             }
 
-            ActivityMode.SEARCH -> intent = Intent(mContext, SearchListActivity::class.java)
+            ActivityMode.SEARCH -> intent = Intent(mContext, SearchActivity::class.java)
 
             ActivityMode.INTRODUCE_SERIES ->
             {

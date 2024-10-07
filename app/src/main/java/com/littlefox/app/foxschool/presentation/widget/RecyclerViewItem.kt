@@ -48,6 +48,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 
@@ -83,9 +84,7 @@ fun SeriesGridViewItem(
                     .clickable(
                         interactionSource = remember {
                             MutableInteractionSource()
-                        },
-                        indication = null,
-                        onClick = onItemClick
+                        }, indication = null, onClick = onItemClick
                     )
             )
             {
@@ -329,4 +328,168 @@ fun BuildContentsListItem(
         }
     }
 }
+
+@Composable
+fun BuildPagingContentsListItem(
+    data: ContentBasePagingResult,
+    modifier: Modifier = Modifier,
+    onThumbnailClick: () -> Unit,
+    onOptionClick: () -> Unit
+)
+{
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(
+                getDp(pixel = 244)
+            )
+            .background(colorResource(id = R.color.color_ffffff))
+            .border(
+                width = getDp(pixel = 2),
+                color = colorResource(id = R.color.color_999999),
+                shape = RoundedCornerShape(
+                    getDp(pixel = 10)
+                )
+            )
+            .clip(
+                shape = RoundedCornerShape(getDp(pixel = 10))
+            ),
+        contentAlignment = Alignment.CenterStart
+    )
+    {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Spacer(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 28)
+                    )
+            )
+            Box(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 324)
+                    )
+                    .height(
+                        getDp(pixel = 192)
+                    )
+                    .clickable(
+                        interactionSource = remember {
+                            MutableInteractionSource()
+                        }, indication = null, onClick = onThumbnailClick
+                    ),
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(data.thumbnail_url),
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = 324)
+                        )
+                        .height(
+                            getDp(pixel = 192)
+                        ),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "Thumbnail Image",
+                )
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 20)
+                    )
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 80)
+                    )
+                    .height(
+                        getDp(pixel = 182)
+                    ),
+                contentAlignment = Alignment.Center
+            )
+            {
+
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 10)
+                    )
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 450)
+                    )
+                    .height(
+                        getDp(pixel = 182)
+                    ),
+                contentAlignment = Alignment.CenterStart
+            )
+            {
+                Text(
+                    text = data.getContentsName(),
+                    style = TextStyle(
+                        color = colorResource(id = R.color.color_444444),
+                        fontSize = 14.sp,
+                        fontFamily = FontFamily(
+                            Font(
+                                resId = R.font.roboto_medium
+                            )
+                        )
+                    ),
+
+                    )
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 5)
+                    )
+            )
+
+            Box(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 92)
+                    )
+                    .height(
+                        getDp(pixel = 125)
+                    )
+                    .clickable(
+                        interactionSource = remember {
+                            MutableInteractionSource()
+                        },
+                        indication = null,
+                        onClick = onOptionClick
+                    ),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_learning),
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = 92)
+                        )
+                        .height(
+                            getDp(pixel = 125)
+                        ),
+                    contentScale = ContentScale.Inside,
+                    contentDescription = "Option Icon"
+                )
+            }
+
+
+        }
+    }
+}
+
 

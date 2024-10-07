@@ -9,6 +9,7 @@ import com.littlefox.app.foxschool.api.data.QueueData
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.di.FoxSchoolRepository
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
+import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +36,8 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
     private suspend fun getSchoolList()
     {
         val result = repository.getSchoolList()
+
+        Log.i("result : ${result.toString()}")
         withContext(Dispatchers.Main)
         {
             when(result)

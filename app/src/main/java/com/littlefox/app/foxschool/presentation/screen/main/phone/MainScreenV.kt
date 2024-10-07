@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
+
 import androidx.compose.material3.DrawerValue
 
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -62,6 +63,7 @@ import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.data.main.TabItemData
+import com.littlefox.app.foxschool.`object`.result.main.MainStoryInformationResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.widget.DrawerMenuPhone
@@ -109,10 +111,10 @@ fun MainScreenV(
 
     ModalNavigationDrawer(
         drawerState = drawerControllerState,
-
         gesturesEnabled = false,
-
         drawerContent = {
+
+
             Box(
                 modifier = Modifier
                     .width(
@@ -155,6 +157,9 @@ fun MainScreenV(
                             },
                             onTabSearch = {
                                 Log.i("onTabSearch Click")
+                                onEvent(
+                                    MainEvent.onClickSearch
+                                )
                             },
                         )
                     }
@@ -201,6 +206,7 @@ fun MainScreenV(
                 HorizontalPager(
                     pageSize = PageSize.Fill,
                     state = pagerState,
+                    userScrollEnabled = false,
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(it)
