@@ -46,7 +46,7 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_STUDENT_HOMEWORK_CALENDAR)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_STUDENT_HOMEWORK_CALENDAR))
                 }
                 else ->{}
             }
@@ -68,7 +68,7 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_STUDENT_HOMEWORK_DETAIL_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_STUDENT_HOMEWORK_DETAIL_LIST))
                 }
                 else ->{}
             }
@@ -90,7 +90,7 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_STUDENT_COMMENT_REGISTER)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_STUDENT_COMMENT_REGISTER))
                 }
                 else ->{}
             }
@@ -112,7 +112,7 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_STUDENT_COMMENT_UPDATE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_STUDENT_COMMENT_UPDATE))
                 }
                 else ->{}
             }
@@ -134,7 +134,7 @@ class StudentHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_STUDENT_COMMENT_DELETE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_STUDENT_COMMENT_DELETE))
                 }
                 else ->{}
             }

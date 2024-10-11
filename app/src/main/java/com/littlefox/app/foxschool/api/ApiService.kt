@@ -110,6 +110,47 @@ interface ApiService
         @Body data: JsonObject
     ) : Response<BaseResponse<Nothing>>
 
+    @FormUrlEncoded
+    @PUT("contents/bookshelves")
+    suspend fun createBookshelf(
+        @Field("name") bookName: String,
+        @Field("color") color: String
+    ) : Response<BaseResponse<MyBookshelfResult>>
+
+    @FormUrlEncoded
+    @POST("contents/bookshelves/{bookshelf_id}")
+    suspend fun updateBookshelf(
+        @Path("bookshelf_id") bookshelfID : String,
+        @Field("name") bookName: String,
+        @Field("color") color: String
+    ) : Response<BaseResponse<MyBookshelfResult>>
+
+    @DELETE("contents/bookshelves/{bookshelf_id}")
+    suspend fun deleteBookshelf(
+        @Path("bookshelf_id") bookshelfID: String
+    ) : Response<BaseResponse<MyBookshelfResult>>
+
+    @FormUrlEncoded
+    @PUT("contents/vocabularies")
+    suspend fun createVocabulary(
+        @Field("name") bookName: String,
+        @Field("color") color: String
+    ) : Response<BaseResponse<MyVocabularyResult>>
+
+    @FormUrlEncoded
+    @POST("contents/vocabularies/{vocabulary_id}")
+    suspend fun updateVocabulary(
+        @Path("vocabulary_id") vocabularyID : String,
+        @Field("name") bookName: String,
+        @Field("color") color: String
+    ) : Response<BaseResponse<MyVocabularyResult>>
+
+    @DELETE("contents/vocabularies/{vocabulary_id}")
+    suspend fun deleteVocabulary(
+        @Path("vocabulary_id") vocabularyID: String
+    ) : Response<BaseResponse<MyVocabularyResult>>
+
+
     @GET("contents/vocabularies/{content_id}")
     suspend fun getVocabularyContentsList(
         @Path("content_id") contentsID : String

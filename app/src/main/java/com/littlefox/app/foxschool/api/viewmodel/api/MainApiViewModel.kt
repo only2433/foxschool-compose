@@ -32,7 +32,7 @@ class MainApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_MAIN)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_MAIN))
                 }
                 else ->{}
             }

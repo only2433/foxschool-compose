@@ -6,7 +6,10 @@ import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.logmonitor.Log
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.util.LinkedList
 
 abstract class BaseApiViewModel : ViewModel()
@@ -14,8 +17,12 @@ abstract class BaseApiViewModel : ViewModel()
     private val _isLoading = MutableStateFlow<Pair<RequestCode,Boolean>?>(null)
     val isLoading: MutableStateFlow<Pair<RequestCode,Boolean>?> get() = _isLoading
 
-    protected val _errorReport = MutableStateFlow<Pair<ResultData.Fail, RequestCode>?>(null)
-    val errorReport : MutableStateFlow<Pair<ResultData.Fail, RequestCode>?> = _errorReport
+    protected val _errorReport = MutableSharedFlow<Pair<ResultData.Fail, RequestCode>?>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val errorReport: SharedFlow<Pair<ResultData.Fail, RequestCode>?> = _errorReport
 
     private val queueList: LinkedList<QueueData> = LinkedList<QueueData>()
     private var isRunningTask: Boolean = false

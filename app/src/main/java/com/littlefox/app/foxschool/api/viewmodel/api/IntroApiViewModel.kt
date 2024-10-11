@@ -50,7 +50,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_VERSION)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_VERSION))
                 }
                 else -> {}
             }
@@ -72,7 +72,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_AUTH_ME)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_AUTH_ME))
                 }
                 else -> {}
             }
@@ -94,7 +94,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_MAIN)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_MAIN))
                 }
                 else -> {}
 
@@ -118,7 +118,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE))
                 }
                 else -> {}
             }
@@ -140,7 +140,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT))
                 }
                 else -> {}
             }
@@ -163,7 +163,7 @@ class IntroApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP))
                 }
                 else ->{}
             }

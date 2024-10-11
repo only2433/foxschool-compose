@@ -42,7 +42,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_AUTH_CONTENT_PLAY)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_AUTH_CONTENT_PLAY))
                 }
                 else ->{}
             }
@@ -64,7 +64,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE))
                 }
                 else ->{}
             }
@@ -86,7 +86,7 @@ class PlayerApiViewModel @Inject constructor(private val repository : FoxSchoolR
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD))
                 }
                 else ->{}
             }

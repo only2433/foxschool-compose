@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.presentation.widget
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +41,38 @@ import com.littlefox.app.foxschool.enumerate.SeriesType
 import com.littlefox.app.foxschool.enumerate.SwitchButtonType
 import com.littlefox.app.foxschool.presentation.common.getDp
 
+@Composable
+fun LightBlueOutlinedButton(text: String, modifier : Modifier = Modifier, onClick: () -> Unit )
+{
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(
+            getDp(pixel = 60)
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(id = R.color.color_ffffff),
+            contentColor = colorResource(id = R.color.color_26d0df)
+        ),
+        border = BorderStroke(
+            color = colorResource(id = R.color.color_26d0df),
+            width = getDp(pixel = 4)
+        ),
+        elevation = null
+    )
+    {
+        Text(
+            text = text,
+            style = TextStyle(
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.roboto_medium
+                    )
+                )
+            )
+        )
+    }
+}
 
 @Composable
 fun BlueOutlinedButton(text: String, modifier : Modifier = Modifier, onClick: () -> Unit )
@@ -53,7 +86,12 @@ fun BlueOutlinedButton(text: String, modifier : Modifier = Modifier, onClick: ()
         colors = ButtonDefaults.buttonColors(
             backgroundColor = colorResource(id = R.color.color_ffffff),
             contentColor = colorResource(id = R.color.color_1aa3f8)
-        )
+        ),
+        border = BorderStroke(
+            color = colorResource(id = R.color.color_1aa3f8),
+            width = getDp(pixel = 4)
+        ),
+        elevation = null
     )
     {
         Text(
@@ -85,7 +123,13 @@ fun GreenOutlineButton(
         colors = ButtonDefaults.buttonColors(
             backgroundColor = colorResource(id = R.color.color_ffffff),
             contentColor = colorResource(id = R.color.color_23cc8a)
-        )
+        ),
+        border = BorderStroke(
+            color = colorResource(id = R.color.color_23cc8a),
+            width = getDp(pixel = 4)
+        ),
+        elevation = null
+
     )
     {
         Text(
@@ -103,6 +147,35 @@ fun GreenOutlineButton(
 }
 
 @Composable
+fun LightBlueRoundButton(text: String, modifier : Modifier = Modifier, onClick : () -> Unit)
+{
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(
+            getDp(pixel = 60)
+        ),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = colorResource(id = R.color.color_26d0df),
+            contentColor = colorResource(id = R.color.color_ffffff)
+        ),
+        elevation = null
+    )
+    {
+        Text(
+            text = text,
+            style = TextStyle(
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.roboto_medium
+                    )
+                )
+            )
+        )
+    }
+}
+
+@Composable
 fun BlueRoundButton(text: String, modifier : Modifier = Modifier, onClick : () -> Unit)
 {
     Button(
@@ -114,7 +187,8 @@ fun BlueRoundButton(text: String, modifier : Modifier = Modifier, onClick : () -
         colors = ButtonDefaults.buttonColors(
             backgroundColor = colorResource(id = R.color.color_3370de),
             contentColor = colorResource(id = R.color.color_ffffff)
-        )
+        ),
+        elevation = null
     )
     {
         Text(
@@ -186,14 +260,12 @@ fun SwitchTextButton(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .clickable(
-                                interactionSource = remember {MutableInteractionSource()},
+                            .clickable(interactionSource = remember {MutableInteractionSource()},
                                 indication = null,
                                 onClick = {
                                     selectButtonType = type
                                     onClick(selectButtonType)
-                                }
-                            ),
+                                }),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

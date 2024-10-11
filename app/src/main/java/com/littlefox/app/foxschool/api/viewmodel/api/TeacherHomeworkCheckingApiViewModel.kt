@@ -32,7 +32,7 @@ class TeacherHomeworkCheckingApiViewModel @Inject constructor(private val reposi
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CHECKING)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CHECKING))
                 }
                 else ->{}
             }

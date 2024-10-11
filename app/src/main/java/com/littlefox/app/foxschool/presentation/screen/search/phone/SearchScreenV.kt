@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,11 +84,13 @@ fun SearchScreen(
     val focusManager = LocalFocusManager.current
     var searchType by remember { mutableStateOf(SearchType.ALL) }
     var shouldAnimate by remember { mutableStateOf(false) }
+    var previousSearchText by remember { mutableStateOf("") }
 
     // searchedItemList의 itemCount가 변경될 때마다 애니메이션을 트리거
     LaunchedEffect(searchedItemList.itemCount) {
         shouldAnimate = true
     }
+
 
     Box(
         modifier = Modifier
@@ -104,12 +107,16 @@ fun SearchScreen(
             }
 
             BuildSelectTypeLayout(searchType = searchType) { type ->
+
+                shouldAnimate = false
                 searchType = type
                 onEvent(SearchEvent.onClickSearchType(type))
             }
 
             BuildSearchTextFieldLayout { searchText ->
                 Log.i("Search Text: $searchText")
+
+
                 shouldAnimate = false
                 focusManager.clearFocus()
                 onEvent(SearchEvent.onClickSearchExecute(searchText))

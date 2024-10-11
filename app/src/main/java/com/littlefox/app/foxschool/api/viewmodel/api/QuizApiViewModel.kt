@@ -44,7 +44,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_QUIZ_INFORMATION)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_QUIZ_INFORMATION))
                 }
                 else ->{}
             }
@@ -66,7 +66,7 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_QUIZ_RECORD_SAVE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_QUIZ_RECORD_SAVE))
                 }
                 else ->{}
             }
@@ -91,13 +91,15 @@ class QuizApiViewModel @Inject constructor(private val repository : FoxSchoolRep
             if(isSuccess == false)
             {
                 mJob?.cancel()
-                _errorReport.value = Pair(
-                    ResultData.Fail(
-                        status = 500,
-                        "파일을 다운로드 하지 못했습니다."
-                    ),
-                    RequestCode.CODE_DOWNLOAD_QUIZ_RESOURCE
-                )
+                viewModelScope.launch {
+                    _errorReport.emit(Pair(
+                        ResultData.Fail(
+                            status = 500,
+                            "파일을 다운로드 하지 못했습니다."
+                        ),
+                        RequestCode.CODE_DOWNLOAD_QUIZ_RESOURCE
+                    ))
+                }
                 break;
             }
         }

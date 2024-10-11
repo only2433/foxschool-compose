@@ -41,7 +41,7 @@ class ForumApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_FORUM_FAQ_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_FORUM_FAQ_LIST))
                 }
                 else -> {}
             }
@@ -62,7 +62,7 @@ class ForumApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_FORUM_NEWS_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_FORUM_NEWS_LIST))
                 }
                 else -> {}
             }

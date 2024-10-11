@@ -49,7 +49,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_SCHOOL_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_SCHOOL_LIST))
                 }
                 else ->{}
             }
@@ -71,7 +71,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_LOGIN)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_LOGIN))
                 }
                 else ->{}
             }
@@ -93,7 +93,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE))
                 }
                 else ->{}
             }
@@ -115,7 +115,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_NEXT))
                 }
                 else ->{}
             }
@@ -138,7 +138,7 @@ class LoginApiViewModel @Inject constructor(private val repository : FoxSchoolRe
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_PASSWORD_CHANGE_KEEP))
                 }
                 else ->{}
             }

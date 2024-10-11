@@ -40,7 +40,7 @@ class BookshelfApiViewModel @Inject constructor(private val repository : FoxScho
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_LIST))
                 }
 
                 else -> {}
@@ -64,7 +64,7 @@ class BookshelfApiViewModel @Inject constructor(private val repository : FoxScho
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_DELETE)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_DELETE))
                 }
                 else -> {}
             }

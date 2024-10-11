@@ -2,6 +2,8 @@ package com.littlefox.app.foxschool.presentation.screen.main.phone
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.BookType
 import com.littlefox.app.foxschool.enumerate.SwitchButtonType
@@ -67,6 +70,10 @@ fun SubMyBooksScreenV(
 
     var bookType by remember {
         mutableStateOf(BookType.BOOKSHELF)
+    }
+
+    var currentListSize by remember {
+        mutableStateOf(0)
     }
 
     val bookshelfItemList = remember(mainMyBooksInformationResult) {
@@ -109,9 +116,11 @@ fun SubMyBooksScreenV(
                     if(switchButtonType == SwitchButtonType.FIRST_ITEM)
                     {
                         bookType = BookType.BOOKSHELF
+                        currentListSize = bookshelfItemList.value.size
                     } else
                     {
                         bookType = BookType.VOCABULARY
+                        currentListSize = vocabularyItemList.value.size
                     }
                 }
             }
@@ -134,7 +143,67 @@ fun SubMyBooksScreenV(
                         items(bookshelfItemList.value){ item ->
 
                             BuildBookshelfItem(item){
+                                onEvent(
+                                    MainEvent.onSettingBookshelf(item)
+                                )
+                            }
+                        }
+                    }
 
+                    if(currentListSize < Common.MAX_BOOKSHELF_SIZE)
+                    {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(
+                                    getDp(pixel = 240)
+                                ),
+                            contentAlignment = Alignment.Center
+                        )
+                        {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                                Image(
+                                    modifier = Modifier
+                                        .width(
+                                            getDp(pixel = 87)
+                                        )
+                                        .height(
+                                            getDp(pixel = 87)
+                                        )
+                                        .clickable(interactionSource = remember {
+                                            MutableInteractionSource()
+                                        }, indication = null, onClick = {
+                                            onEvent(MainEvent.onAddBookshelf)
+                                        }),
+                                    painter = painterResource(id = R.drawable.btn_add),
+                                    contentScale = ContentScale.Fit,
+                                    contentDescription = "추가 버튼"
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(
+                                            getDp(pixel = 20)
+                                        )
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(
+                                            getDp(pixel = 70)
+                                        ),
+                                    text = stringResource(id = R.string.text_add_bookshelf),
+                                    textAlign = TextAlign.Center,
+                                    style = TextStyle(
+                                        color = colorResource(id = R.color.color_b7b7b7),
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(
+                                            Font(
+                                                resId = R.font.roboto_regular
+                                            )
+                                        )
+                                    )
+                                )
                             }
                         }
                     }
@@ -148,11 +217,75 @@ fun SubMyBooksScreenV(
                     LazyColumn{
                         items(vocabularyItemList.value){ item ->
                             BuildVocabularyItem(item) {
-
+                                onEvent(
+                                    MainEvent.onSettingVocabulary(item)
+                                )
                             }
                         }
                     }
+
+                    if(currentListSize < Common.MAX_VOCABULARY_SIZE)
+                    {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(
+                                    getDp(pixel = 240)
+                                ),
+                            contentAlignment = Alignment.Center
+                        )
+                        {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+                                Image(
+                                    modifier = Modifier
+                                        .width(
+                                            getDp(pixel = 87)
+                                        )
+                                        .height(
+                                            getDp(pixel = 87)
+                                        )
+                                        .clickable(interactionSource = remember {
+                                            MutableInteractionSource()
+                                        }, indication = null, onClick = {
+                                            onEvent(MainEvent.onAddVocabulary)
+                                        }),
+                                    painter = painterResource(id = R.drawable.btn_add),
+                                    contentScale = ContentScale.Fit,
+                                    contentDescription = "추가 버튼"
+                                )
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(
+                                            getDp(pixel = 20)
+                                        )
+                                )
+                                Text(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(
+                                            getDp(pixel = 70)
+                                        ),
+                                    text = stringResource(id = R.string.text_add_bookshelf),
+                                    textAlign = TextAlign.Center,
+                                    style = TextStyle(
+                                        color = colorResource(id = R.color.color_b7b7b7),
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(
+                                            Font(
+                                                resId = R.font.roboto_regular
+                                            )
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+
                 }
+
+
             }
         }
     }
@@ -163,7 +296,7 @@ fun SubMyBooksScreenV(
 @Composable
 fun BuildBookshelfItem(
     data: MyBookshelfResult,
-    onClick: () -> Unit
+    onOptionClick: () -> Unit
 )
 {
     val context = LocalContext.current
@@ -272,6 +405,13 @@ fun BuildBookshelfItem(
                     )
                     .padding(
                         end = getDp(pixel = 95)
+                    )
+                    .clickable(
+                        interactionSource = remember { //
+                            MutableInteractionSource()
+                        },
+                        indication = null,
+                        onClick = onOptionClick
                     ),
                 contentAlignment = Alignment.Center
             )
@@ -417,6 +557,13 @@ fun BuildVocabularyItem(
                     )
                     .padding(
                         end = getDp(pixel = 95)
+                    )
+                    .clickable(
+                        interactionSource = remember { //
+                            MutableInteractionSource()
+                        },
+                        indication = null,
+                        onClick = onClick
                     ),
                 contentAlignment = Alignment.Center
             )

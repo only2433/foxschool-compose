@@ -46,6 +46,12 @@ object Injection
     }
 
     @Provides
+    fun provideManagementMyBooksApiViewModel() : ManagementMyBooksApiViewModel
+    {
+        return ManagementMyBooksApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun providePlayerApiViewModel() : PlayerApiViewModel
     {
         return PlayerApiViewModel(provideFoxSchoolRepository())

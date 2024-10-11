@@ -265,6 +265,30 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         remote.getVocabularyContentsList(contentID)
     }
 
+    suspend fun createBookshelf(name: String, color: String) = safeApiCall {
+        remote.createBookshelf(name, color)
+    }
+
+    suspend fun updateBookshelf(bookshelfID: String, name: String, color: String) = safeApiCall {
+        remote.updateBookshelf(bookshelfID, name, color)
+    }
+
+    suspend fun deleteBookshelf(bookshelfID: String) = safeApiCall {
+        remote.deleteBookshelf(bookshelfID)
+    }
+
+    suspend fun createVocabulary(name: String, color: String) = safeApiCall {
+        remote.createVocabulary(name, color)
+    }
+
+    suspend fun updateVocabulary(vocabularyID: String, name: String, color: String) = safeApiCall {
+        remote.updateVocabulary(vocabularyID, name, color)
+    }
+
+    suspend fun deleteVocabulary(vocabularyID: String) = safeApiCall {
+        remote.deleteVocabulary(vocabularyID)
+    }
+
     suspend fun addVocabularyContents(contentID : String, vocabularyID : String, itemList : ArrayList<VocabularyDataResult>) = safeApiCall {
         var queryMap = mutableMapOf<String, String>()
         queryMap["content_id"] =  contentID
@@ -319,4 +343,6 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
             pagingSourceFactory = {SearchPagingSource(remote, searchType, keyword)}
         ).flow
     }
+
+
 }

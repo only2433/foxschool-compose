@@ -47,7 +47,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CLASS_LIST))
                 }
                 else ->{}
             }
@@ -69,7 +69,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CALENDAR))
                 }
                 else ->{}
             }
@@ -91,7 +91,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_STATUS)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_STATUS))
                 }
                 else ->{}
             }
@@ -113,7 +113,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_DETAIL_LIST))
                 }
                 else ->{}
             }
@@ -135,7 +135,7 @@ class TeacherHomeworkApiViewModel @Inject constructor(private val repository : F
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_TEACHER_HOMEWORK_CONTENTS))
                 }
                 else ->{}
             }

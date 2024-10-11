@@ -35,6 +35,7 @@ import com.littlefox.app.foxschool.presentation.screen.login.LoginActivity
 import com.littlefox.app.foxschool.presentation.screen.main.MainActivity
 import com.littlefox.app.foxschool.presentation.screen.series_contents_list.SeriesContentsListActivity
 import com.littlefox.app.foxschool.presentation.screen.search.SearchActivity
+import com.littlefox.app.foxschool.presentation.screen.management_mybooks.ManagementMyBooksActivity
 
 import com.littlefox.logmonitor.Log
 

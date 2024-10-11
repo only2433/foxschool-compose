@@ -15,10 +15,12 @@ import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.BookType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.DrawerMenu
+import com.littlefox.app.foxschool.enumerate.MyBooksType
 import com.littlefox.app.foxschool.enumerate.SwitchButtonType
 import com.littlefox.app.foxschool.enumerate.TransitionType
 
 import com.littlefox.app.foxschool.management.IntentManagementFactory
+import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.InAppCompaignResult
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
@@ -172,6 +174,40 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                 )
             }
 
+            is MainEvent.onAddBookshelf -> {
+                startManagementMyBooksActivity(
+                    ManagementBooksData(MyBooksType.BOOKSHELF_ADD)
+                )
+            }
+
+            is MainEvent.onAddVocabulary ->{
+                startManagementMyBooksActivity(
+                    ManagementBooksData(MyBooksType.VOCABULARY_ADD)
+                )
+            }
+
+            is MainEvent.onSettingBookshelf -> {
+                startManagementMyBooksActivity(
+                    ManagementBooksData(
+                        id = event.item.getID(),
+                        name = event.item.getName(),
+                        color = event.item.getColor(),
+                        booksType = MyBooksType.BOOKSHELF_MODIFY
+                    )
+                )
+            }
+
+            is MainEvent.onSettingVocabulary -> {
+                startManagementMyBooksActivity(
+                    ManagementBooksData(
+                        id = event.item.getID(),
+                        name = event.item.getName(),
+                        color = event.item.getColor(),
+                        booksType = MyBooksType.VOCABULARY_MODIFY
+                    )
+                )
+            }
+
             is MainEvent.onClickDrawerItem -> {
                 checkDrawerMenu(event.menu)
             }
@@ -216,6 +252,18 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                 else ->{}
             }
         }
+        else if(eventType == DIALOG_TYPE_LOGOUT)
+        {
+            when(buttonType)
+            {
+                DialogButtonType.BUTTON_2 ->
+                {
+                    Log.f("============ LOGOUT COMPLETE ============")
+                    IntentManagementFactory.getInstance().initScene()
+                }
+                else ->{}
+            }
+        }
     }
 
     private fun startSearchActivity()
@@ -236,6 +284,15 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
         data.setSeriesType(Common.CONTENT_TYPE_STORY)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.SERIES_DETAIL_LIST)
+            .setData(data)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+    private fun startManagementMyBooksActivity(data : ManagementBooksData)
+    {
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.MANAGEMENT_MYBOOKS)
             .setData(data)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()

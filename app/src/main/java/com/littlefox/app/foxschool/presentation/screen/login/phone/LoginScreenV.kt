@@ -23,16 +23,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Checkbox
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,11 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -57,23 +44,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.presentation.viewmodel.LoginViewModel
 
-import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.login.LoginEvent
 import com.littlefox.app.foxschool.presentation.widget.BlueRoundButton
-import com.littlefox.app.foxschool.presentation.widget.IconTextFieldLayout
+import com.littlefox.app.foxschool.presentation.widget.PrefixIconTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
 import com.littlefox.logmonitor.Log
 
@@ -197,7 +179,7 @@ fun LoginScreenV(
                                     )
                             )
 
-                            IconTextFieldLayout(
+                            PrefixIconTextFieldLayout(
                                 text = schoolText.value,
                                 icon = painterResource(id = R.drawable.icon_search_2),
                                 hintText = stringResource(id = R.string.text_school_search),
@@ -217,7 +199,7 @@ fun LoginScreenV(
                             )
 
 
-                            IconTextFieldLayout(
+                            PrefixIconTextFieldLayout(
                                 text = idText.value,
                                 icon = painterResource(id = R.drawable.icon_id),
                                 hintText = stringResource(id = R.string.text_id_input),
@@ -234,7 +216,7 @@ fun LoginScreenV(
                                     )
                             )
 
-                            IconTextFieldLayout(
+                            PrefixIconTextFieldLayout(
                                 text = passwordText.value,
                                 icon = painterResource(id = R.drawable.icon_lock),
                                 hintText = stringResource(id = R.string.text_password_input),

@@ -39,7 +39,7 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_CONTENTS_STORY_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_CONTENTS_STORY_LIST))
                 }
                 else ->{}
             }
@@ -60,7 +60,7 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
                 }
                 is ResultData.Fail ->
                 {
-                    _errorReport.value = Pair(result, RequestCode.CODE_CONTENTS_SONG_LIST)
+                    _errorReport.emit(Pair(result, RequestCode.CODE_CONTENTS_SONG_LIST))
                 }
                 else -> {}
             }
