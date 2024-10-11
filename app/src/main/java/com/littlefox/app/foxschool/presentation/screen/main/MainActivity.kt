@@ -104,6 +104,12 @@ class MainActivity : BaseActivity()
                 showAppEndDialog()
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.showLogoutDialog.collect{
+                showLogoutDialog()
+            }
+        }
     }
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)

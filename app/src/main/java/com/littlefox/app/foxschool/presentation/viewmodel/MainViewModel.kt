@@ -209,6 +209,8 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             }
 
             is MainEvent.onClickDrawerItem -> {
+
+
                 checkDrawerMenu(event.menu)
             }
 
@@ -300,6 +302,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
 
     private fun checkDrawerMenu(menu: DrawerMenu)
     {
+        Log.i("menu : $menu")
         when(menu)
         {
             DrawerMenu.MY_INFORMATION -> startMyInformationActivity()
