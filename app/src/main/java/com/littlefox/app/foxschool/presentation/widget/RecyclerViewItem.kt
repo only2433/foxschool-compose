@@ -20,7 +20,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,6 +55,7 @@ import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.logmonitor.Log
 
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -71,6 +76,9 @@ fun SeriesGridViewItem(
             )
             .height(
                 getDp(pixel = 374)
+            )
+            .background(
+                color = colorResource(id = R.color.color_edeef2)
             )
     )
     {
@@ -149,10 +157,12 @@ fun SeriesGridViewItem(
 fun BuildContentsListItem(
     data: ContentsBaseResult,
     itemColor : String,
+    onBackgroundClick: () -> Unit,
     onThumbnailClick: () -> Unit,
     onOptionClick: () -> Unit
 )
 {
+    Log.i("data selected : ${data.isSelected()}, text : ${data.getContentsName()}")
 
     var indexColor: Color;
     try {
@@ -163,6 +173,21 @@ fun BuildContentsListItem(
         indexColor = Color.LightGray
     }
 
+    var backgroundColor = remember {
+        mutableStateOf(R.color.color_ffffff)
+    }
+
+    LaunchedEffect(data.isSelected()) {
+        if(data.isSelected())
+        {
+            backgroundColor.value = R.color.color_fff55a
+        }
+        else
+        {
+            backgroundColor.value = R.color.color_ffffff
+        }
+    }
+
 
     Box(
         modifier = Modifier
@@ -170,15 +195,23 @@ fun BuildContentsListItem(
             .height(
                 getDp(pixel = 244)
             )
+            .background(color = colorResource(id = backgroundColor.value))
             .border(
-                width = getDp(pixel = 2),
-                color = colorResource(id = R.color.color_999999),
+                width = getDp(pixel = 1),
+                color = colorResource(id = R.color.color_a0a0a0),
                 shape = RoundedCornerShape(
                     getDp(pixel = 10)
                 )
             )
             .clip(
                 shape = RoundedCornerShape(getDp(pixel = 10))
+            )
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = null,
+                onClick = onBackgroundClick
             ),
         contentAlignment = Alignment.CenterStart
     )
@@ -304,9 +337,7 @@ fun BuildContentsListItem(
                     .clickable(
                         interactionSource = remember {
                             MutableInteractionSource()
-                        },
-                        indication = null,
-                        onClick = onOptionClick
+                        }, indication = null, onClick = onOptionClick
                     ),
                 contentAlignment = Alignment.CenterStart
             ) {
@@ -467,9 +498,7 @@ fun BuildPagingContentsListItem(
                     .clickable(
                         interactionSource = remember {
                             MutableInteractionSource()
-                        },
-                        indication = null,
-                        onClick = onOptionClick
+                        }, indication = null, onClick = onOptionClick
                     ),
                 contentAlignment = Alignment.CenterStart
             ) {

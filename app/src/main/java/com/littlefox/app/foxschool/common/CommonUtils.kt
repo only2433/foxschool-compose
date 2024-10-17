@@ -334,7 +334,17 @@ class CommonUtils
         {
             MainApplication.sDisPlayMetrics = DisplayMetrics()
         }
-        (sContext as Activity).windowManager.defaultDisplay.getMetrics(MainApplication.sDisPlayMetrics)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowMetrics = (sContext as Activity).windowManager.currentWindowMetrics
+            val bounds = windowMetrics.bounds
+            MainApplication.sDisPlayMetrics?.widthPixels = bounds.width()
+            MainApplication.sDisPlayMetrics?.heightPixels = bounds.height()
+        } else {
+            // API 레벨 30 미만에서는 기존 방식 사용
+            @Suppress("DEPRECATION")
+            (sContext as Activity).windowManager.defaultDisplay.getMetrics(MainApplication.sDisPlayMetrics)
+        }
+
         width = MainApplication.sDisPlayMetrics!!.widthPixels
         height = MainApplication.sDisPlayMetrics!!.heightPixels
         /**

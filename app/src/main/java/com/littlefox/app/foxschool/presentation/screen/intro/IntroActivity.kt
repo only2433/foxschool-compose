@@ -11,7 +11,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.IntroFactoryViewModel
 
@@ -134,69 +136,96 @@ class IntroActivity : BaseActivity()
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {
-            viewModel.isLoading.collect{ loading ->
-                Log.i("loading : $loading")
-                if(loading)
-                {
-                    showLoading()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.isLoading.collect{ loading ->
+                    Log.i("loading : $loading")
+                    if(loading)
+                    {
+                        showLoading()
+                    }
+                    else
+                    {
+                        hideLoading()
+                    }
                 }
-                else
-                {
-                    hideLoading()
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.toast.collect{ message ->
+                    Log.i("message : $message")
+                    Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.toast.collect{ message ->
-                Log.i("message : $message")
-                Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.successMessage.collect{ message ->
+
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.successMessage.collect{ message ->
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.errorMessage.collect{ message ->
 
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.errorMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogSelectUpdate.collect{
+                    showSelectUpdateDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogSelectUpdate.collect{
-                showSelectUpdateDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogForceUpdate.collect{
+                    showForceUpdateDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogForceUpdate.collect{
-                showForceUpdateDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogFilePermission.collect{
+                    showChangeFilePermissionDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogFilePermission.collect{
-                showChangeFilePermissionDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.showDialogPasswordChange.collect{ type ->
+                    showPasswordChangeDialog(type)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.showDialogPasswordChange.collect{ type ->
-                showPasswordChangeDialog(type)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.hideDialogPasswordChange.collect{
-                hidePasswordChangeDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.hideDialogPasswordChange.collect{
+                    hidePasswordChangeDialog()
+                }
             }
         }
     }

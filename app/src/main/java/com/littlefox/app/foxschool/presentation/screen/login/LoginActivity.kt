@@ -7,7 +7,9 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -87,58 +89,78 @@ class LoginActivity : BaseActivity()
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {
-            viewModel.isLoading.collect{ loading ->
-                Log.i("loading : $loading")
-                if(loading)
-                {
-                    showLoading()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.isLoading.collect{ loading ->
+                    Log.i("loading : $loading")
+                    if(loading)
+                    {
+                        showLoading()
+                    }
+                    else
+                    {
+                        hideLoading()
+                    }
                 }
-                else
-                {
-                    hideLoading()
+            }
+
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.toast.collect{ message ->
+                    Log.i("message : $message")
+                    Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.toast.collect{ message ->
-                Log.i("message : $message")
-                Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.successMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.successMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.errorMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@LoginActivity).showErrorMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.errorMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@LoginActivity).showErrorMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.showDialogPasswordChange.collect{ type ->
+                    showPasswordChangeDialog(type)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.showDialogPasswordChange.collect{ type ->
-                showPasswordChangeDialog(type)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.hideDialogPasswordChange.collect{
+                    hidePasswordChangeDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.hideDialogPasswordChange.collect{
-                hidePasswordChangeDialog()
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.finishActivity.collect{
-                setResult(Activity.RESULT_OK)
-                finish()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.finishActivity.collect{
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
             }
         }
     }

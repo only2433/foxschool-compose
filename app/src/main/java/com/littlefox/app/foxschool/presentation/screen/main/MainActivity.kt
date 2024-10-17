@@ -6,7 +6,10 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -14,6 +17,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.presentation.screen.main.phone.SubStoryScreenV
 
 import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
@@ -27,6 +31,7 @@ class MainActivity : BaseActivity()
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
     private val viewModel: MainViewModel by viewModels()
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -63,51 +68,68 @@ class MainActivity : BaseActivity()
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {
-            viewModel.isLoading.collect{ loading ->
-                Log.i("loading : $loading")
-                if(loading)
-                {
-                    showLoading()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.isLoading.collect{ loading ->
+                    Log.i("loading : $loading")
+                    if(loading)
+                    {
+                        showLoading()
+                    }
+                    else
+                    {
+                        hideLoading()
+                    }
                 }
-                else
-                {
-                    hideLoading()
+            }
+
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.toast.collect{ message ->
+                    Log.i("message : $message")
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.toast.collect{ message ->
-                Log.i("message : $message")
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.successMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@MainActivity).showSuccessMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.successMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@MainActivity).showSuccessMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.errorMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@MainActivity).showErrorMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.errorMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@MainActivity).showErrorMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.showAppEndDialog.collect{
+                    showAppEndDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.showAppEndDialog.collect{
-                showAppEndDialog()
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.showLogoutDialog.collect{
-                showLogoutDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.showLogoutDialog.collect{
+                    showLogoutDialog()
+                }
             }
         }
     }

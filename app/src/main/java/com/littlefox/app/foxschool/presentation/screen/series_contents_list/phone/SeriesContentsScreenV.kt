@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
@@ -41,10 +42,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,6 +75,7 @@ import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.SeriesContentsListViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
+import com.littlefox.app.foxschool.presentation.widget.BuildBottomSelectBarLayout
 import com.littlefox.app.foxschool.presentation.widget.BuildContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.TopbarSeriesContentsLayout
 import com.littlefox.logmonitor.Log
@@ -89,15 +93,40 @@ fun SeriesContentsScreenV(
     onEvent: (SeriesContentsListEvent) -> Unit,
 )
 {
-    val contentsList by viewModel.contentsList.collectAsState(initial = emptyList<ContentsBaseResult>())
+    val contentsList by viewModel.contentsList.collectAsState(initial = emptyList())
     val showToolbarInformationView by viewModel.showToolbarInformationView.collectAsState(initial = false)
     val isShowContentsLoading by viewModel.isContentsLoading.collectAsState(initial = true)
     val seriesTitle by viewModel.seriesTitle.collectAsState(initial = "")
     val prepareData by viewModel.backgroundView.collectAsState(initial = TopThumbnailViewData())
+    val selectedItemCount by viewModel.itemSelectedCount.collectAsState(initial = 0)
 
     var isFabToolbarVisible by remember { //
         mutableStateOf(false)
     }
+    var shouldAnimate by remember { mutableStateOf(false) }
+
+    // contentsList 의 size 변경될 때마다 애니메이션을 트리거
+    LaunchedEffect(contentsList.size) {
+        Log.i("------------- notify")
+        shouldAnimate = true
+    }
+
+    LaunchedEffect(selectedItemCount) {
+
+        Log.i("------------- selected Item count : $selectedItemCount")
+
+        if(selectedItemCount > 0)
+        {
+            isFabToolbarVisible = true
+        }
+        else
+        {
+            isFabToolbarVisible = false
+        }
+    }
+
+
+
     val scaffoldState = rememberCollapsingToolbarScaffoldState()
 
     Box(modifier = Modifier.fillMaxSize())
@@ -138,46 +167,81 @@ fun SeriesContentsScreenV(
             })
         {
             Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(
-                            start = getDp(pixel = 28),
-                            end = getDp(pixel = 28),
-                        )
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = colorResource(id = R.color.color_edeef2)
+                    )
+            )
+            {
+                AnimatedVisibility(
+                    visible = contentsList.isNotEmpty() && shouldAnimate,
+                    enter = slideInVertically(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        ),
+                        initialOffsetY = { it }
+                    ),
+                    exit = slideOutVertically(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        ),
+                        targetOffsetY = { 0 }
+                    )
+                )
+                {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                start = getDp(pixel = 28),
+                                end = getDp(pixel = 28),
+                            )
 
-                ) {
+                    ) {
+                        itemsIndexed(contentsList) {index, item ->
 
-                    items(contentsList.size) {index ->
-                        Column {
-
-                            if(index == 0)
-                            {
-                                Spacer(
-                                    modifier = Modifier.height(
+                            Log.i("index : ${index} ")
+                            Column {
+                                if(index == 0)
+                                {
+                                    Spacer(
+                                        modifier = Modifier.height(
                                             getDp(pixel = 20)
                                         )
-                                )
-                            }
-                            BuildContentsListItem(data = contentsList[index],
-                                itemColor = prepareData.titleColor,
-
-                                onThumbnailClick = {
-
-                                },
-                                onOptionClick = {
-
-                                })
-                            Spacer(
-                                modifier = Modifier.height(
+                                    )
+                                }
+                                BuildContentsListItem(data = item,
+                                    itemColor = prepareData.titleColor,
+                                    onBackgroundClick = {
+                                        Log.i("onBackgroundClick : $index")
+                                        onEvent(
+                                            SeriesContentsListEvent.onSelectedItem(index)
+                                        )
+                                    },
+                                    onThumbnailClick = {
+                                        onEvent(
+                                            SeriesContentsListEvent.onClickThumbnail(item)
+                                        )
+                                    },
+                                    onOptionClick = {
+                                        onEvent(
+                                            SeriesContentsListEvent.onClickOption(item)
+                                        )
+                                    })
+                                Spacer(
+                                    modifier = Modifier.height(
                                         getDp(pixel = 20)
                                     )
-                            )
+                                )
+                            }
                         }
                     }
+
                 }
+
 
                 Box(
                     modifier = Modifier
@@ -233,7 +297,7 @@ fun SeriesContentsScreenV(
             {
                 FloatingActionButton(
                     onClick = {
-                        isFabToolbarVisible = !isFabToolbarVisible
+                        isFabToolbarVisible = true
                     },
 
                     ) {
@@ -253,22 +317,31 @@ fun SeriesContentsScreenV(
             }
         }
 
-
         BuildBottomSelectBarLayout(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
+            isSelectedItemCount = selectedItemCount,
             isVisible = isFabToolbarVisible,
             onClickAll = {
-
+                onEvent(
+                    SeriesContentsListEvent.onClickSelectAll
+                )
             },
             onClickPlay = {
-
+                onEvent(
+                    SeriesContentsListEvent.onClickSelectPlay
+                )
             },
             onClickBookshelf = {
-
+                onEvent(
+                    SeriesContentsListEvent.onClickAddBookshelf
+                )
             },
             onClickCancel = {
-                isFabToolbarVisible = !isFabToolbarVisible
+                isFabToolbarVisible = false
+                onEvent(
+                    SeriesContentsListEvent.onClickCancel
+                )
             }
         )
     }
@@ -296,287 +369,5 @@ fun BuildCollapsibleImageHeader(
     }
 }
 
-@Composable
-fun BuildBottomSelectBarLayout(
-    modifier : Modifier = Modifier,
-    isVisible: Boolean,
-    onClickAll: () -> Unit,
-    onClickPlay: () -> Unit,
-    onClickBookshelf: () -> Unit,
-    onClickCancel: () -> Unit
-)
-{
-    AnimatedVisibility(
-        visible = isVisible,
-        modifier = modifier,
-        enter = slideInVertically(
-            initialOffsetY = {
-                200
-            },
-            animationSpec = tween(
-                durationMillis = Common.DURATION_NORMAL.toInt(),
-                easing = FastOutSlowInEasing
-            )
-        ),
-        exit = slideOutVertically(
-            targetOffsetY = {
-                200
-            },
-            animationSpec = tween(
-                durationMillis = Common.DURATION_NORMAL.toInt(),
-                easing = FastOutSlowInEasing
-            )
-        )
-    )
-    {
-        Box {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(
-                        getDp(pixel = 176)
-                    )
-                    .background(color = colorResource(id = R.color.color_29c8e6))
-            )
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(
-                        getDp(pixel = 176)
-                    )
-                    .clickable(
-                        interactionSource = remember {
-                            MutableInteractionSource()
-                        },
-                        indication = null,
-                        onClick = onClickAll
-                    )
-            ) {
-                Column(
-                    modifier = Modifier
-                        .width(
-                            getDp(pixel = 270)
-                        )
-                        .height(
-                            getDp(pixel = 176)
-                        )
-                )
-                {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 90)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.bottom_all),
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Click All"
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 86)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Text(
-                            text = stringResource(id = R.string.text_select_all),
-                            style = TextStyle(
-                                color = colorResource(id = R.color.color_ffffff),
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        resId = R.font.roboto_medium
-                                    )
-                                )
-                            )
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .width(
-                            getDp(pixel = 270)
-                        )
-                        .height(
-                            getDp(pixel = 176)
-                        )
-                        .clickable(
-                            interactionSource = remember {
-                                MutableInteractionSource()
-                            },
-                            indication = null,
-                            onClick = onClickPlay
-                        )
-                )
-                {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 90)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.bottom_play),
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Click Play"
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 86)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Text(
-                            text = stringResource(id = R.string.text_select_play),
-                            style = TextStyle(
-                                color = colorResource(id = R.color.color_ffffff),
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        resId = R.font.roboto_medium
-                                    )
-                                )
-                            )
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .width(
-                            getDp(pixel = 270)
-                        )
-                        .height(
-                            getDp(pixel = 176)
-                        )
-                        .clickable(
-                            interactionSource = remember {
-                                MutableInteractionSource()
-                            },
-                            indication = null,
-                            onClick = onClickBookshelf
-                        )
-                )
-                {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 90)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.bottom_bookshelf),
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Click Bookshelf"
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 86)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Text(
-                            text = stringResource(id = R.string.text_contain_bookshelf),
-                            style = TextStyle(
-                                color = colorResource(id = R.color.color_ffffff),
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        resId = R.font.roboto_medium
-                                    )
-                                )
-                            )
-                        )
-                    }
-                }
-
-                Column(
-                    modifier = Modifier
-                        .width(
-                            getDp(pixel = 270)
-                        )
-                        .height(
-                            getDp(pixel = 176)
-                        )
-                        .clickable(
-                            interactionSource = remember {
-                                MutableInteractionSource()
-                            },
-                            indication = null,
-                            onClick = onClickCancel
-                        )
-                )
-                {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 90)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Image(
-                            painter = painterResource(id = R.drawable.bottom_close),
-                            contentScale = ContentScale.Fit,
-                            contentDescription = "Click Cancel"
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 86)
-                            ),
-                        contentAlignment = Alignment.Center
-                    )
-                    {
-                        Text(
-                            text = stringResource(id = R.string.text_cancel),
-                            style = TextStyle(
-                                color = colorResource(id = R.color.color_ffffff),
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        resId = R.font.roboto_medium
-                                    )
-                                )
-                            )
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-
-}
 

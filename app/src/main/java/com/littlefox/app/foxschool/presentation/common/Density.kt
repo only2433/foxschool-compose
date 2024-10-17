@@ -7,22 +7,23 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.logmonitor.Log
 
 
 @Composable
 fun getDp(pixel : Int, isHeight : Boolean = false) : Dp
 {
     val context = LocalContext.current
-    return with(LocalDensity.current){
-
+    var data: Dp = 0.dp
+     with(LocalDensity.current){
         if(isHeight)
         {
-            CommonUtils.getInstance(context).getHeightPixel(pixel).toDp()
+            data = CommonUtils.getInstance(context).getHeightPixel(pixel).toDp()
         }
         else
         {
-            CommonUtils.getInstance(context).getPixel(pixel).toDp()
+            data = CommonUtils.getInstance(context).getPixel(pixel).toDp()
         }
-
     }
+    return data
 }

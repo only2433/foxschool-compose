@@ -108,7 +108,6 @@ fun MainScreenV(
         }
     }
 
-
     ModalNavigationDrawer(
         drawerState = drawerControllerState,
         gesturesEnabled = false,
@@ -221,7 +220,7 @@ fun MainScreenV(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TabContent(page: Int, viewModel: MainViewModel, onEvent: (MainEvent) -> Unit, scrollBehavior: TopAppBarScrollBehavior) {
+fun TabContent(page: Int, viewModel: MainViewModel, onEvent: (MainEvent) -> Unit, scrollBehavior : TopAppBarScrollBehavior) {
     when (page) {
         0 -> SubStoryScreenV(viewModel, onEvent, scrollBehavior)
         1 -> SubSongScreenV(viewModel, onEvent, scrollBehavior)

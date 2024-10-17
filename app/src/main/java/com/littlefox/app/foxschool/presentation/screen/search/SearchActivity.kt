@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -91,43 +93,59 @@ class SearchActivity : BaseActivity()
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {
-            viewModel.toast.collect{ message ->
-                Log.i("message : $message")
-                Toast.makeText(this@SearchActivity, message, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.toast.collect{ message ->
+                    Log.i("message : $message")
+                    Toast.makeText(this@SearchActivity, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.successMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.successMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.errorMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@SearchActivity).showErrorMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.errorMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@SearchActivity).showErrorMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogBottomOption.collect{ item->
-                showBottomContentItemDialog(item)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogBottomOption.collect{ item->
+                    showBottomContentItemDialog(item)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogBottomBookshelfContentsAdd.collect{ list ->
-                showBottomBookAddDialog(list)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogBottomBookshelfContentsAdd.collect{ list ->
+                    showBottomBookAddDialog(list)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogRecordPermission.collect{
-                showChangeRecordPermissionDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogRecordPermission.collect{
+                    showChangeRecordPermissionDialog()
+                }
             }
         }
     }
@@ -136,7 +154,7 @@ class SearchActivity : BaseActivity()
     {
         mTemplateAlertDialog = TemplateAlertDialog(this).apply {
             setMessage(resources.getString(R.string.message_record_permission))
-            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+            setDialogEventType(SearchViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
             setButtonType(DialogButtonType.BUTTON_2)
             setButtonText(
                 resources.getString(R.string.text_cancel),

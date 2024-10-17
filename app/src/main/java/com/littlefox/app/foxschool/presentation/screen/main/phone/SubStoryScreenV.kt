@@ -24,8 +24,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -80,7 +82,7 @@ import com.littlefox.logmonitor.Log
 fun SubStoryScreenV(
     viewModel : MainViewModel,
     onEvent: (MainEvent) -> Unit,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior : TopAppBarScrollBehavior
 )
 {
     val mainStoryInformationResult by viewModel.updateStoryData.collectAsStateWithLifecycle(
@@ -111,7 +113,7 @@ fun SubStoryScreenV(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            var switchButtonType by remember { mutableStateOf(SwitchButtonType.FIRST_ITEM) }
+
             SwitchTextButton(
                 firstText = stringResource(id = R.string.text_levels),
                 secondText = stringResource(id = R.string.text_categories)) { type ->
@@ -124,10 +126,8 @@ fun SubStoryScreenV(
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
-                        .fillMaxSize(),
-
-                    ) {
-
+                        .fillMaxSize())
+                {
                     items(dataList.value.size){ index ->
 
                         if(index % 2 == 0)
@@ -170,6 +170,7 @@ fun SubStoryScreenV(
                     }
                 }
             }
+
         }
     }
 }

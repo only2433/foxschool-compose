@@ -2,41 +2,56 @@ package com.littlefox.app.foxschool.presentation.viewmodel
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
-import com.littlefox.app.foxschool.api.base.BaseApiViewModel
+import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
-import com.littlefox.app.foxschool.api.viewmodel.api.MainApiViewModel
 import com.littlefox.app.foxschool.api.viewmodel.api.SeriesContentsListApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
+import com.littlefox.app.foxschool.enumerate.ActivityMode
+import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.VocabularyType
 
 import com.littlefox.app.foxschool.management.IntentManagementFactory
+import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
+import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
+import com.littlefox.app.foxschool.`object`.data.record.RecordIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.series.SeriesViewData
 import com.littlefox.app.foxschool.`object`.data.series.TopThumbnailViewData
+import com.littlefox.app.foxschool.`object`.data.webview.WebviewIntentParamsObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
 import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
+import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
+import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.ArrayList
+import okhttp3.internal.filterList
 import java.util.Collections
+
 import javax.inject.Inject
+
 
 @HiltViewModel
 class SeriesContentsListViewModel @Inject constructor(private val apiViewModel : SeriesContentsListApiViewModel) : BaseViewModel()
@@ -97,13 +112,50 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         onBufferOverflow = BufferOverflow.DROP_LATEST
 
     )
-    val statusBarColor:SharedFlow<String> = _statusBarColor
+    val statusBarColor: SharedFlow<String> = _statusBarColor
+
+    private val _itemSelectedCount =  MutableSharedFlow<Int>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val itemSelectedCount: SharedFlow<Int> = _itemSelectedCount
+
+    private val _dialogBottomOption = MutableSharedFlow<ContentsBaseResult>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogBottomOption : SharedFlow<ContentsBaseResult> = _dialogBottomOption
+
+    private val _dialogBottomBookshelfContentsAdd = MutableSharedFlow<java.util.ArrayList<MyBookshelfResult>>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogBottomBookshelfContentsAdd : SharedFlow<java.util.ArrayList<MyBookshelfResult>> = _dialogBottomBookshelfContentsAdd
+
+    private val _dialogRecordPermission = MutableSharedFlow<Unit>(
+        replay = 1,
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_LATEST
+    )
+    val dialogRecordPermission : SharedFlow<Unit> = _dialogRecordPermission
 
 
-    private var mCurrentContentsItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
-    private var isStillSeries : Boolean = false
+
     private lateinit var mCurrentSeriesBaseResult : SeriesBaseResult
     private lateinit var mDetailItemInformationResult : DetailItemInformationResult
+    private lateinit var mMainInformationResult : MainInformationResult
+
+    private var mCurrentContentsItemList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
+    private var mSendBookshelfAddList : java.util.ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
+
+    private var mCurrentPlayIndex : Int     = 0
+    private var mCurrentOptionIndex : Int   = 0
+    private var mCurrentSelectItem: ContentsBaseResult? = null
+    private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
+    private var isStillOnSeries : Boolean   = false
     private lateinit var mContext : Context
 
 
@@ -111,6 +163,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         mContext = context
         mCurrentSeriesBaseResult = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_STORY_SERIES_DATA)!!
+        mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         onHandleApiObserver()
 
         prepareUI()
@@ -150,7 +203,55 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     override fun onHandleViewEvent(event : BaseEvent)
     {
-        TODO("Not yet implemented")
+        when(event)
+        {
+            is SeriesContentsListEvent.onClickSelectAll ->
+            {
+                checkSelectedItemAll(
+                    isSelected = true
+                )
+            }
+            is SeriesContentsListEvent.onClickSelectPlay ->
+            {
+
+            }
+            is SeriesContentsListEvent.onClickAddBookshelf ->
+            {
+                addContentsListInBookshelf()
+            }
+            is SeriesContentsListEvent.onClickCancel ->
+            {
+                checkSelectedItemAll(
+                    isSelected = false
+                )
+            }
+
+            is SeriesContentsListEvent.onClickBottomContentsType ->
+            {
+                checkBottomSelectItemType(event.type)
+            }
+
+            is SeriesContentsListEvent.onSelectedItem ->
+            {
+                onSelectItem(event.index)
+            }
+            is SeriesContentsListEvent.onClickThumbnail ->
+            {
+                mCurrentSelectItem = event.item
+                startCurrentSelectMovieActivity()
+            }
+            is SeriesContentsListEvent.onClickOption ->
+            {
+                mCurrentSelectItem = event.item
+                viewModelScope.launch {
+                    _dialogBottomOption.emit(event.item)
+                }
+            }
+            is SeriesContentsListEvent.onAddContentsInBookshelf ->
+            {
+                onDialogAddBookshelfClick(event.index)
+            }
+        }
     }
 
     override fun onHandleApiObserver()
@@ -192,6 +293,24 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 apiViewModel.songContentsListData.collect { data ->
                     data?.let {
                         settingDetailView(data)
+                    }
+                }
+            }
+        }
+
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                apiViewModel.addBookshelfContentsData.collect{ data ->
+                    data?.let {
+                        updateBookshelfData(it)
+                    }
+                    checkSelectedItemAll(
+                        isSelected = false
+                    )
+                    withContext(Dispatchers.Main)
+                    {
+                        delay(Common.DURATION_NORMAL)
+                        _successMessage.emit(mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf))
                     }
                 }
             }
@@ -254,17 +373,17 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     override fun resume()
     {
-        TODO("Not yet implemented")
+
     }
 
     override fun pause()
     {
-        TODO("Not yet implemented")
+
     }
 
     override fun destroy()
     {
-        TODO("Not yet implemented")
+
     }
 
     private fun requestDetailInformation()
@@ -283,6 +402,17 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 mCurrentSeriesBaseResult.getDisplayID()
             )
         }
+    }
+
+
+    private fun requestBookshelfContentsAddAsync(data : ArrayList<ContentsBaseResult>)
+    {
+        Log.f("")
+        apiViewModel.enqueueCommandStart(
+            RequestCode.CODE_BOOKSHELF_CONTENTS_ADD,
+            mCurrentBookshelfAddResult!!.getID(),
+            data
+        )
 
     }
 
@@ -351,11 +481,12 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             _isSingleSeries.emit(mDetailItemInformationResult.isSingleSeries)
         }
 
+
         if(mDetailItemInformationResult.seriesID != "")
         {
             if(!mDetailItemInformationResult.isSingleSeries && mDetailItemInformationResult.isSingleSeries)
             {
-                isStillSeries = true
+                isStillOnSeries = true
             }
         }
 
@@ -376,7 +507,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             mCurrentContentsItemList[i].setIndex(index)
         }
 
-        if(isStillSeries)
+        if(isStillOnSeries)
         {
             mCurrentContentsItemList.reverse()
         }
@@ -399,6 +530,296 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 _successMessage.emit(
                     "${loginInformationResult.getUserInformation().getName()}님은 현재 $resultIndex 까지 학습 했어요."
                 )
+            }
+        }
+    }
+
+    /**
+     * 컨텐츠의 책장 리스트에서 나의단어장으로 컨텐츠를 추가해서 갱신할때 사용하는 메소드 ( 추가됨으로써 서버쪽의 해당 책장의 정보를 갱신하기 위해 사용 )
+     * 예) 책장 ID , 컨텐츠의 개수, 책장 컬러 등등
+     * @param result 서버쪽에서 받은 결과 책장 정보
+     */
+    private fun updateBookshelfData(result : MyBookshelfResult)
+    {
+        for(i in 0 until mMainInformationResult.getBookShelvesList().size)
+        {
+            if(mMainInformationResult.getBookShelvesList().get(i).getID().equals(result.getID()))
+            {
+                Log.f("update Index :$i")
+                mMainInformationResult.getBookShelvesList().set(i, result)
+            }
+        }
+        CommonUtils.getInstance(mContext).saveMainData(mMainInformationResult)
+        MainObserver.updatePage(Common.PAGE_MY_BOOKS)
+    }
+
+    private fun checkBottomSelectItemType(type: BottomDialogContentsType)
+    {
+        when(type)
+        {
+            BottomDialogContentsType.QUIZ -> startQuizActivity()
+            BottomDialogContentsType.EBOOK -> startEbookActivity()
+            BottomDialogContentsType.FLASHCARD -> startFlashcardActivity()
+            BottomDialogContentsType.VOCABULARY -> startVocabularyActivity()
+            BottomDialogContentsType.CROSSWORD -> startGameCrosswordActivity()
+            BottomDialogContentsType.STARWORDS -> startGameStarwordsActivity()
+            BottomDialogContentsType.TRANSLATE -> startOriginTranslateActivity()
+            BottomDialogContentsType.RECORD_PLAYER -> {
+                Log.f("")
+                if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+                {
+                    viewModelScope.launch {
+                        _dialogRecordPermission.emit(Unit)
+                    }
+                }
+                else
+                {
+                    startRecordPlayerActivity()
+                }
+            }
+            BottomDialogContentsType.ADD_BOOKSHELF -> {
+                Log.f("")
+                mCurrentSelectItem?.let { item ->
+                    mSendBookshelfAddList.clear()
+                    mSendBookshelfAddList.add(item)
+                    viewModelScope.launch {
+                        _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
+                    }
+                }
+            }
+            else -> {}
+        }
+    }
+
+    private fun addContentsListInBookshelf()
+    {
+        if(getSelectedItemList().size > 0)
+        {
+            mSendBookshelfAddList.clear()
+            mSendBookshelfAddList = getSelectedItemList()
+            if(isStillOnSeries)
+            {
+                Log.f("Add List isStillOnSeries : " + mDetailItemInformationResult.seriesID)
+                mSendBookshelfAddList.reverse()
+            }
+            viewModelScope.launch {
+                _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
+            }
+        } else
+        {
+            viewModelScope.launch {
+                _errorMessage.emit(mContext.resources.getString(R.string.message_not_add_selected_contents_bookshelf))
+            }
+        }
+    }
+
+
+
+    private fun onDialogAddBookshelfClick(index : Int)
+    {
+        mCurrentBookshelfAddResult = mMainInformationResult.getBookShelvesList()[index]
+        Log.f("Add Item : " + mCurrentBookshelfAddResult!!.getName())
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            requestBookshelfContentsAddAsync(mSendBookshelfAddList)
+        }
+    }
+
+
+    /** ====================== StartActivity ====================== */
+    private fun startCurrentSelectMovieActivity()
+    {
+        mCurrentSelectItem?.let { item ->
+            Log.f("Movie ID : " + item.getID())
+            val sendItemList = java.util.ArrayList<ContentsBaseResult>()
+            sendItemList.add(item)
+            val playerParamsObject = PlayerIntentParamsObject(sendItemList)
+
+            IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .setData(playerParamsObject)
+                .startActivity()
+        }
+    }
+
+    private fun startQuizActivity()
+    {
+        mCurrentSelectItem?.let { item ->
+            Log.f("Quiz ID : " + item.getID())
+            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.getID())
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.QUIZ)
+                .setData(quizIntentParamsObject)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+
+    }
+
+    private fun startOriginTranslateActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
+                .setData(item.getID())
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+
+    }
+
+    private fun startEbookActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
+                .setData(data)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+
+    }
+
+    private fun startVocabularyActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val title = item.getVocabularyName()
+            val myVocabularyResult = MyVocabularyResult(
+                item.getID(),
+                title,
+                VocabularyType.VOCABULARY_CONTENTS)
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.VOCABULARY)
+                .setData(myVocabularyResult)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+    }
+
+    private fun startGameStarwordsActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
+                .setData(data)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+    }
+
+    private fun startGameCrosswordActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
+                .setData(data)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+    }
+
+    private fun startFlashcardActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val data = FlashcardDataObject(
+                item.getID(),
+                item.getName(),
+                item.getSubName(),
+                VocabularyType.VOCABULARY_CONTENTS
+            )
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.FLASHCARD)
+                .setData(data)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+    }
+
+    private fun startRecordPlayerActivity()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            val recordIntentParamsObject = RecordIntentParamsObject(item)
+
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.RECORD_PLAYER)
+                .setData(recordIntentParamsObject)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+    }
+
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun onSelectItem(index : Int)
+    {
+        // 현재 선택 상태를 반전
+        val isSelected = mCurrentContentsItemList[index].isSelected()
+        mCurrentContentsItemList[index].setSelected(!isSelected)
+
+        // mCurrentContentsItemList를 ArrayList로 변환하여 방출
+        viewModelScope.launch {
+            _contentsList.emit(ArrayList<ContentsBaseResult>())
+            _contentsList.emit(mCurrentContentsItemList)
+        }
+
+        Log.i("index : $index , isSelected : ${mCurrentContentsItemList[index].isSelected()}")
+
+        sendSelectedItem()
+    }
+
+    private fun getSelectedItemList() : ArrayList<ContentsBaseResult>
+    {
+        return ArrayList(mCurrentContentsItemList.filter {
+            it.isSelected()
+        })
+    }
+
+    private fun sendSelectedItem()
+    {
+        val selectedItemCount = mCurrentContentsItemList.count { it.isSelected() }
+        viewModelScope.launch {
+            _itemSelectedCount.emit(selectedItemCount)
+        }
+    }
+
+    private fun checkSelectedItemAll(isSelected : Boolean)
+    {
+        mCurrentContentsItemList.forEach {
+            it.setSelected(isSelected)
+        }
+
+        // mCurrentContentsItemList를 ArrayList로 변환하여 방출
+        viewModelScope.launch {
+            _contentsList.emit(ArrayList<ContentsBaseResult>())
+            _contentsList.emit(mCurrentContentsItemList)
+        }
+
+        viewModelScope.launch {
+            if(isSelected)
+            {
+                _itemSelectedCount.emit(mCurrentContentsItemList.size)
+            }
+            else
+            {
+                _itemSelectedCount.emit(0)
             }
         }
     }

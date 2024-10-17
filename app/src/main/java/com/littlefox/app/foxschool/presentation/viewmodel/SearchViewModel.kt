@@ -1,6 +1,9 @@
 package com.littlefox.app.foxschool.presentation.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +25,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.SearchListContract
@@ -66,6 +70,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiViewModel) : BaseViewModel()
 {
+    companion object
+    {
+        const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int   = 10001
+    }
+
     private val _isContentsLoading = MutableSharedFlow<Boolean>(
         replay = 1,
         extraBufferCapacity = 1,
@@ -110,7 +119,6 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     private lateinit var mContext : Context
     private lateinit var mSearchListContractView : SearchListContract.View
     private var mCurrentSearchListBaseResult : SearchListResult? = null
-
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
 
     /**
@@ -264,8 +272,29 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
             BottomDialogContentsType.CROSSWORD -> startGameCrosswordActivity()
             BottomDialogContentsType.STARWORDS -> startGameStarwordsActivity()
             BottomDialogContentsType.TRANSLATE -> startOriginTranslateActivity()
-            BottomDialogContentsType.RECORD_PLAYER -> onClickRecordPlayerButton()
-            BottomDialogContentsType.ADD_BOOKSHELF -> onClickAddBookshelfButton()
+            BottomDialogContentsType.RECORD_PLAYER -> {
+                Log.f("")
+                if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+                {
+                    viewModelScope.launch {
+                        _dialogRecordPermission.emit(Unit)
+                    }
+                }
+                else
+                {
+                    startRecordPlayerActivity()
+                }
+            }
+            BottomDialogContentsType.ADD_BOOKSHELF -> {
+                Log.f("")
+                mCurrentSelectItem?.let { item ->
+                    mSendBookshelfAddList.clear()
+                    mSendBookshelfAddList.add(item)
+                    viewModelScope.launch {
+                        _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
+                    }
+                }
+            }
             else -> {}
         }
     }
@@ -492,32 +521,6 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
 
     }
 
-    private fun onClickAddBookshelfButton()
-    {
-        Log.f("")
-        mCurrentSelectItem?.let { item ->
-            mSendBookshelfAddList.clear()
-            mSendBookshelfAddList.add(item)
-            viewModelScope.launch {
-                _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
-            }
-        }
-    }
-
-    private fun onClickRecordPlayerButton()
-    {
-        Log.f("")
-        if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
-        {
-            viewModelScope.launch {
-                _dialogRecordPermission.emit(Unit)
-            }
-        }
-        else
-        {
-            startRecordPlayerActivity()
-        }
-    }
 
     private fun onDialogAddBookshelfClick(index : Int)
     {
@@ -548,5 +551,29 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     }
 
 
-
+    override fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
+    {
+        if(eventType == DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+        {
+            when(buttonType)
+            {
+                DialogButtonType.BUTTON_1 ->
+                {
+                    viewModelScope.launch {
+                        _errorMessage.emit(mContext.getString(R.string.message_warning_record_permission))
+                    }
+                }
+                DialogButtonType.BUTTON_2 ->
+                {
+                    // [권한 변경하기] 앱 정보 화면으로 이동
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", mContext.packageName, null)
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mContext.startActivity(intent)
+                }
+            }
+        }
+    }
 }

@@ -7,13 +7,16 @@ import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.api.di.FoxSchoolRepository
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
+import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
+import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +27,9 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
 
     private val _songContentsListData = MutableStateFlow<DetailItemInformationResult?>(null)
     val songContentsListData : MutableStateFlow<DetailItemInformationResult?> = _songContentsListData
+
+    private val _addBookshelfContentsData = MutableStateFlow<MyBookshelfResult?>(null)
+    val addBookshelfContentsData: MutableStateFlow<MyBookshelfResult?> = _addBookshelfContentsData
 
     private suspend fun getStoryContentsListData(displayID: String)
     {
@@ -67,6 +73,28 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
         }
     }
 
+    private suspend fun addBookshelfContents(bookshelfID: String, contentsList: ArrayList<ContentsBaseResult>)
+    {
+        val result = repository.addBookshelfContents(bookshelfID, contentsList)
+        withContext(Dispatchers.Main)
+        {
+            when(result)
+            {
+                is ResultData.Success ->
+                {
+                    val data = result.data as MyBookshelfResult
+                    _addBookshelfContentsData.value = data
+                }
+                is ResultData.Fail ->
+                {
+                    _errorReport.emit(Pair(result, RequestCode.CODE_BOOKSHELF_CONTENTS_ADD))
+                }
+                else ->{}
+            }
+        }
+        enqueueCommandEnd()
+    }
+
     override fun pullNext(data : QueueData)
     {
         super.pullNext(data)
@@ -88,6 +116,16 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
                     delay(data.duration)
                     getSongContentsListData(
                         data.objects[0] as String
+                    )
+                }
+            }
+            RequestCode.CODE_BOOKSHELF_CONTENTS_ADD ->
+            {
+                mJob = viewModelScope.launch(Dispatchers.IO) {
+                    delay(data.duration)
+                    addBookshelfContents(
+                        data.objects[0] as String,
+                        data.objects[1] as ArrayList<ContentsBaseResult>
                     )
                 }
             }

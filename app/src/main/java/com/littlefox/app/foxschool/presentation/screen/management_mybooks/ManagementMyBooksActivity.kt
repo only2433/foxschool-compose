@@ -5,7 +5,9 @@ import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -69,50 +71,66 @@ class ManagementMyBooksActivity : BaseActivity()
     override fun setupObserverViewModel()
     {
         lifecycleScope.launch {
-            viewModel.isLoading.collect{ isLoading ->
-                if(isLoading)
-                {
-                    showLoading()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.isLoading.collect{ isLoading ->
+                    if(isLoading)
+                    {
+                        showLoading()
+                    }
+                    else
+                    {
+                        hideLoading()
+                    }
                 }
-                else
-                {
-                    hideLoading()
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.toast.collect{ message ->
+                    Log.i("message : $message")
+                    Toast.makeText(this@ManagementMyBooksActivity, message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.toast.collect{ message ->
-                Log.i("message : $message")
-                Toast.makeText(this@ManagementMyBooksActivity, message, Toast.LENGTH_SHORT).show()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.successMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.successMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.errorMessage.collect{ message ->
+                    Log.i("message : $message")
+                    CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(message)
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.errorMessage.collect{ message ->
-
-                Log.i("message : $message")
-                CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(message)
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogDeleteBookshelf.collect{
+                    showDeleteBookshelfDialog()
+                }
             }
         }
 
         lifecycleScope.launch {
-            viewModel.dialogDeleteBookshelf.collect{
-                showDeleteBookshelfDialog()
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.dialogDeleteVocabulary.collect{
-                showDeleteVocabularyDialog()
+            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            {
+                viewModel.dialogDeleteVocabulary.collect{
+                    showDeleteVocabularyDialog()
+                }
             }
         }
     }
