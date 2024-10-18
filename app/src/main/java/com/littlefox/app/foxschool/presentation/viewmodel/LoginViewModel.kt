@@ -165,7 +165,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
     override fun onHandleApiObserver()
     {
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.isLoading.collect { data ->
                     data?.let {
                         if (data.first == RequestCode.CODE_SCHOOL_LIST)
@@ -187,7 +187,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.schoolListData.collect { data ->
                     data?.let {
                         _requestSchoolList.addAll(data)
@@ -197,7 +197,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.loginData.collect { data ->
                     data?.let {
                         Log.f("Login Complete")
@@ -224,7 +224,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.changePasswordData.collect { data ->
                     data?.let {
                         // 비밀번호 변경 성공
@@ -246,7 +246,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.changePasswordNextData.collect { data ->
                     data?.let {
                         // 다음에 변경
@@ -258,7 +258,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.changePasswordKeepData.collect { data ->
                     data?.let {
                         // 현재 비밀번호 유지
@@ -277,7 +277,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.errorReport.collect { data ->
                     data?.let {
                         val result = data.first

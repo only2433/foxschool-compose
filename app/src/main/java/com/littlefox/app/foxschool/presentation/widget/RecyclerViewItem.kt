@@ -173,7 +173,7 @@ fun BuildContentsListItem(
         indexColor = Color.LightGray
     }
 
-    var backgroundColor = remember {
+    val backgroundColor = remember {
         mutableStateOf(R.color.color_ffffff)
     }
 

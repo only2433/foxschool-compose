@@ -43,7 +43,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -52,11 +54,10 @@ import java.util.Collections
 
 import javax.inject.Inject
 
-
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class SeriesContentsListViewModel @Inject constructor(private val apiViewModel : SeriesContentsListApiViewModel) : BaseViewModel()
 {
-
     private val _isContentsLoading = MutableSharedFlow<Boolean>(
         replay = 1,
         extraBufferCapacity = 1,
@@ -156,6 +157,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private var mCurrentSelectItem: ContentsBaseResult? = null
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
     private var isStillOnSeries : Boolean   = false
+    private var test: String = ""
     private lateinit var mContext : Context
 
 
@@ -165,6 +167,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         mCurrentSeriesBaseResult = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_STORY_SERIES_DATA)!!
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         onHandleApiObserver()
+
+        test = "시발"
 
         prepareUI()
         viewModelScope.launch {
@@ -213,7 +217,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             }
             is SeriesContentsListEvent.onClickSelectPlay ->
             {
-
+                startSelectedListMovieActivity()
             }
             is SeriesContentsListEvent.onClickAddBookshelf ->
             {
@@ -257,7 +261,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     override fun onHandleApiObserver()
     {
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.isLoading.collect { data ->
                     data?.let {
                         if (data.first == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
@@ -279,45 +283,52 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED){
                 apiViewModel.storyContentsListData.collect { data ->
                     data?.let {
+                        Log.i("data size : ${data.getContentsList().size}")
                         settingDetailView(data)
+                        initContentsList()
+                        checkLastWatchContents()
+
                     }
                 }
             }
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED){
                 apiViewModel.songContentsListData.collect { data ->
                     data?.let {
                         settingDetailView(data)
+                        initContentsList()
+                        checkLastWatchContents()
                     }
                 }
             }
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.addBookshelfContentsData.collect{ data ->
                     data?.let {
                         updateBookshelfData(it)
+                        checkSelectedItemAll(
+                            isSelected = false
+                        )
+                        withContext(Dispatchers.Main)
+                        {
+                            delay(Common.DURATION_NORMAL)
+                            _successMessage.emit(mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf))
+                        }
                     }
-                    checkSelectedItemAll(
-                        isSelected = false
-                    )
-                    withContext(Dispatchers.Main)
-                    {
-                        delay(Common.DURATION_NORMAL)
-                        _successMessage.emit(mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf))
-                    }
+
                 }
             }
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED){
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED){
                 apiViewModel.errorReport.collect { data ->
                     data?.let {
                         val result = data.first
@@ -373,12 +384,12 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     override fun resume()
     {
-
+        Log.f("")
     }
 
     override fun pause()
     {
-
+        Log.f("")
     }
 
     override fun destroy()
@@ -403,6 +414,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             )
         }
     }
+
 
 
     private fun requestBookshelfContentsAddAsync(data : ArrayList<ContentsBaseResult>)
@@ -494,7 +506,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             _isContentsLoading.emit(false)
         }
 
-        initContentsList()
+
     }
 
     private fun initContentsList()
@@ -516,7 +528,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             _contentsList.emit(mCurrentContentsItemList)
         }
 
-        checkLastWatchContents()
+
     }
 
     private fun checkLastWatchContents()
@@ -613,8 +625,6 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
     }
 
-
-
     private fun onDialogAddBookshelfClick(index : Int)
     {
         mCurrentBookshelfAddResult = mMainInformationResult.getBookShelvesList()[index]
@@ -629,6 +639,31 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
 
     /** ====================== StartActivity ====================== */
+    private fun startSelectedListMovieActivity()
+    {
+        val sendItemList = getSelectedItemList()
+
+        if(sendItemList.isNotEmpty())
+        {
+            val playerIntentParamsObject = PlayerIntentParamsObject(sendItemList)
+            if(isStillOnSeries)
+            {
+                sendItemList.reverse()
+            }
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.PLAYER)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .setData(playerIntentParamsObject)
+                .startActivity()
+        }
+        else
+        {
+            viewModelScope.launch {
+                _errorMessage.emit(mContext.resources.getString(R.string.message_not_selected_contents_list))
+            }
+        }
+    }
+
     private fun startCurrentSelectMovieActivity()
     {
         mCurrentSelectItem?.let { item ->

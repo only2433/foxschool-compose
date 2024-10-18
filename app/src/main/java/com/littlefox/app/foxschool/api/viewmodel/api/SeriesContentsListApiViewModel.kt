@@ -10,6 +10,7 @@ import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObje
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -34,6 +35,7 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
     private suspend fun getStoryContentsListData(displayID: String)
     {
         val result = repository.getStoryContentsList(displayID)
+        Log.i("result : ${result.toString()}")
         withContext(Dispatchers.Main)
         {
             when(result)
@@ -50,11 +52,13 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
                 else ->{}
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun getSongContentsListData(displayID : String)
     {
         val result = repository.getSongContentsList(displayID)
+        Log.i("result : ${result.toString()}")
         withContext(Dispatchers.Main)
         {
             when(result)
@@ -71,11 +75,13 @@ class SeriesContentsListApiViewModel @Inject constructor(private val repository 
                 else -> {}
             }
         }
+        enqueueCommandEnd()
     }
 
     private suspend fun addBookshelfContents(bookshelfID: String, contentsList: ArrayList<ContentsBaseResult>)
     {
         val result = repository.addBookshelfContents(bookshelfID, contentsList)
+        Log.i("result : ${result.toString()}")
         withContext(Dispatchers.Main)
         {
             when(result)

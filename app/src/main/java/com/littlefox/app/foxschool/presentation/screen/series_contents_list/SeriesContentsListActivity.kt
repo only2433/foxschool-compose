@@ -45,15 +45,14 @@ class SeriesContentsListActivity : BaseActivity()
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
     private var mBottomContentItemOptionDialog: BottomContentItemOptionDialog? = null
     private var mBottomBookAddDialog: BottomBookAddDialog? = null
-    private val viewModel: SeriesContentsListViewModel by viewModels()
 
+    private val viewModel: SeriesContentsListViewModel by viewModels()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
 
         viewModel.init(this)
         setupObserverViewModel()
-
 
         setContent{
             SeriesContentsScreenV(
@@ -144,7 +143,7 @@ class SeriesContentsListActivity : BaseActivity()
     {
         super.onResume()
         viewModel.resume()
-        Log.f("")
+
 
     }
 
@@ -152,8 +151,10 @@ class SeriesContentsListActivity : BaseActivity()
     {
         super.onPause()
         viewModel.pause()
-        Log.f("")
+
     }
+
+
 
     override fun finish()
     {

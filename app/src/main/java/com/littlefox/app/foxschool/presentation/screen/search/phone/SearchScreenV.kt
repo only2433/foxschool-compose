@@ -151,7 +151,10 @@ fun SearchScreen(
                 ){
                     LazyColumn(
                         modifier = Modifier
-                            .padding(start = getDp(pixel = 28), end = getDp(pixel = 28))
+                            .padding(
+                                start = getDp(pixel = 28),
+                                end = getDp(pixel = 28)
+                            )
                     ) {
                         items(searchedItemList.itemCount) { index ->
                             val item = searchedItemList[index]

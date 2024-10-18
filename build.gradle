@@ -2,8 +2,8 @@
 buildscript {
 
     ext {
-        kotlin_version = '1.9.20'
-        compose_version = '1.5.4'  // 최신 버전 사용
+        kotlin_version = '1.9.25'
+        compose_version = '1.7.0'  // 최신 버전 사용
         hilt_version = '2.48'
     }
     repositories {

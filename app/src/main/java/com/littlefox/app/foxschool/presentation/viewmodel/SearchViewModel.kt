@@ -241,17 +241,17 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
 
     override fun resume()
     {
-        TODO("Not yet implemented")
+        Log.i("mCurrentKeyword : $mCurrentKeyword")
     }
 
     override fun pause()
     {
-        TODO("Not yet implemented")
+
     }
 
     override fun destroy()
     {
-        TODO("Not yet implemented")
+
     }
 
 

@@ -46,7 +46,7 @@ android {
     }
 
     composeOptions{
-        kotlinCompilerExtensionVersion "$compose_version"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     kotlinOptions {
@@ -157,7 +157,7 @@ dependencies {
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     implementation "io.coil-kt:coil-compose:2.1.0" // Coil for Compose
     implementation "me.onebone:toolbar-compose:2.3.5"
-    implementation 'androidx.compose.foundation:foundation:1.7.3'
+    implementation 'androidx.compose.foundation:foundation:1.6.0-beta01'
     implementation "androidx.paging:paging-compose:3.3.2"
     implementation "androidx.paging:paging-runtime-ktx:3.3.2"
 

@@ -27,15 +27,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+
+
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.TopAppBarDefaults
@@ -65,6 +64,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
@@ -86,7 +86,98 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import androidx.compose.ui.graphics.Color as ComposeColor
 import android.graphics.Color as AndroidColor
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalToolbarApi::class)
+/*
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SeriesContentsListScreen(
+    viewModel : SeriesContentsListViewModel,
+    onEvent: (SeriesContentsListEvent) -> Unit,
+)
+{
+    val contentsList by viewModel.contentsList.collectAsStateWithLifecycle(initialValue = ArrayList())
+
+
+    var dataList by remember {
+        mutableStateOf(ArrayList<ContentsBaseResult>())
+    }
+
+    // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
+    val contentsSize = contentsList.size
+    LaunchedEffect(contentsSize) {
+        dataList = contentsList
+        Log.i("------------- notify size : $contentsSize, dataList : ${dataList.size}")
+
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(
+                color = colorResource(id = R.color.color_edeef2)
+            )
+    )
+    {
+        if(dataList.size > 0)
+        {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(
+                        start = getDp(pixel = 28),
+                        end = getDp(pixel = 28),
+                    ),
+            ) {
+                items(dataList.size) {index ->
+
+                    val item = dataList[index]
+                    item?.let {
+                        Column {
+                            if(index == 0)
+                            {
+                                Spacer(
+                                    modifier = Modifier.height(
+                                        getDp(pixel = 20)
+                                    )
+                                )
+                            }
+                            BuildContentsListItem(data = item,
+                                itemColor = "#35adfd",
+                                onBackgroundClick = {
+                                    Log.i("onBackgroundClick : $index")
+                                    onEvent(
+                                        SeriesContentsListEvent.onSelectedItem(index)
+                                    )
+                                },
+                                onThumbnailClick = {
+                                    onEvent(
+                                        SeriesContentsListEvent.onClickThumbnail(item)
+                                    )
+                                },
+                                onOptionClick = {
+                                    onEvent(
+                                        SeriesContentsListEvent.onClickOption(item)
+                                    )
+                                })
+                            Spacer(
+                                modifier = Modifier.height(
+                                    getDp(pixel = 20)
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+    }
+}
+*/
+
+
 @Composable
 fun SeriesContentsScreenV(
     viewModel : SeriesContentsListViewModel,
@@ -105,11 +196,14 @@ fun SeriesContentsScreenV(
     }
     var shouldAnimate by remember { mutableStateOf(false) }
 
-    // contentsList 의 size 변경될 때마다 애니메이션을 트리거
-    LaunchedEffect(contentsList.size) {
-        Log.i("------------- notify")
+
+    // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
+    val contentsSize = contentsList.size
+    LaunchedEffect(contentsSize) {
+        Log.i("------------- notify size : $contentsSize")
         shouldAnimate = true
     }
+
 
     LaunchedEffect(selectedItemCount) {
 

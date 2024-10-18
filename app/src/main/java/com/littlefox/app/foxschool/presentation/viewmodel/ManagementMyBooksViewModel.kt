@@ -130,7 +130,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
     override fun onHandleApiObserver()
     {
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.isLoading.collect {data ->
                     data?.let {
@@ -158,7 +158,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
         }
 
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.createBookshelfData.collect { data ->
                     Log.f("")
@@ -177,7 +177,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.updateBookshelfData.collect { data ->
                     data?.let {
@@ -195,7 +195,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.deleteBookshelfData.collect{ data ->
                     data?.let {
@@ -212,7 +212,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.createVocabularyData.collect{ data ->
                     data?.let {
@@ -230,7 +230,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.updateVocabularyData.collect{ data ->
                     data?.let {
@@ -248,7 +248,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.deleteVocabularyData.collect{ data ->
 
@@ -266,7 +266,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             }
         }
         (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.RESUMED)
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED)
             {
                 apiViewModel.errorReport.collect{ data ->
                     data?.let {

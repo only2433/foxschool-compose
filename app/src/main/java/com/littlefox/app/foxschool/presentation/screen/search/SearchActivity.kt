@@ -69,18 +69,19 @@ class SearchActivity : BaseActivity()
     override fun onResume()
     {
         super.onResume()
-
+        viewModel.resume()
     }
 
     override fun onPause()
     {
         super.onPause()
-
+        viewModel.pause()
     }
 
     override fun onDestroy()
     {
         super.onDestroy()
+        viewModel.destroy()
     }
 
 
