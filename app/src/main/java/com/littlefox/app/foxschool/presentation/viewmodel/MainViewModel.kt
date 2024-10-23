@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.api.MainApiViewModel
@@ -33,6 +34,7 @@ import com.littlefox.app.foxschool.presentation.screen.series_contents_list.Seri
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -54,75 +56,37 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
         const val DIALOG_TYPE_APP_END: Int          = 10003
         const val DIALOG_TYPE_NOT_HAVE_CLASS: Int   = 10004
     }
-    private val _settingMenuView = MutableSharedFlow<Pair<Boolean, Boolean>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val settingMenuView: SharedFlow<Pair<Boolean, Boolean>> = _settingMenuView
 
-    private val _settingUserInformation = MutableSharedFlow<LoginInformationResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val settingUserInformation: SharedFlow<LoginInformationResult> = _settingUserInformation
+    private val _settingMenuView = SingleLiveEvent<Pair<Boolean, Boolean>>()
+    val settingMenuView: LiveData<Pair<Boolean, Boolean>> get() = _settingMenuView
 
-    private val _showLogoutDialog = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showLogoutDialog: SharedFlow<Unit> = _showLogoutDialog
+    private val _settingUserInformation = SingleLiveEvent<LoginInformationResult>()
+    val settingUserInformation: LiveData<LoginInformationResult> get() = _settingUserInformation
 
-    private val _showAppEndDialog = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showAppEndDialog: SharedFlow<Unit> = _showAppEndDialog
+    private val _showLogoutDialog = SingleLiveEvent<Void>()
+    val showLogoutDialog: LiveData<Void> get() = _showLogoutDialog
 
-    private val _showNoClassStudentDialog = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showNoClassStudentDialog: SharedFlow<Unit> = _showNoClassStudentDialog
+    private val _showAppEndDialog = SingleLiveEvent<Void>()
+    val showAppEndDialog: LiveData<Void> get() = _showAppEndDialog
 
-    private val _showNoClassTeacherDialog = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showNoClassTeacherDialog: SharedFlow<Unit> = _showNoClassTeacherDialog
+    private val _showNoClassStudentDialog = SingleLiveEvent<Void>()
+    val showNoClassStudentDialog: LiveData<Void> get() = _showNoClassStudentDialog
 
-    private val _showIACInformationDialog = MutableSharedFlow<InAppCompaignResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showIACInformationDialog: SharedFlow<InAppCompaignResult> = _showIACInformationDialog
+    private val _showNoClassTeacherDialog = SingleLiveEvent<Void>()
+    val showNoClassTeacherDialog: LiveData<Void> get() = _showNoClassTeacherDialog
 
-    private val _updateStoryData = MutableSharedFlow<MainStoryInformationResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val updateStoryData: SharedFlow<MainStoryInformationResult> = _updateStoryData
+    private val _showIACInformationDialog = SingleLiveEvent<InAppCompaignResult>()
+    val showIACInformationDialog: LiveData<InAppCompaignResult> get() = _showIACInformationDialog
 
-    private val _updateSongData = MutableSharedFlow<List<SeriesInformationResult>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val updateSongData: SharedFlow<List<SeriesInformationResult>> = _updateSongData
+    private val _updateStoryData = SingleLiveEvent<MainStoryInformationResult>()
+    val updateStoryData: LiveData<MainStoryInformationResult> get() = _updateStoryData
 
-    private val _updateMyBooksData = MutableSharedFlow<MainInformationResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val updateMyBooksData: SharedFlow<MainInformationResult> = _updateMyBooksData
+    private val _updateSongData = SingleLiveEvent<List<SeriesInformationResult>>()
+    val updateSongData: LiveData<List<SeriesInformationResult>> get() = _updateSongData
+
+    private val _updateMyBooksData = SingleLiveEvent<MainInformationResult>()
+    val updateMyBooksData: LiveData<MainInformationResult> get() = _updateMyBooksData
+
 
     private lateinit var mContext: Context
     private lateinit var mMainInformationResult : MainInformationResult
@@ -136,15 +100,9 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
 
         Log.i("size : " + mMainInformationResult.getMainStoryInformation().getContentByLevelToList().size)
 
-        viewModelScope.launch {
-            _updateStoryData.emit(mMainInformationResult.getMainStoryInformation())
-        }
-        viewModelScope.launch {
-            _updateSongData.emit(mMainInformationResult.getMainSongInformationList())
-        }
-        viewModelScope.launch {
-            _updateMyBooksData.emit(mMainInformationResult)
-        }
+        _updateStoryData.value = mMainInformationResult.getMainStoryInformation()
+        _updateSongData.value = mMainInformationResult.getMainSongInformationList()
+        _updateMyBooksData.value = mMainInformationResult
     }
 
     override fun onHandleViewEvent(event : BaseEvent)
@@ -152,9 +110,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
         when(event)
         {
             is BaseEvent.onBackPressed ->{
-                viewModelScope.launch {
-                    _showAppEndDialog.emit(Unit)
-                }
+                _showAppEndDialog.call()
             }
             is BaseEvent.DialogClick ->{
                 onDialogClick(
@@ -209,8 +165,6 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             }
 
             is MainEvent.onClickDrawerItem -> {
-
-
                 checkDrawerMenu(event.menu)
             }
 
@@ -316,9 +270,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             DrawerMenu.HOME_NEWSPAPER -> downloadHomeNewsPaper()
             DrawerMenu.TEACHER_MANUAL -> downloadTeacherManual()
             DrawerMenu.LOGOUT -> {
-                viewModelScope.launch {
-                    _showLogoutDialog.emit(Unit)
-                }
+                _showLogoutDialog.call()
             }
 
         }
@@ -333,9 +285,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             if(mLoginInformationResult!!.getSchoolInformation().isHaveClass() == false)
             {
                 // 학급 정보 없을 때
-                viewModelScope.launch {
-                    _showNoClassStudentDialog.emit(Unit)
-                }
+                _showNoClassStudentDialog.call()
             }
             else
             {
@@ -349,9 +299,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             if(mLoginInformationResult!!.getUserInformation().isHaveClass() == false)
             {
                 // 학급 정보 없을 때
-                viewModelScope.launch {
-                    _showNoClassTeacherDialog.emit(Unit)
-                }
+                _showNoClassTeacherDialog.call()
             }
             else
             {
@@ -446,9 +394,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
     private fun downloadHomeNewsPaper()
     {
         Log.f("")
-        viewModelScope.launch {
-            _successMessage.emit(mContext.resources.getString(R.string.message_download_home_newspaper))
-        }
+        _successMessage.value = mContext.resources.getString(R.string.message_download_home_newspaper)
         CommonUtils.getInstance(mContext).downloadFileToExternalPublicDir(
             mMainInformationResult.getFileInformation()!!.getHomeNewsPaperLink(),
             Common.FILE_HOME_NEWSPAPER
@@ -457,9 +403,7 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
 
     private fun downloadTeacherManual()
     {
-        viewModelScope.launch {
-            _successMessage.emit(mContext.resources.getString(R.string.message_download_teacher_manual))
-        }
+        _successMessage.value = mContext.resources.getString(R.string.message_download_teacher_manual)
         CommonUtils.getInstance(mContext).downloadFileToExternalPublicDir(
             mMainInformationResult.getFileInformation()!!.getTeacherManualLink(),
             Common.FILE_TEACHER_MANUAL
@@ -472,14 +416,10 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
         if(MainObserver.isUpdateUserStatus())
         {
             mLoginInformationResult = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
-            viewModelScope.launch {
-                mLoginInformationResult?.let {
-                    _settingUserInformation.emit(it)
-                }
+            mLoginInformationResult?.let {
+                _settingUserInformation.value = it
             }
-            viewModelScope.launch {
-                _settingMenuView.emit(Pair(mMainInformationResult.isUpdateHomework, mMainInformationResult.isUpdateNews))
-            }
+            _settingMenuView.value = Pair(mMainInformationResult.isUpdateHomework, mMainInformationResult.isUpdateNews)
             MainObserver.clearUserStatus()
         }
     }
@@ -494,19 +434,13 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                 when(page)
                 {
                     Common.PAGE_STORY ->{
-                        viewModelScope.launch {
-                            _updateStoryData.emit(mMainInformationResult.getMainStoryInformation())
-                        }
+                        _updateStoryData.value = mMainInformationResult.getMainStoryInformation()
                     }
                     Common.PAGE_SONG ->{
-                        viewModelScope.launch {
-                            _updateSongData.emit(mMainInformationResult.getMainSongInformationList())
-                        }
+                        _updateSongData.value = mMainInformationResult.getMainSongInformationList()
                     }
                     Common.PAGE_MY_BOOKS ->{
-                        viewModelScope.launch {
-                            _updateMyBooksData.emit(mMainInformationResult)
-                        }
+                        _updateMyBooksData.value = mMainInformationResult
                     }
                 }
             }

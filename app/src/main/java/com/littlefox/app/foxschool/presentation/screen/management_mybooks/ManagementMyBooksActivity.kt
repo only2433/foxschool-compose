@@ -70,68 +70,38 @@ class ManagementMyBooksActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+        viewModel.isLoading.observe(this){ isLoading ->
+            if(isLoading)
             {
-                viewModel.isLoading.collect{ isLoading ->
-                    if(isLoading)
-                    {
-                        showLoading()
-                    }
-                    else
-                    {
-                        hideLoading()
-                    }
-                }
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.toast.collect{ message ->
-                    Log.i("message : $message")
-                    Toast.makeText(this@ManagementMyBooksActivity, message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        viewModel.toast.observe(this){ message ->
+            Log.i("message : $message")
+            Toast.makeText(this@ManagementMyBooksActivity, message, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.successMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(message)
-                }
-            }
+        viewModel.successMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.errorMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(message)
-                }
-            }
+        viewModel.errorMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogDeleteBookshelf.collect{
-                    showDeleteBookshelfDialog()
-                }
-            }
+        viewModel.dialogDeleteBookshelf.observe(this){
+            showDeleteBookshelfDialog()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogDeleteVocabulary.collect{
-                    showDeleteVocabularyDialog()
-                }
-            }
+        viewModel.dialogDeleteVocabulary.observe(this){
+            showDeleteVocabularyDialog()
         }
     }
 

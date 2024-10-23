@@ -418,9 +418,9 @@ class StudentHomeworkFactoryViewModel @Inject constructor(private val apiViewMod
         // 숙제목록 클릭 이벤트 (컨텐츠 이동)
         Log.f("Homework Type : ${item.getHomeworkType()}")
         val content = ContentsBaseResult()
-        content.setID(item.getContentID())
+        content.id = item.getContentID()
         content.setTitle(item.getName(), item.getSubName())
-        content.setThumbnailUrl(item.getThumbnailUrl())
+        content.thumbnail_url = item.getThumbnailUrl()
 
         when(item.getHomeworkType())
         {

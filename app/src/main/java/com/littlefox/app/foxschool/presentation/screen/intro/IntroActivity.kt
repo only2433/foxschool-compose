@@ -135,98 +135,53 @@ class IntroActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+        viewModel.isLoading.observe(this){ loading ->
+            Log.i("loading : $loading")
+            if(loading)
             {
-                viewModel.isLoading.collect{ loading ->
-                    Log.i("loading : $loading")
-                    if(loading)
-                    {
-                        showLoading()
-                    }
-                    else
-                    {
-                        hideLoading()
-                    }
-                }
+                showLoading()
+            }
+            else
+            {
+                hideLoading()
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.toast.collect{ message ->
-                    Log.i("message : $message")
-                    Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        viewModel.toast.observe(this){ message ->
+            Log.i("message : $message")
+            Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.successMessage.collect{ message ->
+        viewModel.successMessage.observe(this){ message ->
 
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
-                }
-            }
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.errorMessage.collect{ message ->
+        viewModel.errorMessage.observe(this){ message ->
 
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
-                }
-            }
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogSelectUpdate.collect{
-                    showSelectUpdateDialog()
-                }
-            }
+        viewModel.dialogSelectUpdate.observe(this){
+            showSelectUpdateDialog()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogForceUpdate.collect{
-                    showForceUpdateDialog()
-                }
-            }
+        viewModel.dialogForceUpdate.observe(this){
+            showForceUpdateDialog()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogFilePermission.collect{
-                    showChangeFilePermissionDialog()
-                }
-            }
+        viewModel.dialogFilePermission.observe(this){
+            showChangeFilePermissionDialog()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.showDialogPasswordChange.collect{ type ->
-                    showPasswordChangeDialog(type)
-                }
-            }
+        viewModel.showDialogPasswordChange.observe(this){ type ->
+            showPasswordChangeDialog(type)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.hideDialogPasswordChange.collect{
-                    hidePasswordChangeDialog()
-                }
-            }
+        viewModel.hideDialogPasswordChange.observe(this){
+            hidePasswordChangeDialog()
         }
     }
 

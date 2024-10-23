@@ -67,70 +67,39 @@ class MainActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+        viewModel.isLoading.observe(this){ loading ->
+            Log.i("loading : $loading")
+            if(loading)
             {
-                viewModel.isLoading.collect{ loading ->
-                    Log.i("loading : $loading")
-                    if(loading)
-                    {
-                        showLoading()
-                    }
-                    else
-                    {
-                        hideLoading()
-                    }
-                }
+                showLoading()
             }
-
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            else
             {
-                viewModel.toast.collect{ message ->
-                    Log.i("message : $message")
-                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                }
+                hideLoading()
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.successMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@MainActivity).showSuccessMessage(message)
-                }
-            }
+        viewModel.toast.observe(this){ message ->
+            Log.i("message : $message")
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.errorMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@MainActivity).showErrorMessage(message)
-                }
-            }
+        viewModel.successMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@MainActivity).showSuccessMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.showAppEndDialog.collect{
-                    showAppEndDialog()
-                }
-            }
+        viewModel.errorMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@MainActivity).showErrorMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.showLogoutDialog.collect{
-                    showLogoutDialog()
-                }
-            }
+        viewModel.showAppEndDialog.observe(this){
+            showAppEndDialog()
+        }
+
+        viewModel.showLogoutDialog.observe(this){
+            showLogoutDialog()
         }
     }
 

@@ -70,7 +70,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
     override fun onBindViewHolder(holder : ViewHolder, position : Int)
     {
         Glide.with(mContext)
-            .load(mPlayInformationList[position].getThumbnailUrl())
+            .load(mPlayInformationList[position].thumbnail_url)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder._ItemTitleImage)
         holder._ItemTitleText.setText(mPlayInformationList[position].getContentsName())
@@ -91,7 +91,7 @@ class PlayerListAdapter : RecyclerView.Adapter<PlayerListAdapter.ViewHolder?>
         }
         if(mCurrentOrientation == Configuration.ORIENTATION_PORTRAIT)
         {
-            if(mPlayInformationList[position].isOptionDisable())
+            if(mPlayInformationList[position].isOptionDisable)
             {
                 holder._ItemTitleOption.visibility = View.GONE
             }

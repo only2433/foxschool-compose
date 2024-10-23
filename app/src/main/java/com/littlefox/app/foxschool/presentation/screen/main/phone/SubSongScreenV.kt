@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -48,8 +49,8 @@ fun SubSongScreenV(
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val viewModelDataList by viewModel.updateSongData.collectAsStateWithLifecycle(
-        initialValue = emptyList()
+    val viewModelDataList by viewModel.updateSongData.observeAsState(
+        initial = emptyList()
     )
     val dataList by remember(viewModelDataList) {
         derivedStateOf {

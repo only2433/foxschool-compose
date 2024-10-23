@@ -162,7 +162,7 @@ fun BuildContentsListItem(
     onOptionClick: () -> Unit
 )
 {
-    Log.i("data selected : ${data.isSelected()}, text : ${data.getContentsName()}")
+    Log.i("data selected : ${data.isSelected}, text : ${data.getContentsName()}")
 
     var indexColor: Color;
     try {
@@ -177,8 +177,8 @@ fun BuildContentsListItem(
         mutableStateOf(R.color.color_ffffff)
     }
 
-    LaunchedEffect(data.isSelected()) {
-        if(data.isSelected())
+    LaunchedEffect(data.isSelected) {
+        if(data.isSelected)
         {
             backgroundColor.value = R.color.color_fff55a
         }
@@ -240,7 +240,7 @@ fun BuildContentsListItem(
                     ),
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(data.getThumbnailUrl()),
+                    painter = rememberAsyncImagePainter(data.thumbnail_url),
                     modifier = Modifier
                         .width(
                             getDp(pixel = 324)
@@ -272,7 +272,7 @@ fun BuildContentsListItem(
             )
             {
                 Text(
-                    text = if(data.getIndex() < 10)  "0${data.getIndex()}" else "${data.getIndex()}",
+                    text = if(data.index < 10)  "0${data.index}" else "${data.index}",
                     style = TextStyle(
                         color = indexColor,
                         textAlign = TextAlign.Center,

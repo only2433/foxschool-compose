@@ -67,54 +67,27 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
 
-    private val _bottomType = MutableSharedFlow<IntroViewMode>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val bottomType: SharedFlow<IntroViewMode> = _bottomType
+    private val _bottomType = SingleLiveEvent<IntroViewMode>()
+    val bottomType: LiveData<IntroViewMode> get() = _bottomType
 
-    private val _progressPercent = MutableSharedFlow<Float>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val progressPercent: SharedFlow<Float> = _progressPercent
+    private val _progressPercent = SingleLiveEvent<Float>()
+    val progressPercent: LiveData<Float> get() = _progressPercent
 
-    private val _dialogSelectUpdate = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogSelectUpdate: SharedFlow<Unit> = _dialogSelectUpdate
+    private val _dialogSelectUpdate = SingleLiveEvent<Void>()
+    val dialogSelectUpdate: LiveData<Void> get() = _dialogSelectUpdate
 
-    private val _dialogForceUpdate = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogForceUpdate: SharedFlow<Unit> = _dialogForceUpdate
+    private val _dialogForceUpdate = SingleLiveEvent<Void>()
+    val dialogForceUpdate: LiveData<Void> get() = _dialogForceUpdate
 
-    private val _dialogFilePermission = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogFilePermission: SharedFlow<Unit> = _dialogFilePermission
+    private val _dialogFilePermission = SingleLiveEvent<Void>()
+    val dialogFilePermission: LiveData<Void> get() = _dialogFilePermission
 
-    private val _showDialogPasswordChange = MutableSharedFlow<PasswordGuideType>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showDialogPasswordChange: SharedFlow<PasswordGuideType> = _showDialogPasswordChange
+    private val _showDialogPasswordChange = SingleLiveEvent<PasswordGuideType>()
+    val showDialogPasswordChange: LiveData<PasswordGuideType> get() = _showDialogPasswordChange
 
-    private val _hideDialogPasswordChange = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val hideDialogPasswordChange: SharedFlow<Unit> = _hideDialogPasswordChange
+    private val _hideDialogPasswordChange = SingleLiveEvent<Void>()
+    val hideDialogPasswordChange: LiveData<Void> get() = _hideDialogPasswordChange
+
 
     private lateinit var mContext : Context
     private lateinit var mPermissionList : ArrayList<String>
@@ -240,11 +213,11 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             if(data.second)
                             {
-                                _isLoading.emit(true)
+                                _isLoading.value = true
                             }
                             else
                             {
-                                _isLoading.emit(false)
+                                _isLoading.value = false
                             }
                         }
                     }
@@ -262,11 +235,11 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             if(mVersionDataResult!!.isForceUpdate())
                             {
-                                _dialogSelectUpdate.emit(Unit)
+                                _dialogSelectUpdate.call()
                             }
                             else
                             {
-                                _dialogForceUpdate.emit(Unit)
+                                _dialogForceUpdate.call()
                             }
                         }
                         else
@@ -289,7 +262,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                             // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
                             mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
 
-                            _showDialogPasswordChange.emit(mUserInformationResult!!.getPasswordChangeType())
+                            _showDialogPasswordChange.value =mUserInformationResult!!.getPasswordChangeType()
 
                         }
                         else
@@ -330,13 +303,12 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         Log.f("Password Change Complete")
                         changeUserLoginData()
 
-                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
-                        viewModelScope.launch(Dispatchers.Main) {
+                        _toast.value = mContext.getString(R.string.message_password_change_complete)
+                        viewModelScope.launch {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
                             }
-
-                            _hideDialogPasswordChange.emit(Unit)
+                            _hideDialogPasswordChange.call()
                             mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                             enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                         }
@@ -350,7 +322,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 apiViewModel.changePasswordNextData.collect { data ->
                     data?.let {
                         // 다음에 변경
-                        _hideDialogPasswordChange.emit(Unit)
+                        _hideDialogPasswordChange.call()
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
@@ -363,13 +335,14 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 apiViewModel.changePasswordKeepData.collect { data ->
                     data?.let {
                         // 현재 비밀번호 유지
-                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
+                        _toast.value = mContext.getString(R.string.message_password_change_complete)
 
-                        viewModelScope.launch(Dispatchers.Main) {
+                        viewModelScope.launch {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
+
                             }
-                            _hideDialogPasswordChange.emit(Unit)
+                            _hideDialogPasswordChange.call()
                             mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                             enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                         }
@@ -400,7 +373,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                                 code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
                                 code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                             {
-                                _toast.emit(result.message)
+                                _toast.value = result.message
                             }
                             else
                             {
@@ -485,9 +458,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, false)
             }
 
-            viewModelScope.launch(Dispatchers.Main) {
-                _bottomType.emit(IntroViewMode.PROGRESS)
-            }
+            _bottomType.value = IntroViewMode.PROGRESS
 
             requestInitAsync()
             requestAutoLoginAsync()
@@ -495,9 +466,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            viewModelScope.launch(Dispatchers.Main) {
-                _bottomType.emit(IntroViewMode.SELECT)
-            }
+            _bottomType.value = IntroViewMode.SELECT
         }
     }
 
@@ -547,21 +516,15 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         {
             IntroProcess.INIT_COMPLETE ->
             {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _progressPercent.emit(PERCENT_SEQUENCE[1])
-                }
+                _progressPercent.value = PERCENT_SEQUENCE[1]
             }
             IntroProcess.LOGIN_COMPLTE ->
             {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _progressPercent.emit(PERCENT_SEQUENCE[2])
-                }
+                _progressPercent.value = PERCENT_SEQUENCE[2]
             }
             IntroProcess.MAIN_COMPELTE ->
             {
-                viewModelScope.launch(Dispatchers.Main) {
-                    _progressPercent.emit(PERCENT_SEQUENCE[3])
-                }
+                _progressPercent.value = PERCENT_SEQUENCE[3]
             }
             else ->{}
         }
@@ -612,9 +575,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
     private fun requestInitAsync()
     {
         Log.f("")
-        var deviceID = CommonUtils.getInstance(mContext).secureDeviceID
-        var pushAddress: String = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_FIREBASE_PUSH_TOKEN)
-        var pushOn = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
+        val deviceID = CommonUtils.getInstance(mContext).secureDeviceID
+        val pushAddress: String = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_FIREBASE_PUSH_TOKEN)
+        val pushOn = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_PUSH_SEND, "Y")
         apiViewModel.enqueueCommandStart(
             RequestCode.CODE_VERSION,
             Common.DURATION_SHORT_LONG,
@@ -700,9 +663,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
                 if(isAllCheckSuccess == false)
                 {
-                    viewModelScope.launch(Dispatchers.Main) {
-                        _dialogFilePermission.emit(Unit)
-                    }
+                    _dialogFilePermission.call()
                 }
                 else
                 {
@@ -714,8 +675,8 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
 
     private fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
     {
+        _bottomType.value = IntroViewMode.PROGRESS
         viewModelScope.launch{
-            _bottomType.emit(IntroViewMode.PROGRESS)
             withContext(Dispatchers.IO){
                 delay(Common.DURATION_NORMAL)
             }
@@ -760,8 +721,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 DialogButtonType.BUTTON_1 ->
                 {
                     // [취소] 컨텐츠 사용 불가 메세지 표시
-                    // mMainContractView.showErrorMessage(mContext.getString(R.string.message_warning_storage_permission))
-                    Toast.makeText(mContext, mContext.getString(R.string.message_warning_storage_permission), Toast.LENGTH_LONG).show()
+                    _toast.value = mContext.getString(R.string.message_warning_storage_permission)
                     (mContext as AppCompatActivity).finish()
                 }
                 DialogButtonType.BUTTON_2 ->
@@ -808,9 +768,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            viewModelScope.launch(Dispatchers.Main) {
-                _toast.emit(mContext.resources.getString(R.string.message_toast_network_error))
-            }
+            _toast.value = mContext.resources.getString(R.string.message_toast_network_error)
             (mContext as AppCompatActivity).finish()
         }
     }
@@ -824,9 +782,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            viewModelScope.launch(Dispatchers.Main) {
-                _toast.emit(mContext.resources.getString(R.string.message_toast_network_error))
-            }
+            _toast.value = mContext.resources.getString(R.string.message_toast_network_error)
             (mContext as AppCompatActivity).finish()
         }
     }

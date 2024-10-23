@@ -88,80 +88,44 @@ class LoginActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+        viewModel.isLoading.observe(this){ loading ->
+            Log.i("loading : $loading")
+            if(loading)
             {
-                viewModel.isLoading.collect{ loading ->
-                    Log.i("loading : $loading")
-                    if(loading)
-                    {
-                        showLoading()
-                    }
-                    else
-                    {
-                        hideLoading()
-                    }
-                }
+                showLoading()
             }
-
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
+            else
             {
-                viewModel.toast.collect{ message ->
-                    Log.i("message : $message")
-                    Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-                }
+                hideLoading()
             }
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.successMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(message)
-                }
-            }
+        viewModel.toast.observe(this){ message ->
+            Log.i("message : $message")
+            Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.errorMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@LoginActivity).showErrorMessage(message)
-                }
-            }
+        viewModel.successMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.showDialogPasswordChange.collect{ type ->
-                    showPasswordChangeDialog(type)
-                }
-            }
+        viewModel.errorMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@LoginActivity).showErrorMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.hideDialogPasswordChange.collect{
-                    hidePasswordChangeDialog()
-                }
-            }
+        viewModel.showDialogPasswordChange.observe(this){ type ->
+            showPasswordChangeDialog(type)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.finishActivity.collect{
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
-            }
+        viewModel.hideDialogPasswordChange.observe(this){
+            hidePasswordChangeDialog()
+        }
+
+        viewModel.finishActivity.observe(this){
+            setResult(Activity.RESULT_OK)
+            finish()
         }
     }
 

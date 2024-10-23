@@ -3,6 +3,7 @@ package com.littlefox.app.foxschool.presentation.viewmodel
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -36,6 +37,7 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -58,91 +60,42 @@ import javax.inject.Inject
 @HiltViewModel
 class SeriesContentsListViewModel @Inject constructor(private val apiViewModel : SeriesContentsListApiViewModel) : BaseViewModel()
 {
-    private val _isContentsLoading = MutableSharedFlow<Boolean>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val isContentsLoading : SharedFlow<Boolean> = _isContentsLoading
 
-    private val _contentsList = MutableSharedFlow<ArrayList<ContentsBaseResult>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val contentsList: SharedFlow<ArrayList<ContentsBaseResult>> = _contentsList
+    private val _isContentsLoading = SingleLiveEvent<Boolean>()
+    val isContentsLoading: LiveData<Boolean> get() = _isContentsLoading
 
-    private val _isSingleSeries = MutableSharedFlow<Boolean>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val isSingleSeries: SharedFlow<Boolean> = _isSingleSeries
+    private val _contentsList = SingleLiveEvent<ArrayList<ContentsBaseResult>>()
+    val contentsList: LiveData<ArrayList<ContentsBaseResult>> get() = _contentsList
 
-    private val _showToolbarInformationView = MutableSharedFlow<Boolean>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val showToolbarInformationView: SharedFlow<Boolean> = _showToolbarInformationView
+    private val _isSingleSeries = SingleLiveEvent<Boolean>()
+    val isSingleSeries: LiveData<Boolean> get() = _isSingleSeries
 
-    private val _seriesTitle = MutableSharedFlow<String>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val seriesTitle: SharedFlow<String> = _seriesTitle
+    private val _showToolbarInformationView = SingleLiveEvent<Boolean>()
+    val showToolbarInformationView: LiveData<Boolean> get() = _showToolbarInformationView
 
-    private val _backgroundViewData = MutableSharedFlow<TopThumbnailViewData>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val backgroundView: SharedFlow<TopThumbnailViewData> = _backgroundViewData
+    private val _seriesTitle = SingleLiveEvent<String>()
+    val seriesTitle: LiveData<String> get() = _seriesTitle
 
-    private val _seriesDataView = MutableSharedFlow<SeriesViewData>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val seriesViewData: SharedFlow<SeriesViewData> = _seriesDataView
+    private val _backgroundViewData = SingleLiveEvent<TopThumbnailViewData>()
+    val backgroundViewData: LiveData<TopThumbnailViewData> get() = _backgroundViewData
 
-    private val _statusBarColor = MutableSharedFlow<String>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
+    private val _seriesDataView = SingleLiveEvent<SeriesViewData>()
+    val seriesDataView: LiveData<SeriesViewData> get() = _seriesDataView
 
-    )
-    val statusBarColor: SharedFlow<String> = _statusBarColor
+    private val _statusBarColor = SingleLiveEvent<String>()
+    val statusBarColor: LiveData<String> get() = _statusBarColor
 
-    private val _itemSelectedCount =  MutableSharedFlow<Int>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val itemSelectedCount: SharedFlow<Int> = _itemSelectedCount
+    private val _itemSelectedCount = SingleLiveEvent<Int>()
+    val itemSelectedCount: LiveData<Int> get() = _itemSelectedCount
 
-    private val _dialogBottomOption = MutableSharedFlow<ContentsBaseResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogBottomOption : SharedFlow<ContentsBaseResult> = _dialogBottomOption
+    private val _dialogBottomOption = SingleLiveEvent<ContentsBaseResult>()
+    val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
 
-    private val _dialogBottomBookshelfContentsAdd = MutableSharedFlow<java.util.ArrayList<MyBookshelfResult>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogBottomBookshelfContentsAdd : SharedFlow<java.util.ArrayList<MyBookshelfResult>> = _dialogBottomBookshelfContentsAdd
+    private val _dialogBottomBookshelfContentsAdd = SingleLiveEvent<ArrayList<MyBookshelfResult>>()
+    val dialogBottomBookshelfContentsAdd: LiveData<ArrayList<MyBookshelfResult>> get() = _dialogBottomBookshelfContentsAdd
 
-    private val _dialogRecordPermission = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogRecordPermission : SharedFlow<Unit> = _dialogRecordPermission
-
+    private val _dialogRecordPermission = SingleLiveEvent<Void>()
+    val dialogRecordPermission: LiveData<Void> get() = _dialogRecordPermission
 
 
     private lateinit var mCurrentSeriesBaseResult : SeriesBaseResult
@@ -157,7 +110,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private var mCurrentSelectItem: ContentsBaseResult? = null
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
     private var isStillOnSeries : Boolean   = false
-    private var test: String = ""
+
     private lateinit var mContext : Context
 
 
@@ -168,7 +121,6 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
         onHandleApiObserver()
 
-        test = "시발"
 
         prepareUI()
         viewModelScope.launch {
@@ -183,13 +135,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     private fun prepareUI()
     {
-        viewModelScope.launch {
-            _seriesTitle.emit(mCurrentSeriesBaseResult.getSeriesName())
-        }
-
-        viewModelScope.launch {
-            _statusBarColor.emit(mCurrentSeriesBaseResult.statusBarColor)
-        }
+        _seriesTitle.value = mCurrentSeriesBaseResult.getSeriesName()
+        _statusBarColor.value = mCurrentSeriesBaseResult.statusBarColor
 
         val data = TopThumbnailViewData(
             thumbnail = mCurrentSeriesBaseResult.getThumbnailUrl(),
@@ -197,12 +144,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             transitionType = mCurrentSeriesBaseResult.getTransitionType()
             )
 
-        viewModelScope.launch {
-            _backgroundViewData.emit(data)
-        }
-        viewModelScope.launch {
-            _isContentsLoading.emit(true)
-        }
+        _backgroundViewData.value = data
+        _isContentsLoading.value = true
     }
 
     override fun onHandleViewEvent(event : BaseEvent)
@@ -247,9 +190,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             is SeriesContentsListEvent.onClickOption ->
             {
                 mCurrentSelectItem = event.item
-                viewModelScope.launch {
-                    _dialogBottomOption.emit(event.item)
-                }
+                _dialogBottomOption.value = event.item
             }
             is SeriesContentsListEvent.onAddContentsInBookshelf ->
             {
@@ -269,12 +210,12 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                             if(data.second)
                             {
                                 Log.i("isLoading = true")
-                                _isLoading.emit(true)
+                                _isLoading.value = true
                             }
                             else
                             {
                                 Log.i("isLoading = false")
-                                _isLoading.emit(false)
+                                _isLoading.value = false
                             }
                         }
                     }
@@ -319,7 +260,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                         withContext(Dispatchers.Main)
                         {
                             delay(Common.DURATION_NORMAL)
-                            _successMessage.emit(mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf))
+                            _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                         }
                     }
 
@@ -337,17 +278,13 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                         if(result.isDuplicateLogin)
                         {
                             (mContext as AppCompatActivity).finish()
-                            viewModelScope.launch {
-                                _toast.emit(result.message)
-                            }
+                            _toast.value = result.message
                             IntentManagementFactory.getInstance().initAutoIntroSequence()
                         }
                         else if(result.isAuthenticationBroken)
                         {
                             (mContext as AppCompatActivity).finish()
-                            viewModelScope.launch {
-                                _toast.emit(result.message)
-                            }
+                            _toast.value = result.message
                             IntentManagementFactory.getInstance().initScene()
                         }
                         else
@@ -355,23 +292,18 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                             if(code == RequestCode.CODE_CONTENTS_STORY_LIST ||
                                 code == RequestCode.CODE_CONTENTS_SONG_LIST)
                             {
-                                viewModelScope.launch {
-                                    _toast.emit(result.message)
-                                }
+                                _toast.value = result.message
                                 (mContext as AppCompatActivity).onBackPressed()
                             }
                             else if(code == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                             {
-                                viewModelScope.launch {
-                                    _isLoading.emit(false)
-                                }
-
+                                _isLoading.value = false
                                 viewModelScope.launch {
                                     withContext(Dispatchers.IO)
                                     {
                                         delay(Common.DURATION_SHORT)
                                     }
-                                    _errorMessage.emit(result.message)
+                                    _errorMessage.value = result.message
                                 }
                             }
                         }
@@ -434,7 +366,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             var result = 0
             for(i in 0 until mDetailItemInformationResult.getContentsList().size)
             {
-                if(mDetailItemInformationResult.lastStudyContentID == mDetailItemInformationResult.getContentsList()[i].getID())
+                if(mDetailItemInformationResult.lastStudyContentID == mDetailItemInformationResult.getContentsList()[i].id)
                 {
                     if(mDetailItemInformationResult.isStillOnSeries)
                     {
@@ -457,9 +389,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         if(mDetailItemInformationResult.isSingleSeries == false
             && mCurrentSeriesBaseResult.getSeriesType().equals(Common.CONTENT_TYPE_STORY))
         {
-            viewModelScope.launch {
-                _showToolbarInformationView.emit(true)
-            }
+            _showToolbarInformationView.value = true
         }
 
         if(CommonUtils.getInstance(mContext).checkTablet)
@@ -485,13 +415,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             )
         }
 
-        viewModelScope.launch {
-            _seriesDataView.emit(viewData)
-        }
-
-        viewModelScope.launch {
-            _isSingleSeries.emit(mDetailItemInformationResult.isSingleSeries)
-        }
+        _seriesDataView.value = viewData
+        _isSingleSeries.value = mDetailItemInformationResult.isSingleSeries
 
 
         if(mDetailItemInformationResult.seriesID != "")
@@ -502,10 +427,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             }
         }
 
-        viewModelScope.launch {
-            _isContentsLoading.emit(false)
-        }
-
+        _isContentsLoading.value = false
 
     }
 
@@ -524,11 +446,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             mCurrentContentsItemList.reverse()
         }
 
-        viewModelScope.launch {
-            _contentsList.emit(mCurrentContentsItemList)
-        }
-
-
+        _contentsList.value = mCurrentContentsItemList
     }
 
     private fun checkLastWatchContents()
@@ -538,11 +456,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             val loginInformationResult : LoginInformationResult =
                 CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_API_INFORMATION, LoginInformationResult::class.java) as LoginInformationResult
             val resultIndex = lastStudyMovieIndex
-            viewModelScope.launch {
-                _successMessage.emit(
-                    "${loginInformationResult.getUserInformation().getName()}님은 현재 $resultIndex 까지 학습 했어요."
-                )
-            }
+            _successMessage.value = "${loginInformationResult.getUserInformation().getName()}님은 현재 $resultIndex 까지 학습 했어요."
         }
     }
 
@@ -580,9 +494,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
-                    viewModelScope.launch {
-                        _dialogRecordPermission.emit(Unit)
-                    }
+                    _dialogBottomOption.call()
                 }
                 else
                 {
@@ -594,9 +506,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 mCurrentSelectItem?.let { item ->
                     mSendBookshelfAddList.clear()
                     mSendBookshelfAddList.add(item)
-                    viewModelScope.launch {
-                        _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
-                    }
+
+                    _dialogBottomBookshelfContentsAdd.value = mMainInformationResult.getBookShelvesList()
                 }
             }
             else -> {}
@@ -614,14 +525,10 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                 Log.f("Add List isStillOnSeries : " + mDetailItemInformationResult.seriesID)
                 mSendBookshelfAddList.reverse()
             }
-            viewModelScope.launch {
-                _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
-            }
+            _dialogBottomBookshelfContentsAdd.value = mMainInformationResult.getBookShelvesList()
         } else
         {
-            viewModelScope.launch {
-                _errorMessage.emit(mContext.resources.getString(R.string.message_not_add_selected_contents_bookshelf))
-            }
+            _errorMessage.value = mContext.resources.getString(R.string.message_not_add_selected_contents_bookshelf)
         }
     }
 
@@ -658,17 +565,15 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
         else
         {
-            viewModelScope.launch {
-                _errorMessage.emit(mContext.resources.getString(R.string.message_not_selected_contents_list))
-            }
+            _errorMessage.value = mContext.resources.getString(R.string.message_not_selected_contents_list)
         }
     }
 
     private fun startCurrentSelectMovieActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Movie ID : " + item.getID())
-            val sendItemList = java.util.ArrayList<ContentsBaseResult>()
+            Log.f("Movie  : " + item.toString())
+            val sendItemList = ArrayList<ContentsBaseResult>()
             sendItemList.add(item)
             val playerParamsObject = PlayerIntentParamsObject(sendItemList)
 
@@ -682,8 +587,8 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private fun startQuizActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Quiz ID : " + item.getID())
-            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.getID())
+            Log.f("Quiz ID : " + item.id)
+            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.id)
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.QUIZ)
                 .setData(quizIntentParamsObject)
@@ -699,7 +604,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         mCurrentSelectItem?.let { item ->
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-                .setData(item.getID())
+                .setData(item.id)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
                 .startActivity()
         }
@@ -710,7 +615,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -727,7 +632,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         mCurrentSelectItem?.let { item ->
             val title = item.getVocabularyName()
             val myVocabularyResult = MyVocabularyResult(
-                item.getID(),
+                item.id,
                 title,
                 VocabularyType.VOCABULARY_CONTENTS)
 
@@ -743,7 +648,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -757,7 +662,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -772,9 +677,9 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         Log.f("")
         mCurrentSelectItem?.let { item ->
             val data = FlashcardDataObject(
-                item.getID(),
-                item.getName(),
-                item.getSubName(),
+                item.id,
+                item.name,
+                item.sub_name,
                 VocabularyType.VOCABULARY_CONTENTS
             )
 
@@ -806,16 +711,17 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private fun onSelectItem(index : Int)
     {
         // 현재 선택 상태를 반전
-        val isSelected = mCurrentContentsItemList[index].isSelected()
-        mCurrentContentsItemList[index].setSelected(!isSelected)
+        val currentSelected = mCurrentContentsItemList[index].isSelected
+        mCurrentContentsItemList[index] = mCurrentContentsItemList[index].copy(
+            isSelected = !currentSelected
+        )
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        viewModelScope.launch {
-            _contentsList.emit(ArrayList<ContentsBaseResult>())
-            _contentsList.emit(mCurrentContentsItemList)
-        }
+        _contentsList.value = ArrayList<ContentsBaseResult>()
+        _contentsList.value = mCurrentContentsItemList
 
-        Log.i("index : $index , isSelected : ${mCurrentContentsItemList[index].isSelected()}")
+
+        Log.i("index : $index , isSelected : ${mCurrentContentsItemList[index].isSelected}")
 
         sendSelectedItem()
     }
@@ -823,39 +729,33 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private fun getSelectedItemList() : ArrayList<ContentsBaseResult>
     {
         return ArrayList(mCurrentContentsItemList.filter {
-            it.isSelected()
+            it.isSelected
         })
     }
 
     private fun sendSelectedItem()
     {
-        val selectedItemCount = mCurrentContentsItemList.count { it.isSelected() }
-        viewModelScope.launch {
-            _itemSelectedCount.emit(selectedItemCount)
-        }
+        val selectedItemCount = mCurrentContentsItemList.count { it.isSelected }
+        _itemSelectedCount.value = selectedItemCount
     }
 
     private fun checkSelectedItemAll(isSelected : Boolean)
     {
         mCurrentContentsItemList.forEach {
-            it.setSelected(isSelected)
+            it.isSelected = isSelected
         }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        viewModelScope.launch {
-            _contentsList.emit(ArrayList<ContentsBaseResult>())
-            _contentsList.emit(mCurrentContentsItemList)
-        }
+        _contentsList.value = mCurrentContentsItemList
 
-        viewModelScope.launch {
-            if(isSelected)
-            {
-                _itemSelectedCount.emit(mCurrentContentsItemList.size)
-            }
-            else
-            {
-                _itemSelectedCount.emit(0)
-            }
+        if(isSelected)
+        {
+            _itemSelectedCount.value = mCurrentContentsItemList.size
+
+        }
+        else
+        {
+            _itemSelectedCount.value = 0
         }
     }
 }

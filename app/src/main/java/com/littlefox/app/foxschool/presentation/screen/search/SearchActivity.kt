@@ -93,61 +93,31 @@ class SearchActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.toast.collect{ message ->
-                    Log.i("message : $message")
-                    Toast.makeText(this@SearchActivity, message, Toast.LENGTH_SHORT).show()
-                }
-            }
+        viewModel.toast.observe(this){ message ->
+            Log.i("message : $message")
+            Toast.makeText(this@SearchActivity, message, Toast.LENGTH_SHORT).show()
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.successMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(message)
-                }
-            }
+        viewModel.successMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.errorMessage.collect{ message ->
-                    Log.i("message : $message")
-                    CommonUtils.getInstance(this@SearchActivity).showErrorMessage(message)
-                }
-            }
+        viewModel.errorMessage.observe(this){ message ->
+            Log.i("message : $message")
+            CommonUtils.getInstance(this@SearchActivity).showErrorMessage(message)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogBottomOption.collect{ item->
-                    showBottomContentItemDialog(item)
-                }
-            }
+        viewModel.dialogBottomOption.observe(this){ item->
+            showBottomContentItemDialog(item)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogBottomBookshelfContentsAdd.collect{ list ->
-                    showBottomBookAddDialog(list)
-                }
-            }
+        viewModel.dialogBottomBookshelfContentsAdd.observe(this){ list ->
+            showBottomBookAddDialog(list)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED)
-            {
-                viewModel.dialogRecordPermission.collect{
-                    showChangeRecordPermissionDialog()
-                }
-            }
+        viewModel.dialogRecordPermission.observe(this){
+            showChangeRecordPermissionDialog()
         }
     }
 

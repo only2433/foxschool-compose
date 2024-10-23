@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -34,6 +35,7 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.manage_mybooks.ManagementMyBooksEvent
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -58,26 +60,15 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
         private const val MAX_NAME_SIZE : Int = 15
     }
 
-    private val _managementBooksData = MutableSharedFlow<ManagementBooksData>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val managementBooksData : SharedFlow<ManagementBooksData> = _managementBooksData
+    private val _managementBooksData = SingleLiveEvent<ManagementBooksData>()
+    val managementBooksData: LiveData<ManagementBooksData> get() = _managementBooksData
 
-    private val _dialogDeleteBookshelf = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogDeleteBookshelf : SharedFlow<Unit> = _dialogDeleteBookshelf
+    private val _dialogDeleteBookshelf = SingleLiveEvent<Void>()
+    val dialogDeleteBookshelf: LiveData<Void> get() = _dialogDeleteBookshelf
 
-    private val _dialogDeleteVocabulary = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogDeleteVocabulary : SharedFlow<Unit> = _dialogDeleteVocabulary
+    private val _dialogDeleteVocabulary = SingleLiveEvent<Void>()
+    val dialogDeleteVocabulary: LiveData<Void> get() = _dialogDeleteVocabulary
+
     private lateinit var mContext : Context
     private var mMainInformationResult : MainInformationResult? = null
     private lateinit var mManagementBooksData : ManagementBooksData
@@ -93,10 +84,7 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
 
         onHandleApiObserver()
 
-        viewModelScope.launch {
-            _managementBooksData.emit(mManagementBooksData)
-        }
-
+        _managementBooksData.value = mManagementBooksData
     }
 
     override fun onHandleViewEvent(event : BaseEvent)
@@ -144,11 +132,11 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                             viewModelScope.launch {
                                 if(data.second)
                                 {
-                                    _isLoading.emit(true)
+                                    _isLoading.value = true
                                 }
                                 else
                                 {
-                                    _isLoading.emit(false)
+                                    _isLoading.value = false
                                 }
                             }
                         }
@@ -278,25 +266,19 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                         {
                             //중복 로그인 시 재시작
                             (mContext as AppCompatActivity).finish()
-                            viewModelScope.launch {
-                                _toast.emit(result.message)
-                            }
+                            _toast.value = result.message
                             IntentManagementFactory.getInstance().initAutoIntroSequence()
                         }
                         else if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
                             (mContext as AppCompatActivity).finish()
-                            viewModelScope.launch {
-                                _toast.emit(result.message)
-                            }
+                            _toast.value = result.message
                             IntentManagementFactory.getInstance().initScene()
                         }
                         else
                         {
-                            viewModelScope.launch {
-                                _errorMessage.emit(result.message)
-                            }
+                            _errorMessage.value = result.message
                         }
                     }
                 }
@@ -465,16 +447,12 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
     {
         if(bookName == "")
         {
-            viewModelScope.launch {
-                _errorMessage.emit(mContext.resources.getString(R.string.message_warning_empty_bookshelf_name))
-            }
+            _errorMessage.value = mContext.resources.getString(R.string.message_warning_empty_bookshelf_name)
             return
         }
         else if(bookName.length > MAX_NAME_SIZE)
         {
-            viewModelScope.launch {
-                _errorMessage.emit(mContext.resources.getString(R.string.message_warning_add_bookshelf_maximum_15_word))
-            }
+            _errorMessage.value = mContext.resources.getString(R.string.message_warning_add_bookshelf_maximum_15_word)
             return
         }
 
@@ -499,16 +477,11 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             MyBooksType.BOOKSHELF_ADD, MyBooksType.VOCABULARY_ADD -> (mContext as AppCompatActivity).finish()
             MyBooksType.BOOKSHELF_MODIFY ->
             {
-                viewModelScope.launch {
-                    _dialogDeleteBookshelf.emit(Unit)
-                }
+                _dialogDeleteBookshelf.call()
             }
             MyBooksType.VOCABULARY_MODIFY ->
             {
-                viewModelScope.launch {
-                    _dialogDeleteVocabulary.emit(Unit)
-
-                }
+                _dialogDeleteVocabulary.call()
             }
         }
     }

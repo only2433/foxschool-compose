@@ -51,35 +51,20 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiViewModel) : BaseViewModel()
 {
-    private val _schoolList = MutableSharedFlow<List<SchoolItemDataResult>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val schoolList: SharedFlow<List<SchoolItemDataResult>> = _schoolList
+    private val _schoolList = SingleLiveEvent<List<SchoolItemDataResult>>()
+    val schoolList: LiveData<List<SchoolItemDataResult>> get() = _schoolList
 
-    private val _inputEmptyMessage = MutableSharedFlow<String>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val inputEmptyMessage: SharedFlow<String> = _inputEmptyMessage
+    private val _inputEmptyMessage = SingleLiveEvent<String>()
+    val inputEmptyMessage: LiveData<String> get() = _inputEmptyMessage
 
-    private val _showDialogPasswordChange = MutableSharedFlow<PasswordGuideType>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val showDialogPasswordChange: SharedFlow<PasswordGuideType> = _showDialogPasswordChange
+    private val _showDialogPasswordChange = SingleLiveEvent<PasswordGuideType>()
+    val showDialogPasswordChange: LiveData<PasswordGuideType> get() = _showDialogPasswordChange
 
-    private val _hideDialogPasswordChange = MutableSharedFlow<Unit>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val hideDialogPasswordChange: SharedFlow<Unit> = _hideDialogPasswordChange
+    private val _hideDialogPasswordChange = SingleLiveEvent<Void>()
+    val hideDialogPasswordChange: LiveData<Void> get() = _hideDialogPasswordChange
 
-    private val _finishActivity = MutableSharedFlow<Unit>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val finishActivity: SharedFlow<Unit> = _finishActivity
+    private val _finishActivity = SingleLiveEvent<Void>()
+    val finishActivity: LiveData<Void> get() = _finishActivity
 
 
     private var mUserLoginData : UserLoginData? = null // 로그인 input
@@ -118,9 +103,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
             }
             is LoginEvent.onSchoolNameSelected ->
             {
-                viewModelScope.launch {
-                    _schoolList.emit(emptyList())
-                }
+                _schoolList.value = emptyList()
             }
             is LoginEvent.onClickFindID ->
             {
@@ -173,12 +156,12 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                             if(data.second)
                             {
                                 Log.i("isLoading = true")
-                                _isLoading.emit(true)
+                                _isLoading.value = true
                             }
                             else
                             {
                                 Log.i("isLoading = false")
-                                _isLoading.emit(false)
+                                _isLoading.value = false
                             }
                         }
                     }
@@ -211,11 +194,11 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                         if (mUserInformationResult!!.isNeedChangePassword())
                         {
                             // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
-                            _showDialogPasswordChange.emit(mUserInformationResult!!.getPasswordChangeType())
+                            _showDialogPasswordChange.value = mUserInformationResult!!.getPasswordChangeType()
                         }
                         else
                         {
-                            _finishActivity.emit(Unit)
+                            _finishActivity.call()
                         }
                     }
                 }
@@ -231,14 +214,13 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                         Log.f("Password Change Complete")
                         changeUserLoginData()
 
-                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
+                        _toast.value = mContext.getString(R.string.message_password_change_complete)
                         viewModelScope.launch(Dispatchers.Main) {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
                             }
-
-                            _hideDialogPasswordChange.emit(Unit)
-                            _finishActivity.emit(Unit)
+                            _hideDialogPasswordChange.call()
+                            _finishActivity.call()
                         }
                     }
                 }
@@ -250,8 +232,8 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                 apiViewModel.changePasswordNextData.collect { data ->
                     data?.let {
                         // 다음에 변경
-                        _hideDialogPasswordChange.emit(Unit)
-                        _finishActivity.emit(Unit)
+                        _hideDialogPasswordChange.call()
+                        _finishActivity.call()
                     }
                 }
             }
@@ -262,14 +244,14 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                 apiViewModel.changePasswordKeepData.collect { data ->
                     data?.let {
                         // 현재 비밀번호 유지
-                        _toast.emit(mContext.getString(R.string.message_password_change_complete))
+                        _toast.value = mContext.getString(R.string.message_password_change_complete)
 
                         viewModelScope.launch(Dispatchers.Main) {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
                             }
-                            _hideDialogPasswordChange.emit(Unit)
-                            _finishActivity.emit(Unit)
+                            _hideDialogPasswordChange.call()
+                            _finishActivity.call()
                         }
                     }
                 }
@@ -300,7 +282,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                         {
                             if (code == RequestCode.CODE_LOGIN)
                             {
-                                _errorMessage.emit(result.message)
+                                _errorMessage.value = result.message
                                 if (Feature.IS_ENABLE_FIREBASE_CRASHLYTICS)
                                 {
                                     val errorData = ErrorLoginData(
@@ -316,7 +298,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                                 code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
                                 code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                             {
-                                _toast.emit(result.message)
+                                _toast.value = result.message
                             }
                             else
                             {
@@ -353,7 +335,7 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                 val searchList: List<SchoolItemDataResult> = _requestSchoolList.filter {
                     (it.getSchoolName()).contains(searchText)
                 }
-                _schoolList.emit(searchList)
+                _schoolList.value = searchList
             }
         }
     }
@@ -410,21 +392,15 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
             {
                 (schoolCode == "") ->
                 {
-                    viewModelScope.launch {
-                        _errorMessage.emit(mContext.resources.getString(R.string.message_warning_empty_school))
-                    }
+                    _errorMessage.value = mContext.resources.getString(R.string.message_warning_empty_school)
                 }
                 (id == "") ->
                 {
-                    viewModelScope.launch {
-                        _errorMessage.emit(mContext.resources.getString(R.string.message_warning_empty_id))
-                    }
+                    _errorMessage.value = mContext.resources.getString(R.string.message_warning_empty_id)
                 }
                 (password == "") ->
                 {
-                    viewModelScope.launch {
-                        _errorMessage.emit(mContext.resources.getString(R.string.message_warning_empty_password))
-                    }
+                    _errorMessage.value = mContext.resources.getString(R.string.message_warning_empty_password)
                 }
             }
             return

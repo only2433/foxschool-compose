@@ -416,6 +416,12 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
         super.onBackPressed()
     }
 
+    override fun finish()
+    {
+        super.finish()
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out)
+    }
+
     override fun initView()
     {
         initFadeControllerView()

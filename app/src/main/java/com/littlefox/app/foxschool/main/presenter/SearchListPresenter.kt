@@ -309,7 +309,7 @@ class SearchListPresenter : SearchListContract.Presenter
     /** ====================== StartActivity ====================== */
     private fun startCurrentSelectMovieActivity()
     {
-        Log.f("Movie ID : " + mSearchItemList[mCurrentPlayIndex].getID())
+        Log.f("Movie ID : " + mSearchItemList[mCurrentPlayIndex].id)
         val sendItemList = java.util.ArrayList<ContentsBaseResult>()
         sendItemList.add(mSearchItemList[mCurrentPlayIndex])
         val playerParamsObject = PlayerIntentParamsObject(sendItemList)
@@ -322,8 +322,8 @@ class SearchListPresenter : SearchListContract.Presenter
 
     private fun startQuizActivity()
     {
-        Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].getID())
-        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        Log.f("Quiz ID : " + mSearchItemList[mCurrentOptionIndex].id)
+        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mSearchItemList[mCurrentOptionIndex].id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -336,7 +336,7 @@ class SearchListPresenter : SearchListContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mSearchItemList[mCurrentOptionIndex].getID())
+            .setData(mSearchItemList[mCurrentOptionIndex].id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -344,7 +344,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -358,7 +358,7 @@ class SearchListPresenter : SearchListContract.Presenter
         Log.f("")
         val title = mSearchItemList[mCurrentOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
-            mSearchItemList[mCurrentOptionIndex].getID(),
+            mSearchItemList[mCurrentOptionIndex].id,
             title,
             VocabularyType.VOCABULARY_CONTENTS)
 
@@ -372,7 +372,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -384,7 +384,7 @@ class SearchListPresenter : SearchListContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mSearchItemList[mCurrentOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -397,9 +397,9 @@ class SearchListPresenter : SearchListContract.Presenter
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mSearchItemList[mCurrentOptionIndex].getID(),
-            mSearchItemList[mCurrentOptionIndex].getName(),
-            mSearchItemList[mCurrentOptionIndex].getSubName(),
+            mSearchItemList[mCurrentOptionIndex].id,
+            mSearchItemList[mCurrentOptionIndex].name,
+            mSearchItemList[mCurrentOptionIndex].sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
 

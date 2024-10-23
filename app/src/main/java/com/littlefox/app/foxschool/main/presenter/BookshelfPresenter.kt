@@ -245,7 +245,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
         {
             for(i in mBookItemInformationList!!.indices)
             {
-                if(deleteItem.getID() == (mBookItemInformationList!![i].getID()))
+                if(deleteItem.id == (mBookItemInformationList!![i].id))
                 {
                     mBookItemInformationList!!.removeAt(i)
                     break
@@ -287,7 +287,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("")
-        val quizIntentParamsObject = QuizIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+        val quizIntentParamsObject = QuizIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -300,7 +300,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mBookItemInformationList!![mCurrentOptionIndex].getID())
+            .setData(mBookItemInformationList!![mCurrentOptionIndex].id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -308,7 +308,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        val data  = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+        val data  = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
             .setData(data)
@@ -321,7 +321,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
         Log.f("")
         val title = mBookItemInformationList!![mCurrentOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
-            mBookItemInformationList!![mCurrentOptionIndex].getID(),
+            mBookItemInformationList!![mCurrentOptionIndex].id,
             title,
             VocabularyType.VOCABULARY_CONTENTS
         )
@@ -335,7 +335,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -347,7 +347,7 @@ class BookshelfPresenter : BookshelfContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mBookItemInformationList!![mCurrentOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -360,9 +360,9 @@ class BookshelfPresenter : BookshelfContract.Presenter
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mBookItemInformationList!![mCurrentOptionIndex].getID(),
-            mBookItemInformationList!![mCurrentOptionIndex].getName(),
-            mBookItemInformationList!![mCurrentOptionIndex].getSubName(),
+            mBookItemInformationList!![mCurrentOptionIndex].id,
+            mBookItemInformationList!![mCurrentOptionIndex].name,
+            mBookItemInformationList!![mCurrentOptionIndex].sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
         IntentManagementFactory.getInstance()

@@ -380,7 +380,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
             var result = 0
             for(i in 0 until mDetailItemInformationResult.getContentsList().size)
             {
-                if(mDetailItemInformationResult.lastStudyContentID.equals(mDetailItemInformationResult.getContentsList().get(i).getID()))
+                if(mDetailItemInformationResult.lastStudyContentID.equals(mDetailItemInformationResult.getContentsList().get(i).id))
                 {
                     if(mDetailItemInformationResult.isStillOnSeries)
                     {
@@ -413,7 +413,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startQuizActivity()
     {
         Log.f("")
-        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
@@ -427,7 +427,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            .setData(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -436,7 +436,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     {
         Log.f("")
         val data : WebviewIntentParamsObject =
-            WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+            WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -448,7 +448,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -460,7 +460,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id)
         
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -473,9 +473,9 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getID(),
-            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getName(),
-            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].getSubName(),
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].id,
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].name,
+            mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
 
@@ -506,7 +506,7 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
         Log.f("")
         val title = mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
-            mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getID(),
+            mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).id,
             title,
             VocabularyType.VOCABULARY_CONTENTS
         )
@@ -520,15 +520,15 @@ class SeriesContentsListPresenter : SeriesContentsListContract.Presenter
 
     private fun showBottomStoryItemDialog()
     {
-        Log.f("getThumbnailUrl() : " + mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getThumbnailUrl())
+        Log.f("getThumbnailUrl() : " + mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].thumbnail_url)
         Log.f("mCurrentOptionIndex() : $mCurrentOptionIndex")
-        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex))
+        mBottomContentItemOptionDialog = BottomContentItemOptionDialog(mContext, mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex])
         mBottomContentItemOptionDialog.let {
             if (mDetailItemInformationResult.isSingleSeries)
             {
                 it.setFullName()
             }
-            it.setPosition(mDetailItemInformationResult.getContentsList().get(mCurrentOptionIndex).getIndex())
+            it.setPosition(mDetailItemInformationResult.getContentsList()[mCurrentOptionIndex].index)
             it.setIndexColor(seriesColor)
             it.setItemOptionListener(mStoryDetailOptionListener)
             it.setView()

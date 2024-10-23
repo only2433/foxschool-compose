@@ -34,7 +34,7 @@ class BookshelfContentRemoveCoroutine : BaseCoroutine
             val list = ContentValues()
             for(i in mSendDataList.indices)
             {
-                list.put("content_ids[$i]", mSendDataList[i].getID())
+                list.put("content_ids[$i]", mSendDataList[i].id)
             }
             val respose : String? = requestServerPair(mContext, Common.API_BOOKSHELF + File.separator + mBookshelfID + File.separator + "contents", list, NetworkUtil.DELETE_METHOD)
             result = Gson().fromJson(respose, BookshelfBaseObject::class.java)

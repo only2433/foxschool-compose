@@ -1,38 +1,55 @@
-package com.littlefox.app.foxschool.`object`.result.content
-
+import android.os.Parcel
+import android.os.Parcelable
 import com.littlefox.app.foxschool.common.Common
-import java.io.Serializable
 
-class ServiceSupportedTypeResult : Serializable
-{
-    private var story : String              = Common.SERVICE_NOT_SUPPORTED  // 동화 서비스
-    private var service : String            = Common.SERVICE_NOT_SUPPORTED
-    private var original_text : String      = Common.SERVICE_NOT_SUPPORTED  // 원문 서비스
-    private var vocabulary : String         = Common.SERVICE_NOT_SUPPORTED  // 단어장 서비스
-    private var quiz : String               = Common.SERVICE_NOT_SUPPORTED  // 퀴즈 서비스
-    private var ebook : String              = Common.SERVICE_NOT_SUPPORTED  // ebook 서비스
-    private var crossword : String          = Common.SERVICE_NOT_SUPPORTED  // 크로스워드 서비스
-    private var starwords : String          = Common.SERVICE_NOT_SUPPORTED  // 스타워즈 서비스
-    private var flash_card : String         = Common.SERVICE_NOT_SUPPORTED  // 플래시카드 서비스
-    private var record : String             = Common.SERVICE_NOT_SUPPORTED  // 녹음기 서비스
+data class ServiceSupportedTypeResult(
+    var story: String = Common.SERVICE_NOT_SUPPORTED,  // 동화 서비스
+    var service: String = Common.SERVICE_NOT_SUPPORTED,
+    var original_text: String = Common.SERVICE_NOT_SUPPORTED,  // 원문 서비스
+    var vocabulary: String = Common.SERVICE_NOT_SUPPORTED,  // 단어장 서비스
+    var quiz: String = Common.SERVICE_NOT_SUPPORTED,  // 퀴즈 서비스
+    var ebook: String = Common.SERVICE_NOT_SUPPORTED,  // ebook 서비스
+    var crossword: String = Common.SERVICE_NOT_SUPPORTED,  // 크로스워드 서비스
+    var starwords: String = Common.SERVICE_NOT_SUPPORTED,  // 스타워즈 서비스
+    var flash_card: String = Common.SERVICE_NOT_SUPPORTED,  // 플래시카드 서비스
+    var record: String = Common.SERVICE_NOT_SUPPORTED  // 녹음기 서비스
+) : Parcelable {
 
-    fun getStorySupportType() : String = story
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED,
+        parcel.readString() ?: Common.SERVICE_NOT_SUPPORTED
+    )
 
-    fun getServiceSupportType() : String = service
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(story)
+        parcel.writeString(service)
+        parcel.writeString(original_text)
+        parcel.writeString(vocabulary)
+        parcel.writeString(quiz)
+        parcel.writeString(ebook)
+        parcel.writeString(crossword)
+        parcel.writeString(starwords)
+        parcel.writeString(flash_card)
+        parcel.writeString(record)
+    }
 
-    fun getOriginalTextSupportType() : String = original_text
+    override fun describeContents(): Int = 0
 
-    fun getVocabularySupportType() : String = vocabulary
+    companion object CREATOR : Parcelable.Creator<ServiceSupportedTypeResult> {
+        override fun createFromParcel(parcel: Parcel): ServiceSupportedTypeResult {
+            return ServiceSupportedTypeResult(parcel)
+        }
 
-    fun getQuizSupportType() : String = quiz
-
-    fun getEbookSupportType() : String = ebook
-
-    fun getCrosswordSupportType() : String = crossword
-
-    fun getStarwordsSupportType() : String = starwords
-
-    fun getFlashcardSupportType() : String = flash_card
-
-    fun getRecorderSupportType() : String = record
+        override fun newArray(size: Int): Array<ServiceSupportedTypeResult?> {
+            return arrayOfNulls(size)
+        }
+    }
 }

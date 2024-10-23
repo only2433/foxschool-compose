@@ -535,7 +535,7 @@ class MainPresenter : MainContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS) //  .setData(mCurrentDetailOptionResult.getID())
@@ -547,7 +547,7 @@ class MainPresenter : MainContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD) // .setData(mCurrentDetailOptionResult.getID())
@@ -560,9 +560,9 @@ class MainPresenter : MainContract.Presenter
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mCurrentDetailOptionResult.getID(),
-            mCurrentDetailOptionResult.getName(),
-            mCurrentDetailOptionResult.getSubName(),
+            mCurrentDetailOptionResult.id,
+            mCurrentDetailOptionResult.name,
+            mCurrentDetailOptionResult.sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
 
@@ -644,7 +644,7 @@ class MainPresenter : MainContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mCurrentDetailOptionResult.getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mCurrentDetailOptionResult.id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -706,7 +706,7 @@ class MainPresenter : MainContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mCurrentDetailOptionResult.getID())
+            .setData(mCurrentDetailOptionResult.id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -714,7 +714,7 @@ class MainPresenter : MainContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mCurrentDetailOptionResult.id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -727,7 +727,7 @@ class MainPresenter : MainContract.Presenter
     {
         Log.f("")
         val title : String = mCurrentDetailOptionResult.getVocabularyName()
-        val myVocabularyResult = MyVocabularyResult(mCurrentDetailOptionResult.getID(), title, VocabularyType.VOCABULARY_CONTENTS)
+        val myVocabularyResult = MyVocabularyResult(mCurrentDetailOptionResult.id, title, VocabularyType.VOCABULARY_CONTENTS)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.VOCABULARY)
             .setData(myVocabularyResult)

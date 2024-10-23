@@ -138,7 +138,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
     {
         mAddItemTypeList = ArrayList<ContentItemType>()
         _OptionAddItemLayout.removeAllViews()
-        Glide.with(mContext).load(mContentsInformationResult.getThumbnailUrl())
+        Glide.with(mContext).load(mContentsInformationResult.thumbnail_url)
             .transition(DrawableTransitionOptions.withCrossFade()).into(_ThumbnailImage)
 
         if(mIndexColor.equals("") == false)
@@ -163,12 +163,12 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         }
         else
         {
-            Log.f("Name : " + mContentsInformationResult.getName().toString() + ", SubName : " + mContentsInformationResult.getSubName())
+            Log.f("Name : " + mContentsInformationResult.name.toString() + ", SubName : " + mContentsInformationResult.sub_name)
             _ContentTitleText.setText(
-                if(mContentsInformationResult.getSubName().equals(""))
-                    mContentsInformationResult.getName()
+                if(mContentsInformationResult.sub_name.equals(""))
+                    mContentsInformationResult.name
                 else
-                    mContentsInformationResult.getSubName()
+                    mContentsInformationResult.name
             )
         }
         checkContentItem()
@@ -187,47 +187,47 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         {
             if(CommonUtils.getInstance(mContext).checkTablet || Feature.IS_SUPPORT_EBOOK)
             {
-                if(mContentsInformationResult.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+                if(mContentsInformationResult.service_info?.ebook.equals(Common.SERVICE_SUPPORTED_PAID))
                 {
                     mAddItemTypeList.add(ContentItemType.EBOOK)
                 }
             }
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mContentsInformationResult.service_info?.quiz.equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.QUIZ)
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mContentsInformationResult.service_info?.vocabulary.equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.VOCABULARY)
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mContentsInformationResult.service_info?.flash_card.equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.FLASHCARD)
         }
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
         {
-            if(mContentsInformationResult.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+            if(mContentsInformationResult.service_info?.starwords.equals(Common.SERVICE_SUPPORTED_PAID))
             {
                 mAddItemTypeList.add(ContentItemType.STARWORDS)
             }
 
-            if(mContentsInformationResult.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+            if(mContentsInformationResult.service_info?.crossword.equals(Common.SERVICE_SUPPORTED_PAID))
             {
                 mAddItemTypeList.add(ContentItemType.CROSSWORD)
             }
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getRecorderSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mContentsInformationResult.service_info?.record.equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.RECORDER)
         }
 
-        if(mContentsInformationResult.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_SUPPORTED_PAID))
+        if(mContentsInformationResult.service_info?.original_text.equals(Common.SERVICE_SUPPORTED_PAID))
         {
             mAddItemTypeList.add(ContentItemType.TRANSLATE)
         }
@@ -416,14 +416,14 @@ class BottomContentItemOptionDialog : BottomSheetDialog
         var serviceCheck = ""
         when(type)
         {
-            SERVICE_INFO_QUIZ -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getQuizSupportType()
-            SERVICE_INFO_ORIGINAL_TEXT -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getOriginalTextSupportType()
-            SERVICE_INFO_VOCA -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getVocabularySupportType()
-            SERVICE_INFO_EBOOK -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getEbookSupportType()
-            SERVICE_INFO_STARWORDS -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getStarwordsSupportType()
-            SERVICE_INFO_CROSSWORD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getCrosswordSupportType()
-            SERVICE_INFO_FLASHCARD -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getFlashcardSupportType()
-            SERVICE_INFO_RECORD_PLAYER -> serviceCheck = mContentsInformationResult.getServiceInformation()!!.getRecorderSupportType()
+            SERVICE_INFO_QUIZ -> serviceCheck = mContentsInformationResult.service_info!!.quiz
+            SERVICE_INFO_ORIGINAL_TEXT -> serviceCheck = mContentsInformationResult.service_info!!.original_text
+            SERVICE_INFO_VOCA -> serviceCheck = mContentsInformationResult.service_info!!.vocabulary
+            SERVICE_INFO_EBOOK -> serviceCheck = mContentsInformationResult.service_info!!.ebook
+            SERVICE_INFO_STARWORDS -> serviceCheck = mContentsInformationResult.service_info!!.starwords
+            SERVICE_INFO_CROSSWORD -> serviceCheck = mContentsInformationResult.service_info!!.crossword
+            SERVICE_INFO_FLASHCARD -> serviceCheck = mContentsInformationResult.service_info!!.flash_card
+            SERVICE_INFO_RECORD_PLAYER -> serviceCheck = mContentsInformationResult.service_info!!.record
         }
         return true
     }

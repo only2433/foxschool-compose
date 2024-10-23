@@ -43,6 +43,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -86,97 +87,6 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import androidx.compose.ui.graphics.Color as ComposeColor
 import android.graphics.Color as AndroidColor
 
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SeriesContentsListScreen(
-    viewModel : SeriesContentsListViewModel,
-    onEvent: (SeriesContentsListEvent) -> Unit,
-)
-{
-    val contentsList by viewModel.contentsList.collectAsStateWithLifecycle(initialValue = ArrayList())
-
-
-    var dataList by remember {
-        mutableStateOf(ArrayList<ContentsBaseResult>())
-    }
-
-    // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
-    val contentsSize = contentsList.size
-    LaunchedEffect(contentsSize) {
-        dataList = contentsList
-        Log.i("------------- notify size : $contentsSize, dataList : ${dataList.size}")
-
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .background(
-                color = colorResource(id = R.color.color_edeef2)
-            )
-    )
-    {
-        if(dataList.size > 0)
-        {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(
-                        start = getDp(pixel = 28),
-                        end = getDp(pixel = 28),
-                    ),
-            ) {
-                items(dataList.size) {index ->
-
-                    val item = dataList[index]
-                    item?.let {
-                        Column {
-                            if(index == 0)
-                            {
-                                Spacer(
-                                    modifier = Modifier.height(
-                                        getDp(pixel = 20)
-                                    )
-                                )
-                            }
-                            BuildContentsListItem(data = item,
-                                itemColor = "#35adfd",
-                                onBackgroundClick = {
-                                    Log.i("onBackgroundClick : $index")
-                                    onEvent(
-                                        SeriesContentsListEvent.onSelectedItem(index)
-                                    )
-                                },
-                                onThumbnailClick = {
-                                    onEvent(
-                                        SeriesContentsListEvent.onClickThumbnail(item)
-                                    )
-                                },
-                                onOptionClick = {
-                                    onEvent(
-                                        SeriesContentsListEvent.onClickOption(item)
-                                    )
-                                })
-                            Spacer(
-                                modifier = Modifier.height(
-                                    getDp(pixel = 20)
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-
-
-    }
-}
-*/
-
 
 @Composable
 fun SeriesContentsScreenV(
@@ -184,12 +94,16 @@ fun SeriesContentsScreenV(
     onEvent: (SeriesContentsListEvent) -> Unit,
 )
 {
-    val contentsList by viewModel.contentsList.collectAsState(initial = emptyList())
-    val showToolbarInformationView by viewModel.showToolbarInformationView.collectAsState(initial = false)
-    val isShowContentsLoading by viewModel.isContentsLoading.collectAsState(initial = true)
-    val seriesTitle by viewModel.seriesTitle.collectAsState(initial = "")
-    val prepareData by viewModel.backgroundView.collectAsState(initial = TopThumbnailViewData())
-    val selectedItemCount by viewModel.itemSelectedCount.collectAsState(initial = 0)
+    val contentsList by viewModel.contentsList.observeAsState(
+        initial = emptyList()
+    )
+
+
+    val showToolbarInformationView by viewModel.showToolbarInformationView.observeAsState(initial = false)
+    val isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = true)
+    val seriesTitle by viewModel.seriesTitle.observeAsState(initial = "")
+    val prepareData by viewModel.backgroundViewData.observeAsState(initial = TopThumbnailViewData())
+    val selectedItemCount by viewModel.itemSelectedCount.observeAsState(initial = 0)
 
     var isFabToolbarVisible by remember { //
         mutableStateOf(false)
@@ -206,9 +120,6 @@ fun SeriesContentsScreenV(
 
 
     LaunchedEffect(selectedItemCount) {
-
-        Log.i("------------- selected Item count : $selectedItemCount")
-
         if(selectedItemCount > 0)
         {
             isFabToolbarVisible = true
@@ -295,9 +206,7 @@ fun SeriesContentsScreenV(
                             )
 
                     ) {
-                        itemsIndexed(contentsList) {index, item ->
-
-                            Log.i("index : ${index} ")
+                        itemsIndexed(contentsList, key = {_, item -> item.id}) {index, item ->
                             Column {
                                 if(index == 0)
                                 {
@@ -447,7 +356,7 @@ fun BuildCollapsibleImageHeader(
     modifier : Modifier = Modifier
 )
 {
-    Log.i("thumbnailUrl : $thumbnailUrl")
+
     Box(
         modifier = modifier
     )

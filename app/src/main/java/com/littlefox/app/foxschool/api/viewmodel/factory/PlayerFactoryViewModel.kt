@@ -324,7 +324,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
                             {
                                 val errorData = ErrorRequestData(
                                     CrashlyticsHelper.ERROR_CODE_VIDEO_REQUEST,
-                                    mPlayInformationList[mCurrentPlayMovieIndex].getID(),
+                                    mPlayInformationList[mCurrentPlayMovieIndex].id,
                                     result.status,
                                     result.message,
                                     Exception())
@@ -374,7 +374,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)!!
         mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
-        Log.f("list size : ${mPlayInformationList.size} , isOptionDisable : ${mPlayInformationList[0].isOptionDisable()} " +
+        Log.f("list size : ${mPlayInformationList.size} , isOptionDisable : ${mPlayInformationList[0].isOptionDisable} " +
                 ", homeworkNumber : ${mPlayerIntentParamsObject.getHomeworkNumber()}")
         mCurrentPlayMovieIndex = 0
 
@@ -385,7 +385,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         // 숙제관리에서 넘어온 플레이의 경우 3점 메뉴버튼 표시하지 않도록 처리
         if (mPlayerIntentParamsObject.getHomeworkNumber() != 0)
         {
-            mPlayInformationList[mCurrentPlayMovieIndex].setOptionDisable(true)
+            mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable = true
         }
     }
 
@@ -515,7 +515,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
 
     private fun setVideoPrepared()
     {
-        if(mPlayInformationList[mCurrentPlayMovieIndex].getType().equals(Common.CONTENT_TYPE_SONG))
+        if(mPlayInformationList[mCurrentPlayMovieIndex].type.equals(Common.CONTENT_TYPE_SONG))
         {
             setVideoSpeed(DEFAULT_SPEED_INDEX)
             _settingSpeedTextLayout.value = Pair(DEFAULT_SPEED_INDEX, true)
@@ -783,39 +783,39 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         }
         else
         {
-            if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
+            if(data.service_info?.ebook.equals(Common.SERVICE_NOT_SUPPORTED)
                 || Feature.IS_SUPPORT_EBOOK == false)
             {
                 playerEndViewData.isEbookAvailable = false
             }
 
-            if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.quiz.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isQuizAvailable = false
             }
-            if(data.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.vocabulary.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isVocabularyAvailable = false
             }
-            if(data.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.flash_card.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isFlashcardAvailable = false
             }
-            if(data.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.starwords.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isStarwordsAvailable = false
             }
-            if(data.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.crossword.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isCrosswordAvailable = false
             }
-            if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.original_text.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 playerEndViewData.isTranslateAvailable = false
             }
         }
 
-        if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable())
+        if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable)
         {
             _availableMovieOptionButton.value = false
         }
@@ -941,7 +941,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         Log.f("")
         mPlayListAdapter.setEnableOption(false)
         var isShowCoachingMark : Boolean = false
-        val type : String = mPlayInformationList[mCurrentPlayMovieIndex].getType()
+        val type : String = mPlayInformationList[mCurrentPlayMovieIndex].type
         _initMovieLayout.call()
 
         mCoachingMarkJob = CoroutineScope(Dispatchers.Main).launch{
@@ -1205,7 +1205,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         val resolutionValue : String = CommonUtils.getInstance(mContext).getSharedPreferenceString(Common.PARAMS_IS_VIDEO_HIGH_RESOLUTION, "N")
         apiViewModel.enqueueCommandStart(
             RequestCode.CODE_AUTH_CONTENT_PLAY,
-            mPlayInformationList[mCurrentPlayMovieIndex].getID(),
+            mPlayInformationList[mCurrentPlayMovieIndex].id,
             if(resolutionValue == "Y") true else false
         )
     }
@@ -1236,7 +1236,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
         apiViewModel.enqueueCommandStart(
             RequestCode.CODE_PLAY_CONTENTS_LOG_SAVE,
-            mPlayInformationList[mCurrentSaveLogIndex].getID(),
+            mPlayInformationList[mCurrentSaveLogIndex].id,
             autoPlay,
             studyLogSeconds.toString(),
             mPlayerIntentParamsObject.getHomeworkNumber()
@@ -1246,7 +1246,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     private fun startEbookActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -1258,7 +1258,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -1271,7 +1271,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         Log.f("")
         val title = mPlayInformationList[mSelectItemOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
-            mPlayInformationList[mSelectItemOptionIndex].getID(),
+            mPlayInformationList[mSelectItemOptionIndex].id,
             title,
             VocabularyType.VOCABULARY_CONTENTS)
         IntentManagementFactory.getInstance()
@@ -1286,7 +1286,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setData(mPlayInformationList[mSelectItemOptionIndex].id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -1294,7 +1294,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -1306,7 +1306,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -1319,9 +1319,9 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mPlayInformationList[mSelectItemOptionIndex].getID(),
-            mPlayInformationList[mSelectItemOptionIndex].getName(),
-            mPlayInformationList[mSelectItemOptionIndex].getSubName(),
+            mPlayInformationList[mSelectItemOptionIndex].id,
+            mPlayInformationList[mSelectItemOptionIndex].name,
+            mPlayInformationList[mSelectItemOptionIndex].sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
 
@@ -1442,12 +1442,12 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
 
         mCoachingMarkJob = viewModelScope.launch(Dispatchers.Main) {
             viewModelScope.async(Dispatchers.Default) {
-                isShowCoachingMark = isNeverSeeAgainCheck(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+                isShowCoachingMark = isNeverSeeAgainCheck(mPlayInformationList[mCurrentPlayMovieIndex].type)
             }.await()
 
             if(isShowCoachingMark)
             {
-                _settingCoachmarkView.value = mPlayInformationList[mCurrentPlayMovieIndex].getType()
+                _settingCoachmarkView.value = mPlayInformationList[mCurrentPlayMovieIndex].type
             }
         }
     }

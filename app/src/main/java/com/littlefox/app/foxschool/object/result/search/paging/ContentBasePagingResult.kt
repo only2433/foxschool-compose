@@ -1,8 +1,9 @@
 package com.littlefox.app.foxschool.`object`.result.search.paging
 
+import ServiceSupportedTypeResult
 import com.google.gson.annotations.SerializedName
 import com.littlefox.app.foxschool.common.Common
-import com.littlefox.app.foxschool.`object`.result.content.ServiceSupportedTypeResult
+
 
 data class ContentBasePagingResult(
     @SerializedName("id")

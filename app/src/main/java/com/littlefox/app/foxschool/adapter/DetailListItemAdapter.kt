@@ -123,7 +123,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         if(mIndexColor.equals("") == false)
         {
             holder._ContentIndexText.setTextColor(Color.parseColor(mIndexColor))
-            holder._ContentIndexText.setText(java.lang.String.valueOf(mDataList[position].getIndex()))
+            holder._ContentIndexText.setText(java.lang.String.valueOf(mDataList[position].index))
         }
         if(isFullName)
         {
@@ -131,17 +131,17 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         }
         else
         {
-            Log.f("mDataList[position].getSubName() : "+mDataList[position].getSubName())
-            if(mDataList[position].getSubName().equals(""))
+            Log.f("mDataList[position].getSubName() : "+mDataList[position].sub_name)
+            if(mDataList[position].sub_name.equals(""))
             {
-                holder._ContentTitleText.setText(mDataList[position].getName())
+                holder._ContentTitleText.setText(mDataList[position].name)
             } else
             {
-                holder._ContentTitleText.setText(mDataList[position].getSubName())
+                holder._ContentTitleText.setText(mDataList[position].sub_name)
             }
         }
 
-        if(mDataList[position].isSelected())
+        if(mDataList[position].isSelected)
         {
             holder._BackgroundImage.setImageResource(R.drawable.box_list_select)
         }
@@ -159,7 +159,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             holder._StudiedCheckIcon.visibility = View.GONE
         }
 
-        if(mDataList[position].isOptionDisable())
+        if(mDataList[position].isOptionDisable)
         {
             holder._thumbnailOption.visibility = View.GONE
         } else
@@ -168,7 +168,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         }
 
         Glide.with(mContext)
-            .load(mDataList[position].getThumbnailUrl())
+            .load(mDataList[position].thumbnail_url)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(holder._ThumbnailImage)
 
@@ -177,8 +177,8 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
             {
                 return@OnClickListener
             }
-            val isSelected : Boolean = !mDataList!![position].isSelected()
-            mDataList[position].setSelected(isSelected)
+            val isSelected : Boolean = !mDataList!![position].isSelected
+            mDataList[position].isSelected = isSelected
             notifyItemChanged(position)
             mDetailItemListener?.onItemSelectCount(getSelectedCount())
         })
@@ -225,7 +225,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         val result : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
         for(i in mDataList.indices)
         {
-            if(mDataList[i].isSelected()) result.add(mDataList[i])
+            if(mDataList[i].isSelected) result.add(mDataList[i])
         }
         return result
     }
@@ -235,7 +235,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
         var count = 0
         for(i in mDataList.indices)
         {
-            if(mDataList[i].isSelected())
+            if(mDataList[i].isSelected)
             {
                 count++
             }
@@ -248,9 +248,9 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
     {
         for(i in mDataList.indices)
         {
-            if(mDataList[i].isSelected())
+            if(mDataList[i].isSelected)
             {
-                mDataList[i].setSelected(false)
+                mDataList[i].isSelected = false
             }
         }
         notifyDataSetChanged()
@@ -260,7 +260,7 @@ class DetailListItemAdapter : RecyclerView.Adapter<DetailListItemAdapter.ViewHol
     {
         for(i in mDataList.indices)
         {
-            mDataList[i].setSelected(true)
+            mDataList[i].isSelected = true
         }
         notifyDataSetChanged()
         mDetailItemListener?.onItemSelectCount(mDataList.size)

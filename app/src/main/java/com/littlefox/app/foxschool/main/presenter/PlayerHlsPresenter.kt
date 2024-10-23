@@ -309,7 +309,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         mPlayerIntentParamsObject = (mContext as AppCompatActivity).getIntent().getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)!!
         mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
-        Log.f("list size : " + mPlayInformationList.size + ", isOptionDisable :" + mPlayInformationList[0].isOptionDisable())
+        Log.f("list size : " + mPlayInformationList.size + ", isOptionDisable :" + mPlayInformationList[0].isOptionDisable)
         mCurrentPlayMovieIndex = 0
 
         mVibrator = mContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -320,7 +320,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         // 숙제관리에서 넘어온 플레이의 경우 3점 메뉴버튼 표시하지 않도록 처리
         if (mPlayerIntentParamsObject.getHomeworkNumber() != 0)
         {
-            mPlayInformationList[mCurrentPlayMovieIndex].setOptionDisable(true)
+            mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable = true
         }
     }
 
@@ -598,7 +598,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
 
     private fun setVideoPrepared()
     {
-        if(mPlayInformationList[mCurrentPlayMovieIndex].getType().equals(Common.CONTENT_TYPE_SONG))
+        if(mPlayInformationList[mCurrentPlayMovieIndex].type.equals(Common.CONTENT_TYPE_SONG))
         {
             setVideoSpeed(DEFAULT_SPEED_INDEX)
             mPlayerContractView.settingSpeedTextLayout(DEFAULT_SPEED_INDEX, true)
@@ -704,7 +704,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         mPlayListAdapter.setEnableOption(false)
         var isShowCoachingMark : Boolean = false
-        val type : String = mPlayInformationList[mCurrentPlayMovieIndex].getType()
+        val type : String = mPlayInformationList[mCurrentPlayMovieIndex].type
         mPlayerContractView.initMovieLayout()
 
         mJob = CoroutineScope(Dispatchers.Main).launch{
@@ -843,39 +843,39 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
         else
         {
-            if(data.getServiceInformation()?.getEbookSupportType().equals(Common.SERVICE_NOT_SUPPORTED)
+            if(data.service_info?.ebook.equals(Common.SERVICE_NOT_SUPPORTED)
                 || Feature.IS_SUPPORT_EBOOK == false)
             {
                 isEbookAvailable = false
             }
 
-            if(data.getServiceInformation()?.getQuizSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.quiz.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isQuizAvailable = false
             }
-            if(data.getServiceInformation()?.getVocabularySupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.vocabulary.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isVocabularyAvailable = false
             }
-            if(data.getServiceInformation()?.getFlashcardSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.flash_card.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isFlashcardAvailable = false
             }
-            if(data.getServiceInformation()?.getStarwordsSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.starwords.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isStarwordsAvailable = false
             }
-            if(data.getServiceInformation()?.getCrosswordSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.crossword.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isCrosswordAvailable = false
             }
-            if(data.getServiceInformation()?.getOriginalTextSupportType().equals(Common.SERVICE_NOT_SUPPORTED))
+            if(data.service_info?.original_text.equals(Common.SERVICE_NOT_SUPPORTED))
             {
                 isTranslateAvailable = false
             }
         }
 
-        if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable())
+        if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable)
         {
             mPlayerContractView.availableMovieOptionButton(false)
         }
@@ -1251,7 +1251,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("mCurrentStudyLogMilliSeconds : $mCurrentStudyLogMilliSeconds, studyLogSeconds : $studyLogSeconds")
         mStudyLogSaveCoroutine = StudyLogSaveCoroutine(mContext).apply{
             setData(
-                mPlayInformationList[mCurrentSaveLogIndex].getID(),
+                mPlayInformationList[mCurrentSaveLogIndex].id,
                 autoPlay,
                 studyLogSeconds,
                 mPlayerIntentParamsObject.getHomeworkNumber())
@@ -1276,7 +1276,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("")
         releaseAuthContentPlay()
         mAuthContentPlayCoroutine = AuthContentPlayCoroutine(mContext).apply {
-            setData(mPlayInformationList[mCurrentPlayMovieIndex].getID())
+            setData(mPlayInformationList[mCurrentPlayMovieIndex].id)
             asyncListener = mAsyncListener
             execute()
         }
@@ -1304,7 +1304,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startQuizAcitiviy()
     {
         Log.f("")
-        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.QUIZ)
             .setData(quizIntentParamsObject)
@@ -1317,7 +1317,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("")
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-            .setData(mPlayInformationList[mSelectItemOptionIndex].getID())
+            .setData(mPlayInformationList[mSelectItemOptionIndex].id)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
@@ -1325,7 +1325,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startEbookActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -1339,7 +1339,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         Log.f("")
         val title = mPlayInformationList[mSelectItemOptionIndex].getVocabularyName()
         val myVocabularyResult = MyVocabularyResult(
-                mPlayInformationList[mSelectItemOptionIndex].getID(),
+                mPlayInformationList[mSelectItemOptionIndex].id,
                 title,
                 VocabularyType.VOCABULARY_CONTENTS)
         IntentManagementFactory.getInstance()
@@ -1352,7 +1352,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startGameStarwordsActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -1364,7 +1364,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private fun startGameCrosswordActivity()
     {
         Log.f("")
-        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].getID())
+        val data : WebviewIntentParamsObject = WebviewIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
 
         IntentManagementFactory.getInstance()
             .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -1377,9 +1377,9 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         Log.f("")
         val data = FlashcardDataObject(
-            mPlayInformationList[mSelectItemOptionIndex].getID(),
-            mPlayInformationList[mSelectItemOptionIndex].getName(),
-            mPlayInformationList[mSelectItemOptionIndex].getSubName(),
+            mPlayInformationList[mSelectItemOptionIndex].id,
+            mPlayInformationList[mSelectItemOptionIndex].name,
+            mPlayInformationList[mSelectItemOptionIndex].sub_name,
             VocabularyType.VOCABULARY_CONTENTS
         )
 
@@ -1612,12 +1612,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         mJob = CoroutineScope(Dispatchers.Main).launch {
 
             CoroutineScope(Dispatchers.Default).async {
-                isShowCoachingMark = isNeverSeeAgainCheck(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+                isShowCoachingMark = isNeverSeeAgainCheck(mPlayInformationList[mCurrentPlayMovieIndex].type)
             }.await()
 
             if(isShowCoachingMark)
             {
-                mPlayerContractView.settingCoachmarkView(mPlayInformationList[mCurrentPlayMovieIndex].getType())
+                mPlayerContractView.settingCoachmarkView(mPlayInformationList[mCurrentPlayMovieIndex].type)
             }
         }
     }
@@ -1754,7 +1754,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                         {
                             val data = ErrorRequestData(
                                     CrashlyticsHelper.ERROR_CODE_VIDEO_REQUEST,
-                                    mPlayInformationList[mCurrentPlayMovieIndex].getID(),
+                                    mPlayInformationList[mCurrentPlayMovieIndex].id,
                                     result.getStatus(),
                                     result.getMessage(),
                                     Exception())

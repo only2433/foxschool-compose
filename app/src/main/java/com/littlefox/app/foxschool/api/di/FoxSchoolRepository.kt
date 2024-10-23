@@ -211,7 +211,7 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         var queryMap = mutableMapOf<String, String>()
         for(i in contentsList.indices)
         {
-            queryMap["content_ids[$i]"] = contentsList.get(i).getID()
+            queryMap["content_ids[$i]"] = contentsList.get(i).id
         }
 
         remote.addBookshelfContentsAsync(bookshelfID, queryMap)
@@ -314,7 +314,7 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         var queryMap = mutableMapOf<String, String>()
         for(i in list.indices)
         {
-            queryMap["content_ids[$i]"] = list[i].getID()
+            queryMap["content_ids[$i]"] = list[i].id
         }
         remote.deleteBookshelfContents(
             bookshelfID,

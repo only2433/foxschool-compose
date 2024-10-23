@@ -7,6 +7,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.paging.LoadState
@@ -45,6 +46,7 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,33 +77,17 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int   = 10001
     }
 
-    private val _isContentsLoading = MutableSharedFlow<Boolean>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val isContentsLoading : SharedFlow<Boolean> = _isContentsLoading
+    private val _isContentsLoading = SingleLiveEvent<Boolean>()
+    val isContentsLoading: LiveData<Boolean> get() = _isContentsLoading
 
-    private val _dialogBottomOption = MutableSharedFlow<ContentsBaseResult>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogBottomOption : SharedFlow<ContentsBaseResult> = _dialogBottomOption
+    private val _dialogBottomOption = SingleLiveEvent<ContentsBaseResult>()
+    val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
 
-    private val _dialogBottomBookshelfContentsAdd = MutableSharedFlow<ArrayList<MyBookshelfResult>>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogBottomBookshelfContentsAdd : SharedFlow<ArrayList<MyBookshelfResult>> = _dialogBottomBookshelfContentsAdd
+    private val _dialogBottomBookshelfContentsAdd = SingleLiveEvent<ArrayList<MyBookshelfResult>>()
+    val dialogBottomBookshelfContentsAdd: LiveData<ArrayList<MyBookshelfResult>> get() = _dialogBottomBookshelfContentsAdd
 
-    private val _dialogRecordPermission = MutableSharedFlow<Unit>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST
-    )
-    val dialogRecordPermission : SharedFlow<Unit> = _dialogRecordPermission
+    private val _dialogRecordPermission = SingleLiveEvent<Void>()
+    val dialogRecordPermission: LiveData<Void> get() = _dialogRecordPermission
 
 
     private var mCurrentSearchType: String = Common.CONTENT_TYPE_ALL
@@ -181,11 +167,11 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                         viewModelScope.launch {
                             if(data.second)
                             {
-                                _isLoading.emit(true)
+                                _isLoading.value = true
                             }
                             else
                             {
-                                _isLoading.emit(false)
+                                _isLoading.value = false
                             }
                         }
                     }
@@ -201,7 +187,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                         withContext(Dispatchers.IO){
                             delay(Common.DURATION_NORMAL)
                         }
-                        _successMessage.emit(mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf))
+                        _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                     }
                 }
             }
@@ -230,9 +216,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                     }
                     else
                     {
-                        viewModelScope.launch {
-                            _toast.emit(result.message)
-                        }
+                        _toast.value = result.message
                     }
                 }
             }
@@ -276,9 +260,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
-                    viewModelScope.launch {
-                        _dialogRecordPermission.emit(Unit)
-                    }
+                    _dialogRecordPermission.call()
                 }
                 else
                 {
@@ -290,9 +272,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                 mCurrentSelectItem?.let { item ->
                     mSendBookshelfAddList.clear()
                     mSendBookshelfAddList.add(item)
-                    viewModelScope.launch {
-                        _dialogBottomBookshelfContentsAdd.emit(mMainInformationResult.getBookShelvesList())
-                    }
+                    _dialogBottomBookshelfContentsAdd.value = mMainInformationResult.getBookShelvesList()
                 }
             }
             else -> {}
@@ -336,7 +316,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     private fun startCurrentSelectMovieActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Movie ID : " + item.getID())
+            Log.f("Movie ID : " + item.id)
             val sendItemList = ArrayList<ContentsBaseResult>()
             sendItemList.add(item)
             val playerParamsObject = PlayerIntentParamsObject(sendItemList)
@@ -352,8 +332,8 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     private fun startQuizActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Quiz ID : " + item.getID())
-            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.getID())
+            Log.f("Quiz ID : " + item.id)
+            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.id)
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.QUIZ)
                 .setData(quizIntentParamsObject)
@@ -369,7 +349,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         mCurrentSelectItem?.let { item ->
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-                .setData(item.getID())
+                .setData(item.id)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
                 .startActivity()
         }
@@ -380,7 +360,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -397,7 +377,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         mCurrentSelectItem?.let { item ->
             val title = item.getVocabularyName()
             val myVocabularyResult = MyVocabularyResult(
-                item.getID(),
+                item.id,
                 title,
                 VocabularyType.VOCABULARY_CONTENTS)
 
@@ -413,7 +393,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -427,7 +407,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -442,9 +422,9 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         Log.f("")
         mCurrentSelectItem?.let { item ->
             val data = FlashcardDataObject(
-                item.getID(),
-                item.getName(),
-                item.getSubName(),
+                item.id,
+                item.name,
+                item.sub_name,
                 VocabularyType.VOCABULARY_CONTENTS
             )
 
@@ -491,10 +471,10 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
             mCurrentSearchListBaseResult = null
 
             viewModelScope.launch {
-                _isContentsLoading.emit(true)
+                _isContentsLoading.value = true
                 mCurrentSearchType = searchType
                 searchDataList()
-                _isContentsLoading.emit(false)
+                _isContentsLoading.value = false
             }
         }
     }
@@ -504,19 +484,17 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         Log.f("keyword : $keyword")
         if(keyword.trim().length < 2)
         {
-            viewModelScope.launch {
-                _errorMessage.emit(mContext.resources.getString(R.string.message_warning_search_input_2_or_more))
-            }
+            _errorMessage.value = mContext.resources.getString(R.string.message_warning_search_input_2_or_more)
             return
         }
         mRequestPagePosition = 1
         mCurrentSearchListBaseResult = null
 
         viewModelScope.launch {
-            _isContentsLoading.emit(true)
+            _isContentsLoading.value = true
             mCurrentKeyword = keyword
             searchDataList()
-            _isContentsLoading.emit(false)
+            _isContentsLoading.value = false
         }
 
     }
@@ -536,18 +514,16 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
 
     private fun onClickItemThumbnail(item: ContentsBaseResult)
     {
-        Log.f("index : ${item.getID()}")
+        Log.f("index : ${item.id}")
         mCurrentSelectItem = item
         startCurrentSelectMovieActivity()
     }
 
     private fun onClickItemOption(item: ContentsBaseResult)
     {
-        Log.f("index : ${item.getID()}")
+        Log.f("index : ${item.id}")
         mCurrentSelectItem = item
-        viewModelScope.launch {
-            _dialogBottomOption.emit(item)
-        }
+        _dialogBottomOption.value = item
     }
 
 
@@ -559,9 +535,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
             {
                 DialogButtonType.BUTTON_1 ->
                 {
-                    viewModelScope.launch {
-                        _errorMessage.emit(mContext.getString(R.string.message_warning_record_permission))
-                    }
+                    _errorMessage.value = mContext.getString(R.string.message_warning_record_permission)
                 }
                 DialogButtonType.BUTTON_2 ->
                 {

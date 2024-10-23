@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -59,8 +60,8 @@ fun IntroScreenV(
     onEvent : (IntroEvent) -> Unit
 )
 {
-    val bottomTypeState by viewModel.bottomType.collectAsState(initial = IntroViewMode.DEFAULT)
-    val percentProgressState by viewModel.progressPercent.collectAsState(initial = 0f)
+    val bottomTypeState by viewModel.bottomType.observeAsState(initial = IntroViewMode.DEFAULT)
+    val percentProgressState by viewModel.progressPercent.observeAsState(initial = 0f)
 
 
     val context = LocalContext.current

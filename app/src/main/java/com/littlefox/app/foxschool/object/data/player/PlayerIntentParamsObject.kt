@@ -19,9 +19,9 @@ class PlayerIntentParamsObject : Parcelable
         mHomeworkNumber = homeworkNumber
     }
 
-    protected constructor(`in` : Parcel)
+    private constructor(`in` : Parcel)
     {
-        `in`.readTypedList(mPlayInformationList as List<ContentsBaseResult?>, ContentsBaseResult.CREATOR)
+        `in`.readTypedList(mPlayInformationList as List<ContentsBaseResult>, ContentsBaseResult.CREATOR)
         mHomeworkNumber = `in`.readInt()
     }
 
@@ -40,20 +40,16 @@ class PlayerIntentParamsObject : Parcelable
         return 0
     }
 
-    companion object
+    companion object CREATOR : Parcelable.Creator<PlayerIntentParamsObject>
     {
-        @JvmField
-        val CREATOR : Parcelable.Creator<PlayerIntentParamsObject?> = object : Parcelable.Creator<PlayerIntentParamsObject?>
+        override fun createFromParcel(`in` : Parcel) : PlayerIntentParamsObject
         {
-            override fun createFromParcel(`in` : Parcel) : PlayerIntentParamsObject?
-            {
-                return PlayerIntentParamsObject(`in`)
-            }
+            return PlayerIntentParamsObject(`in`)
+        }
 
-            override fun newArray(size : Int) : Array<PlayerIntentParamsObject?>
-            {
-                return arrayOfNulls(size)
-            }
+        override fun newArray(size : Int) : Array<PlayerIntentParamsObject?>
+        {
+            return arrayOfNulls(size)
         }
     }
 }

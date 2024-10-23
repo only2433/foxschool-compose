@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,29 +16,18 @@ import kotlinx.coroutines.flow.StateFlow
 
 abstract class BaseViewModel : ViewModel()
 {
-    protected val _toast = MutableSharedFlow<String>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val toast: SharedFlow<String> = _toast
+    protected val _toast = SingleLiveEvent<String>()
+    val toast: LiveData<String> get() = _toast
 
-    protected val _successMessage = MutableSharedFlow<String>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val successMessage: SharedFlow<String> = _successMessage
+    protected val _successMessage = SingleLiveEvent<String>()
+    val successMessage: LiveData<String> get() = _successMessage
 
-    protected val _errorMessage = MutableSharedFlow<String>(
-        replay = 0,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val errorMessage: SharedFlow<String> = _errorMessage
+    protected val _errorMessage = SingleLiveEvent<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
 
-    protected val _isLoading = MutableSharedFlow<Boolean>(
-        replay = 1,
-        extraBufferCapacity = 1,
-        onBufferOverflow = BufferOverflow.DROP_LATEST)
-    val isLoading: SharedFlow<Boolean> = _isLoading
+    protected val _isLoading = SingleLiveEvent<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
 
     abstract fun init(context : Context)
     abstract fun onHandleViewEvent(event: BaseEvent)

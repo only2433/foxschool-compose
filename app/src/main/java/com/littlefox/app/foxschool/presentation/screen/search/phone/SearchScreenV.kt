@@ -39,6 +39,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -80,7 +81,7 @@ fun SearchScreen(
     onEvent: (BaseEvent) -> Unit
 ) {
     val searchedItemList = viewModel.searchItemList.collectAsLazyPagingItems()
-    val isContentsLoading by viewModel.isContentsLoading.collectAsState(initial = false)
+    val isContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
     val focusManager = LocalFocusManager.current
     var searchType by remember { mutableStateOf(SearchType.ALL) }
     var shouldAnimate by remember { mutableStateOf(false) }

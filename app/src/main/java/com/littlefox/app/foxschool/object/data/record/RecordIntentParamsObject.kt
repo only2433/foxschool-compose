@@ -28,9 +28,9 @@ class  RecordIntentParamsObject : Parcelable
 
     constructor(content : ContentsBaseResult)
     {
-        this.id = content.getID()
-        this.name = content.getName()
-        this.sub_name = content.getSubName()
+        this.id = content.id
+        this.name = content.name
+        this.sub_name = content.sub_name
     }
 
     constructor(content : ContentsBaseResult, homeworkNo : Int) : this(content)

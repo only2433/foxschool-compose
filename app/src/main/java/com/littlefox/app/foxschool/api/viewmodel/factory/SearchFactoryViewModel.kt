@@ -272,7 +272,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     private fun startCurrentSelectMovieActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Movie ID : " + item.getID())
+            Log.f("Movie ID : " + item.id)
             val sendItemList = ArrayList<ContentsBaseResult>()
             sendItemList.add(item)
             val playerParamsObject = PlayerIntentParamsObject(sendItemList)
@@ -288,8 +288,8 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     private fun startQuizActivity()
     {
         mCurrentSelectItem?.let { item ->
-            Log.f("Quiz ID : " + item.getID())
-            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.getID())
+            Log.f("Quiz ID : " + item.id)
+            val quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(item.id)
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.QUIZ)
                 .setData(quizIntentParamsObject)
@@ -305,7 +305,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         mCurrentSelectItem?.let { item ->
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_ORIGIN_TRANSLATE)
-                .setData(item.getID())
+                .setData(item.id)
                 .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
                 .startActivity()
         }
@@ -316,7 +316,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_EBOOK)
@@ -333,7 +333,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         mCurrentSelectItem?.let { item ->
             val title = item.getVocabularyName()
             val myVocabularyResult = MyVocabularyResult(
-                item.getID(),
+                item.id,
                 title,
                 VocabularyType.VOCABULARY_CONTENTS)
 
@@ -349,7 +349,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_STARWORDS)
@@ -363,7 +363,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         Log.f("")
         mCurrentSelectItem?.let { item ->
-            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.getID())
+            val data : WebviewIntentParamsObject = WebviewIntentParamsObject(item.id)
 
             IntentManagementFactory.getInstance()
                 .readyActivityMode(ActivityMode.WEBVIEW_GAME_CROSSWORD)
@@ -378,9 +378,9 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         Log.f("")
         mCurrentSelectItem?.let { item ->
             val data = FlashcardDataObject(
-                item.getID(),
-                item.getName(),
-                item.getSubName(),
+                item.id,
+                item.name,
+                item.sub_name,
                 VocabularyType.VOCABULARY_CONTENTS
             )
 
@@ -566,14 +566,14 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
     {
         override fun onItemClickThumbnail(item : ContentsBaseResult)
         {
-            Log.f("index : ${item.getID()}")
+            Log.f("index : ${item.id}")
             mCurrentSelectItem = item
             startCurrentSelectMovieActivity()
         }
 
         override fun onItemClickOption(item : ContentsBaseResult)
         {
-            Log.f("index : ${item.getID()}")
+            Log.f("index : ${item.id}")
             mCurrentSelectItem = item
             _dialogBottomOption.value = item
         }

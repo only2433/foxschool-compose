@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -64,8 +65,8 @@ fun SubMyBooksScreenV(
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val mainMyBooksInformationResult by viewModel.updateMyBooksData.collectAsStateWithLifecycle(
-        initialValue = MainInformationResult()
+    val mainMyBooksInformationResult by viewModel.updateMyBooksData.observeAsState(
+        initial = MainInformationResult()
     )
 
     var bookType by remember {
