@@ -326,7 +326,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     override fun destroy()
     {
-
+        Log.f("")
     }
 
     private fun requestDetailInformation()
@@ -711,10 +711,12 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private fun onSelectItem(index : Int)
     {
         // 현재 선택 상태를 반전
-        val currentSelected = mCurrentContentsItemList[index].isSelected
-        mCurrentContentsItemList[index] = mCurrentContentsItemList[index].copy(
-            isSelected = !currentSelected
-        )
+        mCurrentContentsItemList.forEachIndexed{ position, item ->
+            if(position == index)
+            {
+                item.isSelected = !item.isSelected
+            }
+        }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
         _contentsList.value = ArrayList<ContentsBaseResult>()
@@ -746,6 +748,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
+        _contentsList.value = ArrayList<ContentsBaseResult>()
         _contentsList.value = mCurrentContentsItemList
 
         if(isSelected)

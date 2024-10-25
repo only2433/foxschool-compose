@@ -43,6 +43,7 @@ import com.littlefox.app.foxschool.presentation.common.getDp
 fun BuildBottomSelectBarLayout(
     modifier : Modifier = Modifier,
     isVisible: Boolean,
+    isBookshelfMode: Boolean = false,
     isSelectedItemCount: Int = 0,
     onClickAll: () -> Unit,
     onClickPlay: () -> Unit,
@@ -264,7 +265,11 @@ fun BuildBottomSelectBarLayout(
                     )
                     {
                         Image(
-                            painter = painterResource(id = R.drawable.bottom_bookshelf),
+                            painter = painterResource(
+                                id = when(isBookshelfMode){
+                                    true -> R.drawable.bottom_delete
+                                    false -> R.drawable.bottom_bookshelf
+                                }),
                             contentScale = ContentScale.Fit,
                             contentDescription = "Click Bookshelf"
                         )
@@ -280,7 +285,11 @@ fun BuildBottomSelectBarLayout(
                     )
                     {
                         Text(
-                            text = stringResource(id = R.string.text_contain_bookshelf),
+                            text = stringResource(
+                                id = when(isBookshelfMode){
+                                    true -> R.string.text_delete
+                                    false -> R.string.text_contain_bookshelf
+                                }),
                             style = TextStyle(
                                 color = colorResource(id = R.color.color_ffffff),
                                 fontSize = 14.sp,

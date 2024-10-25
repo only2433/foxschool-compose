@@ -19,6 +19,7 @@ import com.littlefox.app.foxschool.enumerate.DrawerMenu
 import com.littlefox.app.foxschool.enumerate.MyBooksType
 import com.littlefox.app.foxschool.enumerate.SwitchButtonType
 import com.littlefox.app.foxschool.enumerate.TransitionType
+import com.littlefox.app.foxschool.enumerate.VocabularyType
 
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
@@ -162,6 +163,13 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                         booksType = MyBooksType.VOCABULARY_MODIFY
                     )
                 )
+            }
+
+            is MainEvent.onEnterBookshelfList ->{
+                startMyBookshelfList(event.index)
+            }
+            is MainEvent.onEnterVocabularyList ->{
+                startMyVocabularyList(event.index)
             }
 
             is MainEvent.onClickDrawerItem -> {
@@ -388,6 +396,45 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             .readyActivityMode(ActivityMode.HOMEWORK_MANAGE)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
+    }
+
+    fun startMyBookshelfList(index : Int)
+    {
+        Log.f("onEnterBookshelfList : $index")
+        if(mMainInformationResult.getBookShelvesList().get(index).getContentsCount() > 0)
+        {
+            Log.f("Enter Bookshelf : " + mMainInformationResult.getBookShelvesList().get(index).getName())
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.BOOKSHELF)
+                .setData(mMainInformationResult.getBookShelvesList()[index])
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+        else
+        {
+            Log.f("Empty Bookshelf")
+            _errorMessage.value = mContext.resources.getString(R.string.message_empty_bookshelf_contents)
+        }
+    }
+
+    fun startMyVocabularyList(index : Int)
+    {
+        Log.f("onEnterVocabularyList : $index")
+        if(mMainInformationResult.getVocabulariesList().get(index).getWordCount() > 0)
+        {
+            Log.f("Enter Vocabulary : " + mMainInformationResult.getVocabulariesList().get(index).getName())
+            mMainInformationResult.getVocabulariesList().get(index)
+                .setVocabularyType(VocabularyType.VOCABULARY_SHELF)
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.VOCABULARY)
+                .setData(mMainInformationResult.getVocabulariesList().get(index))
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        } else
+        {
+            Log.f("Empty Vocabulary")
+            _errorMessage.value = mContext.resources.getString(R.string.message_empty_vocabulary_contents)
+        }
     }
 
 

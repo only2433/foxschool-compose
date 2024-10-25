@@ -134,18 +134,18 @@ class SeriesContentsListActivity : BaseActivity()
     }
 
     private fun showChangeRecordPermissionDialog()
-    {
-        mTemplateAlertDialog = TemplateAlertDialog(this).apply {
-            setMessage(resources.getString(R.string.message_record_permission))
-            setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
-            setButtonType(DialogButtonType.BUTTON_2)
-            setButtonText(
-                resources.getString(R.string.text_cancel),
-                resources.getString(R.string.text_change_permission))
-            setDialogListener(mDialogListener)
-            show()
-        }
+{
+    mTemplateAlertDialog = TemplateAlertDialog(this).apply {
+        setMessage(resources.getString(R.string.message_record_permission))
+        setDialogEventType(PlayerFactoryViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+        setButtonType(DialogButtonType.BUTTON_2)
+        setButtonText(
+            resources.getString(R.string.text_cancel),
+            resources.getString(R.string.text_change_permission))
+        setDialogListener(mDialogListener)
+        show()
     }
+}
 
     private fun showBottomContentItemDialog(result : ContentsBaseResult)
     {

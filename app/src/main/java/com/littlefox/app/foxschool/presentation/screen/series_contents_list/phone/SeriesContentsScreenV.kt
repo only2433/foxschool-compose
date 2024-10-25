@@ -217,7 +217,7 @@ fun SeriesContentsScreenV(
                                     )
                                 }
                                 BuildContentsListItem(data = item,
-                                    itemColor = prepareData.titleColor,
+                                    itemIndexColor = prepareData.titleColor,
                                     onBackgroundClick = {
                                         Log.i("onBackgroundClick : $index")
                                         onEvent(

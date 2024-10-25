@@ -48,6 +48,78 @@ import androidx.compose.ui.graphics.Color as ComposeColor
 import android.graphics.Color as AndroidColor
 
 @Composable
+fun TopBarBackLayout(
+    title: String,
+    backgroundColor: Color,
+    onBackEvent: () -> Unit
+)
+{
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(
+                getDp(pixel = 166)
+            )
+            .background(
+                color = backgroundColor
+            ),
+    )
+    {
+        Box (
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ){
+            Text(
+                text = title,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.color_ffffff),
+                    fontFamily = FontFamily(
+                        Font(
+                            resId = R.font.roboto_bold
+                        )
+                    ),
+                    textAlign = TextAlign.Center
+                ),
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .width(
+                    getDp(pixel = 166)
+                )
+                .height(
+                    getDp(pixel = 166)
+                )
+                .align(Alignment.CenterStart) // Box의 오른쪽 끝에 정렬
+                .padding(end = 10.dp)
+                .clickable(
+                    interactionSource = remember {MutableInteractionSource()},
+                    indication = null, // 클릭 시 효과 제거
+                    onClick = onBackEvent // 클릭 이벤트에 콜백 연결
+                ),
+        )
+        {
+            Image(
+                painter = painterResource(id = R.drawable.top_pre),
+                contentDescription = "Back Icon",
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 48)
+                    )
+                    .height(
+                        getDp(pixel = 48)
+                    )
+                    .align(Alignment.Center)
+
+            )
+        }
+    }
+}
+
+@Composable
 fun TopBarCloseLayout(
     title: String,
     backgroundColor : Color,

@@ -156,7 +156,7 @@ fun SeriesGridViewItem(
 @Composable
 fun BuildContentsListItem(
     data: ContentsBaseResult,
-    itemColor : String,
+    itemIndexColor : String = "",
     onBackgroundClick: () -> Unit,
     onThumbnailClick: () -> Unit,
     onOptionClick: () -> Unit
@@ -164,13 +164,10 @@ fun BuildContentsListItem(
 {
     Log.i("data selected : ${data.isSelected}, text : ${data.getContentsName()}")
 
-    var indexColor: Color;
-    try {
-        indexColor = Color(android.graphics.Color.parseColor(itemColor))
-        // Use the color
-    } catch (e: Exception) {
-        // Handle invalid color, e.g., use a default color
-        indexColor = Color.LightGray
+    var indexColor: Color = Color.LightGray;
+    if(itemIndexColor != "")
+    {
+        indexColor = Color(android.graphics.Color.parseColor(itemIndexColor))
     }
 
     val backgroundColor = remember {
@@ -209,9 +206,7 @@ fun BuildContentsListItem(
             .clickable(
                 interactionSource = remember {
                     MutableInteractionSource()
-                },
-                indication = null,
-                onClick = onBackgroundClick
+                }, indication = null, onClick = onBackgroundClick
             ),
         contentAlignment = Alignment.CenterStart
     )
@@ -260,31 +255,35 @@ fun BuildContentsListItem(
                     )
             )
 
-            Box(
-                modifier = Modifier
-                    .width(
-                        getDp(pixel = 80)
-                    )
-                    .height(
-                        getDp(pixel = 182)
-                    ),
-                contentAlignment = Alignment.Center
-            )
+            if(itemIndexColor != "")
             {
-                Text(
-                    text = if(data.index < 10)  "0${data.index}" else "${data.index}",
-                    style = TextStyle(
-                        color = indexColor,
-                        textAlign = TextAlign.Center,
-                        fontSize = 14.sp,
-                        fontFamily = FontFamily(
-                            Font(
-                                resId = R.font.roboto_medium
+                Box(
+                    modifier = Modifier
+                        .width(
+                            getDp(pixel = 80)
+                        )
+                        .height(
+                            getDp(pixel = 182)
+                        ),
+                    contentAlignment = Alignment.Center
+                )
+                {
+                    Text(
+                        text = if(data.index < 10)  "0${data.index}" else "${data.index}",
+                        style = TextStyle(
+                            color = indexColor,
+                            textAlign = TextAlign.Center,
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily(
+                                Font(
+                                    resId = R.font.roboto_medium
+                                )
                             )
                         )
                     )
-                )
+                }
             }
+
 
             Spacer(
                 modifier = Modifier
@@ -334,6 +333,15 @@ fun BuildContentsListItem(
                     .height(
                         getDp(pixel = 125)
                     )
+                    .offset(
+                        x = if(itemIndexColor != "")
+                        {
+                            getDp(pixel = 0)
+                        } else
+                        {
+                            getDp(pixel = 80)
+                        }
+                    )
                     .clickable(
                         interactionSource = remember {
                             MutableInteractionSource()
@@ -354,8 +362,6 @@ fun BuildContentsListItem(
                     contentDescription = "Option Icon"
                 )
             }
-
-
         }
     }
 }

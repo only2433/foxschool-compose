@@ -217,7 +217,7 @@ class BookshelfFactoryViewModel @Inject constructor(private val apiViewModel : B
     override fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
         mResultLauncherList = arrayListOf()
-        mResultLauncherList.add(launchers.get(0))
+        mResultLauncherList.add(launchers[0])
     }
 
     override fun onActivityResult(code : ResultLauncherCode, intent : Intent?)

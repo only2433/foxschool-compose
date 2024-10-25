@@ -453,7 +453,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
             .readyActivityMode(ActivityMode.LOGIN)
             .setData(isLoginFromMain)
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-            .setResultLauncher(mResultLauncherList.get(0))
+            .setResultLauncher(mResultLauncherList[0])
             .startActivity()
     }
 
@@ -524,7 +524,7 @@ class IntroFactoryViewModel @Inject constructor(private val apiViewModel : Intro
     override fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
         mResultLauncherList = arrayListOf()
-        mResultLauncherList.add(launchers.get(0))
+        mResultLauncherList.add(launchers[0])
     }
 
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)

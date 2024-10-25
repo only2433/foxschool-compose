@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -141,13 +142,20 @@ fun SubMyBooksScreenV(
                 if(bookshelfItemList.value.isNotEmpty())
                 {
                     LazyColumn{
-                        items(bookshelfItemList.value){ item ->
-
-                            BuildBookshelfItem(item){
-                                onEvent(
-                                    MainEvent.onSettingBookshelf(item)
+                        itemsIndexed(bookshelfItemList.value, key= {_, item -> item.getID()}){ index, item ->
+                            BuildBookshelfItem(
+                                data = item,
+                                onItemClick = {
+                                    onEvent(
+                                        MainEvent.onEnterBookshelfList(index)
+                                    )
+                                },
+                                onOptionClick = {
+                                    onEvent(
+                                        MainEvent.onSettingBookshelf(item)
+                                    )
+                                }
                                 )
-                            }
                         }
                     }
 
@@ -297,6 +305,7 @@ fun SubMyBooksScreenV(
 @Composable
 fun BuildBookshelfItem(
     data: MyBookshelfResult,
+    onItemClick: () -> Unit,
     onOptionClick: () -> Unit
 )
 {
@@ -307,10 +316,14 @@ fun BuildBookshelfItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .height(
+            modifier = Modifier.fillMaxSize().height(
                     getDp(pixel = 170)
+                )
+                .clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()},
+                    indication = null,
+                    onClick = onItemClick
                 ),
         )
         {
