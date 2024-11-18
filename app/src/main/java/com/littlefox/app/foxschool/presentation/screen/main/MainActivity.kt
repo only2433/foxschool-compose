@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.presentation.screen.main
 
 import MainScreenV
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
@@ -35,10 +36,10 @@ class MainActivity : BaseActivity()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         viewModel.init(this)
         setupObserverViewModel()
-
         setContent {
             MainScreenV(
                 viewModel = viewModel,

@@ -121,13 +121,14 @@ fun TopBarBackLayout(
 
 @Composable
 fun TopBarCloseLayout(
+    modifier : Modifier = Modifier,
     title: String,
     backgroundColor : Color,
     onClickEvent: () -> Unit
 )
 {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(
                 getDp(pixel = 166)

@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main
 
+import VocabularySelectData
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -19,7 +20,6 @@ import butterknife.BindView
 import butterknife.ButterKnife
 import butterknife.OnClick
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.adapter.VocabularyItemListAdapter
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
@@ -438,7 +438,7 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
      */
     override fun checkIconStatusMenu(vocabularySelectData : VocabularySelectData)
     {
-        if(vocabularySelectData.isSelectAll())
+        if(vocabularySelectData.isCheckAll())
         {
             Log.f("Check ALL")
             _CheckAllIcon.setImageResource(R.drawable.check_on)
@@ -448,13 +448,13 @@ class VocabularyActivity : BaseActivity(), VocabularyContract.View, MessageHandl
         }
         else
         {
-            Log.f("Check word: " + vocabularySelectData.isSelectedWord())
-            Log.f("Check meaning: " + vocabularySelectData.isSelectedMeaning())
-            Log.f("Check example: " + vocabularySelectData.isSelectedExample())
+            Log.f("Check word: " + vocabularySelectData.isSelectedWord)
+            Log.f("Check meaning: " + vocabularySelectData.isSelectedMeaning)
+            Log.f("Check example: " + vocabularySelectData.isSelectedExample)
             _CheckAllIcon.setImageResource(R.drawable.check_off)
-            _CheckWordIcon.setImageResource(if(vocabularySelectData.isSelectedWord()) R.drawable.check_on else R.drawable.check_off)
-            _CheckMeaningIcon.setImageResource(if(vocabularySelectData.isSelectedMeaning()) R.drawable.check_on else R.drawable.check_off)
-            _CheckExampleIcon.setImageResource(if(vocabularySelectData.isSelectedExample()) R.drawable.check_on else R.drawable.check_off)
+            _CheckWordIcon.setImageResource(if(vocabularySelectData.isSelectedWord) R.drawable.check_on else R.drawable.check_off)
+            _CheckMeaningIcon.setImageResource(if(vocabularySelectData.isSelectedMeaning) R.drawable.check_on else R.drawable.check_off)
+            _CheckExampleIcon.setImageResource(if(vocabularySelectData.isSelectedExample) R.drawable.check_on else R.drawable.check_off)
         }
     }
 

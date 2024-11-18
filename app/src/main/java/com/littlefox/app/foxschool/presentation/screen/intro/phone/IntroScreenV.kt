@@ -18,14 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -44,7 +38,6 @@ import androidx.compose.ui.unit.sp
 
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.enumerate.IntroViewMode
-import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.IntroViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
@@ -60,21 +53,20 @@ fun IntroScreenV(
     onEvent : (IntroEvent) -> Unit
 )
 {
-    val bottomTypeState by viewModel.bottomType.observeAsState(initial = IntroViewMode.DEFAULT)
-    val percentProgressState by viewModel.progressPercent.observeAsState(initial = 0f)
-
-
     val context = LocalContext.current
     val density = LocalDensity.current
-    val colorStart  = Color(0xFF47E1AD)
-    val colorEnd    = Color(0xFF29C8E6)
+
+    val _bottomTypeState by viewModel.bottomType.observeAsState(initial = IntroViewMode.DEFAULT)
+    val _percentProgressState by viewModel.progressPercent.observeAsState(initial = 0f)
+    val _colorStart  = Color(0xFF47E1AD)
+    val _colorEnd    = Color(0xFF29C8E6)
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
-                    colors = listOf(colorStart, colorEnd)
+                    colors = listOf(_colorStart, _colorEnd)
                 )
             ),
     )
@@ -127,7 +119,7 @@ fun IntroScreenV(
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            when(bottomTypeState)
+            when(_bottomTypeState)
             {
                 IntroViewMode.SELECT -> {
                     BuildSelectLayout(
@@ -137,7 +129,7 @@ fun IntroScreenV(
                 IntroViewMode.PROGRESS -> {
                     LogoFrameAnimationView()
                     IntroProgressBar(
-                        percent = percentProgressState,
+                        percent = _percentProgressState,
                         width = 888,
                         height = 50,
                         progressColor = colorResource(id = R.color.color_alpha_white))

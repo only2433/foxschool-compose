@@ -12,10 +12,11 @@ import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.SeriesContentsListApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.coroutine.BookshelfContentAddCoroutine
+import com.littlefox.app.foxschool.common.Event
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -37,22 +38,15 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
+import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.internal.filterList
-import java.util.Collections
 
 import javax.inject.Inject
 
@@ -60,12 +54,14 @@ import javax.inject.Inject
 @HiltViewModel
 class SeriesContentsListViewModel @Inject constructor(private val apiViewModel : SeriesContentsListApiViewModel) : BaseViewModel()
 {
+    private val _contentsList = SingleLiveEvent<EventWrapper<ArrayList<ContentsBaseResult>>>()
+    val contentsList: LiveData<EventWrapper<ArrayList<ContentsBaseResult>>> get() = _contentsList
+
+    private val _itemSelectedCount = SingleLiveEvent<EventWrapper<Int>>()
+    val itemSelectedCount: LiveData<EventWrapper<Int>> get() = _itemSelectedCount
 
     private val _isContentsLoading = SingleLiveEvent<Boolean>()
     val isContentsLoading: LiveData<Boolean> get() = _isContentsLoading
-
-    private val _contentsList = SingleLiveEvent<ArrayList<ContentsBaseResult>>()
-    val contentsList: LiveData<ArrayList<ContentsBaseResult>> get() = _contentsList
 
     private val _isSingleSeries = SingleLiveEvent<Boolean>()
     val isSingleSeries: LiveData<Boolean> get() = _isSingleSeries
@@ -84,9 +80,6 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
     private val _statusBarColor = SingleLiveEvent<String>()
     val statusBarColor: LiveData<String> get() = _statusBarColor
-
-    private val _itemSelectedCount = SingleLiveEvent<Int>()
-    val itemSelectedCount: LiveData<Int> get() = _itemSelectedCount
 
     private val _dialogBottomOption = SingleLiveEvent<ContentsBaseResult>()
     val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
@@ -152,30 +145,43 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         when(event)
         {
-            is SeriesContentsListEvent.onClickSelectAll ->
+            is SeriesContentsListEvent.onClickBottomBarMenu ->
             {
-                checkSelectedItemAll(
-                    isSelected = true
-                )
-            }
-            is SeriesContentsListEvent.onClickSelectPlay ->
-            {
-                startSelectedListMovieActivity()
-            }
-            is SeriesContentsListEvent.onClickAddBookshelf ->
-            {
-                addContentsListInBookshelf()
-            }
-            is SeriesContentsListEvent.onClickCancel ->
-            {
-                checkSelectedItemAll(
-                    isSelected = false
-                )
+                when(event.menu)
+                {
+                    ContentsListBottomBarMenu.SELECT_ALL ->
+                    {
+                        checkSelectedItemAll(
+                            isSelected = true
+                        )
+                    }
+                    ContentsListBottomBarMenu.SELECT_PLAY ->
+                    {
+                        startSelectedListMovieActivity()
+                    }
+                    ContentsListBottomBarMenu.BOOKSHELF_ADD ->
+                    {
+                        addContentsListInBookshelf()
+                    }
+                    ContentsListBottomBarMenu.CANCEL ->
+                    {
+                        checkSelectedItemAll(
+                            isSelected = false
+                        )
+                    }
+                    else -> {}
+                }
             }
 
             is SeriesContentsListEvent.onClickBottomContentsType ->
             {
-                checkBottomSelectItemType(event.type)
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main)
+                    {
+                        delay(Common.DURATION_NORMAL)
+                    }
+                    checkBottomSelectItemType(event.type)
+                }
             }
 
             is SeriesContentsListEvent.onSelectedItem ->
@@ -446,7 +452,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
             mCurrentContentsItemList.reverse()
         }
 
-        _contentsList.value = mCurrentContentsItemList
+        _contentsList.value = EventWrapper(mCurrentContentsItemList)
     }
 
     private fun checkLastWatchContents()
@@ -719,8 +725,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        _contentsList.value = ArrayList<ContentsBaseResult>()
-        _contentsList.value = mCurrentContentsItemList
+        _contentsList.value = EventWrapper(mCurrentContentsItemList)
 
 
         Log.i("index : $index , isSelected : ${mCurrentContentsItemList[index].isSelected}")
@@ -738,7 +743,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     private fun sendSelectedItem()
     {
         val selectedItemCount = mCurrentContentsItemList.count { it.isSelected }
-        _itemSelectedCount.value = selectedItemCount
+        _itemSelectedCount.value = EventWrapper(selectedItemCount)
     }
 
     private fun checkSelectedItemAll(isSelected : Boolean)
@@ -748,17 +753,16 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        _contentsList.value = ArrayList<ContentsBaseResult>()
-        _contentsList.value = mCurrentContentsItemList
+        _contentsList.value = EventWrapper(mCurrentContentsItemList)
 
         if(isSelected)
         {
-            _itemSelectedCount.value = mCurrentContentsItemList.size
+            _itemSelectedCount.value = EventWrapper(mCurrentContentsItemList.size)
 
         }
         else
         {
-            _itemSelectedCount.value = 0
+            _itemSelectedCount.value = EventWrapper(0)
         }
     }
 }

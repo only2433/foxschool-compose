@@ -45,6 +45,12 @@ object Injection
     }
 
     @Provides
+    fun provideCategoryListApiViewModel() : CategoryListApiViewModel
+    {
+        return CategoryListApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
     fun provideManagementMyBooksApiViewModel() : ManagementMyBooksApiViewModel
     {
         return ManagementMyBooksApiViewModel(provideFoxSchoolRepository())
@@ -72,6 +78,12 @@ object Injection
     fun provideBookshelfApiViewModel() : BookshelfApiViewModel
     {
         return BookshelfApiViewModel(provideFoxSchoolRepository())
+    }
+
+    @Provides
+    fun provideVocabularyApiViewModel() : VocabularyApiViewModel
+    {
+        return VocabularyApiViewModel(provideFoxSchoolRepository())
     }
 
     @Provides

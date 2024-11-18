@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.adapter
 
+import VocabularySelectData
 import android.content.Context
 import android.os.Build
 import android.text.Html
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.ButterKnife
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
+
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.adapter.listener.VocabularyItemListener
 import com.littlefox.app.foxschool.common.Common
@@ -102,7 +103,7 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
      */
     fun notifySelectContents(vocabularySelectData : VocabularySelectData)
     {
-        if(mVocabularySelectData.isSelectedWord() != vocabularySelectData.isSelectedWord())
+        if(mVocabularySelectData.isSelectedWord != vocabularySelectData.isSelectedWord)
         {
             isTitleDataChanged = true
         }
@@ -110,8 +111,8 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
         {
             isTitleDataChanged = false
         }
-        if(((mVocabularySelectData.isSelectedMeaning() != vocabularySelectData.isSelectedMeaning())
-                        || (mVocabularySelectData.isSelectedExample() != vocabularySelectData.isSelectedExample())))
+        if(((mVocabularySelectData.isSelectedMeaning != vocabularySelectData.isSelectedMeaning)
+                        || (mVocabularySelectData.isSelectedExample != vocabularySelectData.isSelectedExample)))
         {
             isContentsDataChanged = true
         }
@@ -214,7 +215,7 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
                 CONTENTS_WIDTH.toFloat(),
                 mVocabularyItemList[position].getContentViewSize().toFloat())
         mTitleText = ""
-        if(mVocabularySelectData.isSelectedWord())
+        if(mVocabularySelectData.isSelectedWord)
         {
             mTitleText = mVocabularyItemList[position].getWordText()
         }
@@ -223,13 +224,13 @@ class VocabularyItemListAdapter : RecyclerView.Adapter<VocabularyItemListAdapter
             mTitleText = ""
         }
         mContentsText = ""
-        if(mVocabularySelectData.isSelectedMeaning())
+        if(mVocabularySelectData.isSelectedMeaning)
         {
             mContentsText = mVocabularyItemList[position].getMeaningText()
         }
-        if(mVocabularySelectData.isSelectedExample())
+        if(mVocabularySelectData.isSelectedExample)
         {
-            if((mContentsText == "") == false)
+            if((mContentsText != ""))
             {
                 mContentsText += "<br>" + mVocabularyItemList[position].getExampleText()
             }

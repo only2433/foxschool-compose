@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.presentation.screen.bookshelf
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -33,10 +34,10 @@ class BookshelfActivity : BaseActivity()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
-        
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         viewModel.init(this)
         setupObserverViewModel()
-        
         setContent {
             BookshelfScreenV(
                 viewModel = viewModel,

@@ -12,6 +12,7 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
 import com.littlefox.app.foxschool.api.base.BaseResponse
 import com.littlefox.app.foxschool.common.Common
+
 import com.littlefox.app.foxschool.`object`.result.DetailItemInformationBaseObject
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.content.DetailItemInformationResult
@@ -23,6 +24,7 @@ import com.littlefox.app.foxschool.`object`.result.quiz.QuizInformationResult
 import com.littlefox.app.foxschool.`object`.result.search.SearchListResult
 import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
 import com.littlefox.app.foxschool.`object`.result.search.paging.SearchListPagingResult
+import com.littlefox.app.foxschool.`object`.result.story.StoryCategoryListResult
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import okhttp3.OkHttpClient
 import retrofit2.Response
@@ -88,6 +90,11 @@ interface ApiService
         @Path("data")  requestData : String
     ) : Response<BaseResponse<DetailItemInformationResult>>
 
+    @GET("contents/story/series/{data}")
+    suspend fun categoryListAsync(
+        @Path("data") requestData : String
+    ) : Response<BaseResponse<StoryCategoryListResult>>
+
     @FormUrlEncoded
     @POST("contents/player/save")
     suspend fun savePlayerStudyAsync(
@@ -150,10 +157,9 @@ interface ApiService
         @Path("vocabulary_id") vocabularyID: String
     ) : Response<BaseResponse<MyVocabularyResult>>
 
-
-    @GET("contents/vocabularies/{content_id}")
+    @GET("contents/vocabularies/{id}")
     suspend fun getVocabularyContentsList(
-        @Path("content_id") contentsID : String
+        @Path("id") contentsID : String
     ) : Response<BaseResponse<ArrayList<VocabularyDataResult>>>
 
     @FormUrlEncoded
@@ -161,6 +167,14 @@ interface ApiService
     suspend fun addVocabularyContents(
         @Path("vocabulary_id") vocabularyID: String,
         @FieldMap queryMap : Map<String, String>
+    ) : Response<BaseResponse<MyVocabularyResult>>
+
+
+    @Headers("Content-Type: application/json")
+    @DELETE("contents/vocabularies/{vocabulary_id}/words")
+    suspend fun deleteVocabularyContents(
+        @Path("vocabulary_id") vocabularyID : String,
+        @QueryMap queryMap : Map<String, String>
     ) : Response<BaseResponse<MyVocabularyResult>>
 
     @GET("contents/bookshelves/{bookshelf_id}")
@@ -175,6 +189,7 @@ interface ApiService
         @FieldMap queryMap : Map<String, String>
     ) : Response<BaseResponse<MyBookshelfResult>>
 
+    @Headers("Content-Type: application/json")
     @DELETE("contents/bookshelves/{bookshelf_id}/contents")
     suspend fun deleteBookshelfContents(
         @Path("bookshelf_id") bookshelfID : String,
@@ -229,7 +244,6 @@ interface ApiService
         @Query("hw_no") homeworkNumber : Int
     ) : Response<BaseResponse<Nothing>>
 
-
     @FormUrlEncoded
     @POST("homeworks/student")
     suspend fun studentCommentUpdateAsync(
@@ -271,7 +285,6 @@ interface ApiService
         @Path("hw_no") homeworkNumber : Int
     ) : Response<BaseResponse<HomeworkDetailBaseResult>>
 
-
     @FormUrlEncoded
     @POST("homeworks/teacher")
     suspend fun teacherHomeworkCheckingAsync(
@@ -280,7 +293,6 @@ interface ApiService
         @Field("fu_id") userID : String,
         @Field("eval") evaluationState : String
     ) : Response<BaseResponse<Nothing>>
-
 
     @FormUrlEncoded
     @POST("homeworks/teacher")

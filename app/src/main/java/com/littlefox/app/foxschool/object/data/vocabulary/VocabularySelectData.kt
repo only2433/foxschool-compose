@@ -1,81 +1,47 @@
-package com.littlefox.app.foxschool.`object`.data.vocabulary
+data class VocabularySelectData(
+    var isSelectAll: Boolean = true,
+    var isSelectedWord: Boolean = true,
+    var isSelectedMeaning: Boolean = true,
+    var isSelectedExample: Boolean = true
+) {
 
-/**
- * Vocabulary 의 체크박스 버튼의 상태값의 전달을 위해 사용
- */
-class VocabularySelectData
-{
-    private var isSelectAll = false
-    private var isSelectedWord = false
-    private var isSelectedMeaning = false
-    private var isSelectedExample = false
+    constructor(data: VocabularySelectData) : this(
+        data.isSelectAll,
+        data.isSelectedWord,
+        data.isSelectedMeaning,
+        data.isSelectedExample
+    )
 
-    constructor()
+    fun setData(data: VocabularySelectData)
     {
-        isSelectAll = true
-        isSelectedWord = true
-        isSelectedMeaning = true
-        isSelectedExample = true
+        this.isSelectAll = data.isSelectAll
+        this.isSelectedWord = data.isSelectedWord
+        this.isSelectedMeaning = data.isSelectedMeaning
+        this.isSelectedExample = data.isSelectedExample
     }
 
-    fun setSelectWord()
-    {
+    fun setSelectWord() {
         isSelectedWord = !isSelectedWord
-    }
-
-    fun setSelectMeaning()
-    {
+        isSelectAll = isCheckAll()
+    }fun setSelectMeaning() {
         isSelectedMeaning = !isSelectedMeaning
+        isSelectAll = isCheckAll()
     }
 
-    fun setSelectExample()
-    {
+    fun setSelectExample() {
         isSelectedExample = !isSelectedExample
+        isSelectAll = isCheckAll()
     }
 
-    fun setSelectAll()
-    {
-        if(isSelectAll)
-        {
-            isSelectAll = false
-            isSelectedWord = false
-            isSelectedMeaning = false
-            isSelectedExample = false
-        }
-        else
-        {
-            isSelectAll = true
-            isSelectedWord = true
-            isSelectedMeaning = true
-            isSelectedExample = true
-        }
+    fun setSelectAll() {
+        isSelectAll = !isSelectAll
+        isSelectedWord = isSelectAll
+        isSelectedMeaning = isSelectAll
+        isSelectedExample = isSelectAll
     }
 
-    fun setData(vocabularySelectData : VocabularySelectData)
-    {
-        isSelectAll = vocabularySelectData.isSelectAll()
-        isSelectedWord = vocabularySelectData.isSelectedWord()
-        isSelectedMeaning = vocabularySelectData.isSelectedMeaning()
-        isSelectedExample = vocabularySelectData.isSelectedExample()
+    fun isCheckAll(): Boolean {
+        val result = isSelectedWord && isSelectedMeaning && isSelectedExample
+        return result
     }
-
-    fun isSelectAll() : Boolean
-    {
-        if(isSelectedWord && isSelectedMeaning && isSelectedExample)
-        {
-            isSelectAll = true
-        }
-        else
-        {
-            isSelectAll = false
-        }
-        return isSelectAll
-    }
-
-    fun isSelectedWord() : Boolean = isSelectedWord
-
-    fun isSelectedMeaning() : Boolean = isSelectedMeaning
-
-    fun isSelectedExample() : Boolean = isSelectedExample
-
 }

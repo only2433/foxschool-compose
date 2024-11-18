@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.presentation.screen.series_contents_list
 
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -50,10 +51,10 @@ class SeriesContentsListActivity : BaseActivity()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         viewModel.init(this)
         setupObserverViewModel()
-
         setContent{
             SeriesContentsScreenV(
                 viewModel = viewModel,
@@ -109,18 +110,13 @@ class SeriesContentsListActivity : BaseActivity()
     {
         super.onResume()
         viewModel.resume()
-
-
     }
 
     override fun onPause()
     {
         super.onPause()
         viewModel.pause()
-
     }
-
-
 
     override fun finish()
     {

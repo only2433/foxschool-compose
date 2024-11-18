@@ -1,5 +1,6 @@
 package com.littlefox.app.foxschool.main.presenter
 
+import VocabularySelectData
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -14,7 +15,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
-import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
 import com.littlefox.app.foxschool.`object`.result.VocabularyContentsBaseObject
 import com.littlefox.app.foxschool.`object`.result.VocabularyShelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.VocabularyShelfListItemBaseObject
@@ -805,7 +805,7 @@ class VocabularyPresenter : VocabularyContract.Presenter
         override fun onClickBook(index : Int)
         {
             Log.f("index : $index")
-            mCurrentVocabularyAddResult = mMainInformationResult.getVocabulariesList().get(index)
+            mCurrentVocabularyAddResult = mMainInformationResult.getVocabulariesList()[index]
             mRequestItemList.clear()
             mRequestItemList = mVocabularyItemListAdapter.selectedList
             mVocabularyContractView.showLoading()

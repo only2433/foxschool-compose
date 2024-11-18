@@ -37,7 +37,8 @@ import com.littlefox.app.foxschool.presentation.screen.series_contents_list.Seri
 import com.littlefox.app.foxschool.presentation.screen.search.SearchActivity
 import com.littlefox.app.foxschool.presentation.screen.management_mybooks.ManagementMyBooksActivity
 import com.littlefox.app.foxschool.presentation.screen.bookshelf.BookshelfActivity
-
+import com.littlefox.app.foxschool.presentation.screen.category_list.CategoryListActivity
+import com.littlefox.app.foxschool.presentation.screen.vocabulary.VocabularyActivity
 import com.littlefox.logmonitor.Log
 
 /**
@@ -211,7 +212,7 @@ class IntentManagementFactory
 
             ActivityMode.STORY_CATEGORY_LIST ->
             {
-                intent = Intent(mContext, StoryCategoryListActivity::class.java)
+                intent = Intent(mContext, CategoryListActivity::class.java)
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_STORY_CATEGORY_DATA, `object` as SeriesBaseResult?)

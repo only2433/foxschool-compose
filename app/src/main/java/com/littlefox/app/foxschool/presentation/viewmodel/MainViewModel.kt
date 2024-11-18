@@ -130,6 +130,11 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
                     event.seriesInformationResult
                 )
             }
+            is MainEvent.onClickStoryCategoriesItem -> {
+                startCategoriesContentsActivity(
+                    event.seriesInformationResult
+                )
+            }
 
             is MainEvent.onAddBookshelf -> {
                 startManagementMyBooksActivity(
@@ -243,7 +248,6 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
     private fun startSeriesContentsActivity(data : SeriesBaseResult)
     {
         Log.i("")
-
         data.setTransitionType(TransitionType.PAIR_IMAGE)
         data.setSeriesType(Common.CONTENT_TYPE_STORY)
         IntentManagementFactory.getInstance()
@@ -252,6 +256,19 @@ class MainViewModel @Inject constructor(private val apiViewModel : MainApiViewMo
             .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
             .startActivity()
     }
+
+    private fun startCategoriesContentsActivity(data : SeriesInformationResult)
+    {
+        Log.f("onClick StoryCategoryItem")
+        data.setTransitionType(TransitionType.PAIR_IMAGE)
+        IntentManagementFactory.getInstance()
+            .readyActivityMode(ActivityMode.STORY_CATEGORY_LIST)
+            .setData(data as SeriesBaseResult)
+            .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+            .startActivity()
+    }
+
+
 
     private fun startManagementMyBooksActivity(data : ManagementBooksData)
     {

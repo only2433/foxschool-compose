@@ -12,18 +12,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -43,7 +39,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -66,27 +61,23 @@ fun SubMyBooksScreenV(
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val mainMyBooksInformationResult by viewModel.updateMyBooksData.observeAsState(
+    val _mainMyBooksInformationResult by viewModel.updateMyBooksData.observeAsState(
         initial = MainInformationResult()
     )
-
-    var bookType by remember {
+    var _bookType by remember {
         mutableStateOf(BookType.BOOKSHELF)
     }
-
-    var currentListSize by remember {
+    var _currentListSize by remember {
         mutableStateOf(0)
     }
-
-    val bookshelfItemList = remember(mainMyBooksInformationResult) {
+    val _bookshelfItemList = remember(_mainMyBooksInformationResult) {
         derivedStateOf {
-            mainMyBooksInformationResult.getBookShelvesList()
+            _mainMyBooksInformationResult.getBookShelvesList()
         }
     }
-
-    val vocabularyItemList = remember(mainMyBooksInformationResult) {
+    val _vocabularyItemList = remember(_mainMyBooksInformationResult) {
         derivedStateOf {
-            mainMyBooksInformationResult.getVocabulariesList()
+            _mainMyBooksInformationResult.getVocabulariesList()
         }
     }
 
@@ -117,12 +108,12 @@ fun SubMyBooksScreenV(
 
                     if(switchButtonType == SwitchButtonType.FIRST_ITEM)
                     {
-                        bookType = BookType.BOOKSHELF
-                        currentListSize = bookshelfItemList.value.size
+                        _bookType = BookType.BOOKSHELF
+                        _currentListSize = _bookshelfItemList.value.size
                     } else
                     {
-                        bookType = BookType.VOCABULARY
-                        currentListSize = vocabularyItemList.value.size
+                        _bookType = BookType.VOCABULARY
+                        _currentListSize = _vocabularyItemList.value.size
                     }
                 }
             }
@@ -135,14 +126,14 @@ fun SubMyBooksScreenV(
                     .background(color = colorResource(id = R.color.color_dbdada))
             )
             
-            if(bookType == BookType.BOOKSHELF)
+            if(_bookType == BookType.BOOKSHELF)
             {
-                Log.i("size : ${bookshelfItemList.value.size}")
+                Log.i("size : ${_bookshelfItemList.value.size}")
 
-                if(bookshelfItemList.value.isNotEmpty())
+                if(_bookshelfItemList.value.isNotEmpty())
                 {
                     LazyColumn{
-                        itemsIndexed(bookshelfItemList.value, key= {_, item -> item.getID()}){ index, item ->
+                        itemsIndexed(_bookshelfItemList.value, key= {_, item -> item.getID()}){index, item ->
                             BuildBookshelfItem(
                                 data = item,
                                 onItemClick = {
@@ -159,7 +150,7 @@ fun SubMyBooksScreenV(
                         }
                     }
 
-                    if(currentListSize < Common.MAX_BOOKSHELF_SIZE)
+                    if(_currentListSize < Common.MAX_BOOKSHELF_SIZE)
                     {
                         Box(
                             modifier = Modifier
@@ -221,19 +212,26 @@ fun SubMyBooksScreenV(
             }
             else
             {
-                if(vocabularyItemList.value.isNotEmpty())
+                if(_vocabularyItemList.value.isNotEmpty())
                 {
                     LazyColumn{
-                        items(vocabularyItemList.value){ item ->
-                            BuildVocabularyItem(item) {
-                                onEvent(
-                                    MainEvent.onSettingVocabulary(item)
-                                )
-                            }
+                        itemsIndexed(_vocabularyItemList.value, key= {_, item -> item.getID()}){index, item ->
+                            BuildMyVocabularyShelfItem(
+                                data = item,
+                                onItemClick = {
+                                    onEvent(
+                                        MainEvent.onEnterVocabularyList(index)
+                                    )
+                                },
+                                onOptionClick = {
+                                    onEvent(
+                                        MainEvent.onSettingVocabulary(item)
+                                    )
+                                })
                         }
                     }
 
-                    if(currentListSize < Common.MAX_VOCABULARY_SIZE)
+                    if(_currentListSize < Common.MAX_VOCABULARY_SIZE)
                     {
                         Box(
                             modifier = Modifier
@@ -460,9 +458,10 @@ fun BuildBookshelfItem(
 }
 
 @Composable
-fun BuildVocabularyItem(
+fun BuildMyVocabularyShelfItem(
     data: MyVocabularyResult,
-    onClick: () -> Unit
+    onItemClick: () -> Unit,
+    onOptionClick: () -> Unit
 )
 {
     val context = LocalContext.current
@@ -472,10 +471,15 @@ fun BuildVocabularyItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize()
                 .height(
                     getDp(pixel = 170)
+                )
+                .clickable(interactionSource = remember { //
+                    MutableInteractionSource()
+                },
+                    indication = null,
+                    onClick = onItemClick
                 ),
         )
         {
@@ -577,7 +581,7 @@ fun BuildVocabularyItem(
                             MutableInteractionSource()
                         },
                         indication = null,
-                        onClick = onClick
+                        onClick = onOptionClick
                     ),
                 contentAlignment = Alignment.Center
             )

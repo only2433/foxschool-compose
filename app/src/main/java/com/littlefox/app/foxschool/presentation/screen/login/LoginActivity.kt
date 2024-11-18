@@ -2,6 +2,7 @@ package com.littlefox.app.foxschool.presentation.screen.login
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
@@ -36,10 +37,10 @@ class LoginActivity : BaseActivity()
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         viewModel.init(this)
         setupObserverViewModel()
-
         setContent {
             LoginScreenV(
                 viewModel = viewModel,

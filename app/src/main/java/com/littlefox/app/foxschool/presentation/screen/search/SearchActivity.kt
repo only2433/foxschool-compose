@@ -51,7 +51,7 @@ class SearchActivity : BaseActivity()
         }
         else
         {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         }
 
         viewModel.init(this)

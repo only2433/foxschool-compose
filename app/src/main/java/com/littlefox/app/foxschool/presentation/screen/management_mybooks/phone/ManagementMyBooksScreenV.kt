@@ -19,13 +19,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -43,18 +40,14 @@ import androidx.compose.ui.unit.sp
 import com.littlefox.app.foxschool.presentation.viewmodel.ManagementMyBooksViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.enumerate.BookColor
 import com.littlefox.app.foxschool.enumerate.MyBooksType
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.manage_mybooks.ManagementMyBooksEvent
-import com.littlefox.app.foxschool.presentation.widget.BlueOutlinedButton
-import com.littlefox.app.foxschool.presentation.widget.BlueRoundButton
 import com.littlefox.app.foxschool.presentation.widget.DeleteIconTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.LightBlueOutlinedButton
 import com.littlefox.app.foxschool.presentation.widget.LightBlueRoundButton
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
-import com.littlefox.logmonitor.Log
 
 @Composable
 fun ManagementMyBooksScreenV(
@@ -62,20 +55,19 @@ fun ManagementMyBooksScreenV(
     onEvent: (BaseEvent) -> Unit
 )
 {
-    val nameText = remember {
+    val focusManager = LocalFocusManager.current
+    val _managementData by viewModel.managementBooksData.observeAsState(initial = null)
+    val _nameText = remember {
         mutableStateOf("")
     }
-    val focusManager = LocalFocusManager.current
-    val managementData by viewModel.managementBooksData.observeAsState(initial = null)
-
-    var currentSelectColorIndex = remember {
+    var _currentSelectColorIndex = remember {
         mutableStateOf(0)
     }
 
-    LaunchedEffect(managementData) {
-        managementData?.let {
-            currentSelectColorIndex.value = getBookIndexFromColor(it.getColor())
-            nameText.value = it.getName()
+    LaunchedEffect(_managementData) {
+        _managementData?.let {
+            _currentSelectColorIndex.value = getBookIndexFromColor(it.getColor())
+            _nameText.value = it.getName()
         }
     }
 
@@ -91,7 +83,7 @@ fun ManagementMyBooksScreenV(
         Column{
 
             TopBarCloseLayout(
-                title = getTitleText(managementData),
+                title = getTitleText(_managementData),
                 backgroundColor = colorResource(id = R.color.color_23cc8a)) {
             }
 
@@ -111,7 +103,7 @@ fun ManagementMyBooksScreenV(
                         .offset(
                             x = getDp(pixel = 42)
                         ),
-                    text = getMessageText(data = managementData),
+                    text = getMessageText(data = _managementData),
                     style = TextStyle(
                         color = colorResource(id = R.color.color_444444),
                         fontFamily = FontFamily(
@@ -134,23 +126,23 @@ fun ManagementMyBooksScreenV(
             )
             {
                 DeleteIconTextFieldLayout(
-                    text = nameText.value,
+                    text = _nameText.value,
                     hintText = stringResource(id = R.string.message_edit_maximum_text),
                     width = 884,
                     height = 120,
                     onTextChange = { value ->
-                        nameText.value = value
+                        _nameText.value = value
                     },
                     onClickDelete = {
-                        nameText.value = ""
+                        _nameText.value = ""
                     }
                 )
             }
 
             BuildBookItemsLayout(
-                selectedIndex = currentSelectColorIndex.value,
+                selectedIndex = _currentSelectColorIndex.value,
                 onValueChange = {
-                    currentSelectColorIndex.value = it
+                    _currentSelectColorIndex.value = it
 
                     onEvent(
                         ManagementMyBooksEvent.onSelectBooksItem(
@@ -175,7 +167,7 @@ fun ManagementMyBooksScreenV(
                         ), text = stringResource(id = R.string.text_save)
                 ) {
                     onEvent(
-                        ManagementMyBooksEvent.onSelectSaveButton(nameText.value)
+                        ManagementMyBooksEvent.onSelectSaveButton(_nameText.value)
                     )
                 }
             }
@@ -198,7 +190,7 @@ fun ManagementMyBooksScreenV(
                     )
                     .height(
                         getDp(pixel = 120)
-                    ), text = managementData?.let {
+                    ), text = _managementData?.let {
                     when
                     {
                         it.getName().isNotEmpty() -> stringResource(id = R.string.text_delete)

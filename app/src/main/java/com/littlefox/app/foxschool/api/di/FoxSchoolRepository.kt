@@ -11,6 +11,7 @@ import com.littlefox.app.foxschool.api.base.safeApiCall
 import com.littlefox.app.foxschool.api.paging.ForumPagingSource
 import com.littlefox.app.foxschool.api.paging.SearchPagingSource
 import com.littlefox.app.foxschool.common.Common
+
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizStudyRecordData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
@@ -98,7 +99,12 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
         remote.songContentsListAsync(displayID)
     }
 
-
+    /**
+     * 카테고리 리스트 가져오기
+     */
+    suspend fun getCategoryList(displayID : String) = safeApiCall {
+        remote.categoryListAsync(displayID)
+    }
 
     /**
      * 학생 - 숙제관리(달력) 정보 가져오기
@@ -261,9 +267,10 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
 
     }
 
-    suspend fun getVocabularyContentsList(contentID : String) = safeApiCall {
-        remote.getVocabularyContentsList(contentID)
+    suspend fun getVocabularyContentsList(id : String) = safeApiCall {
+        remote.getVocabularyContentsList(id)
     }
+
 
     suspend fun createBookshelf(name: String, color: String) = safeApiCall {
         remote.createBookshelf(name, color)
@@ -290,13 +297,27 @@ class FoxSchoolRepository @Inject constructor(private val remote: ApiService)
     }
 
     suspend fun addVocabularyContents(contentID : String, vocabularyID : String, itemList : ArrayList<VocabularyDataResult>) = safeApiCall {
-        var queryMap = mutableMapOf<String, String>()
+        val queryMap = mutableMapOf<String, String>()
         queryMap["content_id"] =  contentID
         for(i in itemList.indices)
         {
             queryMap["word_ids[$i]"] = itemList[i].getID()
         }
         remote.addVocabularyContents(
+            vocabularyID,
+            queryMap
+        )
+    }
+
+    suspend fun deleteVocabularyContents(vocabularyID : String, itemList : ArrayList<VocabularyDataResult>) = safeApiCall {
+        var queryMap = mutableMapOf<String, String>()
+        for(i in itemList.indices)
+        {
+            queryMap["words[$i][word_id]"] = itemList[i].getID()
+            queryMap["words[$i][content_id]"] = itemList[i].getContentID()
+        }
+
+        remote.deleteVocabularyContents(
             vocabularyID,
             queryMap
         )

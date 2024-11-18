@@ -1,18 +1,12 @@
 package com.littlefox.app.foxschool.presentation.screen.search.phone
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,7 +15,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,15 +22,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -56,12 +45,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.ImageLoader
 import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
 import com.littlefox.app.foxschool.R
@@ -69,7 +55,6 @@ import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.widget.BuildContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.BuildPagingContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.SearchTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
@@ -80,16 +65,16 @@ fun SearchScreen(
     viewModel: SearchViewModel,
     onEvent: (BaseEvent) -> Unit
 ) {
-    val searchedItemList = viewModel.searchItemList.collectAsLazyPagingItems()
-    val isContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
     val focusManager = LocalFocusManager.current
-    var searchType by remember { mutableStateOf(SearchType.ALL) }
-    var shouldAnimate by remember { mutableStateOf(false) }
-    var previousSearchText by remember { mutableStateOf("") }
+    val _searchedItemList = viewModel.searchItemList.collectAsLazyPagingItems()
+    val _isContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
+    var _searchType by remember { mutableStateOf(SearchType.ALL) }
+    var _shouldAnimate by remember { mutableStateOf(false) }
+    var _previousSearchText by remember { mutableStateOf("") }
 
     // searchedItemList의 itemCount가 변경될 때마다 애니메이션을 트리거
-    LaunchedEffect(searchedItemList.itemCount) {
-        shouldAnimate = true
+    LaunchedEffect(_searchedItemList.itemCount) {
+        _shouldAnimate = true
     }
 
 
@@ -107,10 +92,10 @@ fun SearchScreen(
                 onEvent(BaseEvent.onBackPressed)
             }
 
-            BuildSelectTypeLayout(searchType = searchType) { type ->
+            BuildSelectTypeLayout(searchType = _searchType) {type ->
 
-                shouldAnimate = false
-                searchType = type
+                _shouldAnimate = false
+                _searchType = type
                 onEvent(SearchEvent.onClickSearchType(type))
             }
 
@@ -118,12 +103,12 @@ fun SearchScreen(
                 Log.i("Search Text: $searchText")
 
 
-                shouldAnimate = false
+                _shouldAnimate = false
                 focusManager.clearFocus()
                 onEvent(SearchEvent.onClickSearchExecute(searchText))
             }
 
-            if (isContentsLoading) {
+            if (_isContentsLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -134,7 +119,7 @@ fun SearchScreen(
 
 
                 AnimatedVisibility(
-                    visible = searchedItemList.itemCount > 0 && shouldAnimate,
+                    visible = _searchedItemList.itemCount > 0 && _shouldAnimate,
                     enter = slideInVertically(
                         animationSpec = tween(
                             durationMillis = 500,
@@ -157,8 +142,8 @@ fun SearchScreen(
                                 end = getDp(pixel = 28)
                             )
                     ) {
-                        items(searchedItemList.itemCount) { index ->
-                            val item = searchedItemList[index]
+                        items(_searchedItemList.itemCount) {index ->
+                            val item = _searchedItemList[index]
                             item?.let {
                                 Column {
                                     if (index == 0) {
@@ -192,7 +177,7 @@ fun SearchScreen(
         }
 
         // 에러 상태 표시
-        if (searchedItemList.loadState.append is LoadState.Error) {
+        if (_searchedItemList.loadState.append is LoadState.Error) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

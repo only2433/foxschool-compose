@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -68,24 +67,25 @@ fun LoginScreenV(
     onEvent: (LoginEvent) -> Unit
 )
 {
-    val schoolList by viewModel.schoolList.observeAsState(initial = emptyList())
-
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
-    val schoolText = remember {
+    val _schoolList by viewModel.schoolList.observeAsState(
+        initial = emptyList()
+    )
+    val _schoolText = remember {
         mutableStateOf("")
     }
-    val idText = remember {
+    val _idText = remember {
         mutableStateOf("")
     }
-    val passwordText = remember {
+    val _passwordText = remember {
         mutableStateOf("")
     }
-    val selectSchoolCode = remember {
+    val _selectSchoolCode = remember {
         mutableStateOf("")
     }
-    val isAutoLoginCheck = remember {
+    val _isAutoLoginCheck = remember {
         mutableStateOf(false)
     }
 
@@ -181,14 +181,14 @@ fun LoginScreenV(
                             )
 
                             PrefixIconTextFieldLayout(
-                                text = schoolText.value,
+                                text = _schoolText.value,
                                 icon = painterResource(id = R.drawable.icon_search_2),
                                 hintText = stringResource(id = R.string.text_school_search),
-                                isBottomRounded = schoolList.isEmpty(),
+                                isBottomRounded = _schoolList.isEmpty(),
                                 width = 888,
                                 height = 120)
                             {
-                                schoolText.value = it
+                                _schoolText.value = it
                                 onEvent(LoginEvent.onInputSchoolNameChanged(it))
                             }
 
@@ -201,13 +201,13 @@ fun LoginScreenV(
 
 
                             PrefixIconTextFieldLayout(
-                                text = idText.value,
+                                text = _idText.value,
                                 icon = painterResource(id = R.drawable.icon_id),
                                 hintText = stringResource(id = R.string.text_id_input),
                                 width = 888,
                                 height = 120)
                             {
-                                idText.value = it
+                                _idText.value = it
                             }
 
                             Spacer(
@@ -218,14 +218,14 @@ fun LoginScreenV(
                             )
 
                             PrefixIconTextFieldLayout(
-                                text = passwordText.value,
+                                text = _passwordText.value,
                                 icon = painterResource(id = R.drawable.icon_lock),
                                 hintText = stringResource(id = R.string.text_password_input),
                                 visualTransformation = PasswordVisualTransformation(),
                                 width = 888,
                                 height = 120)
                             {
-                                passwordText.value = it
+                                _passwordText.value = it
                             }
                         }
 
@@ -257,7 +257,7 @@ fun LoginScreenV(
                         )
                         {
                             Image(
-                                painter = if(isAutoLoginCheck.value)
+                                painter = if(_isAutoLoginCheck.value)
                                 {
                                     painterResource(id = R.drawable.radio_on)
                                 }
@@ -276,10 +276,10 @@ fun LoginScreenV(
                                         MutableInteractionSource()
                                     }, indication = null, // 클릭 시 효과 제거
                                         onClick = {
-                                            isAutoLoginCheck.value = !isAutoLoginCheck.value
+                                            _isAutoLoginCheck.value = !_isAutoLoginCheck.value
                                             onEvent(
                                                 LoginEvent.onCheckAutoLogin(
-                                                    isAutoLoginCheck.value
+                                                    _isAutoLoginCheck.value
                                                 )
                                             )
                                         }),
@@ -346,9 +346,9 @@ fun LoginScreenV(
                         focusManager.clearFocus()
                         onEvent(LoginEvent.onClickLogin(
                             UserLoginData(
-                                userId = idText.value,
-                                password = passwordText.value,
-                                schoolCode = selectSchoolCode.value
+                                userId = _idText.value,
+                                password = _passwordText.value,
+                                schoolCode = _selectSchoolCode.value
                             )
                         ))
 
@@ -362,7 +362,7 @@ fun LoginScreenV(
                     )
                     BuildFindsLayout(onEvent)
                 }
-                if(schoolList.isNotEmpty())
+                if(_schoolList.isNotEmpty())
                 {
                     Box(
                         modifier = Modifier
@@ -402,14 +402,14 @@ fun LoginScreenV(
                                 )
                         )
                         {
-                            items(schoolList) { item ->
+                            items(_schoolList) {item ->
                                 Text(
                                     text = item.getSchoolName(),
                                     modifier = Modifier
                                         .clickable {
                                             onEvent(LoginEvent.onSchoolNameSelected)
-                                            schoolText.value = item.getSchoolName()
-                                            selectSchoolCode.value = item.getSchoolID()
+                                            _schoolText.value = item.getSchoolName()
+                                            _selectSchoolCode.value = item.getSchoolID()
                                         },
                                     style = TextStyle(
                                         color = colorResource(id = R.color.color_444444),

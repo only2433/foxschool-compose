@@ -24,6 +24,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.management.IntentManagementFactory
@@ -40,6 +41,7 @@ import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.bookshelf.BookshelfEvent
+import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,18 +65,17 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         const val DIALOG_EVENT_WARNING_RECORD_PERMISSION : Int      = 10002
     }
 
-    private val _contentsList = SingleLiveEvent<ArrayList<ContentsBaseResult>>()
-    val contentsList: LiveData<ArrayList<ContentsBaseResult>> get() = _contentsList
+    private val _contentsList = SingleLiveEvent<EventWrapper<ArrayList<ContentsBaseResult>>>()
+    val contentsList: LiveData<EventWrapper<ArrayList<ContentsBaseResult>>> get() = _contentsList
+
+    private val _itemSelectedCount = SingleLiveEvent<EventWrapper<Int>>()
+    val itemSelectedCount: LiveData<EventWrapper<Int>> get() = _itemSelectedCount
 
     private val _setTitle = SingleLiveEvent<String>()
     val setTitle : LiveData<String> get() = _setTitle
 
     private val _enableContentListLoading = SingleLiveEvent<Boolean>()
     val enableContentListLoading : LiveData<Boolean> get() = _enableContentListLoading
-
-
-    private val _itemSelectedCount = SingleLiveEvent<Int>()
-    val itemSelectedCount: LiveData<Int> get() = _itemSelectedCount
 
     private val _dialogBottomOption = SingleLiveEvent <ContentsBaseResult>()
     val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
@@ -136,26 +137,35 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                 )
             }
 
-            is BookshelfEvent.onClickSelectAll ->
+            is BookshelfEvent.onClickBottomBarMenu ->
             {
-                checkSelectedItemAll(
-                    isSelected = true
-                )
+                when(event.menu)
+                {
+                    ContentsListBottomBarMenu.SELECT_ALL ->
+                    {
+                        checkSelectedItemAll(
+                            isSelected = true
+                        )
+                    }
+                    ContentsListBottomBarMenu.SELECT_PLAY ->
+                    {
+                        startSelectedListMovieActivity()
+                    }
+                    ContentsListBottomBarMenu.BOOKSHELF_DELETE ->
+                    {
+                        removeContentsInBookshelf()
+                    }
+                    ContentsListBottomBarMenu.CANCEL ->
+                    {
+                        checkSelectedItemAll(
+                            isSelected = false
+                        )
+                    }
+                    else -> {}
+                }
+
             }
-            is BookshelfEvent.onClickSelectPlay ->
-            {
-                startSelectedListMovieActivity()
-            }
-            is BookshelfEvent.onClickDeleteBookshelf ->
-            {
-                removeContentsInBookshelf()
-            }
-            is BookshelfEvent.onClickCancel ->
-            {
-                checkSelectedItemAll(
-                    isSelected = false
-                )
-            }
+
 
             is BookshelfEvent.onClickBottomContentsType ->
             {
@@ -208,7 +218,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                     list?.let {
                         _enableContentListLoading.value = false
                         mBookItemInformationList = list
-                        _contentsList.value = mBookItemInformationList
+                        _contentsList.value = EventWrapper(mBookItemInformationList)
                     }
                 }
             }
@@ -330,8 +340,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         CommonUtils.getInstance(mContext).saveMainData(mainInformationResult)
         MainObserver.updatePage(Common.PAGE_MY_BOOKS)
 
-        //todo: 리스트 업데이트
-        _contentsList.value = mBookItemInformationList
+        _contentsList.value = EventWrapper(mBookItemInformationList)
     }
 
     /**
@@ -555,11 +564,8 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
             }
         }
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        _contentsList.value = ArrayList<ContentsBaseResult>()
-        _contentsList.value = mBookItemInformationList
 
-
-        Log.i("index : $index , isSelected : ${mBookItemInformationList[index].isSelected}")
+        _contentsList.value = EventWrapper(mBookItemInformationList)
 
         sendSelectedItem()
     }
@@ -574,27 +580,28 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
     private fun sendSelectedItem()
     {
         val selectedItemCount = mBookItemInformationList.count { it.isSelected }
-        _itemSelectedCount.value = selectedItemCount
+        _itemSelectedCount.value = EventWrapper(selectedItemCount)
     }
 
     private fun checkSelectedItemAll(isSelected : Boolean)
     {
+        Log.i("isSelected : ${isSelected}")
         mBookItemInformationList.forEach {
             it.isSelected = isSelected
         }
 
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
-        _contentsList.value = ArrayList<ContentsBaseResult>()
-        _contentsList.value = mBookItemInformationList
+       // _contentsList.value = ArrayList<ContentsBaseResult>()
+        _contentsList.value = EventWrapper(mBookItemInformationList)
 
         if(isSelected)
         {
-            _itemSelectedCount.value = mBookItemInformationList.size
+            _itemSelectedCount.value = EventWrapper(mBookItemInformationList.size)
 
         }
         else
         {
-            _itemSelectedCount.value = 0
+            _itemSelectedCount.value = EventWrapper(0)
         }
     }
 

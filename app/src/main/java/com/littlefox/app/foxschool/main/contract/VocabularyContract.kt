@@ -1,8 +1,9 @@
 package com.littlefox.app.foxschool.main.contract
 
+import VocabularySelectData
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
-import com.littlefox.app.foxschool.`object`.data.vocabulary.VocabularySelectData
+
 import com.littlefox.app.foxschool.adapter.VocabularyItemListAdapter
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.base.BaseContract

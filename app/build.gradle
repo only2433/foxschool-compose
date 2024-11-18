@@ -161,7 +161,7 @@ dependencies {
     implementation 'androidx.compose.foundation:foundation:1.7.4'
     implementation "androidx.paging:paging-compose:3.3.2"
     implementation "androidx.paging:paging-runtime-ktx:3.3.2"
-
+    implementation 'de.charlex.compose.material:material-html-text:2.0.0-beta01'
 
 
     // 테스트를 위한 추가 의존성

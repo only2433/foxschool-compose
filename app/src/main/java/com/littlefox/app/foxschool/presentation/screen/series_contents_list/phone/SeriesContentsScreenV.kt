@@ -12,81 +12,53 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 
 
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
-import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.`object`.data.series.TopThumbnailViewData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
-import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.viewmodel.SeriesContentsListViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
 import com.littlefox.app.foxschool.presentation.widget.BuildBottomSelectBarLayout
 import com.littlefox.app.foxschool.presentation.widget.BuildContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.TopbarSeriesContentsLayout
+import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.logmonitor.Log
 import me.onebone.toolbar.CollapsingToolbarScaffold
-import me.onebone.toolbar.ExperimentalToolbarApi
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
-import androidx.compose.ui.graphics.Color as ComposeColor
-import android.graphics.Color as AndroidColor
-
+import kotlinx.coroutines.delay
 
 @Composable
 fun SeriesContentsScreenV(
@@ -94,42 +66,46 @@ fun SeriesContentsScreenV(
     onEvent: (SeriesContentsListEvent) -> Unit,
 )
 {
-    val contentsList by viewModel.contentsList.observeAsState(
-        initial = emptyList()
+    val _contentsList by viewModel.contentsList.observeAsState(
+        initial = EventWrapper(ArrayList<ContentsBaseResult>())
+    )
+    val _selectedItemCount by viewModel.itemSelectedCount.observeAsState(
+        initial = EventWrapper(0)
     )
 
+    val _showToolbarInformationView by viewModel.showToolbarInformationView.observeAsState(initial = false)
+    val _isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = true)
+    val _seriesTitle by viewModel.seriesTitle.observeAsState(initial = "")
+    val _prepareData by viewModel.backgroundViewData.observeAsState(initial = TopThumbnailViewData())
 
-    val showToolbarInformationView by viewModel.showToolbarInformationView.observeAsState(initial = false)
-    val isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = true)
-    val seriesTitle by viewModel.seriesTitle.observeAsState(initial = "")
-    val prepareData by viewModel.backgroundViewData.observeAsState(initial = TopThumbnailViewData())
-    val selectedItemCount by viewModel.itemSelectedCount.observeAsState(initial = 0)
-
-    var isFabToolbarVisible by remember { //
+    var _dataList by remember {
+        mutableStateOf(ArrayList<ContentsBaseResult>())
+    }
+    var _itemCount by remember {
+        mutableStateOf(0)
+    }
+    var _isFabToolbarVisible by remember { //
         mutableStateOf(false)
     }
-    var shouldAnimate by remember { mutableStateOf(false) }
-
-
+    var _shouldAnimate by remember { mutableStateOf(false) }
     // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
-    val contentsSize = contentsList.size
-    LaunchedEffect(contentsSize) {
-        Log.i("------------- notify size : $contentsSize")
-        shouldAnimate = true
-    }
 
-
-    LaunchedEffect(selectedItemCount) {
-        if(selectedItemCount > 0)
-        {
-            isFabToolbarVisible = true
+    _contentsList.getContentIfNotHandled()?.let {
+        LaunchedEffect(_contentsList) {
+            if(it.size > 0)
+            {
+                _shouldAnimate = true
+            }
         }
-        else
-        {
-            isFabToolbarVisible = false
-        }
-    }
 
+        _dataList = ArrayList()
+        _dataList = it
+    }
+    _selectedItemCount.getContentIfNotHandled()?.let {
+        Log.i("count : $it")
+        _itemCount = it
+        _isFabToolbarVisible = if(it > 0) true else false
+    }
 
 
     val scaffoldState = rememberCollapsingToolbarScaffoldState()
@@ -144,21 +120,20 @@ fun SeriesContentsScreenV(
                         getDp(pixel = 144)
                     )
                     .pin(),
-                    title = seriesTitle,
-                    background = prepareData.titleColor,
-                    isShowSeriesInformation = showToolbarInformationView,
+                    title = _seriesTitle,
+                    background = _prepareData.titleColor,
+                    isShowSeriesInformation = _showToolbarInformationView,
                     onTabBackButton = { /*TODO*/},
                     onTabSeriesInformationButton = {
 
                     })
-                BuildCollapsibleImageHeader(thumbnailUrl = prepareData.thumbnail,
+                BuildCollapsibleImageHeader(
                     modifier = Modifier
                         .fillMaxSize()
                         .height(
                             getDp(pixel = 607)
                         )
                         .graphicsLayer { // change alpha of Image as the toolbar expands
-
                             if(scaffoldState.toolbarState.progress == 0f)
                             {
                                 alpha = 0f
@@ -168,7 +143,9 @@ fun SeriesContentsScreenV(
                             }
 
                         }
-                        .parallax())
+                        .parallax(),
+                    thumbnailUrl = _prepareData.thumbnail,
+                )
             })
         {
             Box(
@@ -179,8 +156,80 @@ fun SeriesContentsScreenV(
                     )
             )
             {
-                AnimatedVisibility(
-                    visible = contentsList.isNotEmpty() && shouldAnimate,
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(
+                            start = getDp(pixel = 20), end = getDp(pixel = 20)
+                        )
+                )
+                {
+                    items(_dataList.size) {index ->
+                        Column {
+                            if(index == 0)
+                            {
+                                Spacer(
+                                    modifier = Modifier
+                                        .height(
+                                            getDp(pixel = 20)
+                                        )
+                                )
+                            }
+                            AnimatedVisibility(
+                                visible = _dataList.isNotEmpty() && _shouldAnimate,
+                                enter = fadeIn() + slideInVertically(
+                                    animationSpec = tween(
+                                        durationMillis = 500,
+                                        easing = FastOutSlowInEasing,
+                                        delayMillis = index * 50
+                                    ),
+                                    initialOffsetY = {
+                                        1000
+                                    }
+                                ),
+                                exit = slideOutVertically(
+                                    animationSpec = tween(
+                                        durationMillis = 500,
+                                        easing = FastOutSlowInEasing
+                                    ),
+                                    targetOffsetY = { 0 }
+                                )
+                            )
+                            {
+                                BuildContentsListItem(
+                                    data = _dataList[index],
+                                    itemIndexColor = _prepareData.titleColor,
+                                    onBackgroundClick = {
+                                        Log.i("onBackgroundClick : $index")
+                                        onEvent(
+                                            SeriesContentsListEvent.onSelectedItem(index)
+                                        )
+                                    },
+                                    onThumbnailClick = {
+                                        onEvent(
+                                            SeriesContentsListEvent.onClickThumbnail(_dataList[index])
+                                        )
+                                    },
+                                    onOptionClick = {
+                                        onEvent(
+                                            SeriesContentsListEvent.onClickOption(_dataList[index])
+                                        )
+                                    })
+                            }
+
+                            Spacer(
+                                modifier = Modifier
+                                    .height(
+                                        getDp(pixel = 20)
+                                    )
+                            )
+                        }
+
+
+                    }
+                }
+/*                AnimatedVisibility(
+                    visible = _dataList.isNotEmpty() && _shouldAnimate,
                     enter = slideInVertically(
                         animationSpec = tween(
                             durationMillis = 500,
@@ -206,7 +255,7 @@ fun SeriesContentsScreenV(
                             )
 
                     ) {
-                        itemsIndexed(contentsList, key = {_, item -> item.id}) {index, item ->
+                        itemsIndexed(_dataList, key = {_, item -> item.id}) {index, item ->
                             Column {
                                 if(index == 0)
                                 {
@@ -217,7 +266,7 @@ fun SeriesContentsScreenV(
                                     )
                                 }
                                 BuildContentsListItem(data = item,
-                                    itemIndexColor = prepareData.titleColor,
+                                    itemIndexColor = _prepareData.titleColor,
                                     onBackgroundClick = {
                                         Log.i("onBackgroundClick : $index")
                                         onEvent(
@@ -243,7 +292,7 @@ fun SeriesContentsScreenV(
                         }
                     }
 
-                }
+                }*/
 
 
                 Box(
@@ -260,7 +309,7 @@ fun SeriesContentsScreenV(
 
                 ) {
                     AnimatedVisibility(
-                        visible = isShowContentsLoading, enter = fadeIn(), exit = fadeOut()
+                        visible = _isShowContentsLoading, enter = fadeIn(), exit = fadeOut()
                     ) {
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.color_1aa3f8)
@@ -277,7 +326,7 @@ fun SeriesContentsScreenV(
             )
         ) {
             AnimatedVisibility(
-                visible = !isFabToolbarVisible,
+                visible = !_isFabToolbarVisible,
                 enter = slideInHorizontally(
                     initialOffsetX = {
                         200
@@ -300,7 +349,7 @@ fun SeriesContentsScreenV(
             {
                 FloatingActionButton(
                     onClick = {
-                        isFabToolbarVisible = true
+                        _isFabToolbarVisible = true
                     },
 
                     ) {
@@ -323,27 +372,11 @@ fun SeriesContentsScreenV(
         BuildBottomSelectBarLayout(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
-            isSelectedItemCount = selectedItemCount,
-            isVisible = isFabToolbarVisible,
-            onClickAll = {
+            selectedItemCount = _itemCount,
+            isVisible = _isFabToolbarVisible,
+            onClickMenu = { menu ->
                 onEvent(
-                    SeriesContentsListEvent.onClickSelectAll
-                )
-            },
-            onClickPlay = {
-                onEvent(
-                    SeriesContentsListEvent.onClickSelectPlay
-                )
-            },
-            onClickBookshelf = {
-                onEvent(
-                    SeriesContentsListEvent.onClickAddBookshelf
-                )
-            },
-            onClickCancel = {
-                isFabToolbarVisible = false
-                onEvent(
-                    SeriesContentsListEvent.onClickCancel
+                    SeriesContentsListEvent.onClickBottomBarMenu(menu)
                 )
             }
         )
@@ -352,8 +385,8 @@ fun SeriesContentsScreenV(
 
 @Composable
 fun BuildCollapsibleImageHeader(
+    modifier : Modifier = Modifier,
     thumbnailUrl : String,
-    modifier : Modifier = Modifier
 )
 {
 
@@ -361,7 +394,6 @@ fun BuildCollapsibleImageHeader(
         modifier = modifier
     )
     {
-        // 여기에 썸네일을 세팅 하고 싶어.
         Image(
             painter = rememberAsyncImagePainter(thumbnailUrl),
             contentDescription = "Thumbnail Image",
