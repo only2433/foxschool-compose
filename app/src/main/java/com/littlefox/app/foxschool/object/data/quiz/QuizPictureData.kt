@@ -5,8 +5,8 @@ import java.util.*
 class QuizPictureData
 {
     private var mCurrentQuizIndex : Int = -1
-    private var mTitleText : String?    = ""
-    private val mQuizImageList = ArrayList<ExamplePictureData?>()
+    private var mTitleText : String    = ""
+    private val mQuizImageList = ArrayList<ExamplePictureData>()
 
     /** 퀴즈의 정답 및 문제 번호 : 서버에서 받은 정보, 퀴즈의 순서가 곧 정답의 index 이다. */
     private var mRecordQuizCorrectIndex : Int   = -1
@@ -14,13 +14,13 @@ class QuizPictureData
     /** 퀴즈에서 보여지는 오답 문제번호 */
     private var mRecordQuizInCorrectIndex : Int = -1
 
-    constructor(quizIndex : Int, title : String?, firstExample : ExamplePictureData?, secondExample : ExamplePictureData?)
+    constructor(quizIndex : Int, title : String, firstExample : ExamplePictureData, secondExample : ExamplePictureData)
     {
         mCurrentQuizIndex = quizIndex
         mTitleText = title
         mQuizImageList.add(firstExample)
         mQuizImageList.add(secondExample)
-        mQuizImageList[0]!!.setAnswer(true)
+        mQuizImageList[0].setAnswer(true)
     }
 
     /**
@@ -36,9 +36,9 @@ class QuizPictureData
 
     fun getQuizIndex() : Int = mCurrentQuizIndex + 1
 
-    fun getTitle() : String? = mTitleText
+    fun getTitle() : String = mTitleText
 
-    fun getImageInformationList() : ArrayList<ExamplePictureData?> = mQuizImageList
+    fun getImageInformationList() : ArrayList<ExamplePictureData> = mQuizImageList
 
     fun getRecordQuizCorrectIndex() : Int = mRecordQuizCorrectIndex
 

@@ -125,11 +125,17 @@
             android:theme="@style/AppTheme_Default">
         </activity>
 
-
         <activity android:name=".presentation.screen.vocabulary.VocabularyActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme_Default">
+        </activity>
+
+        <activity android:name=".presentation.screen.quiz.QuizActivity"
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            tools:ignore="LockedOrientationActivity">
         </activity>
 
         <activity android:name=".main.StoryCategoryListActivity"
@@ -214,12 +220,12 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
         </activity>
 
-        <activity android:name=".main.QuizActivity"
+<!--        <activity android:name=".main.QuizActivity"
             android:screenOrientation="sensorLandscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             tools:ignore="LockedOrientationActivity">
-        </activity>
+        </activity>-->
 
         <activity android:name=".main.FlashCardActivity"
             android:screenOrientation="sensorLandscape"

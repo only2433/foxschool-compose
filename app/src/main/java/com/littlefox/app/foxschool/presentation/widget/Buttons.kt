@@ -1,12 +1,15 @@
 package com.littlefox.app.foxschool.presentation.widget
 
+import android.graphics.BitmapFactory
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,7 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -298,4 +307,62 @@ fun SwitchTextButton(
             )
         }
     }
+}
+
+@Composable
+fun PressedTextButton(
+    modifier : Modifier,
+    normalImageID: Int,
+    pressedImageID: Int,
+    text: String,
+    onButtonClick : () -> Unit
+    )
+{
+    val context = LocalContext.current
+    val pressedImage = BitmapFactory.decodeResource(context.resources, pressedImageID).asImageBitmap()
+    val normalImage = BitmapFactory.decodeResource(context.resources, normalImageID).asImageBitmap()
+    // 버튼의 눌림 상태를 관리
+    val isPressed = remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier
+            .pointerInput(Unit){
+                detectTapGestures(
+                    onPress = {
+                        isPressed.value = true
+                        tryAwaitRelease()
+                        isPressed.value = false
+                    }
+                )
+            }
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                },
+                indication = null,
+                onClick = onButtonClick
+            ),
+        contentAlignment = Alignment.Center
+    )
+    {
+        Image(
+            bitmap = if(isPressed.value) pressedImage else normalImage,
+            contentScale = ContentScale.FillBounds,
+            contentDescription = "Icon"
+        )
+
+        Text(
+            text = text,
+            style = TextStyle(
+                color = colorResource(id = R.color.color_000000),
+                fontSize = 15.sp,
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.roboto_medium
+                    )
+                ),
+            )
+        )
+    }
+
 }

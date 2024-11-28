@@ -10,7 +10,7 @@ open class QuizTextData
     private var mRequestCorrectIndex : Int    = -1 // 서버에서 받은 퀴즈 정답의 인덱스
     protected var mTitle : String               = ""
     private var mMainSoundUrl : String          = ""
-    protected var mExampleList : ArrayList<ExampleTextData?> = ArrayList<ExampleTextData?>()
+    protected var mExampleList : ArrayList<ExampleTextData> = ArrayList<ExampleTextData>()
 
     constructor(quizIndex : Int, requestQuizIndex : Int)
     {
@@ -66,7 +66,7 @@ open class QuizTextData
 
     fun getTitle() : String = mTitle
 
-    fun getExampleList() : ArrayList<ExampleTextData?> = mExampleList
+    fun getExampleList() : ArrayList<ExampleTextData> = mExampleList
 
     fun getMainSoundUrl() : String = mMainSoundUrl
 
@@ -85,7 +85,7 @@ open class QuizTextData
         {
             if(mExampleList[i]!!.isAnswer())
             {
-                mRequestCorrectIndex = mExampleList[i]!!.getExampleIndex()
+                mRequestCorrectIndex = mExampleList[i].getExampleIndex()
             }
         }
         return mRequestCorrectIndex

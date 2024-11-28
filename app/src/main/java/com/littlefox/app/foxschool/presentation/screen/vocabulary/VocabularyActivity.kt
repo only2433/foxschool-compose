@@ -1,11 +1,13 @@
 package com.littlefox.app.foxschool.presentation.screen.vocabulary
 
 import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -37,6 +39,7 @@ class VocabularyActivity : BaseActivity()
     private var mBottomBookAddDialog : BottomBookAddDialog? = null
 
     private val viewModel: VocabularyViewModel by viewModels()
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState : Bundle?)
     {
         super.onCreate(savedInstanceState)

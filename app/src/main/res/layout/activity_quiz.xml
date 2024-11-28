@@ -79,7 +79,7 @@
                 android:id="@+id/_quizTaskBoxLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:scale_base_height="120"
                 app:scale_base_width="1920" >
 
@@ -111,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text=""
+                    android:text="00:00"
                     android:textColor="@color/color_2a4899"
                     app:scale_top="0"
                     app:scale_left="1439"
@@ -147,7 +147,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:text=""
+                    android:text="5/10"
                     android:textColor="@color/color_2a4899"
                     app:scale_top="0"
                     app:scale_left="1774"

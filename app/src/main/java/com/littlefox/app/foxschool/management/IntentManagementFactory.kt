@@ -39,6 +39,7 @@ import com.littlefox.app.foxschool.presentation.screen.management_mybooks.Manage
 import com.littlefox.app.foxschool.presentation.screen.bookshelf.BookshelfActivity
 import com.littlefox.app.foxschool.presentation.screen.category_list.CategoryListActivity
 import com.littlefox.app.foxschool.presentation.screen.vocabulary.VocabularyActivity
+import com.littlefox.app.foxschool.presentation.screen.quiz.QuizActivity
 import com.littlefox.logmonitor.Log
 
 /**
