@@ -12,10 +12,9 @@ import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.SeriesContentsListApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Event
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 
@@ -283,15 +282,27 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
 
                         if(result.isDuplicateLogin)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
                         }
                         else if(result.isAuthenticationBroken)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initScene()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {
@@ -299,7 +310,13 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                                 code == RequestCode.CODE_CONTENTS_SONG_LIST)
                             {
                                 _toast.value = result.message
-                                (mContext as AppCompatActivity).onBackPressed()
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.IO)
+                                    {
+                                        delay(Common.DURATION_SHORT)
+                                    }
+                                    (mContext as AppCompatActivity).finish()
+                                }
                             }
                             else if(code == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                             {
@@ -485,18 +502,18 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
         MainObserver.updatePage(Common.PAGE_MY_BOOKS)
     }
 
-    private fun checkBottomSelectItemType(type: BottomDialogContentsType)
+    private fun checkBottomSelectItemType(type: ActionContentsType)
     {
         when(type)
         {
-            BottomDialogContentsType.QUIZ -> startQuizActivity()
-            BottomDialogContentsType.EBOOK -> startEbookActivity()
-            BottomDialogContentsType.FLASHCARD -> startFlashcardActivity()
-            BottomDialogContentsType.VOCABULARY -> startVocabularyActivity()
-            BottomDialogContentsType.CROSSWORD -> startGameCrosswordActivity()
-            BottomDialogContentsType.STARWORDS -> startGameStarwordsActivity()
-            BottomDialogContentsType.TRANSLATE -> startOriginTranslateActivity()
-            BottomDialogContentsType.RECORD_PLAYER -> {
+            ActionContentsType.QUIZ -> startQuizActivity()
+            ActionContentsType.EBOOK -> startEbookActivity()
+            ActionContentsType.FLASHCARD -> startFlashcardActivity()
+            ActionContentsType.VOCABULARY -> startVocabularyActivity()
+            ActionContentsType.CROSSWORD -> startGameCrosswordActivity()
+            ActionContentsType.STARWORDS -> startGameStarwordsActivity()
+            ActionContentsType.TRANSLATE -> startOriginTranslateActivity()
+            ActionContentsType.RECORD_PLAYER -> {
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
@@ -507,7 +524,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
                     startRecordPlayerActivity()
                 }
             }
-            BottomDialogContentsType.ADD_BOOKSHELF -> {
+            ActionContentsType.ADD_BOOKSHELF -> {
                 Log.f("")
                 mCurrentSelectItem?.let { item ->
                     mSendBookshelfAddList.clear()

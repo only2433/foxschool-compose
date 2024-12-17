@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.provider.Settings
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
@@ -14,16 +13,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.adapter.DetailListItemAdapter
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.BookshelfApiViewModel
 import com.littlefox.app.foxschool.api.viewmodel.factory.BookshelfFactoryViewModel
-import com.littlefox.app.foxschool.api.viewmodel.factory.BookshelfFactoryViewModel.Companion
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
@@ -47,10 +44,7 @@ import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
@@ -260,16 +254,28 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                         if(result.isDuplicateLogin)
                         {
                             // 중복 로그인 시 재시작
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
                         }
                         else if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initScene()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {
@@ -277,7 +283,13 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                             {
                                 _enableContentListLoading.value = false
                                 _toast.value = result.message
-                                (mContext as AppCompatActivity).onBackPressed()
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.IO)
+                                    {
+                                        delay(Common.DURATION_SHORT)
+                                    }
+                                    (mContext as AppCompatActivity).finish()
+                                }
                             }
                             else if(code == RequestCode.CODE_BOOKSHELF_CONTENTS_DELETE)
                             {
@@ -365,18 +377,18 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         )
     }
 
-    private fun checkBottomSelectItemType(type: BottomDialogContentsType)
+    private fun checkBottomSelectItemType(type: ActionContentsType)
     {
         when(type)
         {
-            BottomDialogContentsType.QUIZ -> startQuizActivity()
-            BottomDialogContentsType.EBOOK -> startEbookActivity()
-            BottomDialogContentsType.FLASHCARD -> startFlashcardActivity()
-            BottomDialogContentsType.VOCABULARY -> startVocabularyActivity()
-            BottomDialogContentsType.CROSSWORD -> startGameCrosswordActivity()
-            BottomDialogContentsType.STARWORDS -> startGameStarwordsActivity()
-            BottomDialogContentsType.TRANSLATE -> startOriginTranslateActivity()
-            BottomDialogContentsType.RECORD_PLAYER -> {
+            ActionContentsType.QUIZ -> startQuizActivity()
+            ActionContentsType.EBOOK -> startEbookActivity()
+            ActionContentsType.FLASHCARD -> startFlashcardActivity()
+            ActionContentsType.VOCABULARY -> startVocabularyActivity()
+            ActionContentsType.CROSSWORD -> startGameCrosswordActivity()
+            ActionContentsType.STARWORDS -> startGameStarwordsActivity()
+            ActionContentsType.TRANSLATE -> startOriginTranslateActivity()
+            ActionContentsType.RECORD_PLAYER -> {
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
@@ -387,7 +399,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                     startRecordPlayerActivity()
                 }
             }
-            BottomDialogContentsType.DELETE_BOOKSHELF -> {
+            ActionContentsType.DELETE_BOOKSHELF -> {
                 Log.f("")
                 mCurrentSelectItem?.let {
                     mDeleteBookItemList.clear()

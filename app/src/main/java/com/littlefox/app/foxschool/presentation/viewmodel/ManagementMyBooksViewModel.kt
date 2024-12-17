@@ -265,16 +265,26 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                         if(result.isDuplicateLogin)
                         {
                             //중복 로그인 시 재시작
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO) {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
                         }
                         else if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initScene()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO) {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {

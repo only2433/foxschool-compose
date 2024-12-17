@@ -98,8 +98,7 @@ fun QuizPlayTextScreenV(
                     data.getTitle()
                 },
                 enableSound = if(quizType == Common.QUIZ_CODE_TEXT)
-                {
-                    false
+                {                    false
                 }
                 else
                 {

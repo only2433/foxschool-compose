@@ -341,22 +341,40 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
 
                         if(result.isDuplicateLogin)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
                         }
                         else if(result.isAuthenticationBroken)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initScene()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {
                             if(code == RequestCode.CODE_VOCABULARY_CONTENTS_LIST)
                             {
                                 _toast.value = result.message
-                                (mContext as AppCompatActivity).onBackPressed()
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.IO)
+                                    {
+                                        delay(Common.DURATION_SHORT)
+                                    }
+                                    (mContext as AppCompatActivity).finish()
+                                }
                             }
                             else
                             {

@@ -1,6 +1,6 @@
 package com.littlefox.app.foxschool.enumerate
 
-enum class BottomDialogContentsType
+enum class ActionContentsType
 {
     QUIZ,
     TRANSLATE,

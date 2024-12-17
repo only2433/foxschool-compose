@@ -560,7 +560,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
     }
 
     private val isPlaying : Boolean
-        private get()
+        get()
         {
             Log.f("playWhenReady : " + mPlayer.getPlayWhenReady() + ", state : " + mPlayer.getPlaybackState())
             return mPlayer.getPlayWhenReady() && mPlayer.getPlaybackState() == Player.STATE_READY
@@ -647,7 +647,7 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
      * 하지만 , 동요에서 간주는 데이터가 비어버려 데이터를 찾을 수 없으므로 그때는 startTime으로 다시 찾는다.
      */
     private val currentCaptionIndex : Int
-        private get()
+        get()
         {
             var startTime = 0f
             var endTime = 0f

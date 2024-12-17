@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.presentation.widget
 
 import VocabularySelectData
+import android.content.res.Configuration
 import android.os.Build
 import android.text.Html
 import android.view.View
@@ -13,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.content.MediaType.Companion.HtmlText
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,8 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -343,8 +347,6 @@ fun BuildVocabularyListItem(
     }
 }
 
-
-
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun BuildContentsListItem(
@@ -383,6 +385,9 @@ fun BuildContentsListItem(
             .height(
                 getDp(pixel = 244)
             )
+            .clip(
+                shape = RoundedCornerShape(getDp(pixel = 10))
+            )
             .background(color = colorResource(id = backgroundColor))
             .border(
                 width = getDp(pixel = 1),
@@ -390,9 +395,6 @@ fun BuildContentsListItem(
                 shape = RoundedCornerShape(
                     getDp(pixel = 10)
                 )
-            )
-            .clip(
-                shape = RoundedCornerShape(getDp(pixel = 10))
             )
             .clickable(
                 interactionSource = remember {
@@ -723,6 +725,247 @@ fun BuildPagingContentsListItem(
             }
 
 
+        }
+    }
+}
+
+@Composable
+fun BuildSpeedListItem(
+    index: Int,
+    currentSelectIndex: Int,
+    speedText: String,
+    onSelect: () -> Unit
+)
+{
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(
+                getDp(pixel = 100)
+            )
+            .clickable(
+                interactionSource = remember {
+                    MutableInteractionSource()
+                }, indication = null, onClick = onSelect
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        Spacer(
+            modifier = Modifier
+                .width(
+                    getDp(pixel = 42)
+                )
+        )
+
+        Image(
+            modifier = Modifier
+                .width(
+                    getDp(pixel = 54)
+                )
+                .height(
+                    getDp(pixel = 54)
+                ),
+            painter = painterResource(
+                id = when(currentSelectIndex == index)
+                {
+                    true -> R.drawable.player__speed_select
+                    else -> R.drawable.player__speed_select_default
+                }),
+            contentScale = ContentScale.Fit,
+            contentDescription = "Speed Icon"
+        )
+
+        Spacer(
+            modifier = Modifier
+                .width(
+                    getDp(pixel = 25)
+                )
+        )
+
+        Text(
+            text = speedText,
+            style = TextStyle(
+                color = colorResource(id = R.color.color_ffffff),
+                fontSize = 14.sp,
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.roboto_medium
+                    )
+                )
+            )
+        )
+
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun BuildPlayerListItem(
+    data: ContentsBaseResult,
+    index: Int,
+    currentPlayIndex: Int,
+    onSelectItem: () -> Unit
+)
+{
+    val configuration = LocalConfiguration.current
+    Box(
+        modifier = Modifier
+            .width(
+                getDp(
+                    pixel = when(configuration.orientation)
+                    {
+                        Configuration.ORIENTATION_PORTRAIT -> 1080
+                        else -> 654
+                    }
+                )
+            )
+            .height(
+                getDp(
+                    pixel = when(configuration.orientation)
+                    {
+                        Configuration.ORIENTATION_PORTRAIT -> 318
+                        else -> 220
+                    }
+                )
+            ),
+        contentAlignment = Alignment.TopCenter
+    )
+    {
+        Box(
+            modifier = Modifier
+                .width(
+                    getDp(
+                        pixel = when(configuration.orientation)
+                        {
+                            Configuration.ORIENTATION_PORTRAIT -> 1020
+                            else -> 614
+                        }
+                    )
+                )
+                .height(
+                    getDp(
+                        pixel = when(configuration.orientation)
+                        {
+                            Configuration.ORIENTATION_PORTRAIT -> 288
+                            else -> 200
+                        }
+                    )
+                )
+                .clip(
+                    shape = RoundedCornerShape(getDp(pixel = 10))
+                )
+                .background(
+                    color = colorResource(
+                        id = when(index == currentPlayIndex)
+                        {
+                            true -> R.color.color_fff55a
+                            false -> R.color.color_ffffff
+                        }
+                    )
+                )
+                .border(
+                    width = getDp(pixel = 1),
+                    color = colorResource(id = R.color.color_a0a0a0),
+                    shape = RoundedCornerShape(
+                        getDp(pixel = 10)
+                    )
+                )
+                .clickable(
+                    interactionSource = remember {
+                        MutableInteractionSource()
+                    }, indication = null,
+                    onClick = onSelectItem
+                )
+        )
+        {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                GlideImage(
+                    modifier = Modifier
+                        .width(
+                            getDp(
+                                pixel = when(configuration.orientation)
+                                {
+                                    Configuration.ORIENTATION_PORTRAIT -> 325
+                                    else -> 226
+                                }
+                            )
+                        )
+                        .height(
+                            getDp(
+                                pixel = when(configuration.orientation)
+                                {
+                                    Configuration.ORIENTATION_PORTRAIT -> 230
+                                    else -> 160
+                                }
+                            )
+                        ),
+                    model = data.thumbnail_url,
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "Thumb Image",
+                    requestBuilderTransform = { requestBuilder ->
+                        requestBuilder.transition(DrawableTransitionOptions.withCrossFade(Common.DURATION_NORMAL.toInt()))
+                    }
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(
+                            getDp(
+                                pixel = when(configuration.orientation)
+                                {
+                                    Configuration.ORIENTATION_PORTRAIT -> 500
+                                    else -> 322
+                                }
+                            )
+                        )
+                        .height(
+                            getDp(
+                                pixel = when(configuration.orientation)
+                                {
+                                    Configuration.ORIENTATION_PORTRAIT -> 220
+                                    else -> 160
+                                }
+                            )
+                        ),
+                    contentAlignment = Alignment.CenterStart
+                )
+                {
+                    Text(
+                        text = data.getContentsName(),
+                        style = TextStyle(
+                            color = colorResource(id = R.color.color_444444),
+                            fontSize = 13.sp,
+                            fontFamily = FontFamily(
+                                Font(
+                                    resId = R.font.roboto_regular
+                                )
+                            )
+                        )
+                    )
+                }
+                
+                if(configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(pixel = 92)
+                            )
+                            .height(
+                                getDp(pixel = 125)
+                            ),
+                        painter = painterResource(id = R.drawable.icon_learning),
+                        contentScale = ContentScale.FillBounds,
+                        contentDescription = "Option Icon",
+                    )
+                }
+            }
         }
     }
 }

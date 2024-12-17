@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.api.viewmodel.factory.BookshelfFactoryViewModel
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -14,7 +13,7 @@ import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
-import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.screen.bookshelf.phone.BookshelfScreenV
@@ -152,7 +151,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.QUIZ
+                    ActionContentsType.QUIZ
                 )
             )
         }
@@ -161,7 +160,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.TRANSLATE
+                    ActionContentsType.TRANSLATE
                 )
             )
         }
@@ -170,7 +169,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.VOCABULARY
+                    ActionContentsType.VOCABULARY
                 )
             )
         }
@@ -179,7 +178,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.ADD_BOOKSHELF
+                    ActionContentsType.ADD_BOOKSHELF
                 )
             )
         }
@@ -188,7 +187,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.EBOOK
+                    ActionContentsType.EBOOK
                 )
             )
         }
@@ -197,7 +196,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.STARWORDS
+                    ActionContentsType.STARWORDS
                 )
             )
         }
@@ -206,7 +205,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.CROSSWORD
+                    ActionContentsType.CROSSWORD
                 )
             )
         }
@@ -215,7 +214,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.FLASHCARD
+                    ActionContentsType.FLASHCARD
                 )
             )
         }
@@ -224,7 +223,7 @@ class BookshelfActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.RECORD_PLAYER
+                    ActionContentsType.RECORD_PLAYER
                 )
             )
         }

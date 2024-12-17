@@ -71,7 +71,7 @@
             android:id="@+id/_playerTopBaseLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:scale_base_height="150"
             app:scale_base_width="1920">
 
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/player__caption_off"
                 android:scaleType="fitXY"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:scale_height="55"
                 app:scale_left="1370"
                 app:scale_top="55"
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/player__repeat_off"
                 android:scaleType="fitXY"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:scale_height="64"
                 app:scale_left="1515"
                 app:scale_top="49"
@@ -338,7 +338,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/_playerBackground"
-            android:visibility="gone"
+            android:visibility="visible"
             app:scale_base_height="140"
             app:scale_base_width="1920"
 
@@ -373,7 +373,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/player__replay_off"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:scale_height="70"
                 app:scale_left="48"
                 app:scale_top="15"
@@ -555,14 +555,14 @@
             android:layout_width="match_parent"
             android:layout_height="15dp"
             android:maxHeight="3dp"
-
             android:orientation="horizontal"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:progress="0"
             android:progressDrawable="@drawable/player_seekbar_progress"
             android:thumb="@drawable/seekbar_portrait_thumb"
-            android:thumbOffset="0dip" />
+            android:thumbOffset="0dip"
+            android:visibility="gone"/>
 
 
         <include
@@ -587,7 +587,7 @@
             layout="@layout/player_movie_end_alpha_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/_playerCoachmarkImage"

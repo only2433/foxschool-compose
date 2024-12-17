@@ -270,13 +270,26 @@ class LoginViewModel @Inject constructor(private val apiViewModel : LoginApiView
                         if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            (mContext as AppCompatActivity).finish()
-                            IntentManagementFactory.getInstance().initScene()
+                            _toast.value = result.message
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else if (result.isNetworkError)
                         {
-                            Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
-                            (mContext as AppCompatActivity).finish()
+                            _toast.value = result.message
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                            }
                         }
                         else
                         {

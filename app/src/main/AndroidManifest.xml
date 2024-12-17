@@ -138,10 +138,11 @@
             tools:ignore="LockedOrientationActivity">
         </activity>
 
-        <activity android:name=".main.StoryCategoryListActivity"
+        <activity android:name=".presentation.screen.player.PlayerActivity"
             android:screenOrientation="sensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/AppTheme_Default">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+            tools:ignore="LockedOrientationActivity">
         </activity>
 
 

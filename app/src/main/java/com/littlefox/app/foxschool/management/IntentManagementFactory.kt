@@ -38,6 +38,7 @@ import com.littlefox.app.foxschool.presentation.screen.search.SearchActivity
 import com.littlefox.app.foxschool.presentation.screen.management_mybooks.ManagementMyBooksActivity
 import com.littlefox.app.foxschool.presentation.screen.bookshelf.BookshelfActivity
 import com.littlefox.app.foxschool.presentation.screen.category_list.CategoryListActivity
+import com.littlefox.app.foxschool.presentation.screen.player.PlayerActivity
 import com.littlefox.app.foxschool.presentation.screen.vocabulary.VocabularyActivity
 import com.littlefox.app.foxschool.presentation.screen.quiz.QuizActivity
 import com.littlefox.logmonitor.Log
@@ -222,7 +223,7 @@ class IntentManagementFactory
 
             ActivityMode.PLAYER ->
             {
-                intent = Intent(mContext, PlayerHlsActivity::class.java)
+                intent = Intent(mContext, PlayerActivity::class.java)
                 if(`object` != null)
                 {
                     intent.putExtra(Common.INTENT_PLAYER_DATA_PARAMS, `object` as PlayerIntentParamsObject?)

@@ -2,22 +2,13 @@ package com.littlefox.app.foxschool.presentation.screen.series_contents_list
 
 import android.content.pm.ActivityInfo
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
-import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
@@ -25,19 +16,16 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
-import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
-import com.littlefox.app.foxschool.`object`.result.story.SeriesBaseResult
 import com.littlefox.app.foxschool.presentation.screen.series_contents_list.phone.SeriesContentsScreenV
 import com.littlefox.app.foxschool.presentation.viewmodel.SeriesContentsListViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
 import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 @AndroidEntryPoint
@@ -170,7 +158,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.QUIZ
+                    ActionContentsType.QUIZ
                 )
             )
         }
@@ -179,7 +167,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.TRANSLATE
+                    ActionContentsType.TRANSLATE
                 )
             )
         }
@@ -188,7 +176,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.VOCABULARY
+                    ActionContentsType.VOCABULARY
                 )
             )
         }
@@ -197,7 +185,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.ADD_BOOKSHELF
+                    ActionContentsType.ADD_BOOKSHELF
                 )
             )
         }
@@ -206,7 +194,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.EBOOK
+                    ActionContentsType.EBOOK
                 )
             )
         }
@@ -215,7 +203,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.STARWORDS
+                    ActionContentsType.STARWORDS
                 )
             )
         }
@@ -224,7 +212,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.CROSSWORD
+                    ActionContentsType.CROSSWORD
                 )
             )
         }
@@ -233,7 +221,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.FLASHCARD
+                    ActionContentsType.FLASHCARD
                 )
             )
         }
@@ -242,7 +230,7 @@ class SeriesContentsListActivity : BaseActivity()
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    BottomDialogContentsType.RECORD_PLAYER
+                    ActionContentsType.RECORD_PLAYER
                 )
             )
         }

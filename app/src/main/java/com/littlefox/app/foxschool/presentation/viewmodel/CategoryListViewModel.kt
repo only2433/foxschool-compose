@@ -120,20 +120,38 @@ class CategoryListViewModel @Inject constructor(private val apiViewModel : Categ
                         val code = data.second
                         if(result.isDuplicateLogin)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
                         }
                         else if(result.isAuthenticationBroken)
                         {
-                            (mContext as AppCompatActivity).finish()
                             _toast.value = result.message
-                            IntentManagementFactory.getInstance().initScene()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {
                             _toast.value = result.message
-                            (mContext as AppCompatActivity).onBackPressed()
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                            }
                         }
                     }
                 }

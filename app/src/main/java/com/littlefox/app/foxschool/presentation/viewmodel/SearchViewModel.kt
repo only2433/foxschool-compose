@@ -4,28 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.adapter.SearchListItemPagingAdapter
-import com.littlefox.app.foxschool.adapter.listener.SearchItemListener
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
-import com.littlefox.app.foxschool.api.paging.SearchPagingSource
 import com.littlefox.app.foxschool.api.viewmodel.api.SearchApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.enumerate.BottomDialogContentsType
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
@@ -53,15 +44,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -203,16 +188,28 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                     if(result.isDuplicateLogin)
                     {
                         //중복 로그인 시 재시작
-                        (mContext as AppCompatActivity).finish()
-                        Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
-                        IntentManagementFactory.getInstance().initAutoIntroSequence()
+                        _toast.value = result.message
+                        viewModelScope.launch {
+                            withContext(Dispatchers.IO)
+                            {
+                                delay(Common.DURATION_SHORT)
+                            }
+                            (mContext as AppCompatActivity).finish()
+                            IntentManagementFactory.getInstance().initAutoIntroSequence()
+                        }
                     }
                     else if(result.isAuthenticationBroken)
                     {
                         Log.f("== isAuthenticationBroken ==")
-                        (mContext as AppCompatActivity).finish()
-                        Toast.makeText(mContext, result.message, Toast.LENGTH_LONG).show()
-                        IntentManagementFactory.getInstance().initScene()
+                        _toast.value = result.message
+                        viewModelScope.launch {
+                            withContext(Dispatchers.IO)
+                            {
+                                delay(Common.DURATION_SHORT)
+                            }
+                            (mContext as AppCompatActivity).finish()
+                            IntentManagementFactory.getInstance().initScene()
+                        }
                     }
                     else
                     {
@@ -245,18 +242,18 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     }
 
 
-    private fun checkBottomSelectItemType(type: BottomDialogContentsType)
+    private fun checkBottomSelectItemType(type: ActionContentsType)
     {
         when(type)
         {
-            BottomDialogContentsType.QUIZ -> startQuizActivity()
-            BottomDialogContentsType.EBOOK -> startEbookActivity()
-            BottomDialogContentsType.FLASHCARD -> startFlashcardActivity()
-            BottomDialogContentsType.VOCABULARY -> startVocabularyActivity()
-            BottomDialogContentsType.CROSSWORD -> startGameCrosswordActivity()
-            BottomDialogContentsType.STARWORDS -> startGameStarwordsActivity()
-            BottomDialogContentsType.TRANSLATE -> startOriginTranslateActivity()
-            BottomDialogContentsType.RECORD_PLAYER -> {
+            ActionContentsType.QUIZ -> startQuizActivity()
+            ActionContentsType.EBOOK -> startEbookActivity()
+            ActionContentsType.FLASHCARD -> startFlashcardActivity()
+            ActionContentsType.VOCABULARY -> startVocabularyActivity()
+            ActionContentsType.CROSSWORD -> startGameCrosswordActivity()
+            ActionContentsType.STARWORDS -> startGameStarwordsActivity()
+            ActionContentsType.TRANSLATE -> startOriginTranslateActivity()
+            ActionContentsType.RECORD_PLAYER -> {
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
@@ -267,7 +264,7 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                     startRecordPlayerActivity()
                 }
             }
-            BottomDialogContentsType.ADD_BOOKSHELF -> {
+            ActionContentsType.ADD_BOOKSHELF -> {
                 Log.f("")
                 mCurrentSelectItem?.let { item ->
                     mSendBookshelfAddList.clear()

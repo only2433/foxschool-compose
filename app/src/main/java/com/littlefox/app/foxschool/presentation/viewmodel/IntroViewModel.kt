@@ -364,8 +364,15 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            (mContext as AppCompatActivity).finish()
-                            IntentManagementFactory.getInstance().initScene()
+                            _toast.value = result.message
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
                         }
                         else
                         {
