@@ -12,6 +12,7 @@ class PlayerIntentParamsObject : Parcelable
     constructor(playInformationList : ArrayList<ContentsBaseResult>)
     {
         mPlayInformationList = playInformationList
+        mHomeworkNumber = 0
     }
 
     constructor(playInformationList : ArrayList<ContentsBaseResult>, homeworkNumber : Int) : this(playInformationList)

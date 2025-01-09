@@ -1,10 +1,8 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.management.viewmodel
 
 import android.content.Context
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -13,44 +11,32 @@ import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.ManagementMyBooksApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.coroutine.BookshelfCreateCoroutine
-import com.littlefox.app.foxschool.coroutine.BookshelfDeleteCoroutine
-import com.littlefox.app.foxschool.coroutine.BookshelfUpdateCoroutine
-import com.littlefox.app.foxschool.coroutine.VocabularyCreateCoroutine
-import com.littlefox.app.foxschool.coroutine.VocabularyDeleteCoroutine
-import com.littlefox.app.foxschool.coroutine.VocabularyUpdateCoroutine
-import com.littlefox.app.foxschool.enumerate.BookColor
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.MyBooksType
-import com.littlefox.app.foxschool.main.presenter.ManagementItemMyBooksPresenter
-import com.littlefox.app.foxschool.main.presenter.ManagementItemMyBooksPresenter.Companion
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
-import com.littlefox.app.foxschool.`object`.result.BookshelfBaseObject
-import com.littlefox.app.foxschool.`object`.result.VocabularyShelfBaseObject
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.observer.MainObserver
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.manage_mybooks.ManagementMyBooksEvent
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksAction
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksState
+
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : ManagementMyBooksApiViewModel) : BaseViewModel()
+class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : ManagementMyBooksApiViewModel) : BaseMVIViewModel<ManagementMyBooksState, ManagementMyBooksAction, SideEffect>(
+    ManagementMyBooksState()
+)
 {
     companion object
     {
@@ -59,16 +45,6 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
 
         private const val MAX_NAME_SIZE : Int = 15
     }
-
-    private val _managementBooksData = SingleLiveEvent<ManagementBooksData>()
-    val managementBooksData: LiveData<ManagementBooksData> get() = _managementBooksData
-
-    private val _dialogDeleteBookshelf = SingleLiveEvent<Void>()
-    val dialogDeleteBookshelf: LiveData<Void> get() = _dialogDeleteBookshelf
-
-    private val _dialogDeleteVocabulary = SingleLiveEvent<Void>()
-    val dialogDeleteVocabulary: LiveData<Void> get() = _dialogDeleteVocabulary
-
     private lateinit var mContext : Context
     private var mMainInformationResult : MainInformationResult? = null
     private lateinit var mManagementBooksData : ManagementBooksData
@@ -84,35 +60,9 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
 
         onHandleApiObserver()
 
-        _managementBooksData.value = mManagementBooksData
-    }
-
-    override fun onHandleViewEvent(event : BaseEvent)
-    {
-        when(event)
-        {
-           is BaseEvent.DialogChoiceClick -> {
-                onDialogChoiceClick(
-                    event.buttonType,
-                    event.eventType
-                )
-            }
-
-            is ManagementMyBooksEvent.onSelectBooksItem -> {
-                mSelectBookColor = event.color
-            }
-
-            is ManagementMyBooksEvent.onSelectSaveButton ->{
-                onSelectSaveButton(
-                    event.bookName
-                )
-            }
-
-            is ManagementMyBooksEvent.onCancelDeleteButton ->{
-                onCancelActionButton()
-            }
-
-        }
+        postAction(
+            ManagementMyBooksAction.UpdateData(mManagementBooksData)
+        )
     }
 
     override fun onHandleApiObserver()
@@ -132,11 +82,15 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                             viewModelScope.launch {
                                 if(data.second)
                                 {
-                                    _isLoading.value = true
+                                    postSideEffect(
+                                        SideEffect.EnableLoading(true)
+                                    )
                                 }
                                 else
                                 {
-                                    _isLoading.value = false
+                                    postSideEffect(
+                                        SideEffect.EnableLoading(false)
+                                    )
                                 }
                             }
                         }
@@ -265,7 +219,9 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                         if(result.isDuplicateLogin)
                         {
                             //중복 로그인 시 재시작
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO) {
                                     delay(Common.DURATION_SHORT)
@@ -277,7 +233,9 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                         else if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO) {
                                     delay(Common.DURATION_SHORT)
@@ -288,7 +246,9 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
                         }
                         else
                         {
-                            _errorMessage.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowErrorMessage(result.message)
+                            )
                         }
                     }
                 }
@@ -311,6 +271,39 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
         Log.f("")
     }
 
+    override suspend fun reduceState(current : ManagementMyBooksState, action : ManagementMyBooksAction) : ManagementMyBooksState
+    {
+        return when(action)
+        {
+            is ManagementMyBooksAction.UpdateData ->
+            {
+                current.copy(
+                    booksData = action.data
+                )
+            }
+            is ManagementMyBooksAction.SelectBooksItem ->
+            {
+                mSelectBookColor = action.color
+                current
+            }
+            is ManagementMyBooksAction.SelectSaveButton ->
+            {
+                onSelectSaveButton(action.bookName)
+                current
+            }
+            is ManagementMyBooksAction.CancelDeleteButton ->
+            {
+                onCancelActionButton()
+                current
+            }
+            else -> current
+        }
+    }
+
+    override fun onBackPressed()
+    {
+        (mContext as AppCompatActivity).finish()
+    }
 
     /**
      * 책장 생성
@@ -457,12 +450,16 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
     {
         if(bookName == "")
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_warning_empty_bookshelf_name)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(mContext.resources.getString(R.string.message_warning_empty_bookshelf_name))
+            )
             return
         }
         else if(bookName.length > MAX_NAME_SIZE)
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_warning_add_bookshelf_maximum_15_word)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(mContext.resources.getString(R.string.message_warning_add_bookshelf_maximum_15_word))
+            )
             return
         }
 
@@ -487,28 +484,33 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             MyBooksType.BOOKSHELF_ADD, MyBooksType.VOCABULARY_ADD -> (mContext as AppCompatActivity).finish()
             MyBooksType.BOOKSHELF_MODIFY ->
             {
-                _dialogDeleteBookshelf.call()
+                postSideEffect(
+                    ManagementMyBooksSideEffect.ShowDeleteBookshelfDialog
+                )
             }
             MyBooksType.VOCABULARY_MODIFY ->
             {
-                _dialogDeleteVocabulary.call()
+                postSideEffect(
+                    ManagementMyBooksSideEffect.ShowDeleteVocabularyDialog
+                )
             }
         }
     }
+
 
     override fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
     {
         Log.f("eventType : $eventType, buttonType : $buttonType")
         when(eventType)
         {
-            DIALOG_EVENT_DELETE_BOOKSHELF ->
+            ManagementMyBooksViewModel.DIALOG_EVENT_DELETE_BOOKSHELF ->
             {
                 if(buttonType == DialogButtonType.BUTTON_2)
                 {
                     requestBookshelfDeleteAsync()
                 }
             }
-            DIALOG_EVENT_DELETE_VOCABULARY ->
+            ManagementMyBooksViewModel.DIALOG_EVENT_DELETE_VOCABULARY ->
             {
                 if(buttonType == DialogButtonType.BUTTON_2)
                 {

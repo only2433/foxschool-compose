@@ -15,19 +15,19 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.management.viewmodel.ManagementMyBooksViewModel
 
 import com.littlefox.app.foxschool.presentation.screen.management_mybooks.phone.ManagementMyBooksScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.ManagementMyBooksViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ManagementMyBooksActivity : BaseActivity()
 {
-    private val viewModel : ManagementMyBooksViewModel by viewModels()
+    private val viewModel : com.littlefox.app.foxschool.presentation.mvi.management.viewmodel.ManagementMyBooksViewModel by viewModels()
 
     private var mTemplateAlertDialog : TemplateAlertDialog? = null
     override fun onCreate(savedInstanceState : Bundle?)
@@ -40,7 +40,7 @@ class ManagementMyBooksActivity : BaseActivity()
         setContent {
             ManagementMyBooksScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent)
+                onEvent = viewModel::postAction)
         }
     }
 
@@ -71,7 +71,51 @@ class ManagementMyBooksActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ isLoading ->
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED){
+                viewModel.sideEffect.collect{ data ->
+                    when(data)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(data.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${data.message}")
+                            Toast.makeText(this@ManagementMyBooksActivity, data.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $data.message")
+                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(data.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${data.message}")
+                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(data.message)
+                        }
+                        is ManagementMyBooksSideEffect.ShowDeleteBookshelfDialog ->
+                        {
+                            showDeleteBookshelfDialog()
+                        }
+                        is ManagementMyBooksSideEffect.ShowDeleteVocabularyDialog ->
+                        {
+                            showDeleteBookshelfDialog()
+                        }
+                    }
+                }
+            }
+        }
+
+/*        viewModel.isLoading.observe(this){ isLoading ->
             if(isLoading)
             {
                 showLoading()
@@ -103,7 +147,7 @@ class ManagementMyBooksActivity : BaseActivity()
 
         viewModel.dialogDeleteVocabulary.observe(this){
             showDeleteVocabularyDialog()
-        }
+        }*/
     }
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)
@@ -120,6 +164,7 @@ class ManagementMyBooksActivity : BaseActivity()
 
     private fun showDeleteBookshelfDialog()
     {
+        Log.i("")
         showTemplateAlertDialog(
             resources.getString(R.string.message_delete_bookshelf),
             ManagementMyBooksViewModel.DIALOG_EVENT_DELETE_BOOKSHELF,
@@ -129,6 +174,7 @@ class ManagementMyBooksActivity : BaseActivity()
 
     private fun showDeleteVocabularyDialog()
     {
+        Log.i("")
         showTemplateAlertDialog(
             resources.getString(R.string.message_delete_vocabulary),
             ManagementMyBooksViewModel.DIALOG_EVENT_DELETE_VOCABULARY,
@@ -143,11 +189,9 @@ class ManagementMyBooksActivity : BaseActivity()
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
             Log.f("eventType : $eventType, buttonType : $buttonType")
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
     }

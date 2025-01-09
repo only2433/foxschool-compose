@@ -27,6 +27,7 @@ import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel.Companion
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.common.Event
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
 import com.littlefox.app.foxschool.database.CoachmarkDao
@@ -62,6 +63,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -1227,6 +1229,7 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         }
         else
         {
+            Log.i("serviceInfo : ${data.service_info.toString()}")
             if(data.service_info?.ebook.equals(Common.SERVICE_NOT_SUPPORTED) || !Feature.IS_SUPPORT_EBOOK)
             {
                 playerEndViewData.isEbookAvailable = false

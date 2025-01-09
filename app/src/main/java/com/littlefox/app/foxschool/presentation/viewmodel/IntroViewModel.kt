@@ -261,9 +261,7 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
                             mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
-
-                            _showDialogPasswordChange.value =mUserInformationResult!!.getPasswordChangeType()
-
+                            _showDialogPasswordChange.value = mUserInformationResult!!.getPasswordChangeType()
                         }
                         else
                         {

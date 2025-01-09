@@ -20,7 +20,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -37,26 +36,27 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
-import com.littlefox.app.foxschool.presentation.viewmodel.ManagementMyBooksViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.enumerate.MyBooksType
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.manage_mybooks.ManagementMyBooksEvent
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksAction
 import com.littlefox.app.foxschool.presentation.widget.DeleteIconTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.LightBlueOutlinedButton
 import com.littlefox.app.foxschool.presentation.widget.LightBlueRoundButton
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
+import com.littlefox.logmonitor.Log
 
 @Composable
 fun ManagementMyBooksScreenV(
-    viewModel : ManagementMyBooksViewModel,
-    onEvent: (BaseEvent) -> Unit
+    viewModel : com.littlefox.app.foxschool.presentation.mvi.management.viewmodel.ManagementMyBooksViewModel,
+    onEvent: (ManagementMyBooksAction) -> Unit
 )
 {
     val focusManager = LocalFocusManager.current
-    val _managementData by viewModel.managementBooksData.observeAsState(initial = null)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val _nameText = remember {
         mutableStateOf("")
     }
@@ -64,8 +64,9 @@ fun ManagementMyBooksScreenV(
         mutableStateOf(0)
     }
 
-    LaunchedEffect(_managementData) {
-        _managementData?.let {
+    LaunchedEffect(state.booksData) {
+        Log.i("데이터 변경")
+        state.booksData.let {
             _currentSelectColorIndex.value = getBookIndexFromColor(it.getColor())
             _nameText.value = it.getName()
         }
@@ -83,7 +84,7 @@ fun ManagementMyBooksScreenV(
         Column{
 
             TopBarCloseLayout(
-                title = getTitleText(_managementData),
+                title = getTitleText(state.booksData),
                 backgroundColor = colorResource(id = R.color.color_23cc8a)) {
             }
 
@@ -103,7 +104,7 @@ fun ManagementMyBooksScreenV(
                         .offset(
                             x = getDp(pixel = 42)
                         ),
-                    text = getMessageText(data = _managementData),
+                    text = getMessageText(data = state.booksData),
                     style = TextStyle(
                         color = colorResource(id = R.color.color_444444),
                         fontFamily = FontFamily(
@@ -145,7 +146,7 @@ fun ManagementMyBooksScreenV(
                     _currentSelectColorIndex.value = it
 
                     onEvent(
-                        ManagementMyBooksEvent.onSelectBooksItem(
+                        ManagementMyBooksAction.SelectBooksItem(
                             getBookColorFromIndex(it)
                         )
                     )
@@ -167,7 +168,7 @@ fun ManagementMyBooksScreenV(
                         ), text = stringResource(id = R.string.text_save)
                 ) {
                     onEvent(
-                        ManagementMyBooksEvent.onSelectSaveButton(_nameText.value)
+                        ManagementMyBooksAction.SelectSaveButton(_nameText.value)
                     )
                 }
             }
@@ -190,15 +191,15 @@ fun ManagementMyBooksScreenV(
                     )
                     .height(
                         getDp(pixel = 120)
-                    ), text = _managementData?.let {
+                    ), text = state.booksData.let {
                     when
                     {
                         it.getName().isNotEmpty() -> stringResource(id = R.string.text_delete)
                         else -> stringResource(id = R.string.text_cancel)
                     }
-                } ?: "") {
+                }) {
                     onEvent(
-                        ManagementMyBooksEvent.onCancelDeleteButton
+                        ManagementMyBooksAction.CancelDeleteButton
                     )
                 }
             }

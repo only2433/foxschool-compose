@@ -79,12 +79,13 @@ fun VocabularyScreenV(
     val _selectItemCount by viewModel.itemSelectedCount.observeAsState(
         initial = EventWrapper(0)
     )
+    val _intervalSecond by viewModel.intervalSecond.observeAsState(initial = 0)
+    val _isSequencePlaying by viewModel.isPlayingStatus.observeAsState(initial = false)
+
     val _vocabularyTitle by viewModel.vocabularyTitle.observeAsState(initial = "")
     val _selectMenuData by viewModel.vocabularySelectType.observeAsState(initial = VocabularySelectData())
     val _isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
     val _vocabularyType by viewModel.vocabularyType.observeAsState(initial = VocabularyType.VOCABULARY_CONTENTS)
-    val _intervalSecond by viewModel.intervalSecond.observeAsState(initial = 0)
-    val _isSequencePlaying by viewModel.isPlayingStatus.observeAsState(initial = false)
     val _currentPlayingIndex by viewModel.currentPlayingIndex.observeAsState(initial = 0)
 
     val _listState = remember {

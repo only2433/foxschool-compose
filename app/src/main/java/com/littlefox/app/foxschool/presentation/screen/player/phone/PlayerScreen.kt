@@ -2183,35 +2183,38 @@ private fun BuildPlayerEndView(
                 horizontalArrangement = Arrangement.Center
             )
             {
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isEbookAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.EBOOK)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_ebook_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.EBOOK)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_ebook_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "Ebook Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2224,35 +2227,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isVocabularyAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.VOCABULARY)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_voca_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.VOCABULARY)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_voca_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "VOCABULARY Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2265,35 +2271,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isQuizAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.QUIZ)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_quiz_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.QUIZ)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_quiz_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "QUIZ Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2306,35 +2315,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isFlashcardAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.FLASHCARD)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_flashcard_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.FLASHCARD)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_flashcard_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "FLASHCARD Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2347,35 +2359,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isStarwordsAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.STARWORDS)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_starwords_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.STARWORDS)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_starwords_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "STARWORDS Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2388,35 +2403,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isCrosswordAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.CROSSWORD)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_crossword_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.CROSSWORD)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_crossword_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "CROSSWORD Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
@@ -2429,35 +2447,38 @@ private fun BuildPlayerEndView(
                         )
                 )
 
-                Image(
-                    modifier = Modifier
-                        .width(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                if(data.isTranslateAvailable)
+                {
+                    Image(
+                        modifier = Modifier
+                            .width(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .height(
-                            getDp(
-                                pixel = when(configuration.orientation)
-                                {
-                                    Configuration.ORIENTATION_PORTRAIT -> 114
-                                    else -> 150
-                                }
+                            .height(
+                                getDp(
+                                    pixel = when(configuration.orientation)
+                                    {
+                                        Configuration.ORIENTATION_PORTRAIT -> 114
+                                        else -> 150
+                                    }
+                                )
                             )
-                        )
-                        .clickable(interactionSource = remember {
-                            MutableInteractionSource()
-                        }, indication = null, onClick = {
-                            onClickActionType(ActionContentsType.TRANSLATE)
-                        }),
-                    painter = painterResource(id = R.drawable.icon_org_player),
-                    contentScale = ContentScale.Fit,
-                    contentDescription = "Ebook Icon"
-                )
+                            .clickable(interactionSource = remember {
+                                MutableInteractionSource()
+                            }, indication = null, onClick = {
+                                onClickActionType(ActionContentsType.TRANSLATE)
+                            }),
+                        painter = painterResource(id = R.drawable.icon_org_player),
+                        contentScale = ContentScale.Fit,
+                        contentDescription = "TRANSLATE Icon"
+                    )
+                }
 
                 Spacer(
                     modifier = Modifier
