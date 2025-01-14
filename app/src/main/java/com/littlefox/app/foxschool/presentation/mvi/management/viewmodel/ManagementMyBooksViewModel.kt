@@ -19,9 +19,12 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.observer.MainObserver
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
 import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
 import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
 import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksAction
+
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksEvent
 import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksSideEffect
 import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksState
 
@@ -34,7 +37,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : ManagementMyBooksApiViewModel) : BaseMVIViewModel<ManagementMyBooksState, ManagementMyBooksAction, SideEffect>(
+class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : ManagementMyBooksApiViewModel) : BaseMVIViewModel<ManagementMyBooksState, ManagementMyBooksEvent, SideEffect>(
     ManagementMyBooksState()
 )
 {
@@ -60,9 +63,24 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
 
         onHandleApiObserver()
 
-        postAction(
-            ManagementMyBooksAction.UpdateData(mManagementBooksData)
+        postEvent(
+            ManagementMyBooksEvent.UpdateData(mManagementBooksData)
         )
+    }
+
+    override fun resume()
+    {
+        Log.f("")
+    }
+
+    override fun pause()
+    {
+        Log.f("")
+    }
+
+    override fun destroy()
+    {
+        Log.f("")
     }
 
     override fun onHandleApiObserver()
@@ -256,46 +274,37 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
         }
     }
 
-    override fun resume()
+    override fun onHandleAction(action : Action)
     {
-        Log.f("")
-    }
-
-    override fun pause()
-    {
-        Log.f("")
-    }
-
-    override fun destroy()
-    {
-        Log.f("")
-    }
-
-    override suspend fun reduceState(current : ManagementMyBooksState, action : ManagementMyBooksAction) : ManagementMyBooksState
-    {
-        return when(action)
+        when(action)
         {
-            is ManagementMyBooksAction.UpdateData ->
-            {
-                current.copy(
-                    booksData = action.data
-                )
-            }
             is ManagementMyBooksAction.SelectBooksItem ->
             {
                 mSelectBookColor = action.color
-                current
             }
             is ManagementMyBooksAction.SelectSaveButton ->
             {
                 onSelectSaveButton(action.bookName)
-                current
             }
             is ManagementMyBooksAction.CancelDeleteButton ->
             {
                 onCancelActionButton()
-                current
             }
+            else -> {}
+        }
+    }
+
+    override suspend fun reduceState(current : ManagementMyBooksState, event : ManagementMyBooksEvent) : ManagementMyBooksState
+    {
+        return when(event)
+        {
+            is ManagementMyBooksEvent.UpdateData ->
+            {
+                current.copy(
+                    booksData = event.data
+                )
+            }
+
             else -> current
         }
     }

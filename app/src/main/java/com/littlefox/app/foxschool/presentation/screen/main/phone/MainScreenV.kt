@@ -36,17 +36,21 @@ import androidx.compose.material3.rememberDrawerState
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
+
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.`object`.data.main.TabItemData
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
+import com.littlefox.app.foxschool.presentation.mvi.main.MainState
+import com.littlefox.app.foxschool.presentation.mvi.main.main.MainViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.widget.DrawerMenuPhone
 import com.littlefox.app.foxschool.presentation.widget.TopbarMainLayout
@@ -60,9 +64,10 @@ import kotlinx.coroutines.withContext
 @Composable
 fun MainScreenV(
     viewModel: MainViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (MainAction) -> Unit
 )
 {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val _tabs = listOf(
         TabItemData("Story", painterResource(id = R.drawable.gnb_icon02), colorResource(id = R.color.color_23cc8a)),
         TabItemData("Song", painterResource(id = R.drawable.gnb_icon03), colorResource(id = R.color.color_23cc8a)),
@@ -82,10 +87,7 @@ fun MainScreenV(
         }
         else
         {
-            onEvent(
-                BaseEvent.onBackPressed
-            )
-
+            viewModel.onBackPressed()
         }
     }
 
@@ -114,8 +116,8 @@ fun MainScreenV(
                         {
                             delay(Common.DURATION_SHORTER)
                         }
-                        onEvent(
-                            MainEvent.onClickDrawerItem(menu)
+                        onAction(
+                            MainAction.ClickDrawerItem(menu)
                         )
                     }
                 }
@@ -137,8 +139,8 @@ fun MainScreenV(
                             },
                             onTabSearch = {
                                 Log.i("onTabSearch Click")
-                                onEvent(
-                                    MainEvent.onClickSearch
+                                onAction(
+                                    MainAction.ClickSearch
                                 )
                             },
                         )
@@ -191,7 +193,7 @@ fun MainScreenV(
                         .fillMaxSize()
                         .padding(it)
                 ) { page ->
-                    TabContent(page, viewModel, onEvent, _scrollBehavior)
+                    TabContent(page, state, onAction, _scrollBehavior)
                 }
             }
             )
@@ -201,11 +203,11 @@ fun MainScreenV(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TabContent(page: Int, viewModel: MainViewModel, onEvent: (MainEvent) -> Unit, scrollBehavior : TopAppBarScrollBehavior) {
+fun TabContent(page: Int, state: MainState, onAction: (MainAction) -> Unit, scrollBehavior : TopAppBarScrollBehavior) {
     when (page) {
-        0 -> SubStoryScreenV(viewModel, onEvent, scrollBehavior)
-        1 -> SubSongScreenV(viewModel, onEvent, scrollBehavior)
-        2 -> SubMyBooksScreenV(viewModel, onEvent, scrollBehavior)
+        0 -> SubStoryScreenV(state, onAction, scrollBehavior)
+        1 -> SubSongScreenV(state, onAction, scrollBehavior)
+        2 -> SubMyBooksScreenV(state, onAction, scrollBehavior)
     }
 }
 

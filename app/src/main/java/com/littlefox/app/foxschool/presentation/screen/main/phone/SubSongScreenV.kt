@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
+import com.littlefox.app.foxschool.presentation.mvi.main.MainState
 import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
 import com.littlefox.app.foxschool.presentation.widget.SeriesGridViewItem
@@ -28,17 +30,15 @@ import com.littlefox.logmonitor.Log
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubSongScreenV(
-    viewModel : MainViewModel,
-    onEvent: (MainEvent) -> Unit,
+    state : MainState,
+    onAction: (MainAction) -> Unit,
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val _viewModelDataList by viewModel.updateSongData.observeAsState(
-        initial = emptyList()
-    )
-    val _dataList by remember(_viewModelDataList) {
+
+    val _dataList by remember(state.songData) {
         derivedStateOf {
-            _viewModelDataList.ifEmpty {
+            state.songData.ifEmpty {
                 emptyList()
             }
         }
@@ -79,6 +79,11 @@ fun SubSongScreenV(
                                 data = _dataList[index])
                             {
                                 Log.i("item Click")
+                                onAction(
+                                    MainAction.ClickSongCategoriesItem(
+                                        _dataList[index]
+                                    )
+                                )
                             }
                         }
                         else
@@ -93,6 +98,11 @@ fun SubSongScreenV(
                                 data = _dataList[index])
                             {
                                 Log.i("item Click")
+                                onAction(
+                                    MainAction.ClickSongCategoriesItem(
+                                        _dataList[index]
+                                    )
+                                )
                             }
                         }
                     }

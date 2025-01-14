@@ -27,11 +27,12 @@ import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroAction
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.intro.viewmodel.IntroViewModel
 
 import com.littlefox.app.foxschool.presentation.screen.intro.phone.IntroScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.IntroViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -39,7 +40,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class IntroActivity : BaseActivity()
 {
-
     companion object
     {
         private const val SYSTEM_DIALOG_REASON_KEY : String         = "reason"
@@ -50,7 +50,6 @@ class IntroActivity : BaseActivity()
     private var mPasswordChangeDialog : PasswordChangeDialog? = null
     private lateinit var mTemplateAlertDialog : TemplateAlertDialog
 
-
     private val viewModel: IntroViewModel by viewModels()
     private var mHomeKeyIntentFilter : IntentFilter? = null
 
@@ -60,10 +59,8 @@ class IntroActivity : BaseActivity()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         viewModel.init(this)
-        viewModel.onHandleViewEvent(
-            IntroEvent.onAddResultLaunchers(
-                mLoginActivityResult
-            )
+        viewModel.onAddResultLaunchers(
+            mLoginActivityResult
         )
         CommonUtils.getInstance(this).windowInfo()
         CommonUtils.getInstance(this).showDeviceInfo()
@@ -73,7 +70,7 @@ class IntroActivity : BaseActivity()
         setContent {
             IntroScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
                 )
         }
     }
@@ -124,9 +121,7 @@ class IntroActivity : BaseActivity()
     override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        viewModel.onHandleViewEvent(
-            IntroEvent.onRequestPermissionResult(requestCode, permissions, grantResults)
-        )
+        viewModel.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onNewIntent(intent : Intent?)
@@ -137,53 +132,60 @@ class IntroActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect{ data ->
+                    when(data)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(data.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${data.message}")
+                            Toast.makeText(this@IntroActivity, data.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $data.message")
+                            CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(data.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${data.message}")
+                            CommonUtils.getInstance(this@IntroActivity).showErrorMessage(data.message)
+                        }
+                        is IntroSideEffect.ShowSelectUpdateDialog ->
+                        {
+                            showSelectUpdateDialog()
+                        }
+                        is IntroSideEffect.ShowForceUpdateDialog ->
+                        {
+                            showForceUpdateDialog()
+                        }
+                        is IntroSideEffect.ShowFilePermissionDialog ->
+                        {
+                            showChangeFilePermissionDialog()
+                        }
+                        is IntroSideEffect.ShowPasswordChangeDialog ->
+                        {
+                            showPasswordChangeDialog(data.type)
+                        }
+                        is IntroSideEffect.HidePasswordChangeDialog ->
+                        {
+                            hidePasswordChangeDialog()
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@IntroActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@IntroActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@IntroActivity).showErrorMessage(message)
-        }
-
-        viewModel.dialogSelectUpdate.observe(this){
-            showSelectUpdateDialog()
-        }
-
-        viewModel.dialogForceUpdate.observe(this){
-            showForceUpdateDialog()
-        }
-
-        viewModel.dialogFilePermission.observe(this){
-            showChangeFilePermissionDialog()
-        }
-
-        viewModel.showDialogPasswordChange.observe(this){ type ->
-            showPasswordChangeDialog(type)
-        }
-
-        viewModel.hideDialogPasswordChange.observe(this){
-            hidePasswordChangeDialog()
         }
     }
 
@@ -250,8 +252,8 @@ class IntroActivity : BaseActivity()
          */
         override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
         {
-            viewModel.onHandleViewEvent(
-                IntroEvent.onClickChangeButton(
+            viewModel.onHandleAction(
+                IntroAction.ClickChangeButton(
                     oldPassword,
                     newPassword,
                     confirmPassword
@@ -264,8 +266,8 @@ class IntroActivity : BaseActivity()
          */
         override fun onClickLaterButton()
         {
-            viewModel.onHandleViewEvent(
-                IntroEvent.onClickLasterButton
+            viewModel.onHandleAction(
+                IntroAction.ClickLaterButton
             )
         }
 
@@ -274,8 +276,8 @@ class IntroActivity : BaseActivity()
          */
         override fun onClickKeepButton()
         {
-            viewModel.onHandleViewEvent(
-                IntroEvent.onClickKeepButton
+            viewModel.onHandleAction(
+                IntroAction.ClickKeepButton
             )
         }
     }
@@ -284,20 +286,16 @@ class IntroActivity : BaseActivity()
     {
         override fun onConfirmButtonClick(eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogClick(
-                    eventType
-                )
+            viewModel.onDialogClick(
+                eventType
             )
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
     }
@@ -315,8 +313,8 @@ class IntroActivity : BaseActivity()
                 {
                     if(reason == SYSTEM_DIALOG_REASON_HOME_KEY)
                     {
-                        viewModel.onHandleViewEvent(
-                            IntroEvent.onClickHomeButton
+                        viewModel.onHandleAction(
+                            IntroAction.ClickHomeButton
                         )
                     }
                 }
@@ -327,15 +325,11 @@ class IntroActivity : BaseActivity()
     private val mLoginActivityResult = registerForActivityResult(StartActivityForResult()) { result ->
         if(result.resultCode == RESULT_OK)
         {
-            viewModel.onHandleViewEvent(
-                IntroEvent.onActivityResult(
-                    ResultLauncherCode.DEFAULT,
-                    result.data
-                )
+            viewModel.onActivityResult(
+                ResultLauncherCode.DEFAULT,
+                result.data
             )
         }
     }
-
-
 
 }

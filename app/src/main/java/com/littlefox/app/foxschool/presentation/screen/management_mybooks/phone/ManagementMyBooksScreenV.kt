@@ -42,6 +42,7 @@ import com.littlefox.app.foxschool.enumerate.MyBooksType
 import com.littlefox.app.foxschool.`object`.data.bookshelf.ManagementBooksData
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksAction
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksEvent
 import com.littlefox.app.foxschool.presentation.widget.DeleteIconTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.LightBlueOutlinedButton
 import com.littlefox.app.foxschool.presentation.widget.LightBlueRoundButton
@@ -51,7 +52,7 @@ import com.littlefox.logmonitor.Log
 @Composable
 fun ManagementMyBooksScreenV(
     viewModel : com.littlefox.app.foxschool.presentation.mvi.management.viewmodel.ManagementMyBooksViewModel,
-    onEvent: (ManagementMyBooksAction) -> Unit
+    onAction: (ManagementMyBooksAction) -> Unit
 )
 {
     val focusManager = LocalFocusManager.current
@@ -145,7 +146,7 @@ fun ManagementMyBooksScreenV(
                 onValueChange = {
                     _currentSelectColorIndex.value = it
 
-                    onEvent(
+                    onAction(
                         ManagementMyBooksAction.SelectBooksItem(
                             getBookColorFromIndex(it)
                         )
@@ -167,7 +168,7 @@ fun ManagementMyBooksScreenV(
                             getDp(pixel = 120)
                         ), text = stringResource(id = R.string.text_save)
                 ) {
-                    onEvent(
+                    onAction(
                         ManagementMyBooksAction.SelectSaveButton(_nameText.value)
                     )
                 }
@@ -198,7 +199,7 @@ fun ManagementMyBooksScreenV(
                         else -> stringResource(id = R.string.text_cancel)
                     }
                 }) {
-                    onEvent(
+                    onAction(
                         ManagementMyBooksAction.CancelDeleteButton
                     )
                 }

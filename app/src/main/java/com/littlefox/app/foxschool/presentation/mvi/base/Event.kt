@@ -1,6 +1,3 @@
 package com.littlefox.app.foxschool.presentation.mvi.base
 
-interface Action
-{
-
-}
+interface Event

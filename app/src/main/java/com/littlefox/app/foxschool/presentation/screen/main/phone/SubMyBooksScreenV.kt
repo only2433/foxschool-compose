@@ -48,36 +48,34 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
+import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
+import com.littlefox.app.foxschool.presentation.mvi.main.MainState
 import com.littlefox.app.foxschool.presentation.widget.SwitchTextButton
 import com.littlefox.logmonitor.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubMyBooksScreenV(
-    viewModel : MainViewModel,
-    onEvent: (MainEvent) -> Unit,
+    state : MainState,
+    onAction: (MainAction) -> Unit,
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val _mainMyBooksInformationResult by viewModel.updateMyBooksData.observeAsState(
-        initial = MainInformationResult()
-    )
+
     var _bookType by remember {
         mutableStateOf(BookType.BOOKSHELF)
     }
     var _currentListSize by remember {
         mutableStateOf(0)
     }
-    val _bookshelfItemList = remember(_mainMyBooksInformationResult) {
+    val _bookshelfItemList = remember(state.myBooksData) {
         derivedStateOf {
-            _mainMyBooksInformationResult.getBookShelvesList()
+            state.myBooksData.getBookShelvesList()
         }
     }
-    val _vocabularyItemList = remember(_mainMyBooksInformationResult) {
+    val _vocabularyItemList = remember(state.myBooksData) {
         derivedStateOf {
-            _mainMyBooksInformationResult.getVocabulariesList()
+            state.myBooksData.getVocabulariesList()
         }
     }
 
@@ -137,16 +135,16 @@ fun SubMyBooksScreenV(
                             BuildBookshelfItem(
                                 data = item,
                                 onItemClick = {
-                                    onEvent(
-                                        MainEvent.onEnterBookshelfList(index)
+                                    onAction(
+                                        MainAction.EnterBookshelfList(index)
                                     )
                                 },
                                 onOptionClick = {
-                                    onEvent(
-                                        MainEvent.onSettingBookshelf(item)
+                                    onAction(
+                                        MainAction.SettingBookshelf(item)
                                     )
                                 }
-                                )
+                            )
                         }
                     }
 
@@ -174,7 +172,7 @@ fun SubMyBooksScreenV(
                                         .clickable(interactionSource = remember {
                                             MutableInteractionSource()
                                         }, indication = null, onClick = {
-                                            onEvent(MainEvent.onAddBookshelf)
+                                            onAction(MainAction.AddBookshelf)
                                         }),
                                     painter = painterResource(id = R.drawable.btn_add),
                                     contentScale = ContentScale.Fit,
@@ -219,13 +217,13 @@ fun SubMyBooksScreenV(
                             BuildMyVocabularyShelfItem(
                                 data = item,
                                 onItemClick = {
-                                    onEvent(
-                                        MainEvent.onEnterVocabularyList(index)
+                                    onAction(
+                                        MainAction.EnterVocabularyList(index)
                                     )
                                 },
                                 onOptionClick = {
-                                    onEvent(
-                                        MainEvent.onSettingVocabulary(item)
+                                    onAction(
+                                        MainAction.SettingVocabulary(item)
                                     )
                                 })
                         }
@@ -255,7 +253,7 @@ fun SubMyBooksScreenV(
                                         .clickable(interactionSource = remember {
                                             MutableInteractionSource()
                                         }, indication = null, onClick = {
-                                            onEvent(MainEvent.onAddVocabulary)
+                                            onAction(MainAction.AddVocabulary)
                                         }),
                                     painter = painterResource(id = R.drawable.btn_add),
                                     contentScale = ContentScale.Fit,

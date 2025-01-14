@@ -1,4 +1,5 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.intro.viewmodel
+
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -9,23 +10,13 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
-import com.littlefox.app.foxschool.`object`.result.base.BaseResult
-import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
-import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
-import com.littlefox.app.foxschool.api.base.BaseFactoryViewModel
-import com.littlefox.app.foxschool.enumerate.IntroViewMode
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.IntroApiViewModel
 import com.littlefox.app.foxschool.common.Common
@@ -33,27 +24,40 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.LittlefoxLocale
 import com.littlefox.app.foxschool.common.NetworkUtil
 import com.littlefox.app.foxschool.enc.SimpleCrypto
-import com.littlefox.app.foxschool.enumerate.*
+import com.littlefox.app.foxschool.enumerate.ActivityMode
+import com.littlefox.app.foxschool.enumerate.AnimationMode
+import com.littlefox.app.foxschool.enumerate.DataType
+import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.enumerate.IntroProcess
+import com.littlefox.app.foxschool.enumerate.IntroViewMode
+import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 import com.littlefox.app.foxschool.management.IntentManagementFactory
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
+import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
+import com.littlefox.app.foxschool.`object`.result.base.BaseResult
+import com.littlefox.app.foxschool.`object`.result.login.LoginInformationResult
+import com.littlefox.app.foxschool.`object`.result.version.VersionDataResult
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroAction
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroEvent
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.intro.IntroState
 import com.littlefox.logmonitor.Log
 import com.littlefox.logmonitor.enumItem.MonitorMode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import java.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Locale
 import javax.inject.Inject
-import kotlin.collections.ArrayList
-
 
 @HiltViewModel
-class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiViewModel) : BaseViewModel()
+class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiViewModel) : BaseMVIViewModel<IntroState, IntroEvent, SideEffect>(
+    IntroState()
+)
 {
     companion object
     {
@@ -66,28 +70,6 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         private const val INDEX_LOGIN                               = 0
         private val PERCENT_SEQUENCE : FloatArray                   = floatArrayOf(0f, 30f, 60f, 100f)
     }
-
-    private val _bottomType = SingleLiveEvent<IntroViewMode>()
-    val bottomType: LiveData<IntroViewMode> get() = _bottomType
-
-    private val _progressPercent = SingleLiveEvent<Float>()
-    val progressPercent: LiveData<Float> get() = _progressPercent
-
-    private val _dialogSelectUpdate = SingleLiveEvent<Void>()
-    val dialogSelectUpdate: LiveData<Void> get() = _dialogSelectUpdate
-
-    private val _dialogForceUpdate = SingleLiveEvent<Void>()
-    val dialogForceUpdate: LiveData<Void> get() = _dialogForceUpdate
-
-    private val _dialogFilePermission = SingleLiveEvent<Void>()
-    val dialogFilePermission: LiveData<Void> get() = _dialogFilePermission
-
-    private val _showDialogPasswordChange = SingleLiveEvent<PasswordGuideType>()
-    val showDialogPasswordChange: LiveData<PasswordGuideType> get() = _showDialogPasswordChange
-
-    private val _hideDialogPasswordChange = SingleLiveEvent<Void>()
-    val hideDialogPasswordChange: LiveData<Void> get() = _hideDialogPasswordChange
-
 
     private lateinit var mContext : Context
     private lateinit var mPermissionList : ArrayList<String>
@@ -141,64 +123,29 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
             withContext(Dispatchers.IO){
                 delay(Common.DURATION_NORMAL)
             }
-
             prepare()
         }
     }
 
-    override fun onHandleViewEvent(event : BaseEvent)
+    override fun resume()
     {
-        when(event)
+        Log.f("")
+        if(isRequestPermission)
         {
-            is BaseEvent.DialogClick ->
-            {
-                onDialogClick(
-                    event.eventType
-                )
-            }
-            is BaseEvent.DialogChoiceClick ->
-            {
-                onDialogChoiceClick(
-                    event.buttonType,
-                    event.eventType
-                )
-            }
-            is IntroEvent.onActivateEasterEgg ->
-            {
-                onActivateEasterEgg()
-            }
-            is IntroEvent.onDeactivateEasterEgg ->
-            {
-                onDeactiveEasterEgg()
-            }
-            is IntroEvent.onClickIntroduce ->
-            {
-                onClickIntroduce()
-            }
-            is IntroEvent.onClickLogin ->
-            {
-                onClickLogin()
-            }
-            is IntroEvent.onClickHomeButton ->
-            {
-                (mContext as AppCompatActivity).finish()
-            }
-            is IntroEvent.onClickChangeButton ->
-            {
-                onClickChangeButton(
-                    event.oldPassword,
-                    event.confirmPassword,
-                    event.newPassword
-                )
-            }
-            else ->
-            {
-                onHandleActivityResult(event)
-            }
-
+            isRequestPermission = false
+            checkPermission()
         }
     }
 
+    override fun pause()
+    {
+        Log.f("")
+    }
+
+    override fun destroy()
+    {
+        Log.f("")
+    }
 
     override fun onHandleApiObserver()
     {
@@ -213,11 +160,15 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             if(data.second)
                             {
-                                _isLoading.value = true
+                                postSideEffect(
+                                    SideEffect.EnableLoading(true)
+                                )
                             }
                             else
                             {
-                                _isLoading.value = false
+                                postSideEffect(
+                                    SideEffect.EnableLoading(false)
+                                )
                             }
                         }
                     }
@@ -235,11 +186,11 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             if(mVersionDataResult!!.isForceUpdate())
                             {
-                                _dialogSelectUpdate.call()
+                                postSideEffect(IntroSideEffect.ShowSelectUpdateDialog)
                             }
                             else
                             {
-                                _dialogForceUpdate.call()
+                                postSideEffect(IntroSideEffect.ShowForceUpdateDialog)
                             }
                         }
                         else
@@ -261,7 +212,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         {
                             // 비밀번호 변경 날짜가 90일을 넘어가는 경우 비밀번호 변경 안내 다이얼로그를 표시한다.
                             mUserLoginData = CommonUtils.getInstance(mContext).getPreferenceObject(Common.PARAMS_USER_LOGIN, UserLoginData::class.java) as UserLoginData?
-                            _showDialogPasswordChange.value = mUserInformationResult!!.getPasswordChangeType()
+                            postSideEffect(
+                                IntroSideEffect.ShowPasswordChangeDialog(mUserInformationResult!!.getPasswordChangeType())
+                            )
                         }
                         else
                         {
@@ -300,13 +253,16 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         // 비밀번호 변경 성공
                         Log.f("Password Change Complete")
                         changeUserLoginData()
-
-                        _toast.value = mContext.getString(R.string.message_password_change_complete)
+                        postSideEffect(
+                            SideEffect.ShowToast(mContext.getString(R.string.message_password_change_complete))
+                        )
                         viewModelScope.launch {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
                             }
-                            _hideDialogPasswordChange.call()
+                            postSideEffect(
+                                IntroSideEffect.HidePasswordChangeDialog
+                            )
                             mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                             enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                         }
@@ -320,7 +276,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 apiViewModel.changePasswordNextData.collect { data ->
                     data?.let {
                         // 다음에 변경
-                        _hideDialogPasswordChange.call()
+                        postSideEffect(
+                            IntroSideEffect.HidePasswordChangeDialog
+                        )
                         mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                         enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                     }
@@ -333,14 +291,17 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 apiViewModel.changePasswordKeepData.collect { data ->
                     data?.let {
                         // 현재 비밀번호 유지
-                        _toast.value = mContext.getString(R.string.message_password_change_complete)
-
+                        postSideEffect(
+                            SideEffect.ShowToast(mContext.getString(R.string.message_password_change_complete))
+                        )
                         viewModelScope.launch {
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_LONG)
 
                             }
-                            _hideDialogPasswordChange.call()
+                            postSideEffect(
+                                IntroSideEffect.HidePasswordChangeDialog
+                            )
                             mCurrentIntroProcess = IntroProcess.LOGIN_COMPLTE
                             enableProgressAnimation(IntroProcess.LOGIN_COMPLTE)
                         }
@@ -362,7 +323,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                         if(result.isAuthenticationBroken || result.status == BaseResult.FAIL_CODE_INTERNAL_SERVER_ERROR)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO)
                                 {
@@ -378,7 +341,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                                 code == RequestCode.CODE_PASSWORD_CHANGE_NEXT ||
                                 code == RequestCode.CODE_PASSWORD_CHANGE_KEEP)
                             {
-                                _toast.value = result.message
+                                postSideEffect(
+                                    SideEffect.ShowToast(result.message)
+                                )
                             }
                             else
                             {
@@ -391,49 +356,64 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    override fun resume()
+    override fun onHandleAction(action : Action)
     {
-        Log.f("")
-        if(isRequestPermission)
+        when(action)
         {
-            isRequestPermission = false
-            checkPermission()
+            is IntroAction.ClickIntroduce ->
+            {
+                onClickIntroduce()
+            }
+            is IntroAction.ClickLogin ->
+            {
+                onClickLogin()
+            }
+            is IntroAction.ClickHomeButton ->
+            {
+                onClickHomeButton()
+            }
+            is IntroAction.ClickChangeButton ->
+            {
+                onClickChangeButton(
+                    action.oldPassword,
+                    action.newPassword,
+                    action.confirmPassword
+                )
+            }
+            is IntroAction.ActivateEasterEgg ->
+            {
+                onActivateEasterEgg()
+            }
+            is IntroAction.DeactivateEasterEgg ->
+            {
+                onDeactiveEasterEgg()
+            }
+            is IntroAction.ClickKeepButton ->
+            {
+                onClickKeepButton()
+            }
+            is IntroAction.ClickLaterButton ->
+            {
+                onClickLaterButton()
+            }
+            else -> {}
         }
     }
 
-    override fun pause()
+    override suspend fun reduceState(current : IntroState, event : IntroEvent) : IntroState
     {
-        Log.f("")
-    }
-
-    override fun destroy()
-    {
-        Log.f("")
-    }
-
-    private fun onHandleActivityResult(event: BaseEvent)
-    {
-        when(event)
+        return when(event)
         {
-            is IntroEvent.onAddResultLaunchers ->
+            is IntroEvent.ChangeViewMode ->
             {
-                onAddResultLaunchers(
-                    event.launchers
+                current.copy(
+                    bottomType = event.mode
                 )
             }
-            is IntroEvent.onRequestPermissionResult ->
+            is IntroEvent.UpdatePercent ->
             {
-                onRequestPermissionsResult(
-                    event.requestCode,
-                    event.permissions,
-                    event.gransResults
-                )
-            }
-            is IntroEvent.onActivityResult ->
-            {
-                onActivityResult(
-                    event.code,
-                    event.intent
+                current.copy(
+                    progressPercent = event.percent
                 )
             }
         }
@@ -463,7 +443,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_IS_DISPOSABLE_LOGIN, false)
             }
 
-            _bottomType.value = IntroViewMode.PROGRESS
+            postEvent(
+                IntroEvent.ChangeViewMode(IntroViewMode.PROGRESS)
+            )
 
             requestInitAsync()
             requestAutoLoginAsync()
@@ -471,7 +453,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
         else
         {
-            _bottomType.value = IntroViewMode.SELECT
+            postEvent(
+                IntroEvent.ChangeViewMode(IntroViewMode.SELECT)
+            )
         }
     }
 
@@ -521,15 +505,21 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         {
             IntroProcess.INIT_COMPLETE ->
             {
-                _progressPercent.value = PERCENT_SEQUENCE[1]
+                postEvent(
+                    IntroEvent.UpdatePercent(PERCENT_SEQUENCE[1])
+                )
             }
             IntroProcess.LOGIN_COMPLTE ->
             {
-                _progressPercent.value = PERCENT_SEQUENCE[2]
+                postEvent(
+                    IntroEvent.UpdatePercent(PERCENT_SEQUENCE[2])
+                )
             }
             IntroProcess.MAIN_COMPELTE ->
             {
-                _progressPercent.value = PERCENT_SEQUENCE[3]
+                postEvent(
+                    IntroEvent.UpdatePercent(PERCENT_SEQUENCE[3])
+                )
             }
             else ->{}
         }
@@ -641,54 +631,89 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         apiViewModel.enqueueCommandStart(RequestCode.CODE_PASSWORD_CHANGE_KEEP)
     }
 
-    private fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
+    private fun onActivateEasterEgg()
     {
-        mResultLauncherList = arrayListOf()
-        mResultLauncherList.add(launchers.get(0))
-    }
-
-    private fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
-    {
-        Log.f("requestCode : $requestCode")
-        var isAllCheckSuccess = true
-        when(requestCode)
-        {
-            PERMISSION_REQUEST ->
-            {
-                var i = 0
-                while(i < permissions.size)
-                {
-                    Log.f("permission : " + permissions[i] + ", grantResults : " + grantResults[i])
-                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED && permissions[i] != Manifest.permission.RECORD_AUDIO)
-                    {
-                        isAllCheckSuccess = false
-                    }
-                    i++
-                }
-
-                if(isAllCheckSuccess == false)
-                {
-                    _dialogFilePermission.call()
-                }
-                else
-                {
-                    executeSequence()
-                }
-            }
-        }
-    }
-
-    private fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
-    {
-        _bottomType.value = IntroViewMode.PROGRESS
-        viewModelScope.launch{
+        Log.f("")
+        mEasterEggJob = viewModelScope.launch {
             withContext(Dispatchers.IO){
-                delay(Common.DURATION_NORMAL)
+                delay(Common.DURATION_EASTER_EGG)
             }
-            requestInitAsync()
-            requestAutoLoginAsync()
-            requestMainInformationAsync()
+            CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
         }
+    }
+
+    private fun onDeactiveEasterEgg()
+    {
+        Log.f("")
+        mEasterEggJob?.cancel()
+    }
+
+    private fun onClickIntroduce()
+    {
+        Log.f("")
+        if(NetworkUtil.isConnectNetwork(mContext))
+        {
+            IntentManagementFactory.getInstance()
+                .readyActivityMode(ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE)
+                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
+                .startActivity()
+        }
+        else
+        {
+            postSideEffect(
+                SideEffect.ShowToast(mContext.resources.getString(R.string.message_toast_network_error))
+            )
+            (mContext as AppCompatActivity).finish()
+        }
+    }
+
+    private fun onClickLogin()
+    {
+        Log.f("")
+        if(NetworkUtil.isConnectNetwork(mContext))
+        {
+            startLoginActivity()
+        }
+        else
+        {
+            postSideEffect(
+                SideEffect.ShowToast(mContext.resources.getString(R.string.message_toast_network_error))
+            )
+            (mContext as AppCompatActivity).finish()
+        }
+    }
+
+    private fun onClickHomeButton()
+    {
+        (mContext as AppCompatActivity).finish()
+    }
+
+    /**
+     * [비밀번호 변경] 버튼 클릭 이벤트
+     */
+    private fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
+    {
+        mPassword = oldPassword
+        mNewPassword = newPassword
+        mConfirmPassword = confirmPassword
+
+        requestPasswordChange()
+    }
+
+    /**
+     * [다음에 변경] 버튼 클릭 이벤트
+     */
+    private fun onClickLaterButton()
+    {
+        requestPasswordChangeNext()
+    }
+
+    /**
+     * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
+     */
+    private fun onClickKeepButton()
+    {
+        requestPasswordChangeKeep()
     }
 
     override fun onDialogClick(eventType : Int)
@@ -726,7 +751,9 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
                 DialogButtonType.BUTTON_1 ->
                 {
                     // [취소] 컨텐츠 사용 불가 메세지 표시
-                    _toast.value = mContext.getString(R.string.message_warning_storage_permission)
+                    postSideEffect(
+                        SideEffect.ShowToast(mContext.getString(R.string.message_warning_storage_permission))
+                    )
                     (mContext as AppCompatActivity).finish()
                 }
                 DialogButtonType.BUTTON_2 ->
@@ -744,84 +771,60 @@ class IntroViewModel @Inject constructor(private val apiViewModel : IntroApiView
         }
     }
 
-    private fun onActivateEasterEgg()
+    override fun onAddResultLaunchers(vararg launchers : ActivityResultLauncher<Intent?>?)
     {
-        Log.f("")
-        mEasterEggJob = viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_EASTER_EGG)
+        mResultLauncherList = arrayListOf()
+        for(item in launchers)
+        {
+            mResultLauncherList.add(item)
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode : Int, permissions : Array<out String>, grantResults : IntArray)
+    {
+        Log.f("requestCode : $requestCode")
+        var isAllCheckSuccess = true
+        when(requestCode)
+        {
+            PERMISSION_REQUEST ->
+            {
+                var i = 0
+                while(i < permissions.size)
+                {
+                    Log.f("permission : " + permissions[i] + ", grantResults : " + grantResults[i])
+                    if(grantResults[i] != PackageManager.PERMISSION_GRANTED && permissions[i] != Manifest.permission.RECORD_AUDIO)
+                    {
+                        isAllCheckSuccess = false
+                    }
+                    i++
+                }
+
+                if(isAllCheckSuccess == false)
+                {
+                    postSideEffect(
+                        IntroSideEffect.ShowFilePermissionDialog
+                    )
+                }
+                else
+                {
+                    executeSequence()
+                }
             }
-            CommonUtils.getInstance(mContext).inquireForDeveloper(Common.DEVELOPER_EMAIL)
         }
     }
 
-    private fun onDeactiveEasterEgg()
+    override fun onActivityResult(code : ResultLauncherCode, intent : Intent?)
     {
-        Log.f("")
-        mEasterEggJob?.cancel()
-    }
-
-    private fun onClickIntroduce()
-    {
-        Log.f("")
-        if(NetworkUtil.isConnectNetwork(mContext))
-        {
-            IntentManagementFactory.getInstance()
-                .readyActivityMode(ActivityMode.WEBVIEW_FOXSCHOOL_INTRODUCE)
-                .setAnimationMode(AnimationMode.NORMAL_ANIMATION)
-                .startActivity()
+        postEvent(
+            IntroEvent.ChangeViewMode(IntroViewMode.PROGRESS)
+        )
+        viewModelScope.launch{
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_NORMAL)
+            }
+            requestInitAsync()
+            requestAutoLoginAsync()
+            requestMainInformationAsync()
         }
-        else
-        {
-            _toast.value = mContext.resources.getString(R.string.message_toast_network_error)
-            (mContext as AppCompatActivity).finish()
-        }
-    }
-
-    private fun onClickLogin()
-    {
-        Log.f("")
-        if(NetworkUtil.isConnectNetwork(mContext))
-        {
-            startLoginActivity()
-        }
-        else
-        {
-            _toast.value = mContext.resources.getString(R.string.message_toast_network_error)
-            (mContext as AppCompatActivity).finish()
-        }
-    }
-
-    private fun onClickHomeButton()
-    {
-        (mContext as AppCompatActivity).finish()
-    }
-
-    /**
-     * [비밀번호 변경] 버튼 클릭 이벤트
-     */
-    private fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
-    {
-        mPassword = oldPassword
-        mNewPassword = newPassword
-        mConfirmPassword = confirmPassword
-
-        requestPasswordChange()
-    }
-
-    /**
-     * [다음에 변경] 버튼 클릭 이벤트
-     */
-    private fun onClickLaterButton()
-    {
-        requestPasswordChangeNext()
-    }
-
-    /**
-     * [현재 비밀번호로 유지하기] 버튼 클릭 이벤트
-     */
-    private fun onClickKeepButton()
-    {
-        requestPasswordChangeKeep()
     }
 }

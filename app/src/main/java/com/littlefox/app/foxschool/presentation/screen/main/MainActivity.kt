@@ -12,16 +12,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.api.viewmodel.factory.MainFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.main.MainSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.main.main.MainViewModel
 import com.littlefox.app.foxschool.presentation.screen.main.phone.SubStoryScreenV
 
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
+
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -43,7 +44,7 @@ class MainActivity : BaseActivity()
         setContent {
             MainScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent)
+                onAction = viewModel::onHandleAction)
         }
     }
 
@@ -65,42 +66,50 @@ class MainActivity : BaseActivity()
         viewModel.destroy()
     }
 
-
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect{ data ->
+                    when(data)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(data.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${data.message}")
+                            Toast.makeText(this@MainActivity, data.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $data.message")
+                            CommonUtils.getInstance(this@MainActivity).showSuccessMessage(data.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${data.message}")
+                            CommonUtils.getInstance(this@MainActivity).showErrorMessage(data.message)
+                        }
+                        is MainSideEffect.ShowLogoutDialog ->
+                        {
+                            showLogoutDialog()
+                        }
+                        is MainSideEffect.ShowAppEndDialog ->
+                        {
+                            showAppEndDialog()
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@MainActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@MainActivity).showErrorMessage(message)
-        }
-
-        viewModel.showAppEndDialog.observe(this){
-            showAppEndDialog()
-        }
-
-        viewModel.showLogoutDialog.observe(this){
-            showLogoutDialog()
         }
     }
 
@@ -138,20 +147,16 @@ class MainActivity : BaseActivity()
     private val mDialogListener: DialogListener = object : DialogListener{
         override fun onConfirmButtonClick(eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                event = BaseEvent.DialogClick(
-                    eventType
-                )
+            viewModel.onDialogClick(
+                eventType
             )
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                event = BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
 

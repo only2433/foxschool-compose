@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ManagementMyBooksActivity : BaseActivity()
 {
-    private val viewModel : com.littlefox.app.foxschool.presentation.mvi.management.viewmodel.ManagementMyBooksViewModel by viewModels()
+    private val viewModel : ManagementMyBooksViewModel by viewModels()
 
     private var mTemplateAlertDialog : TemplateAlertDialog? = null
     override fun onCreate(savedInstanceState : Bundle?)
@@ -40,7 +40,7 @@ class ManagementMyBooksActivity : BaseActivity()
         setContent {
             ManagementMyBooksScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::postAction)
+                onAction = viewModel::onHandleAction)
         }
     }
 

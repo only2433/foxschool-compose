@@ -25,8 +25,9 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.enumerate.SwitchButtonType
 import com.littlefox.app.foxschool.`object`.result.main.MainStoryInformationResult
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
+import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
+import com.littlefox.app.foxschool.presentation.mvi.main.MainState
+import com.littlefox.app.foxschool.presentation.mvi.main.main.MainViewModel
 import com.littlefox.app.foxschool.presentation.widget.SeriesGridViewItem
 import com.littlefox.app.foxschool.presentation.widget.SwitchTextButton
 import com.littlefox.logmonitor.Log
@@ -34,25 +35,23 @@ import com.littlefox.logmonitor.Log
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubStoryScreenV(
-    viewModel : MainViewModel,
-    onEvent: (MainEvent) -> Unit,
+    state : MainState,
+    onAction: (MainAction) -> Unit,
     scrollBehavior : TopAppBarScrollBehavior
 )
 {
-    val _mainStoryInformationResult by viewModel.updateStoryData.observeAsState(
-        initial = MainStoryInformationResult()
-    )
+
     // switchButtonType 상태를 관리
     var _switchButtonType by remember {
         mutableStateOf(SwitchButtonType.FIRST_ITEM)
     }
     // derivedStateOf를 사용하여 dataList를 계산
-    val _dataList = remember(_mainStoryInformationResult, _switchButtonType) {
+    val _dataList = remember(state.storyData, _switchButtonType) {
         derivedStateOf {
             if (_switchButtonType == SwitchButtonType.FIRST_ITEM) {
-                _mainStoryInformationResult.getContentByLevelToList()
+                state.storyData.getContentByLevelToList()
             } else {
-                _mainStoryInformationResult.getContentByCategoriesToList()
+                state.storyData.getContentByCategoriesToList()
             }
         }
     }
@@ -97,16 +96,16 @@ fun SubStoryScreenV(
                                 Log.i("item Click")
                                 if(_switchButtonType == SwitchButtonType.FIRST_ITEM)
                                 {
-                                    onEvent(
-                                        MainEvent.onClickStoryLevelsItem(
+                                    onAction(
+                                        MainAction.ClickStoryLevelsItem(
                                             _dataList.value[index]
                                         )
                                     )
                                 }
                                 else
                                 {
-                                    onEvent(
-                                        MainEvent.onClickStoryCategoriesItem(
+                                    onAction(
+                                        MainAction.ClickStoryCategoriesItem(
                                             _dataList.value[index]
                                         )
                                     )
@@ -128,16 +127,16 @@ fun SubStoryScreenV(
                                 Log.i("Item Click")
                                 if(_switchButtonType == SwitchButtonType.FIRST_ITEM)
                                 {
-                                    onEvent(
-                                        MainEvent.onClickStoryLevelsItem(
+                                    onAction(
+                                        MainAction.ClickStoryLevelsItem(
                                             _dataList.value[index]
                                         )
                                     )
                                 }
                                 else
                                 {
-                                    onEvent(
-                                        MainEvent.onClickStoryCategoriesItem(
+                                    onAction(
+                                        MainAction.ClickStoryCategoriesItem(
                                             _dataList.value[index]
                                         )
                                     )

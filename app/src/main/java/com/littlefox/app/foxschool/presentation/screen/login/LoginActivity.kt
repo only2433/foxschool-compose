@@ -21,7 +21,8 @@ import com.littlefox.app.foxschool.enumerate.PasswordGuideType
 import com.littlefox.app.foxschool.presentation.screen.intro.IntroActivity
 import com.littlefox.app.foxschool.presentation.screen.login.phone.LoginScreenV
 import com.littlefox.app.foxschool.presentation.viewmodel.LoginViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.intro.IntroEvent
+import com.littlefox.app.foxschool.presentation.viewmodel.login.LoginEvent
+
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -154,7 +155,7 @@ class LoginActivity : BaseActivity()
         override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
         {
             viewModel.onHandleViewEvent(
-                IntroEvent.onClickChangeButton(
+                LoginEvent.onClickChangeButton(
                     oldPassword,
 
                     newPassword,
@@ -169,7 +170,7 @@ class LoginActivity : BaseActivity()
         override fun onClickLaterButton()
         {
             viewModel.onHandleViewEvent(
-                IntroEvent.onClickLasterButton
+                LoginEvent.onClickLaterButton
             )
         }
 
@@ -179,7 +180,7 @@ class LoginActivity : BaseActivity()
         override fun onClickKeepButton()
         {
             viewModel.onHandleViewEvent(
-                IntroEvent.onClickKeepButton
+                LoginEvent.onClickKeepButton
             )
         }
     }
