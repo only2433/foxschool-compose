@@ -5,7 +5,6 @@ import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.story.SeriesInformationResult
 import com.littlefox.app.foxschool.presentation.mvi.base.Action
-import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
 
 sealed class MainAction : Action
 {
