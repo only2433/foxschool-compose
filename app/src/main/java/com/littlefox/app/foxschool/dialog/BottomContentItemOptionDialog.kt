@@ -16,6 +16,7 @@ import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.common.*
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ContentItemType
 import com.littlefox.logmonitor.Log
 import com.ssomai.android.scalablelayout.ScalableLayout
@@ -297,7 +298,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_EBOOK))
                     {
-                        mItemOptionListener?.onClickEbook()
+                        mItemOptionListener?.onClickItem(ActionContentsType.EBOOK)
                     }
                 })
             }
@@ -309,7 +310,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_QUIZ))
                     {
-                        mItemOptionListener?.onClickQuiz()
+                        mItemOptionListener?.onClickItem(ActionContentsType.QUIZ)
                     }
                 })
             }
@@ -321,7 +322,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_VOCA))
                     {
-                        mItemOptionListener?.onClickVocabulary()
+                        mItemOptionListener?.onClickItem(ActionContentsType.VOCABULARY)
                     }
                 })
             }
@@ -333,7 +334,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_FLASHCARD))
                     {
-                        mItemOptionListener?.onClickFlashCard()
+                        mItemOptionListener?.onClickItem(ActionContentsType.FLASHCARD)
                     }
                 })
             }
@@ -345,7 +346,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_STARWORDS))
                     {
-                        mItemOptionListener?.onClickGameStarwords()
+                        mItemOptionListener?.onClickItem(ActionContentsType.STARWORDS)
                     }
                 })
             }
@@ -357,7 +358,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_CROSSWORD))
                     {
-                        mItemOptionListener?.onClickGameCrossword()
+                        mItemOptionListener?.onClickItem(ActionContentsType.CROSSWORD)
                     }
                 })
             }
@@ -369,7 +370,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if (isServiceAvailable(SERVICE_INFO_RECORD_PLAYER))
                     {
-                        mItemOptionListener?.onClickRecordPlayer()
+                        mItemOptionListener?.onClickItem(ActionContentsType.RECORD_PLAYER)
                     }
                 })
             }
@@ -387,7 +388,7 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                     dismiss()
                     if(isServiceAvailable(SERVICE_INFO_ORIGINAL_TEXT))
                     {
-                        mItemOptionListener?.onClickTranslate()
+                        mItemOptionListener?.onClickItem(ActionContentsType.TRANSLATE)
                     }
                 })
             }
@@ -404,7 +405,14 @@ class BottomContentItemOptionDialog : BottomSheetDialog
                 }
                 iconLayout.setOnClickListener(View.OnClickListener {
                     dismiss()
-                    mItemOptionListener?.onClickBookshelf()
+                    if(isDeleteItemInBookshelf)
+                    {
+                        mItemOptionListener?.onClickItem(ActionContentsType.DELETE_BOOKSHELF)
+                    }
+                    else
+                    {
+                        mItemOptionListener?.onClickItem(ActionContentsType.ADD_BOOKSHELF)
+                    }
                 })
             }
         }

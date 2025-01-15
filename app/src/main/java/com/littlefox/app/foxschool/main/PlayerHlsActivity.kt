@@ -41,6 +41,7 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.DisplayTabletType
 import com.littlefox.app.foxschool.main.presenter.PlayerHlsPresenter
@@ -2457,13 +2458,13 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
             R.id._playerRepeatButton -> factoryViewModel.onRepeatButton()
             R.id._playerPortraitTitleOption -> factoryViewModel.onClickMovieOptionButton()
             R.id._nextButtonBoxImage -> factoryViewModel.onNextMovieButton()
-            R.id._ebookButtonImage -> factoryViewModel.onClickEbookButton()
-            R.id._quizButtonImage -> factoryViewModel.onClickQuizButton()
-            R.id._vocabularyButtonImage -> factoryViewModel.onClickVocabularyButton()
-            R.id._translateButtonImage -> factoryViewModel.onClickTranslateButton()
-            R.id._starwordsButtonImage -> factoryViewModel.onClickStarwordsButton()
-            R.id._crosswordButtonImage -> factoryViewModel.onClickCrosswordButton()
-            R.id._flashcardButtonImage -> factoryViewModel.onClickFlashcardButton()
+            R.id._ebookButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.EBOOK)
+            R.id._quizButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.QUIZ)
+            R.id._vocabularyButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.VOCABULARY)
+            R.id._translateButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.TRANSLATE)
+            R.id._starwordsButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.STARWORDS)
+            R.id._crosswordButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.CROSSWORD)
+            R.id._flashcardButtonImage -> factoryViewModel.onClickItemOption(ActionContentsType.FLASHCARD)
             R.id._player1PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
             R.id._player2PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
             R.id._player3PageButton -> factoryViewModel.onPageByPageIndex((view.tag as Int))
@@ -2582,49 +2583,9 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
 
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
-        override fun onClickQuiz()
+        override fun onClickItem(type : ActionContentsType)
         {
-            factoryViewModel.onClickQuizButton()
-        }
-
-        override fun onClickTranslate()
-        {
-            factoryViewModel.onClickTranslateButton()
-        }
-
-        override fun onClickVocabulary()
-        {
-            factoryViewModel.onClickVocabularyButton()
-        }
-
-        override fun onClickBookshelf()
-        {
-            factoryViewModel.onClickAddBookshelf()
-        }
-
-        override fun onClickEbook()
-        {
-            factoryViewModel.onClickEbookButton()
-        }
-
-        override fun onClickGameStarwords()
-        {
-            factoryViewModel.onClickStarwordsButton()
-        }
-
-        override fun onClickGameCrossword()
-        {
-            factoryViewModel.onClickCrosswordButton()
-        }
-
-        override fun onClickFlashCard()
-        {
-            factoryViewModel.onClickFlashcardButton()
-        }
-
-        override fun onClickRecordPlayer()
-        {
-            factoryViewModel.onClickRecordPlayerButton()
+            factoryViewModel.onClickItemOption(type)
         }
     }
 

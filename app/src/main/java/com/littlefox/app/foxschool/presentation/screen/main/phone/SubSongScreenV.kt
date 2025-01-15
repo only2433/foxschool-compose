@@ -20,8 +20,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
 import com.littlefox.app.foxschool.presentation.mvi.main.MainState
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.main.MainEvent
 import com.littlefox.app.foxschool.presentation.widget.SeriesGridViewItem
 import com.littlefox.logmonitor.Log
 

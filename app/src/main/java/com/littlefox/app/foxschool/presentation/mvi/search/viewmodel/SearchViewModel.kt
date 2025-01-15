@@ -1,22 +1,22 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.search.viewmodel
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.SearchApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
-import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
@@ -32,78 +32,50 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.search.SearchListResult
-import com.littlefox.app.foxschool.`object`.result.search.paging.ContentBasePagingResult
 import com.littlefox.app.foxschool.observer.MainObserver
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchAction
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchEvent
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchState
+import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
+import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel.Companion
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiViewModel) : BaseViewModel()
+class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiViewModel) : BaseMVIViewModel<SearchState, SearchEvent, SideEffect>(
+    SearchState()
+)
 {
     companion object
     {
         const val DIALOG_TYPE_WARNING_RECORD_PERMISSION : Int   = 10001
     }
-
-    private val _isContentsLoading = SingleLiveEvent<Boolean>()
-    val isContentsLoading: LiveData<Boolean> get() = _isContentsLoading
-
-    private val _dialogBottomOption = SingleLiveEvent<ContentsBaseResult>()
-    val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
-
-    private val _dialogBottomBookshelfContentsAdd = SingleLiveEvent<ArrayList<MyBookshelfResult>>()
-    val dialogBottomBookshelfContentsAdd: LiveData<ArrayList<MyBookshelfResult>> get() = _dialogBottomBookshelfContentsAdd
-
-    private val _dialogRecordPermission = SingleLiveEvent<Void>()
-    val dialogRecordPermission: LiveData<Void> get() = _dialogRecordPermission
-
-
-    private var mCurrentSearchType: String = Common.CONTENT_TYPE_ALL
-    private var mCurrentKeyword: String = ""
-
-    private val _searchQuery = MutableStateFlow<Pair<String, String>>(Common.CONTENT_TYPE_ALL to "")
-
-    val searchItemList: Flow<PagingData<ContentBasePagingResult>> = _searchQuery.flatMapLatest { (type, keyword) ->
-        apiViewModel.getPagingData(
-            type,
-            keyword
-        )
-    }
-
     private lateinit var mContext : Context
-    private lateinit var mSearchListContractView : SearchListContract.View
     private var mCurrentSearchListBaseResult : SearchListResult? = null
     private var mCurrentBookshelfAddResult : MyBookshelfResult? = null
-
-    /**
-     * 검색의 타입. ALL = "" , Stories = S , Songs = M
-     */
-
     private var mRequestPagePosition = 1
     private lateinit var mMainInformationResult : MainInformationResult
-    private lateinit var mMainHandler : WeakReferenceHandler
     private val mSendBookshelfAddList : ArrayList<ContentsBaseResult> = ArrayList<ContentsBaseResult>()
     private var mCurrentSelectItem: ContentsBaseResult? = null
     private var mJob: Job? = null
 
-
+    /**
+     * 검색의 타입. ALL = "" , Stories = S , Songs = M
+     */
+    private var mCurrentSearchType: String = Common.CONTENT_TYPE_ALL
+    private var mCurrentKeyword: String = ""
 
     override fun init(context : Context)
     {
@@ -112,135 +84,173 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         onHandleApiObserver()
     }
 
-    override fun onHandleViewEvent(event : BaseEvent)
+    override fun resume() {}
+
+    override fun pause() {}
+
+    override fun destroy() {}
+
+    override fun onBackPressed()
     {
-        when(event)
-        {
-            is BaseEvent.onBackPressed -> {
-                (mContext as AppCompatActivity).onBackPressed()
-            }
-            is SearchEvent.onClickBottomContentsType ->
-            {
-                checkBottomSelectItemType(event.type)
-            }
-            is SearchEvent.onClickSearchType -> {
-                onClickSearchType(event.type)
-            }
-            is SearchEvent.onClickSearchExecute ->{
-                onClickSearchExecute(event.keyword)
-            }
-            is SearchEvent.onClickThumbnail ->{
-                onClickItemThumbnail(event.item)
-            }
-            is SearchEvent.onClickOption ->{
-                onClickItemOption(event.item)
-            }
-            is SearchEvent.onAddContentsInBookshelf ->
-            {
-                onDialogAddBookshelfClick(event.index)
-            }
-        }
+        (mContext as AppCompatActivity).finish()
     }
 
     override fun onHandleApiObserver()
     {
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.isLoading.collect {data ->
-                data?.let {
-                    if(data.first == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
-                    {
-                        viewModelScope.launch {
-                            if(data.second)
-                            {
-                                _isLoading.value = true
-                            }
-                            else
-                            {
-                                _isLoading.value = false
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.isLoading.collect {data ->
+                    data?.let {
+                        if(data.first == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
+                        {
+                            viewModelScope.launch {
+                                if(data.second)
+                                {
+                                    postSideEffect(
+                                        SideEffect.EnableLoading(true)
+                                    )
+                                }
+                                else
+                                {
+                                    postSideEffect(
+                                        SideEffect.EnableLoading(false)
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.addBookshelfContentsData.collect{ data ->
-                data?.let {
-                    updateBookshelfData(data)
-                    viewModelScope.launch(Dispatchers.Main){
-                        withContext(Dispatchers.IO){
-                            delay(Common.DURATION_NORMAL)
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.addBookshelfContentsData.collect{ data ->
+                    data?.let {
+                        updateBookshelfData(data)
+                        viewModelScope.launch(Dispatchers.Main){
+                            withContext(Dispatchers.IO){
+                                delay(Common.DURATION_NORMAL)
+                            }
+                            postSideEffect(
+                                SideEffect.ShowSuccessMessage(
+                                    mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                                )
+                            )
                         }
-                        _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
                     }
                 }
             }
         }
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.errorReport.collect{ data ->
+                    data?.let {
+                        val result = data.first
+                        val code = data.second
 
-        (mContext as AppCompatActivity).lifecycleScope.launchWhenResumed {
-            apiViewModel.errorReport.collect{ data ->
-                data?.let {
-                    val result = data.first
-                    val code = data.second
-
-                    Log.f("status : ${result.status}, message : ${result.message} , code : $code")
-                    if(result.isDuplicateLogin)
-                    {
-                        //중복 로그인 시 재시작
-                        _toast.value = result.message
-                        viewModelScope.launch {
-                            withContext(Dispatchers.IO)
-                            {
-                                delay(Common.DURATION_SHORT)
+                        Log.f("status : ${result.status}, message : ${result.message} , code : $code")
+                        if(result.isDuplicateLogin)
+                        {
+                            //중복 로그인 시 재시작
+                            postSideEffect(
+                                SideEffect.ShowToast(
+                                    result.message
+                                )
+                            )
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
                             }
-                            (mContext as AppCompatActivity).finish()
-                            IntentManagementFactory.getInstance().initAutoIntroSequence()
                         }
-                    }
-                    else if(result.isAuthenticationBroken)
-                    {
-                        Log.f("== isAuthenticationBroken ==")
-                        _toast.value = result.message
-                        viewModelScope.launch {
-                            withContext(Dispatchers.IO)
-                            {
-                                delay(Common.DURATION_SHORT)
+                        else if(result.isAuthenticationBroken)
+                        {
+                            Log.f("== isAuthenticationBroken ==")
+                            postSideEffect(
+                                SideEffect.ShowToast(
+                                    result.message
+                                )
+                            )
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
                             }
-                            (mContext as AppCompatActivity).finish()
-                            IntentManagementFactory.getInstance().initScene()
                         }
-                    }
-                    else
-                    {
-                        _toast.value = result.message
+                        else
+                        {
+                            postSideEffect(
+                                SideEffect.ShowToast(
+                                    result.message
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
     }
 
-    override fun resume()
+    override fun onHandleAction(action : Action)
     {
-        Log.i("mCurrentKeyword : $mCurrentKeyword")
+        when(action)
+        {
+            is SearchAction.ClickSearchType ->
+            {
+               onClickSearchType(action.type)
+            }
+            is SearchAction.ClickSearchExecute ->
+            {
+                onClickSearchExecute(action.keyword)
+            }
+            is SearchAction.ClickOption ->
+            {
+                onClickItemOption(action.item)
+            }
+            is SearchAction.ClickThumbnail ->
+            {
+                onClickItemThumbnail(action.item)
+            }
+            is SearchAction.ClickBottomContentsType ->
+            {
+                checkBottomSelectItemType(action.type)
+            }
+            is SearchAction.AddContentsInBookshelf ->
+            {
+                onDialogAddBookshelfClick(action.index)
+            }
+        }
     }
 
-    override fun pause()
+    override suspend fun reduceState(current : SearchState, event : SearchEvent) : SearchState
     {
-
+       return when(event)
+        {
+            is SearchEvent.EnableContentsLoading ->
+            {
+                current.copy(
+                    isContentsLoading = event.isLoading
+                )
+            }
+            is SearchEvent.ExecuteSearching ->
+            {
+                val data = apiViewModel.getPagingData(
+                    event.type,
+                    event.keyword
+                )
+                current.copy(
+                    searchResult = data
+                )
+            }
+            else -> current
+        }
     }
-
-    override fun destroy()
-    {
-
-    }
-
-
-
-    private fun updateSearchQuery() {
-        _searchQuery.value = mCurrentSearchType to mCurrentKeyword
-    }
-
 
     private fun checkBottomSelectItemType(type: ActionContentsType)
     {
@@ -257,7 +267,9 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                 Log.f("")
                 if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
                 {
-                    _dialogRecordPermission.call()
+                    postSideEffect(
+                        SearchSideEffect.ShowRecordPermissionDialog
+                    )
                 }
                 else
                 {
@@ -269,7 +281,11 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
                 mCurrentSelectItem?.let { item ->
                     mSendBookshelfAddList.clear()
                     mSendBookshelfAddList.add(item)
-                    _dialogBottomBookshelfContentsAdd.value = mMainInformationResult.getBookShelvesList()
+                    postSideEffect(
+                        SearchSideEffect.ShowBookshelfContentsAddDialog(
+                            mMainInformationResult.getBookShelvesList()
+                        )
+                    )
                 }
             }
             else -> {}
@@ -305,7 +321,12 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         Log.f("searchType : $mCurrentSearchType, keyword : $mCurrentKeyword")
         mJob?.cancel()
         mJob = viewModelScope.launch {
-            updateSearchQuery()
+            postEvent(
+                SearchEvent.ExecuteSearching(
+                    mCurrentSearchType,
+                    mCurrentKeyword
+                )
+            )
         }
     }
 
@@ -468,10 +489,14 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
             mCurrentSearchListBaseResult = null
 
             viewModelScope.launch {
-                _isContentsLoading.value = true
+                postEvent(
+                    SearchEvent.EnableContentsLoading(true)
+                )
                 mCurrentSearchType = searchType
                 searchDataList()
-                _isContentsLoading.value = false
+                postEvent(
+                    SearchEvent.EnableContentsLoading(false)
+                )
             }
         }
     }
@@ -481,17 +506,25 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
         Log.f("keyword : $keyword")
         if(keyword.trim().length < 2)
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_warning_search_input_2_or_more)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(
+                    mContext.resources.getString(R.string.message_warning_search_input_2_or_more)
+                )
+            )
             return
         }
         mRequestPagePosition = 1
         mCurrentSearchListBaseResult = null
 
         viewModelScope.launch {
-            _isContentsLoading.value = true
+            postEvent(
+                SearchEvent.EnableContentsLoading(true)
+            )
             mCurrentKeyword = keyword
             searchDataList()
-            _isContentsLoading.value = false
+            postEvent(
+                SearchEvent.EnableContentsLoading(false)
+            )
         }
 
     }
@@ -520,19 +553,26 @@ class SearchViewModel @Inject constructor(private val apiViewModel : SearchApiVi
     {
         Log.f("index : ${item.id}")
         mCurrentSelectItem = item
-        _dialogBottomOption.value = item
+        postSideEffect(
+            SearchSideEffect.ShowBottomOptionDialog(
+                item
+            )
+        )
     }
-
 
     override fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
     {
-        if(eventType == DIALOG_TYPE_WARNING_RECORD_PERMISSION)
+        if(eventType == SearchViewModel.DIALOG_TYPE_WARNING_RECORD_PERMISSION)
         {
             when(buttonType)
             {
                 DialogButtonType.BUTTON_1 ->
                 {
-                    _errorMessage.value = mContext.getString(R.string.message_warning_record_permission)
+                    postSideEffect(
+                        SideEffect.ShowErrorMessage(
+                            mContext.getString(R.string.message_warning_record_permission)
+                        )
+                    )
                 }
                 DialogButtonType.BUTTON_2 ->
                 {

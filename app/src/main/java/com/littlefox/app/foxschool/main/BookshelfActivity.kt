@@ -31,6 +31,7 @@ import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.ResultLauncherCode
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
@@ -523,49 +524,9 @@ class BookshelfActivity : BaseActivity()
 
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
-        override fun onClickQuiz()
+        override fun onClickItem(type : ActionContentsType)
         {
-            factoryViewModel.onClickQuizButton()
-        }
-
-        override fun onClickTranslate()
-        {
-            factoryViewModel.onClickTranslateButton()
-        }
-
-        override fun onClickVocabulary()
-        {
-            factoryViewModel.onClickVocabularyButton()
-        }
-
-        override fun onClickBookshelf()
-        {
-            factoryViewModel.onClickBookshelfButton()
-        }
-
-        override fun onClickEbook()
-        {
-            factoryViewModel.onClickEbookButton()
-        }
-
-        override fun onClickGameStarwords()
-        {
-            factoryViewModel.onClickStarwordsButton()
-        }
-
-        override fun onClickGameCrossword()
-        {
-            factoryViewModel.onClickCrosswordButton()
-        }
-
-        override fun onClickFlashCard()
-        {
-            factoryViewModel.onClickFlashcardButton()
-        }
-
-        override fun onClickRecordPlayer()
-        {
-            factoryViewModel.onClickRecordPlayerButton()
+            factoryViewModel.onClickItemOption(type)
         }
     }
 

@@ -46,14 +46,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchAction
+import com.littlefox.app.foxschool.presentation.mvi.search.viewmodel.SearchViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.widget.BuildPagingContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.SearchTextFieldLayout
@@ -63,17 +64,18 @@ import com.littlefox.logmonitor.Log
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (SearchAction) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val _searchedItemList = viewModel.searchItemList.collectAsLazyPagingItems()
-    val _isContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val _searchedItemList = state.searchResult?.collectAsLazyPagingItems()
+
     var _searchType by remember { mutableStateOf(SearchType.ALL) }
     var _shouldAnimate by remember { mutableStateOf(false) }
     var _previousSearchText by remember { mutableStateOf("") }
 
     // searchedItemList의 itemCount가 변경될 때마다 애니메이션을 트리거
-    LaunchedEffect(_searchedItemList.itemCount) {
+    LaunchedEffect(_searchedItemList?.itemCount) {
         _shouldAnimate = true
     }
 
@@ -89,26 +91,28 @@ fun SearchScreen(
                 title = stringResource(id = R.string.text_search),
                 backgroundColor = colorResource(id = R.color.color_23cc8a)
             ) {
-                onEvent(BaseEvent.onBackPressed)
+                viewModel.onBackPressed()
             }
 
             BuildSelectTypeLayout(searchType = _searchType) {type ->
 
                 _shouldAnimate = false
                 _searchType = type
-                onEvent(SearchEvent.onClickSearchType(type))
+                onAction(
+                    SearchAction.ClickSearchType(type)
+                )
             }
 
             BuildSearchTextFieldLayout { searchText ->
                 Log.i("Search Text: $searchText")
-
-
                 _shouldAnimate = false
                 focusManager.clearFocus()
-                onEvent(SearchEvent.onClickSearchExecute(searchText))
+                onAction(
+                    SearchAction.ClickSearchExecute(searchText)
+                )
             }
 
-            if (_isContentsLoading) {
+            if (state.isContentsLoading) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -119,7 +123,9 @@ fun SearchScreen(
 
 
                 AnimatedVisibility(
-                    visible = _searchedItemList.itemCount > 0 && _shouldAnimate,
+                    visible = _searchedItemList?.let {
+                        it.itemCount > 0 && _shouldAnimate
+                    } ?: false,
                     enter = slideInVertically(
                         animationSpec = tween(
                             durationMillis = 500,
@@ -142,32 +148,30 @@ fun SearchScreen(
                                 end = getDp(pixel = 28)
                             )
                     ) {
-                        items(_searchedItemList.itemCount) {index ->
-                            val item = _searchedItemList[index]
-                            item?.let {
-                                Column {
-                                    if (index == 0) {
+                        _searchedItemList?.itemCount?.let {
+                            items(it) {index ->
+                                val item = _searchedItemList[index]
+                                item?.let {
+                                    Column {
+                                        if (index == 0) {
+                                            Spacer(modifier = Modifier.height(getDp(pixel = 20)))
+                                        }
+
+                                        BuildPagingContentsListItem(data = it, onOptionClick = {
+                                            onAction(
+                                                SearchAction.ClickOption(
+                                                    ContentsBaseResult(item)
+                                                )
+                                            )
+                                        }, onThumbnailClick = {
+                                            onAction(
+                                                SearchAction.ClickThumbnail(
+                                                    ContentsBaseResult(item)
+                                                )
+                                            )
+                                        })
                                         Spacer(modifier = Modifier.height(getDp(pixel = 20)))
                                     }
-
-                                    BuildPagingContentsListItem(
-                                        data = it,
-                                        onOptionClick = {
-                                            onEvent(
-                                                SearchEvent.onClickOption(
-                                                    ContentsBaseResult(item)
-                                                )
-                                            )
-                                        },
-                                        onThumbnailClick = {
-                                            onEvent(
-                                                SearchEvent.onClickThumbnail(
-                                                    ContentsBaseResult(item)
-                                                )
-                                            )
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.height(getDp(pixel = 20)))
                                 }
                             }
                         }
@@ -177,7 +181,7 @@ fun SearchScreen(
         }
 
         // 에러 상태 표시
-        if (_searchedItemList.loadState.append is LoadState.Error) {
+        if (_searchedItemList?.loadState?.append is LoadState.Error) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

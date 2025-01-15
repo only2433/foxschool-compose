@@ -1,14 +1,8 @@
 package com.littlefox.app.foxschool.dialog.listener
 
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
+
 interface ItemOptionListener
 {
-    fun onClickQuiz()
-    fun onClickTranslate()
-    fun onClickVocabulary()
-    fun onClickBookshelf()
-    fun onClickEbook()
-    fun onClickGameStarwords()
-    fun onClickGameCrossword()
-    fun onClickFlashCard()
-    fun onClickRecordPlayer()
+    fun onClickItem(type : ActionContentsType)
 }

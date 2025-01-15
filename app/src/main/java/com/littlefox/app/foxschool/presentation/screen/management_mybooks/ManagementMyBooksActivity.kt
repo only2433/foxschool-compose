@@ -73,12 +73,12 @@ class ManagementMyBooksActivity : BaseActivity()
     {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED){
-                viewModel.sideEffect.collect{ data ->
-                    when(data)
+                viewModel.sideEffect.collect{ value ->
+                    when(value)
                     {
                         is SideEffect.EnableLoading ->
                         {
-                            if(data.isLoading)
+                            if(value.isLoading)
                             {
                                 showLoading()
                             }
@@ -89,18 +89,18 @@ class ManagementMyBooksActivity : BaseActivity()
                         }
                         is SideEffect.ShowToast ->
                         {
-                            Log.i("message : ${data.message}")
-                            Toast.makeText(this@ManagementMyBooksActivity, data.message, Toast.LENGTH_SHORT).show()
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@ManagementMyBooksActivity, value.message, Toast.LENGTH_SHORT).show()
                         }
                         is SideEffect.ShowSuccessMessage ->
                         {
-                            Log.i("message : $data.message")
-                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(data.message)
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(value.message)
                         }
                         is SideEffect.ShowErrorMessage ->
                         {
-                            Log.i("message : ${data.message}")
-                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(data.message)
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(value.message)
                         }
                         is ManagementMyBooksSideEffect.ShowDeleteBookshelfDialog ->
                         {

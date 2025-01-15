@@ -24,6 +24,7 @@ import com.littlefox.app.foxschool.coroutine.SearchListCoroutine
 import com.littlefox.app.foxschool.dialog.BottomBookAddDialog
 import com.littlefox.app.foxschool.dialog.BottomContentItemOptionDialog
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.VocabularyType
@@ -406,6 +407,156 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         }
     }
 
+    private fun onClickQuizButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startQuizActivity()
+        }
+    }
+
+    private fun onClickTranslateButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startOriginTranslateActivity()
+        }
+    }
+
+    private fun onClickVocabularyButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startVocabularyActivity()
+        }
+    }
+
+    private fun onClickAddBookshelfButton()
+    {
+        Log.f("")
+        mCurrentSelectItem?.let { item ->
+            mSendBookshelfAddList.clear()
+            mSendBookshelfAddList.add(item)
+            _dialogBottomBookshelfContentAdd.value = mMainInformationResult.getBookShelvesList()
+        }
+    }
+
+    private fun onClickEbookButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startEbookActivity()
+        }
+    }
+
+    private fun onClickStarwordsButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startGameStarwordsActivity()
+        }
+    }
+
+    private fun onClickCrosswordButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startGameCrosswordActivity()
+        }
+    }
+
+    private fun onClickFlashcardButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startFlashcardActivity()
+        }
+    }
+
+    private fun onClickRecordPlayerButton()
+    {
+        Log.f("")
+        if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+        {
+            _dialogRecordPermission.call()
+        }
+        else
+        {
+            viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_SHORT)
+                }
+                startRecordPlayerActivity()
+            }
+        }
+    }
+
+    fun onClickItemOption(action: ActionContentsType)
+    {
+        when(action)
+        {
+            ActionContentsType.QUIZ ->
+            {
+                onClickQuizButton()
+            }
+            ActionContentsType.EBOOK ->
+            {
+                onClickEbookButton()
+            }
+            ActionContentsType.VOCABULARY ->
+            {
+                onClickVocabularyButton()
+            }
+            ActionContentsType.TRANSLATE ->
+            {
+                onClickTranslateButton()
+            }
+            ActionContentsType.STARWORDS ->
+            {
+                onClickStarwordsButton()
+            }
+            ActionContentsType.CROSSWORD ->
+            {
+                onClickCrosswordButton()
+            }
+            ActionContentsType.FLASHCARD ->
+            {
+                onClickFlashcardButton()
+            }
+            ActionContentsType.RECORD_PLAYER ->
+            {
+                onClickRecordPlayerButton()
+            }
+            ActionContentsType.DELETE_BOOKSHELF ->
+            {
+                onClickAddBookshelfButton()
+            }
+            else -> {}
+        }
+    }
+
+
 
     fun onClickSearchType(type: String)
     {
@@ -442,112 +593,7 @@ class SearchFactoryViewModel @Inject constructor(private val apiViewModel : Sear
         getSearchDataList()
     }
 
-    fun onClickQuizButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startQuizActivity()
-        }
-    }
 
-    fun onClickTranslateButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startOriginTranslateActivity()
-        }
-    }
-
-    fun onClickVocabularyButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startVocabularyActivity()
-        }
-    }
-
-    fun onClickAddBookshelfButton()
-    {
-        Log.f("")
-        mCurrentSelectItem?.let { item ->
-            mSendBookshelfAddList.clear()
-            mSendBookshelfAddList.add(item)
-            _dialogBottomBookshelfContentAdd.value = mMainInformationResult.getBookShelvesList()
-        }
-       // mBottomContentItemOptionDialog.dismiss()
-      //  mMainHandler.sendEmptyMessageDelayed(SearchListPresenter.MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG, Common.DURATION_SHORT)
-    }
-
-     fun onClickEbookButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startEbookActivity()
-        }
-    }
-
-    fun onClickStarwordsButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startGameStarwordsActivity()
-        }
-    }
-
-    fun onClickCrosswordButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startGameCrosswordActivity()
-        }
-    }
-
-    fun onClickFlashcardButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startFlashcardActivity()
-        }
-    }
-
-    fun onClickRecordPlayerButton()
-    {
-        Log.f("")
-        if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
-        {
-            _dialogRecordPermission.call()
-        }
-        else
-        {
-            viewModelScope.launch(Dispatchers.Main) {
-                withContext(Dispatchers.IO){
-                    delay(Common.DURATION_SHORT)
-                }
-                startRecordPlayerActivity()
-            }
-        }
-    }
 
     fun onDialogAddBookshelfClick(index : Int)
     {

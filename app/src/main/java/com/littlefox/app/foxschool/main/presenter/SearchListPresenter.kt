@@ -35,11 +35,13 @@ import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.dialog.listener.BookAddListener
 import com.littlefox.app.foxschool.dialog.listener.DialogListener
 import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.main.contract.SearchListContract
+import com.littlefox.app.foxschool.main.presenter.BookshelfPresenter.Companion
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.observer.MainObserver
 import com.littlefox.library.system.async.listener.AsyncListener
@@ -461,6 +463,69 @@ class SearchListPresenter : SearchListContract.Presenter
         }
     }
 
+    private fun onClickItemOption(action: ActionContentsType)
+    {
+        when(action)
+        {
+            ActionContentsType.QUIZ ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_QUIZ, Common.DURATION_SHORT)
+            }
+            ActionContentsType.EBOOK ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_EBOOK, Common.DURATION_SHORT)
+            }
+            ActionContentsType.VOCABULARY ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_VOCABULARY, Common.DURATION_SHORT)
+            }
+            ActionContentsType.TRANSLATE ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_TRANSLATE, Common.DURATION_SHORT)
+            }
+            ActionContentsType.STARWORDS ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_STARWORDS, Common.DURATION_SHORT)
+            }
+            ActionContentsType.CROSSWORD ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_CROSSWORD, Common.DURATION_SHORT)
+            }
+            ActionContentsType.FLASHCARD ->
+            {
+                Log.f("")
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
+            }
+            ActionContentsType.RECORD_PLAYER ->
+            {
+                Log.f("")
+                if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+                {
+                    showChangeRecordPermissionDialog()
+                }
+                else
+                {
+                    mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
+                }
+            }
+            ActionContentsType.ADD_BOOKSHELF ->
+            {
+                Log.f("")
+                mSendBookshelfAddList.clear()
+                mSendBookshelfAddList.add(mSearchItemList.get(mCurrentOptionIndex))
+                mBottomContentItemOptionDialog.dismiss()
+                mMainHandler.sendEmptyMessageDelayed(MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG, Common.DURATION_SHORT)
+            }
+            else -> {}
+        }
+    }
+
     private val mBookAddListener : BookAddListener = object : BookAddListener
     {
         override fun onClickBook(index : Int)
@@ -495,68 +560,9 @@ class SearchListPresenter : SearchListContract.Presenter
 
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
-        override fun onClickQuiz()
+        override fun onClickItem(type : ActionContentsType)
         {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_QUIZ, Common.DURATION_SHORT)
-        }
-
-        override fun onClickTranslate()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_TRANSLATE, Common.DURATION_SHORT)
-        }
-
-        override fun onClickVocabulary()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_VOCABULARY, Common.DURATION_SHORT)
-        }
-
-        override fun onClickBookshelf()
-        {
-            Log.f("")
-            mSendBookshelfAddList.clear()
-            mSendBookshelfAddList.add(mSearchItemList.get(mCurrentOptionIndex))
-            mBottomContentItemOptionDialog.dismiss()
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_SHOW_BOOKSHELF_ADD_ITEM_DIALOG, Common.DURATION_SHORT)
-        }
-
-        override fun onClickEbook()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_EBOOK, Common.DURATION_SHORT)
-        }
-
-        override fun onClickGameStarwords()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_STARWORDS, Common.DURATION_SHORT)
-        }
-
-        override fun onClickGameCrossword()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_GAME_CROSSWORD, Common.DURATION_SHORT)
-        }
-
-        override fun onClickFlashCard()
-        {
-            Log.f("")
-            mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_FLASHCARD, Common.DURATION_SHORT)
-        }
-
-        override fun onClickRecordPlayer()
-        {
-            Log.f("")
-            if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
-            {
-                showChangeRecordPermissionDialog()
-            }
-            else
-            {
-                mMainHandler.sendEmptyMessageDelayed(MESSAGE_START_RECORD_PLAYER, Common.DURATION_SHORT)
-            }
+            onClickItemOption(type)
         }
     }
 

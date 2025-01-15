@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -18,12 +21,14 @@ import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchAction
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.search.viewmodel.SearchViewModel
 import com.littlefox.app.foxschool.presentation.screen.search.phone.SearchScreen
-import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 @AndroidEntryPoint
@@ -53,7 +58,7 @@ class SearchActivity : BaseActivity()
         setContent {
             SearchScreen(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
             )
         }
 
@@ -86,31 +91,52 @@ class SearchActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@SearchActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@SearchActivity).showErrorMessage(message)
-        }
-
-        viewModel.dialogBottomOption.observe(this){ item->
-            showBottomContentItemDialog(item)
-        }
-
-        viewModel.dialogBottomBookshelfContentsAdd.observe(this){ list ->
-            showBottomBookAddDialog(list)
-        }
-
-        viewModel.dialogRecordPermission.observe(this){
-            showChangeRecordPermissionDialog()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect { value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@SearchActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@SearchActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@SearchActivity).showErrorMessage(value.message)
+                        }
+                        is SearchSideEffect.ShowBottomOptionDialog ->
+                        {
+                            showBottomContentItemDialog(value.data)
+                        }
+                        is SearchSideEffect.ShowBookshelfContentsAddDialog ->
+                        {
+                            showBottomBookAddDialog(value.itemList)
+                        }
+                        is SearchSideEffect.ShowRecordPermissionDialog ->
+                        {
+                            showChangeRecordPermissionDialog()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -152,83 +178,11 @@ class SearchActivity : BaseActivity()
 
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
-        override fun onClickQuiz()
+        override fun onClickItem(type : ActionContentsType)
         {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.QUIZ
-                )
-            )
-        }
-
-        override fun onClickTranslate()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.TRANSLATE
-                )
-            )
-        }
-
-        override fun onClickVocabulary()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.VOCABULARY
-                )
-            )
-        }
-
-        override fun onClickBookshelf()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.ADD_BOOKSHELF
-                )
-            )
-        }
-
-        override fun onClickEbook()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.EBOOK
-                )
-            )
-        }
-
-        override fun onClickGameStarwords()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.STARWORDS
-                )
-            )
-        }
-
-        override fun onClickGameCrossword()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.CROSSWORD
-                )
-            )
-        }
-
-        override fun onClickFlashCard()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.FLASHCARD
-                )
-            )
-        }
-
-        override fun onClickRecordPlayer()
-        {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onClickBottomContentsType(
-                    ActionContentsType.RECORD_PLAYER
+            viewModel.onHandleAction(
+                SearchAction.ClickBottomContentsType(
+                    type
                 )
             )
         }
@@ -238,8 +192,8 @@ class SearchActivity : BaseActivity()
     {
         override fun onClickBook(index : Int)
         {
-            viewModel.onHandleViewEvent(
-                SearchEvent.onAddContentsInBookshelf(
+            viewModel.onHandleAction(
+                SearchAction.AddContentsInBookshelf(
                     index
                 )
             )
@@ -250,20 +204,16 @@ class SearchActivity : BaseActivity()
     {
         override fun onConfirmButtonClick(eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogClick(
-                    eventType
-                )
+            viewModel.onDialogClick(
+                eventType
             )
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
     }

@@ -154,83 +154,11 @@ class SeriesContentsListActivity : BaseActivity()
 
     private val mItemOptionListener : ItemOptionListener = object : ItemOptionListener
     {
-        override fun onClickQuiz()
+        override fun onClickItem(type : ActionContentsType)
         {
             viewModel.onHandleViewEvent(
                 SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.QUIZ
-                )
-            )
-        }
-
-        override fun onClickTranslate()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.TRANSLATE
-                )
-            )
-        }
-
-        override fun onClickVocabulary()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.VOCABULARY
-                )
-            )
-        }
-
-        override fun onClickBookshelf()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.ADD_BOOKSHELF
-                )
-            )
-        }
-
-        override fun onClickEbook()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.EBOOK
-                )
-            )
-        }
-
-        override fun onClickGameStarwords()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.STARWORDS
-                )
-            )
-        }
-
-        override fun onClickGameCrossword()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.CROSSWORD
-                )
-            )
-        }
-
-        override fun onClickFlashCard()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.FLASHCARD
-                )
-            )
-        }
-
-        override fun onClickRecordPlayer()
-        {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    ActionContentsType.RECORD_PLAYER
+                    type
                 )
             )
         }

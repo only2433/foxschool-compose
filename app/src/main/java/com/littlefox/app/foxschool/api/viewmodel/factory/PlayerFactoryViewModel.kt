@@ -1347,6 +1347,142 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
             .startActivity()
     }
 
+    private fun onClickEbookButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startEbookActivity()
+        }
+    }
+
+    private fun onClickQuizButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startQuizAcitiviy()
+        }
+
+    }
+
+    private fun onClickVocabularyButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startVocabularyActivity()
+        }
+    }
+
+    private fun onClickTranslateButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startOriginTranslateActivity()
+        }
+    }
+
+    private fun onClickStarwordsButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startGameStarwordsActivity()
+        }
+    }
+
+    private fun onClickCrosswordButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startGameCrosswordActivity()
+        }
+    }
+
+    private fun onClickFlashcardButton()
+    {
+        Log.f("")
+        viewModelScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO){
+                delay(Common.DURATION_SHORT)
+            }
+            startFlashcardActivity()
+        }
+    }
+
+    private fun onClickRecordPlayerButton()
+    {
+        Log.f("")
+        if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+        {
+            _dialogWarningRecordPermission.call()
+        }
+        else
+        {
+            viewModelScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO){
+                    delay(Common.DURATION_SHORT)
+                }
+                startRecordPlayerActivity()
+            }
+        }
+    }
+
+    fun onClickItemOption(action: ActionContentsType)
+    {
+        when(action)
+        {
+            ActionContentsType.QUIZ ->
+            {
+                onClickQuizButton()
+            }
+            ActionContentsType.EBOOK ->
+            {
+                onClickEbookButton()
+            }
+            ActionContentsType.VOCABULARY ->
+            {
+                onClickVocabularyButton()
+            }
+            ActionContentsType.TRANSLATE ->
+            {
+                onClickTranslateButton()
+            }
+            ActionContentsType.STARWORDS ->
+            {
+                onClickStarwordsButton()
+            }
+            ActionContentsType.CROSSWORD ->
+            {
+                onClickCrosswordButton()
+            }
+            ActionContentsType.FLASHCARD ->
+            {
+                onClickFlashcardButton()
+            }
+            ActionContentsType.RECORD_PLAYER ->
+            {
+                onClickRecordPlayerButton()
+            }
+            else -> {}
+        }
+    }
+
     fun onCloseButton()
     {
         Log.f("isAuthorizationComplete : $isAuthorizationComplete, status : $mCurrentPlayerStatus")
@@ -1479,102 +1615,6 @@ class PlayerFactoryViewModel @Inject constructor(private val apiViewModel : Play
         mSelectItemOptionIndex = mCurrentPlayMovieIndex
         pausePlayer()
         _dialogBottomOption.value = mPlayInformationList[mSelectItemOptionIndex]
-    }
-
-    fun onClickEbookButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startEbookActivity()
-        }
-    }
-
-    fun onClickQuizButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startQuizAcitiviy()
-        }
-
-    }
-
-    fun onClickVocabularyButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startVocabularyActivity()
-        }
-    }
-
-    fun onClickTranslateButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startOriginTranslateActivity()
-        }
-    }
-
-    fun onClickStarwordsButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startGameStarwordsActivity()
-        }
-    }
-
-    fun onClickCrosswordButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startGameCrosswordActivity()
-        }
-    }
-
-    fun onClickFlashcardButton()
-    {
-        Log.f("")
-        viewModelScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO){
-                delay(Common.DURATION_SHORT)
-            }
-            startFlashcardActivity()
-        }
-    }
-
-    fun onClickRecordPlayerButton()
-    {
-        Log.f("")
-        if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
-        {
-           _dialogWarningRecordPermission.call()
-        }
-        else
-        {
-            viewModelScope.launch(Dispatchers.Main) {
-                withContext(Dispatchers.IO){
-                    delay(Common.DURATION_SHORT)
-                }
-                startRecordPlayerActivity()
-            }
-        }
     }
 
     fun onClickAddBookshelf()

@@ -28,8 +28,6 @@ import com.littlefox.app.foxschool.presentation.mvi.main.MainAction
 import com.littlefox.app.foxschool.presentation.mvi.main.MainEvent
 import com.littlefox.app.foxschool.presentation.mvi.main.MainSideEffect
 import com.littlefox.app.foxschool.presentation.mvi.main.MainState
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.MainViewModel.Companion
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
