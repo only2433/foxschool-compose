@@ -18,10 +18,12 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.PasswordChangeDialog
 import com.littlefox.app.foxschool.dialog.listener.PasswordChangeListener
 import com.littlefox.app.foxschool.enumerate.PasswordGuideType
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.login.LoginAction
+import com.littlefox.app.foxschool.presentation.mvi.login.LoginSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.login.viewmodel.LoginViewModel
 import com.littlefox.app.foxschool.presentation.screen.intro.IntroActivity
 import com.littlefox.app.foxschool.presentation.screen.login.phone.LoginScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.LoginViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.login.LoginEvent
 
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,7 +47,7 @@ class LoginActivity : BaseActivity()
         setContent {
             LoginScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
             )
         }
 
@@ -90,44 +92,50 @@ class LoginActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect{ value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@LoginActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@LoginActivity).showErrorMessage(value.message)
+                        }
+                        is LoginSideEffect.ShowPasswordChangeDialog ->
+                        {
+                            showPasswordChangeDialog(
+                                value.type
+                            )
+                        }
+                        is LoginSideEffect.HidePasswordChangeDialog ->
+                        {
+                            hidePasswordChangeDialog()
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@LoginActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@LoginActivity).showErrorMessage(message)
-        }
-
-        viewModel.showDialogPasswordChange.observe(this){ type ->
-            showPasswordChangeDialog(type)
-        }
-
-        viewModel.hideDialogPasswordChange.observe(this){
-            hidePasswordChangeDialog()
-        }
-
-        viewModel.finishActivity.observe(this){
-            setResult(Activity.RESULT_OK)
-            finish()
         }
     }
 
@@ -146,18 +154,16 @@ class LoginActivity : BaseActivity()
         mPasswordChangeDialog!!.dismiss()
     }
 
-    private val mPasswordChangeDialogListener : PasswordChangeListener = object :
-        PasswordChangeListener
+    private val mPasswordChangeDialogListener : PasswordChangeListener = object : PasswordChangeListener
     {
         /**
          * [비밀번호 변경] 버튼 클릭 이벤트
          */
         override fun onClickChangeButton(oldPassword : String, newPassword : String, confirmPassword : String)
         {
-            viewModel.onHandleViewEvent(
-                LoginEvent.onClickChangeButton(
+            viewModel.onHandleAction(
+                LoginAction.ClickChangeButton(
                     oldPassword,
-
                     newPassword,
                     confirmPassword
                 )
@@ -169,8 +175,8 @@ class LoginActivity : BaseActivity()
          */
         override fun onClickLaterButton()
         {
-            viewModel.onHandleViewEvent(
-                LoginEvent.onClickLaterButton
+            viewModel.onHandleAction(
+                LoginAction.ClickLaterButton
             )
         }
 
@@ -179,8 +185,8 @@ class LoginActivity : BaseActivity()
          */
         override fun onClickKeepButton()
         {
-            viewModel.onHandleViewEvent(
-                LoginEvent.onClickKeepButton
+            viewModel.onHandleAction(
+                LoginAction.ClickKeepButton
             )
         }
     }

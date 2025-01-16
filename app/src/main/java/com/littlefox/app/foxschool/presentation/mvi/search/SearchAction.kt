@@ -4,7 +4,6 @@ import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.SearchType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.mvi.base.Action
-import com.littlefox.app.foxschool.presentation.viewmodel.search.SearchEvent
 
 sealed class SearchAction: Action
 {

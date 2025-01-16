@@ -40,8 +40,6 @@ import com.littlefox.app.foxschool.presentation.mvi.search.SearchAction
 import com.littlefox.app.foxschool.presentation.mvi.search.SearchEvent
 import com.littlefox.app.foxschool.presentation.mvi.search.SearchSideEffect
 import com.littlefox.app.foxschool.presentation.mvi.search.SearchState
-import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.SearchViewModel.Companion
 import com.littlefox.library.system.handler.WeakReferenceHandler
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel

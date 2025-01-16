@@ -47,13 +47,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.presentation.viewmodel.LoginViewModel
-
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.login.LoginEvent
+import com.littlefox.app.foxschool.presentation.mvi.login.LoginAction
+import com.littlefox.app.foxschool.presentation.mvi.login.viewmodel.LoginViewModel
 import com.littlefox.app.foxschool.presentation.widget.BlueRoundButton
 import com.littlefox.app.foxschool.presentation.widget.PrefixIconTextFieldLayout
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
@@ -64,15 +64,13 @@ import com.littlefox.logmonitor.Log
 @Composable
 fun LoginScreenV(
     viewModel: LoginViewModel,
-    onEvent: (LoginEvent) -> Unit
+    onAction: (LoginAction) -> Unit
 )
 {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
-    val _schoolList by viewModel.schoolList.observeAsState(
-        initial = emptyList()
-    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val _schoolText = remember {
         mutableStateOf("")
     }
@@ -184,12 +182,14 @@ fun LoginScreenV(
                                 text = _schoolText.value,
                                 icon = painterResource(id = R.drawable.icon_search_2),
                                 hintText = stringResource(id = R.string.text_school_search),
-                                isBottomRounded = _schoolList.isEmpty(),
+                                isBottomRounded = state.schoolList.isEmpty(),
                                 width = 888,
                                 height = 120)
                             {
                                 _schoolText.value = it
-                                onEvent(LoginEvent.onInputSchoolNameChanged(it))
+                                onAction(
+                                    LoginAction.InputSchoolNameChanged(it)
+                                )
                             }
 
                             Spacer(
@@ -277,8 +277,8 @@ fun LoginScreenV(
                                     }, indication = null, // 클릭 시 효과 제거
                                         onClick = {
                                             _isAutoLoginCheck.value = !_isAutoLoginCheck.value
-                                            onEvent(
-                                                LoginEvent.onCheckAutoLogin(
+                                            onAction(
+                                                LoginAction.CheckAutoLogin(
                                                     _isAutoLoginCheck.value
                                                 )
                                             )
@@ -344,13 +344,15 @@ fun LoginScreenV(
                     {
                         Log.i("Login Button Click")
                         focusManager.clearFocus()
-                        onEvent(LoginEvent.onClickLogin(
-                            UserLoginData(
-                                userId = _idText.value,
-                                password = _passwordText.value,
-                                schoolCode = _selectSchoolCode.value
+                        onAction(
+                            LoginAction.ClickLogin(
+                                UserLoginData(
+                                    userId = _idText.value,
+                                    password = _passwordText.value,
+                                    schoolCode = _selectSchoolCode.value
+                                )
                             )
-                        ))
+                        )
 
                     }
 
@@ -360,9 +362,9 @@ fun LoginScreenV(
                                 getDp(pixel = 40)
                             )
                     )
-                    BuildFindsLayout(onEvent)
+                    BuildFindsLayout(onAction)
                 }
-                if(_schoolList.isNotEmpty())
+                if(state.schoolList.isNotEmpty())
                 {
                     Box(
                         modifier = Modifier
@@ -402,12 +404,14 @@ fun LoginScreenV(
                                 )
                         )
                         {
-                            items(_schoolList) {item ->
+                            items(state.schoolList) {item ->
                                 Text(
                                     text = item.getSchoolName(),
                                     modifier = Modifier
                                         .clickable {
-                                            onEvent(LoginEvent.onSchoolNameSelected)
+                                            onAction(
+                                                LoginAction.SelectSchoolName
+                                            )
                                             _schoolText.value = item.getSchoolName()
                                             _selectSchoolCode.value = item.getSchoolID()
                                         },
@@ -447,7 +451,7 @@ fun LoginScreenV(
 
 @Composable
 private fun BuildFindsLayout(
-    onEvent : (LoginEvent) -> Unit
+    onAction : (LoginAction) -> Unit
 )
 {
     Row(
@@ -467,11 +471,9 @@ private fun BuildFindsLayout(
                 )
                 .clickable(interactionSource = remember { //
                     MutableInteractionSource()
-                },
-                    indication = null,
-                    onClick = {
-                    onEvent(
-                        LoginEvent.onClickFindID
+                }, indication = null, onClick = {
+                    onAction(
+                        LoginAction.ClickFindID
                     )
                 })
         ) {
@@ -524,9 +526,9 @@ private fun BuildFindsLayout(
                 },
                     indication = null,
                     onClick = {
-                    onEvent(
-                        LoginEvent.onClickFindPassword
-                    )
+                        onAction(
+                            LoginAction.ClickFindPassword
+                        )
                 })
         ) {
             Text(
