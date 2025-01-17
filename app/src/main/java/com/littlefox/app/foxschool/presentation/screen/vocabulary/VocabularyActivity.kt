@@ -8,7 +8,9 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.Common
@@ -23,10 +25,12 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularyAction
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularySideEffect
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.viewmodel.VocabularyViewModel
 import com.littlefox.app.foxschool.presentation.screen.vocabulary.phone.VocabularyScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.VocabularyViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.vocabulary.VocabularyEvent
+
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -52,7 +56,7 @@ class VocabularyActivity : BaseActivity()
         setContent {
             VocabularyScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent)
+                onAction = viewModel::onHandleAction)
         }
     }
 
@@ -73,44 +77,54 @@ class VocabularyActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect{ value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@VocabularyActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@VocabularyActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@VocabularyActivity).showErrorMessage(value.message)
+                        }
+                        is VocabularySideEffect.ShowContentsAddDialog ->
+                        {
+                            showBottomVocabularyAddDialog(
+                                value.list
+                            )
+                        }
+                        is VocabularySideEffect.ShowContentsDeleteDialog ->
+                        {
+                            showVocabularyContentDeleteDialog()
+                        }
+                        is VocabularySideEffect.ShowIntervalSelectDialog ->
+                        {
+                            showBottomIntervalDialog(value.currentIntervalIndex)
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@VocabularyActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@VocabularyActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@VocabularyActivity).showErrorMessage(message)
-        }
-
-
-        viewModel.dialogIntervalSelect.observe(this){ second ->
-            showBottomIntervalDialog(second)
-        }
-
-        viewModel.dialogBottomVocabularyContentsAdd.observe(this){ list ->
-            showBottomVocabularyAddDialog(list)
-        }
-
-        viewModel.dialogVocabularyContentsDelete.observe(this) {
-            showVocabularyContentDeleteDialog()
         }
     }
 
@@ -159,8 +173,8 @@ class VocabularyActivity : BaseActivity()
         override fun onClickIntervalSecond(second : Int)
         {
             Log.f("second : $second")
-            viewModel.onHandleViewEvent(
-                VocabularyEvent.onSelectIntervalSecond(
+            viewModel.onHandleAction(
+                VocabularyAction.SelectIntervalSecond(
                     second
                 )
             )
@@ -173,8 +187,8 @@ class VocabularyActivity : BaseActivity()
         override fun onClickBook(index : Int)
         {
             Log.f("index : $index")
-            viewModel.onHandleViewEvent(
-                VocabularyEvent.onAddContentsInVocabulary(
+            viewModel.onHandleAction(
+                VocabularyAction.AddContentsInVocabulary(
                     index
                 )
             )
@@ -187,11 +201,9 @@ class VocabularyActivity : BaseActivity()
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
     }

@@ -51,15 +51,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.enumerate.VocabularyType
-import com.littlefox.app.foxschool.presentation.viewmodel.VocabularyViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.logmonitor.Log
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.enumerate.VocabularyTopBarMenu
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.vocabulary.VocabularyEvent
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularyAction
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.viewmodel.VocabularyViewModel
 import com.littlefox.app.foxschool.presentation.widget.BuildVocabularyBarLayout
 import com.littlefox.app.foxschool.presentation.widget.BuildVocabularyListItem
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
@@ -70,24 +70,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun VocabularyScreenV(
     viewModel : VocabularyViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (VocabularyAction) -> Unit
 )
 {
-    val _contentsList by viewModel.vocabularyContentsList.observeAsState(
-        initial = EventWrapper(ArrayList())
-    )
-    val _selectItemCount by viewModel.itemSelectedCount.observeAsState(
-        initial = EventWrapper(0)
-    )
-    val _intervalSecond by viewModel.intervalSecond.observeAsState(initial = 0)
-    val _isSequencePlaying by viewModel.isPlayingStatus.observeAsState(initial = false)
-
-    val _vocabularyTitle by viewModel.vocabularyTitle.observeAsState(initial = "")
-    val _selectMenuData by viewModel.vocabularySelectType.observeAsState(initial = VocabularySelectData())
-    val _isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
-    val _vocabularyType by viewModel.vocabularyType.observeAsState(initial = VocabularyType.VOCABULARY_CONTENTS)
-    val _currentPlayingIndex by viewModel.currentPlayingIndex.observeAsState(initial = 0)
-
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val _listState = remember {
         LazyListState()
     }
@@ -98,31 +84,9 @@ fun VocabularyScreenV(
     var _isSelectedStatus by remember {
         mutableStateOf(false)
     }
-    var _dataList by remember {
-        mutableStateOf(ArrayList<VocabularyDataResult>())
-    }
-    var _itemCount by remember {
-        mutableStateOf(0)
-    }
 
-    _contentsList.getContentIfNotHandled()?.let {
-        Log.i("------------- notify size : ${it.size}")
-        LaunchedEffect(_contentsList) {
-            _isShouldAnimate = if(it.size > 0)
-            {
-                true
-            }
-            else
-            {
-                false
-            }
-        }
-        _dataList = ArrayList()
-        _dataList = it
-    }
-
-    _selectItemCount.getContentIfNotHandled()?.let {
-        _isSelectedStatus = if(it > 0)
+    LaunchedEffect(state.contentsList) {
+        _isShouldAnimate = if(state.contentsList.size > 0)
         {
             true
         }
@@ -130,14 +94,12 @@ fun VocabularyScreenV(
         {
             false
         }
-        _itemCount = it
     }
 
-
-    LaunchedEffect(_currentPlayingIndex) {
-        Log.i("currentPlayingIndex : $_currentPlayingIndex")
+    LaunchedEffect(state.currentPlayingIndex) {
+        Log.i("currentPlayingIndex : $state.currentPlayingIndex")
         _coroutineScope.launch {
-            _listState.animateScrollToItem(_currentPlayingIndex)
+            _listState.animateScrollToItem(state.currentPlayingIndex)
         }
     }
 
@@ -159,16 +121,19 @@ fun VocabularyScreenV(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopBarCloseLayout(
-                title = _vocabularyTitle,
-                backgroundColor = colorResource(id = R.color.color_23cc8a)) {
-                onEvent(BaseEvent.onBackPressed)
+                title = state.title,
+                backgroundColor = colorResource(id = R.color.color_23cc8a))
+            {
+                viewModel.onBackPressed()
             }
-            BuildSelectTypeLayout(data = _selectMenuData) { selectMenu ->
+            BuildSelectTypeLayout(data = state.studyTypeData) { selectMenu ->
                 Log.i("selectMenu : $selectMenu")
-                if(_isSequencePlaying == false)
+                if(state.isPlayingStatus == false)
                 {
-                    onEvent(
-                        VocabularyEvent.onClickTopBarMenu(selectMenu)
+                    onAction(
+                        VocabularyAction.ClickTopBarMenu(
+                            selectMenu
+                        )
                     )
                 }
             }
@@ -180,9 +145,9 @@ fun VocabularyScreenV(
                         start = getDp(pixel = 20), end = getDp(pixel = 20)
                     ),
                 state = _listState,
-                userScrollEnabled = !_isSequencePlaying
+                userScrollEnabled = !state.isPlayingStatus
             ) {
-                itemsIndexed(_dataList, key = {_, item -> item.getID()}){index, item ->
+                itemsIndexed(state.contentsList, key = {_, item -> item.getID()}){index, item ->
                     Column {
                         if(index == 0)
                         {
@@ -195,7 +160,7 @@ fun VocabularyScreenV(
                         }
 
                         AnimatedVisibility(
-                            visible = _dataList.size > 0 && _isShouldAnimate,
+                            visible = state.contentsList.size > 0 && _isShouldAnimate,
                             enter = fadeIn() + slideInVertically(
                                 animationSpec = tween(
                                     durationMillis = 500,
@@ -217,10 +182,10 @@ fun VocabularyScreenV(
                         {
                             BuildVocabularyListItem(
                                 data = item,
-                                type = _selectMenuData,
-                                backgroundColor = if(_isSequencePlaying)
+                                type = state.studyTypeData,
+                                backgroundColor = if(state.isPlayingStatus)
                                 {
-                                    if(_currentPlayingIndex == index)
+                                    if(state.currentPlayingIndex == index)
                                     {
                                         colorResource(id = R.color.color_fffca0)
                                     }
@@ -240,18 +205,18 @@ fun VocabularyScreenV(
                                     }
                                 },
                                 onPlayItem = {
-                                    if(_isSequencePlaying == false)
+                                    if(state.isPlayingStatus == false)
                                     {
-                                        onEvent(
-                                            VocabularyEvent.onPlayContents(index)
+                                        onAction(
+                                            VocabularyAction.PlayContents(index)
                                         )
                                     }
                                 },
                                 onSelectItem = {
-                                    if(_isSequencePlaying == false)
+                                    if(state.isPlayingStatus == false)
                                     {
-                                        onEvent(
-                                            VocabularyEvent.onSelectItem(index)
+                                        onAction(
+                                            VocabularyAction.SelectItem(index)
                                         )
                                     }
                                 }
@@ -280,7 +245,7 @@ fun VocabularyScreenV(
                 .align(Alignment.Center)
         ) {
             AnimatedVisibility(
-                visible = _isShowContentsLoading, enter = fadeIn(), exit = fadeOut()
+                visible = state.isContentsLoading, enter = fadeIn(), exit = fadeOut()
             ) {
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.color_1aa3f8)
@@ -291,18 +256,17 @@ fun VocabularyScreenV(
         BuildVocabularyBarLayout(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
-            isVocabularyShelfMode = when(_vocabularyType)
+            isVocabularyShelfMode = when(state.vocabularyType)
             {
                 VocabularyType.VOCABULARY_SHELF -> true
                 VocabularyType.VOCABULARY_CONTENTS -> false
             },
-            selectedItemCount = _itemCount,
-            currentIntervalSecond = _intervalSecond,
-            isPlaying = _isSequencePlaying,
-            ) { menu ->
-            onEvent(
-                VocabularyEvent.onClickBottomBarMenu(menu)
-            )
+            selectedItemCount = state.selectCount,
+            currentIntervalSecond = state.intervalSecond,
+            isPlaying = state.isPlayingStatus,) { menu ->
+                onAction(
+                    VocabularyAction.ClickBottomBarMenu(menu)
+                )
         }
     }
 }

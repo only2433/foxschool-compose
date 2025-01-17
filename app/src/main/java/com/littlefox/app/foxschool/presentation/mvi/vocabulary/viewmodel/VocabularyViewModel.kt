@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.vocabulary.viewmodel
 
 import VocabularySelectData
 import android.content.Context
@@ -9,7 +9,6 @@ import android.media.MediaPlayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -18,7 +17,6 @@ import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.VocabularyApiViewModel
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Event
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.common.Font
 import com.littlefox.app.foxschool.enumerate.ActivityMode
@@ -27,36 +25,33 @@ import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.enumerate.VocabularyBottomBarMenu
 import com.littlefox.app.foxschool.enumerate.VocabularyTopBarMenu
 import com.littlefox.app.foxschool.enumerate.VocabularyType
-import com.littlefox.app.foxschool.main.presenter.VocabularyPresenter
-import com.littlefox.app.foxschool.main.presenter.VocabularyPresenter.Companion
-
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.vocabulary.VocabularyDataResult
 import com.littlefox.app.foxschool.observer.MainObserver
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.vocabulary.VocabularyEvent
-import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularyAction
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularyEvent
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularySideEffect
+import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularyState
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 @HiltViewModel
-class VocabularyViewModel @Inject constructor(private val apiViewModel : VocabularyApiViewModel) : BaseViewModel()
+class VocabularyViewModel @Inject constructor(private val apiViewModel: VocabularyApiViewModel) : BaseMVIViewModel<VocabularyState, VocabularyEvent, SideEffect>(
+    VocabularyState()
+)
 {
-
     companion object
     {
         const val DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS : Int = 10001
@@ -64,49 +59,13 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
 
     }
 
-    private val _vocabularyContentsList = SingleLiveEvent<EventWrapper<ArrayList<VocabularyDataResult>>>()
-    val vocabularyContentsList: LiveData<EventWrapper<ArrayList<VocabularyDataResult>>> get() = _vocabularyContentsList
-
-    private val _itemSelectedCount = SingleLiveEvent<EventWrapper<Int>>()
-    val itemSelectedCount: LiveData<EventWrapper<Int>> get() = _itemSelectedCount
-
-    private val _vocabularyTitle = SingleLiveEvent<String>()
-    val vocabularyTitle: LiveData<String> get() = _vocabularyTitle
-
-    private val _vocabularyType = SingleLiveEvent<VocabularyType>()
-    val vocabularyType: LiveData<VocabularyType> get() = _vocabularyType
-
-    private val _intervalSecond = SingleLiveEvent<Int>()
-    val intervalSecond: LiveData<Int> get() = _intervalSecond
-
-    private val _isContentsLoading = SingleLiveEvent<Boolean>()
-    val isContentsLoading: LiveData<Boolean> get() = _isContentsLoading
-
-    private val _vocabularySelectType = SingleLiveEvent<VocabularySelectData>()
-    val vocabularySelectType: LiveData<VocabularySelectData> get() = _vocabularySelectType
-
-    private val _currentPlayingIndex = SingleLiveEvent<Int>()
-    val currentPlayingIndex: LiveData<Int> get() = _currentPlayingIndex
-
-    private val _isPlayingStatus = SingleLiveEvent<Boolean>()
-    val isPlayingStatus: LiveData<Boolean> get() = _isPlayingStatus
-
-    private val _dialogIntervalSelect = SingleLiveEvent<Int>()
-    val dialogIntervalSelect: LiveData<Int> get() = _dialogIntervalSelect
-
-    private val _dialogBottomVocabularyContentsAdd = SingleLiveEvent<ArrayList<MyVocabularyResult>>()
-    val dialogBottomVocabularyContentsAdd: LiveData<ArrayList<MyVocabularyResult>> get() = _dialogBottomVocabularyContentsAdd
-
-    private val _dialogVocabularyContentsDelete = SingleLiveEvent<Void>()
-    val dialogVocabularyContentsDelete: LiveData<Void> get() = _dialogVocabularyContentsDelete
+    private lateinit var mVocabularySelectData : VocabularySelectData
+    private lateinit var mMainInformationResult : MainInformationResult
+    private lateinit var mCurrentMyVocabularyResult : MyVocabularyResult
 
     private var mVocabularyItemList : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
     private var mRequestItemList : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
     private var mSelectedPlayItemList : ArrayList<VocabularyDataResult> = ArrayList<VocabularyDataResult>()
-
-    private lateinit var mVocabularySelectData : VocabularySelectData
-    private lateinit var mMainInformationResult : MainInformationResult
-    private lateinit var mCurrentMyVocabularyResult : MyVocabularyResult
 
     private lateinit var mContext : Context
     private var mMediaPlayer : MediaPlayer? = null
@@ -118,15 +77,21 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
 
     private var mSequencePlayJob: Job? = null
 
-
     override fun init(context : Context)
     {
         mContext = context
         mCurrentMyVocabularyResult = (mContext as AppCompatActivity).intent.getParcelableExtra(
             Common.INTENT_VOCABULARY_DATA)!!
         mVocabularySelectData = VocabularySelectData()
-        _vocabularyTitle.value = mCurrentMyVocabularyResult.getName()
-        _vocabularyType.value = mCurrentMyVocabularyResult.getVocabularyType()
+        postEvent(
+            VocabularyEvent.SetTitle(
+                mCurrentMyVocabularyResult.getName()
+            ),
+            VocabularyEvent.SetVocabularyType(
+                mCurrentMyVocabularyResult.getVocabularyType()
+            )
+        )
+
         settingData()
         setupMediaPlayer()
         onHandleApiObserver()
@@ -146,55 +111,236 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         }
     }
 
-    override fun onHandleViewEvent(event : BaseEvent)
-    {
-        when(event)
-        {
-            is BaseEvent.DialogChoiceClick ->
-            {
-                onDialogChoiceClick(
-                    event.buttonType,
-                    event.eventType
-                )
-            }
+    override fun resume() {}
 
-            is VocabularyEvent.onClickTopBarMenu ->
+    override fun pause() {}
+
+    override fun destroy() {}
+
+    override fun onBackPressed()
+    {
+        (mContext as AppCompatActivity).finish()
+    }
+
+    override fun onHandleApiObserver()
+    {
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.isLoading.collect{ data ->
+                    data?.let {
+                        if(it.first == RequestCode.CODE_VOCABULARY_CONTENTS_ADD
+                            || it.first == RequestCode.CODE_VOCABULARY_CONTENTS_DELETE)
+                        {
+                            if(it.second)
+                            {
+                                postSideEffect(
+                                    SideEffect.EnableLoading(true)
+                                )
+                            }
+                            else
+                            {
+                                postSideEffect(
+                                    SideEffect.EnableLoading(false)
+                                )
+                            }
+                        }
+
+                    }
+
+                }
+            }
+        }
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.contentsListData.collect{ data ->
+                    data?.let {
+                        mVocabularyItemList = data
+                        measureContentsViewSize()
+                        postEvent(
+                            VocabularyEvent.EnableContentsLoading(false)
+                        )
+
+                        Log.f("size : ${mVocabularyItemList.size}")
+                        viewModelScope.launch {
+                            withContext(Dispatchers.Main)
+                            {
+                                delay(Common.DURATION_SHORT)
+                            }
+                            postEvent(
+                                VocabularyEvent.UpdateContentsList(
+                                    mVocabularyItemList
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.addVocabularyContentsData.collect{ data ->
+                    data?.let {
+                        updateVocabularyData(data)
+                        checkSelectedDataAll(false)
+                        viewModelScope.launch {
+                            withContext(Dispatchers.Main)
+                            {
+                                delay(Common.DURATION_NORMAL)
+                            }
+                            postSideEffect(
+                                SideEffect.ShowSuccessMessage(
+                                    mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.deleteVocabularyContentsData.collect{ data ->
+                    data?.let {
+                        refreshVocabularyItemData()
+                        checkSelectedDataAll(false)
+                        viewModelScope.launch {
+                            withContext(Dispatchers.Main)
+                            {
+                                delay(Common.DURATION_NORMAL)
+                            }
+                            postSideEffect(
+                                SideEffect.ShowSuccessMessage(
+                                    mContext.resources.getString(R.string.message_success_delete_contents)
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        (mContext as AppCompatActivity).lifecycleScope.launch {
+            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
+                apiViewModel.errorReport.collect{ data ->
+                    data?.let {
+                        val result = data.first
+                        val code = data.second
+
+                        if(result.isDuplicateLogin)
+                        {
+                            postSideEffect(
+                                SideEffect.ShowToast(
+                                    result.message
+                                )
+                            )
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initAutoIntroSequence()
+                            }
+                        }
+                        else if(result.isAuthenticationBroken)
+                        {
+                            postSideEffect(
+                                SideEffect.ShowToast(
+                                    result.message
+                                )
+                            )
+                            viewModelScope.launch {
+                                withContext(Dispatchers.IO)
+                                {
+                                    delay(Common.DURATION_SHORT)
+                                }
+                                (mContext as AppCompatActivity).finish()
+                                IntentManagementFactory.getInstance().initScene()
+                            }
+                        }
+                        else
+                        {
+                            if(code == RequestCode.CODE_VOCABULARY_CONTENTS_LIST)
+                            {
+                                postSideEffect(
+                                    SideEffect.ShowToast(
+                                        result.message
+                                    )
+                                )
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.IO)
+                                    {
+                                        delay(Common.DURATION_SHORT)
+                                    }
+                                    (mContext as AppCompatActivity).finish()
+                                }
+                            }
+                            else
+                            {
+                                postSideEffect(
+                                    SideEffect.EnableLoading(false)
+                                )
+                                viewModelScope.launch {
+                                    withContext(Dispatchers.IO)
+                                    {
+                                        delay(Common.DURATION_SHORT)
+                                    }
+                                    postSideEffect(
+                                        SideEffect.ShowErrorMessage(
+                                            result.message
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onHandleAction(action : Action)
+    {
+        when(action)
+        {
+            is VocabularyAction.ClickTopBarMenu ->
             {
-                Log.i("receive : $event.menu")
-                when(event.menu)
+                Log.i("receive : $action.menu")
+                when(action.menu)
                 {
                     VocabularyTopBarMenu.ALL ->
                     {
                         mVocabularySelectData.setSelectAll()
-                        _vocabularySelectType.value = VocabularySelectData(mVocabularySelectData)
                     }
 
                     VocabularyTopBarMenu.WORD ->
                     {
                         mVocabularySelectData.setSelectWord()
-                        _vocabularySelectType.value = VocabularySelectData(mVocabularySelectData)
                     }
                     VocabularyTopBarMenu.MEANING ->
                     {
                         mVocabularySelectData.setSelectMeaning()
-                        _vocabularySelectType.value = VocabularySelectData(mVocabularySelectData)
                     }
                     VocabularyTopBarMenu.EXAMPLE ->
                     {
                         mVocabularySelectData.setSelectExample()
-                        _vocabularySelectType.value = VocabularySelectData(mVocabularySelectData)
                     }
                 }
+                postEvent(
+                    VocabularyEvent.ChangeStudyDataType(
+                        VocabularySelectData(mVocabularySelectData)
+                    )
+                )
             }
-
-            is VocabularyEvent.onClickBottomBarMenu ->
+            is VocabularyAction.ClickBottomBarMenu ->
             {
-                when(event.menu)
+                when(action.menu)
                 {
                     VocabularyBottomBarMenu.INTERVAL ->
                     {
                         Log.f("")
-                        _dialogIntervalSelect.value = mCurrentIntervalSecond
+                        postSideEffect(
+                            VocabularySideEffect.ShowIntervalSelectDialog(mCurrentIntervalSecond)
+                        )
                     }
                     VocabularyBottomBarMenu.SELECT_ALL ->
                     {
@@ -226,26 +372,26 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
                     }
                 }
             }
-
-            is VocabularyEvent.onSelectIntervalSecond ->
+            is VocabularyAction.PlayContents ->
             {
-                mCurrentIntervalSecond = event.second
-                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_VOCABULARY_INTERVAL, mCurrentIntervalSecond)
-                _intervalSecond.value = mCurrentIntervalSecond
-            }
-
-            is VocabularyEvent.onSelectItem ->
-            {
-                setItemSelected(event.index)
-            }
-            is VocabularyEvent.onPlayContents ->
-            {
-                mCurrentPlayIndex = event.index
+                mCurrentPlayIndex = action.index
                 startAudio(mVocabularyItemList)
             }
-            is VocabularyEvent.onAddContentsInVocabulary ->
+            is VocabularyAction.SelectItem ->
             {
-                val vocabularyID = mMainInformationResult.getVocabulariesList()[event.index].getID()
+                setItemSelected(action.index)
+            }
+            is VocabularyAction.SelectIntervalSecond ->
+            {
+                mCurrentIntervalSecond = action.second
+                CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_VOCABULARY_INTERVAL, mCurrentIntervalSecond)
+                postEvent(
+                    VocabularyEvent.ChangeIntervalSecond(mCurrentIntervalSecond)
+                )
+            }
+            is VocabularyAction.AddContentsInVocabulary ->
+            {
+                val vocabularyID = mMainInformationResult.getVocabulariesList()[action.index].getID()
                 mRequestItemList.clear()
                 mRequestItemList = getSelectedItemList()
                 requestVocabularyContentsAddAsync(vocabularyID)
@@ -253,168 +399,75 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         }
     }
 
-    override fun onHandleApiObserver()
+    override suspend fun reduceState(current : VocabularyState, event : VocabularyEvent) : VocabularyState
     {
-        (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
-                apiViewModel.isLoading.collect{ data ->
-                    data?.let {
-                        if(it.first == RequestCode.CODE_VOCABULARY_CONTENTS_ADD
-                            || it.first == RequestCode.CODE_VOCABULARY_CONTENTS_DELETE)
-                        {
-                            if(it.second)
-                            {
-                                _isLoading.value = true
-                            }
-                            else
-                            {
-                                _isLoading.value = false
-                            }
-                        }
-
-                    }
-
-                }
+        return when(event)
+        {
+            is VocabularyEvent.UpdateContentsList ->
+            {
+                current.copy(
+                    contentsList = event.list
+                )
+            }
+            is VocabularyEvent.SelectItemCount ->
+            {
+                current.copy(
+                    selectCount = event.count
+                )
+            }
+            is VocabularyEvent.SetTitle ->
+            {
+                current.copy(
+                    title = event.title
+                )
+            }
+            is VocabularyEvent.SetVocabularyType ->
+            {
+                current.copy(
+                    vocabularyType = event.type
+                )
+            }
+            is VocabularyEvent.ChangeIntervalSecond ->
+            {
+                current.copy(
+                    intervalSecond = event.second
+                )
+            }
+            is VocabularyEvent.EnableContentsLoading ->
+            {
+                current.copy(
+                    isContentsLoading = event.isLoading
+                )
+            }
+            is VocabularyEvent.ChangeStudyDataType ->
+            {
+                current.copy(
+                    studyTypeData = event.data
+                )
+            }
+            is VocabularyEvent.NotifyCurrentPlayIndex ->
+            {
+                current.copy(
+                    currentPlayingIndex = event.index
+                )
+            }
+            is VocabularyEvent.EnablePlayStatus ->
+            {
+                current.copy(
+                    isPlayingStatus = event.isPlaying
+                )
             }
         }
-        (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
-                apiViewModel.contentsListData.collect{ data ->
-                    data?.let {
-                        mVocabularyItemList = data
-                        measureContentsViewSize()
-                        _isContentsLoading.value = false
-
-                        Log.f("size : ${mVocabularyItemList.size}")
-
-                        viewModelScope.launch {
-                            withContext(Dispatchers.Main)
-                            {
-                                delay(Common.DURATION_SHORT)
-                            }
-                            _vocabularyContentsList.value = EventWrapper(mVocabularyItemList)
-                        }
-                    }
-                }
-            }
-        }
-        (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
-                apiViewModel.addVocabularyContentsData.collect{ data ->
-                    data?.let {
-                        updateVocabularyData(data)
-                        checkSelectedDataAll(false)
-                        viewModelScope.launch {
-                            withContext(Dispatchers.Main)
-                            {
-                                delay(Common.DURATION_NORMAL)
-                            }
-                            _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_vocabulary)
-                        }
-                    }
-                }
-            }
-        }
-        (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
-                apiViewModel.deleteVocabularyContentsData.collect{ data ->
-                    data?.let {
-                        refreshVocabularyItemData()
-                        checkSelectedDataAll(false)
-                        viewModelScope.launch {
-                            withContext(Dispatchers.Main)
-                            {
-                                delay(Common.DURATION_NORMAL)
-                            }
-                            _successMessage.value = mContext.resources.getString(R.string.message_success_delete_contents)
-                        }
-                    }
-                }
-            }
-        }
-        (mContext as AppCompatActivity).lifecycleScope.launch {
-            (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
-                apiViewModel.errorReport.collect{ data ->
-                    data?.let {
-                        val result = data.first
-                        val code = data.second
-
-                        if(result.isDuplicateLogin)
-                        {
-                            _toast.value = result.message
-                            viewModelScope.launch {
-                                withContext(Dispatchers.IO)
-                                {
-                                    delay(Common.DURATION_SHORT)
-                                }
-                                (mContext as AppCompatActivity).finish()
-                                IntentManagementFactory.getInstance().initAutoIntroSequence()
-                            }
-                        }
-                        else if(result.isAuthenticationBroken)
-                        {
-                            _toast.value = result.message
-                            viewModelScope.launch {
-                                withContext(Dispatchers.IO)
-                                {
-                                    delay(Common.DURATION_SHORT)
-                                }
-                                (mContext as AppCompatActivity).finish()
-                                IntentManagementFactory.getInstance().initScene()
-                            }
-                        }
-                        else
-                        {
-                            if(code == RequestCode.CODE_VOCABULARY_CONTENTS_LIST)
-                            {
-                                _toast.value = result.message
-                                viewModelScope.launch {
-                                    withContext(Dispatchers.IO)
-                                    {
-                                        delay(Common.DURATION_SHORT)
-                                    }
-                                    (mContext as AppCompatActivity).finish()
-                                }
-                            }
-                            else
-                            {
-                                _isLoading.value = false
-                                viewModelScope.launch {
-                                    withContext(Dispatchers.IO)
-                                    {
-                                        delay(Common.DURATION_SHORT)
-                                    }
-                                    _errorMessage.value = result.message
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    override fun resume()
-    {
-
-    }
-
-    override fun pause()
-    {
-
-    }
-
-    override fun destroy()
-    {
-
     }
 
     private fun settingData()
     {
         mCurrentIntervalSecond = CommonUtils.getInstance(mContext).getSharedPreferenceInteger(Common.PARAMS_VOCABULARY_INTERVAL, mCurrentIntervalSecond)
-        _intervalSecond.value = mCurrentIntervalSecond
         mMainInformationResult = CommonUtils.getInstance(mContext).loadMainData()
-        _isContentsLoading.value = true
+        postEvent(
+            VocabularyEvent.ChangeIntervalSecond(mCurrentIntervalSecond),
+            VocabularyEvent.EnableContentsLoading(true)
+        )
     }
 
     private fun setupMediaPlayer()
@@ -445,7 +498,9 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
     private fun setStatusCurrentItem()
     {
         Log.f("current Playing Index: $mCurrentPlayIndex")
-        _currentPlayingIndex.value = mCurrentPlayIndex
+        postEvent(
+            VocabularyEvent.NotifyCurrentPlayIndex(mCurrentPlayIndex)
+        )
     }
 
     private fun startAudio(playList : ArrayList<VocabularyDataResult>)
@@ -572,13 +627,16 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
             it.setSelected(isSelected)
         }
 
-        _vocabularyContentsList.value = EventWrapper(mVocabularyItemList)
-
-        _itemSelectedCount.value = when(isSelected)
-        {
-            true -> EventWrapper(mVocabularyItemList.size)
-            false -> EventWrapper(0)
-        }
+        postEvent(
+            VocabularyEvent.UpdateContentsList(mVocabularyItemList),
+            VocabularyEvent.SelectItemCount(
+                when(isSelected)
+                {
+                    true -> mVocabularyItemList.size
+                    false -> 0
+                }
+            )
+        )
     }
 
     private fun getSelectItemCount() : Int
@@ -601,11 +659,11 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
                 item.setSelected(!item.isSelected())
             }
         }
-
-        _vocabularyContentsList.value = EventWrapper(mVocabularyItemList)
-
         val selectedItemCount = getSelectItemCount()
-        _itemSelectedCount.value = EventWrapper(selectedItemCount)
+        postEvent(
+            VocabularyEvent.UpdateContentsList(mVocabularyItemList),
+            VocabularyEvent.SelectItemCount(selectedItemCount)
+        )
     }
 
     /**
@@ -709,7 +767,11 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         Log.f("mSelectedPlayItemList.size() : " + mSelectedPlayItemList.size)
         if(mSelectedPlayItemList.size <= 0)
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_select_word_to_study)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(
+                    mContext.resources.getString(R.string.message_select_word_to_study)
+                )
+            )
             return
         }
 
@@ -731,28 +793,37 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
     private fun setVocabularyControlPlay()
     {
         Log.f("isSequencePlay : $isSequencePlay")
-        _isPlayingStatus.value = isSequencePlay
+        postEvent(
+            VocabularyEvent.EnablePlayStatus(isSequencePlay)
+        )
         if(isSequencePlay)
         {
             Log.f("Vocabulary Sound Play")
             mCurrentPlayIndex = 0
             mSelectedPlayItemList = getSelectedItemList()
-            _vocabularyContentsList.value = EventWrapper(ArrayList<VocabularyDataResult>())
-            _isContentsLoading.value = true
+            postEvent(
+                VocabularyEvent.UpdateContentsList(
+                    ArrayList()
+                ),
+                VocabularyEvent.EnableContentsLoading(true)
+            )
             viewModelScope.launch {
                 withContext(Dispatchers.Main)
                 {
                     delay(Common.DURATION_NORMAL)
                 }
-                _isContentsLoading.value = false
-
+                postEvent(
+                    VocabularyEvent.EnableContentsLoading(false)
+                )
 
                 withContext(Dispatchers.Main)
                 {
                     delay(Common.DURATION_NORMAL)
                 }
-                _vocabularyContentsList.value = EventWrapper(mSelectedPlayItemList)
-                _currentPlayingIndex.value = mCurrentPlayIndex
+                postEvent(
+                    VocabularyEvent.UpdateContentsList(mSelectedPlayItemList),
+                    VocabularyEvent.NotifyCurrentPlayIndex(mCurrentPlayIndex)
+                )
                 startAudio(mSelectedPlayItemList)
             }
         }
@@ -760,17 +831,22 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         {
             Log.f("Vocabulary Sound Stop")
             enableSequencePlayAudio(false)
-            _vocabularyContentsList.value = EventWrapper(ArrayList<VocabularyDataResult>())
-            _currentPlayingIndex.value = 0
-            _isContentsLoading.value = true
+            postEvent(
+                VocabularyEvent.UpdateContentsList(
+                    ArrayList()
+                ),
+                VocabularyEvent.NotifyCurrentPlayIndex(0),
+                VocabularyEvent.EnableContentsLoading(true)
+            )
             viewModelScope.launch {
                 withContext(Dispatchers.Main)
                 {
                     delay(Common.DURATION_NORMAL)
                 }
-                _isContentsLoading.value = false
-
-                _vocabularyContentsList.value = EventWrapper(mVocabularyItemList)
+                postEvent(
+                    VocabularyEvent.EnableContentsLoading(false),
+                    VocabularyEvent.UpdateContentsList(mVocabularyItemList)
+                )
             }
         }
     }
@@ -783,7 +859,11 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         if(getSelectItemCount()<= 0)
         {
             Log.f("Not Select ITEM")
-            _errorMessage.value = mContext.resources.getString(R.string.message_not_have_play_vocabulary)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(
+                    mContext.resources.getString(R.string.message_not_have_play_vocabulary)
+                )
+            )
             return
         }
         isSequencePlay = isPlay
@@ -795,11 +875,19 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
         Log.f("")
         if(getSelectItemCount() > 0)
         {
-            _dialogBottomVocabularyContentsAdd.value = mMainInformationResult.getVocabulariesList()
+            postSideEffect(
+                VocabularySideEffect.ShowContentsAddDialog(
+                    mMainInformationResult.getVocabulariesList()
+                )
+            )
         }
         else
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_select_words_put_in_vocabulary)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(
+                    mContext.resources.getString(R.string.message_select_words_put_in_vocabulary)
+                )
+            )
         }
     }
 
@@ -807,17 +895,22 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
     {
         if(getSelectItemCount() > 0)
         {
-            _dialogVocabularyContentsDelete.call()
+            postSideEffect(
+                VocabularySideEffect.ShowContentsDeleteDialog
+            )
         }
         else
         {
-            _errorMessage.value = mContext.resources.getString(R.string.message_select_words_delete_in_vocabulary)
+            postSideEffect(
+                SideEffect.ShowErrorMessage(
+                    mContext.resources.getString(R.string.message_select_words_delete_in_vocabulary)
+                )
+            )
         }
     }
 
     override fun onDialogChoiceClick(buttonType : DialogButtonType, eventType : Int)
     {
-
         if(eventType == DIALOG_EVENT_DELETE_VOCABULARY_CONTENTS)
         {
             if(buttonType == DialogButtonType.BUTTON_2)
@@ -827,6 +920,5 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel : Vocabul
                 requestVocabularyContentsDeleteAsync()
             }
         }
-
     }
 }
