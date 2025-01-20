@@ -100,8 +100,6 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
     private val _loadingComplete = SingleLiveEvent<Boolean>()
     val loadingComplete: LiveData<Boolean> get() = _loadingComplete
 
-/*    private val _resultData = SingleLiveEvent<EventWrapper<QuizResultViewData>>()
-    val resultData: LiveData<EventWrapper<QuizResultViewData>> get() = _resultData*/
 
     private val _resultData = SingleLiveEvent<EventWrapper<String>>()
     val resultData: LiveData<EventWrapper<String>> get() = _resultData

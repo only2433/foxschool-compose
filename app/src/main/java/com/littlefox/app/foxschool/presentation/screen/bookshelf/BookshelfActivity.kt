@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -16,12 +19,14 @@ import com.littlefox.app.foxschool.dialog.listener.ItemOptionListener
 import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfAction
+import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.bookshelf.viewmodel.BookshelfViewModel
 import com.littlefox.app.foxschool.presentation.screen.bookshelf.phone.BookshelfScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.BookshelfViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookshelfActivity : BaseActivity()
@@ -40,7 +45,7 @@ class BookshelfActivity : BaseActivity()
         setContent {
             BookshelfScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent)
+                onAction = viewModel::onHandleAction)
         }
     }
 
@@ -70,39 +75,52 @@ class BookshelfActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect{ value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@BookshelfActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@BookshelfActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@BookshelfActivity).showErrorMessage(value.message)
+                        }
+                        is BookshelfSideEffect.ShowContentsDeleteDialog ->
+                        {
+                            showBookshelfContentsDeleteDialog()
+                        }
+                        is BookshelfSideEffect.ShowBottomOptionDialog ->
+                        {
+                            showBottomBookshelfItemDialog(value.data)
+                        }
+                        is BookshelfSideEffect.ShowRecordPermissionDialog ->
+                        {
+                            showChangeRecordPermissionDialog()
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@BookshelfActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@BookshelfActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@BookshelfActivity).showErrorMessage(message)
-        }
-
-        viewModel.dialogBookshelfContentsDelete.observe(this){
-            showBookshelfContentsDeleteDialog()
-        }
-
-        viewModel.dialogBottomOption.observe(this){ data ->
-            showBottomBookshelfItemDialog(data)
         }
     }
 
@@ -149,10 +167,8 @@ class BookshelfActivity : BaseActivity()
     {
         override fun onClickItem(type : ActionContentsType)
         {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
-                    type
-                )
+            viewModel.onHandleAction(
+                BookshelfAction.ClickBottomContentsType(type)
             )
         }
     }
@@ -161,21 +177,16 @@ class BookshelfActivity : BaseActivity()
     {
         override fun onConfirmButtonClick(eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogClick(
-                    eventType
-                )
+            viewModel.onDialogClick(
+                eventType
             )
-
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
 

@@ -35,13 +35,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import com.littlefox.app.foxschool.presentation.viewmodel.BookshelfViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.bookshelf.BookshelfEvent
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.logmonitor.Log
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfAction
+import com.littlefox.app.foxschool.presentation.mvi.bookshelf.viewmodel.BookshelfViewModel
 import com.littlefox.app.foxschool.presentation.widget.BuildBottomSelectBarLayout
 import com.littlefox.app.foxschool.presentation.widget.BuildContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.TopBarBackLayout
@@ -50,24 +50,12 @@ import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 @Composable
 fun BookshelfScreenV(
     viewModel : BookshelfViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (BookshelfAction) -> Unit
 )
 {
-    val _contentsList by viewModel.contentsList.observeAsState(
-        initial = EventWrapper(ArrayList())
-    )
-    val _selectedItemCount by viewModel.itemSelectedCount.observeAsState(
-        initial = EventWrapper(0)
-    )
-    val _seriesTitle by viewModel.setTitle.observeAsState(initial = "")
-    val _isShowContentsLoading by viewModel.enableContentListLoading.observeAsState(initial = false)
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    var _dataList by remember {
-        mutableStateOf(ArrayList<ContentsBaseResult>())
-    }
-    var _itemCount by remember {
-        mutableIntStateOf(0)
-    }
+
     var _isFabToolbarVisible by remember {
         mutableStateOf(false)
     }
@@ -76,23 +64,17 @@ fun BookshelfScreenV(
     }
 
 
-    _contentsList.getContentIfNotHandled()?.let {
-        Log.i("------------- notify size : ${it.size}")
-        LaunchedEffect(_contentsList) {
-            if( it.size > 0)
-            {
-                _isShouldAnimate = true
-            }
+    LaunchedEffect(state.contentsList) {
+        if( state.contentsList.size > 0)
+        {
+            _isShouldAnimate = true
         }
-        _dataList = ArrayList()
-        _dataList = it
     }
 
-    _selectedItemCount.getContentIfNotHandled()?.let {
-        Log.i("count : $it")
-        _itemCount = it
-        _isFabToolbarVisible = if(it > 0) true else false
+    LaunchedEffect(state.selectCount) {
+        _isFabToolbarVisible = if(state.selectCount > 0) true else false
     }
+
 
 
     Box(
@@ -105,11 +87,10 @@ fun BookshelfScreenV(
     {
         Column {
             TopBarBackLayout(
-                title = _seriesTitle,
-                backgroundColor = colorResource(id = R.color.color_23cc8a)) {
-                onEvent(
-                    BaseEvent.onBackPressed
-                )
+                title = state.title,
+                backgroundColor = colorResource(id = R.color.color_23cc8a))
+            {
+                viewModel.onBackPressed()
             }
 
             LazyColumn(
@@ -119,7 +100,7 @@ fun BookshelfScreenV(
                         start = getDp(pixel = 20), end = getDp(pixel = 20)
                     )
             ) {
-                itemsIndexed(_dataList, key = {_, item -> item.id}){index, item ->
+                itemsIndexed(state.contentsList, key = {_, item -> item.id}){index, item ->
                     Column {
                         if(index == 0)
                         {
@@ -132,7 +113,7 @@ fun BookshelfScreenV(
                         }
 
                         AnimatedVisibility(
-                            visible = _dataList.size > 0 && _isShouldAnimate,
+                            visible = state.contentsList.size > 0 && _isShouldAnimate,
                             enter = fadeIn() + slideInVertically(
                                 animationSpec = tween(
                                     durationMillis = 500,
@@ -155,18 +136,18 @@ fun BookshelfScreenV(
                             BuildContentsListItem(
                                 data = item,
                                 onBackgroundClick = {
-                                    onEvent(
-                                        BookshelfEvent.onSelectedItem(index)
+                                    onAction(
+                                        BookshelfAction.SelectedItem(index)
                                     )
                                 },
                                 onThumbnailClick = {
-                                    onEvent(
-                                        BookshelfEvent.onClickThumbnail(item)
+                                    onAction(
+                                        BookshelfAction.ClickThumbnail(item)
                                     )
                                 },
                                 onOptionClick = {
-                                    onEvent(
-                                        BookshelfEvent.onClickOption(item)
+                                    onAction(
+                                        BookshelfAction.ClickOption(item)
                                     )
                                 }
                             )
@@ -198,7 +179,7 @@ fun BookshelfScreenV(
         )
         {
             AnimatedVisibility(
-                visible = _isShowContentsLoading,
+                visible = state.isContentsLoading,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -262,11 +243,11 @@ fun BookshelfScreenV(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
             isVisible = _isFabToolbarVisible,
-            selectedItemCount = _itemCount,
+            selectedItemCount = state.selectCount,
             isBookshelfMode = true,
             onClickMenu = { menu ->
-                onEvent(
-                    BookshelfEvent.onClickBottomBarMenu(menu)
+                onAction(
+                    BookshelfAction.ClickBottomBarMenu(menu)
                 )
             }
         )

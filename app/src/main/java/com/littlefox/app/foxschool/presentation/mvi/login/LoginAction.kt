@@ -2,7 +2,6 @@ package com.littlefox.app.foxschool.presentation.mvi.login
 
 import com.littlefox.app.foxschool.`object`.data.login.UserLoginData
 import com.littlefox.app.foxschool.presentation.mvi.base.Action
-import com.littlefox.app.foxschool.presentation.viewmodel.login.LoginEvent
 
 sealed class LoginAction : Action
 {
