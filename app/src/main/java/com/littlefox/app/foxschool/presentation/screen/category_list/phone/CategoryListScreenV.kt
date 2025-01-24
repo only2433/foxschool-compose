@@ -33,38 +33,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.littlefox.app.foxschool.`object`.data.series.TopThumbnailViewData
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.CategoryListViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.presentation.widget.TopbarSeriesContentsLayout
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 import com.littlefox.app.foxschool.R
-import com.littlefox.app.foxschool.presentation.viewmodel.categoty_list.CategoryListEvent
+import com.littlefox.app.foxschool.presentation.mvi.category.CategoryListAction
+import com.littlefox.app.foxschool.presentation.mvi.category.viewmodel.CategoryListViewModel
 import com.littlefox.app.foxschool.presentation.widget.SeriesGridViewItem
 
 @Composable
 fun CategoryListScreenV(
     viewModel : CategoryListViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (CategoryListAction) -> Unit
 )
 {
-    val _contentsList by viewModel.categoryList.observeAsState(
-        initial = emptyList()
-    )
-    val _isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = false)
-    val _categoryTitle by viewModel.categoryTitle.observeAsState(initial = "")
-    val _prepareData by viewModel.backgroundViewData.observeAsState(initial = TopThumbnailViewData())
-    val _totalCategoryContentsCount by viewModel.totalContentsCount.observeAsState(initial = 0)
+    val state by viewModel.state.collectAsStateWithLifecycle()
     var _shouldAnimate by remember {
         mutableStateOf( false)
     }
-    val contentsSize = _contentsList.size
-    LaunchedEffect(contentsSize) {
-        if(contentsSize > 0)
+
+    LaunchedEffect(state.categoryList.size) {
+        if(state.categoryList.size > 0)
         {
             _shouldAnimate = true
         }
@@ -86,8 +80,8 @@ fun CategoryListScreenV(
                             getDp(pixel = 144)
                         )
                         .pin(),
-                    title = _categoryTitle,
-                    background = _prepareData.titleColor,
+                    title = state.title,
+                    background = state.backgroundViewData.titleColor,
                     isShowSeriesInformation = false,
                     onTabBackButton = {},
                     onTabSeriesInformationButton = {}
@@ -108,7 +102,7 @@ fun CategoryListScreenV(
                             }
                         }
                         .parallax(),
-                    thumbnailUrl = _prepareData.thumbnail,
+                    thumbnailUrl = state.backgroundViewData.thumbnail,
                 )
             }
         ) {
@@ -133,11 +127,11 @@ fun CategoryListScreenV(
                             .fillMaxSize()
 
                     ) {
-                        items(_contentsList.size) { index ->
+                        items(state.categoryList.size) { index ->
                             if(index % 2 == 0)
                             {
                                 AnimatedVisibility(
-                                    visible = _contentsList.isNotEmpty() && _shouldAnimate,
+                                    visible = state.categoryList.isNotEmpty() && _shouldAnimate,
                                     enter = slideInVertically(
                                         animationSpec = tween(
                                             durationMillis = 500,
@@ -162,12 +156,12 @@ fun CategoryListScreenV(
                                                 start = getDp(pixel = 26),
                                                 end = getDp(pixel = 12)
                                             ),
-                                        data = _contentsList[index],
+                                        data = state.categoryList[index],
                                         isVisibleLevel = false
                                     ) {
-                                        onEvent(
-                                            CategoryListEvent.onClickContentsItem(
-                                                _contentsList[index]
+                                        onAction(
+                                            CategoryListAction.ClickContentsItem(
+                                                state.categoryList[index]
                                             )
                                         )
                                     }
@@ -176,7 +170,7 @@ fun CategoryListScreenV(
                             else
                             {
                                 AnimatedVisibility(
-                                    visible = _contentsList.isNotEmpty() && _shouldAnimate,
+                                    visible = state.categoryList.isNotEmpty() && _shouldAnimate,
                                     enter = slideInVertically(
                                         animationSpec = tween(
                                             durationMillis = 500,
@@ -201,12 +195,12 @@ fun CategoryListScreenV(
                                                 start = getDp(pixel = 12),
                                                 end = getDp(pixel = 26)
                                             ),
-                                        data = _contentsList[index],
+                                        data = state.categoryList[index],
                                         isVisibleLevel = false
                                     ) {
-                                        onEvent(
-                                            CategoryListEvent.onClickContentsItem(
-                                                _contentsList[index]
+                                        onAction(
+                                            CategoryListAction.ClickContentsItem(
+                                                state.categoryList[index]
                                             )
                                         )
                                     }
@@ -231,7 +225,7 @@ fun CategoryListScreenV(
 
             ) {
                 AnimatedVisibility(
-                    visible = _isShowContentsLoading, enter = fadeIn(), exit = fadeOut()
+                    visible = state.isContentsLoading, enter = fadeIn(), exit = fadeOut()
                 ) {
                     CircularProgressIndicator(
                         color = colorResource(id = R.color.color_1aa3f8)

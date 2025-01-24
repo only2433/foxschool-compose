@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.res.Configuration
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Build
 import android.os.Message
@@ -12,15 +13,20 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
 import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.util.Util
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.ui.PlayerView
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
@@ -182,6 +188,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var isAuthorizationComplete : Boolean = false
     private var isRepeatOn : Boolean = false
     private var mCurrentStudyLogMilliSeconds : Float = 0f
+    private var mCurrentPlaybackState: Int = PlaybackState.STATE_NONE
 
     private lateinit var mMainInformationResult : MainInformationResult
     private lateinit var mCurrentBookshelfAddResult : MyBookshelfResult
@@ -192,7 +199,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     private var mCurrentRepeatPageIndex : Int = -1
     private var mCurrentPageIndex : Int = 0
     private var mCurrentPlaySpeedIndex : Int = DEFAULT_SPEED_INDEX
-    private var mPlayer : SimpleExoPlayer? = null
+    private var mPlayer : ExoPlayer? = null
     private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
     protected var mJob: Job? = null
@@ -527,19 +534,24 @@ class PlayerHlsPresenter : PlayerContract.Presenter
     {
         if(mPlayer == null)
         {
-            mPlayer = ExoPlayerFactory.newSimpleInstance(mContext.applicationContext)
+            mPlayer = ExoPlayer.Builder(mContext).build()
             _PlayerView.setPlayer(mPlayer)
         }
 
-        mPlayer!!.addListener(object : Player.EventListener
+        mPlayer!!.addListener(object : Player.Listener
         {
-            override fun onLoadingChanged(isLoading : Boolean) {}
-
-            override fun onPlayerStateChanged(playWhenReady : Boolean, playbackState : Int)
+            override fun onPlaybackStateChanged(playbackState : Int)
             {
-                Log.f("playWhenReady : $playWhenReady, playbackState : $playbackState")
+                super.onPlaybackStateChanged(playbackState)
+                mCurrentPlaybackState = playbackState
+            }
+
+            override fun onPlayWhenReadyChanged(playWhenReady : Boolean, reason : Int)
+            {
+                super.onPlayWhenReadyChanged(playWhenReady, reason)
+                Log.f("playWhenReady : $playWhenReady, playbackState : $mCurrentPlaybackState")
                 Log.f("Max Duration : " + mPlayer!!.getDuration())
-                when(playbackState)
+                when(mCurrentPlaybackState)
                 {
                     Player.STATE_IDLE -> { }
                     Player.STATE_BUFFERING -> if(playWhenReady)
@@ -571,18 +583,12 @@ class PlayerHlsPresenter : PlayerContract.Presenter
                 }
             }
 
-            override fun onPlayerError(error : ExoPlaybackException)
-            {
-                Log.f("Play Error : " + error.message)
-            }
+            override fun onPlaybackParametersChanged(playbackParameters : PlaybackParameters) {}
 
-            override fun onPlaybackParametersChanged(playbackParameters : PlaybackParameters)
+            override fun onPlayerError(error : PlaybackException)
             {
-            }
-
-            override fun onSeekProcessed()
-            {
-                Log.f("Max Duration : " + mPlayer!!.getDuration())
+                super.onPlayerError(error)
+                Log.i("Play Error : ${error.toString()}")
             }
         })
     }
@@ -684,20 +690,22 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun buildMediaSource(uri : Uri) : MediaSource
     {
         val userAgent = Util.getUserAgent(mContext, Common.PACKAGE_NAME)
+        val mediaItem = MediaItem.fromUri(uri)
         return if(uri.lastPathSegment!!.contains("mp4"))
         {
-            ProgressiveMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(uri)
+            ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
         else if(uri.lastPathSegment!!.contains("m3u8"))
         {
-            HlsMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(uri)
+            HlsMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
         else
         {
-            ProgressiveMediaSource.Factory(DefaultDataSourceFactory(mContext, userAgent)).createMediaSource(uri)
+            ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
     }
 
@@ -796,6 +804,7 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun startMovie()
     {
         val isCaptionEnable = CommonUtils.getInstance(mContext).getSharedPreference(Common.PARAMS_IS_ENABLE_CAPTION, DataType.TYPE_BOOLEAN) as Boolean
@@ -805,7 +814,8 @@ class PlayerHlsPresenter : PlayerContract.Presenter
         notifyPlayItemIndex()
         settingCurrentMovieStudyOption()
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
-        mPlayer!!.prepare(source, true, false)
+        mPlayer!!.setMediaSource(source)
+        mPlayer!!.prepare()
         _PlayerView.requestFocus()
         mPlayerContractView.run {
             enablePlayMovie(true)

@@ -3,23 +3,26 @@ package com.littlefox.app.foxschool.presentation.viewmodel
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.MediaSource
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import androidx.media3.common.MediaItem
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.PlaybackParameters
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.util.Util
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.ExoPlaybackException
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.SimpleExoPlayer
+import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.PlayerApiViewModel
@@ -87,8 +90,8 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         private const val FINE_TUNING_PAGE_TIME : Float     = 1f
     }
 
-    private val _player = SingleLiveEvent<SimpleExoPlayer?>()
-    val player: LiveData<SimpleExoPlayer?> get() = _player
+    private val _player = SingleLiveEvent<ExoPlayer?>()
+    val player: LiveData<ExoPlayer?> get() = _player
 
     private val _contentsList = SingleLiveEvent<ArrayList<ContentsBaseResult>>()
     val contentsList: LiveData<ArrayList<ContentsBaseResult>> get() = _contentsList
@@ -215,7 +218,7 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
 
     private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
-    private lateinit var mPlayer : SimpleExoPlayer
+    private lateinit var mPlayer : ExoPlayer
     private lateinit var mLoginInformationResult : LoginInformationResult
 
     private var mUiUpdateTimerJob: Job? = null
@@ -627,13 +630,15 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         mCoachingMarkUserDao = CoachmarkDatabase.getInstance(mContext)?.coachmarkDao()
     }
 
+    @OptIn(UnstableApi::class)
     private fun setupPlayVideo()
     {
-        mPlayer = ExoPlayerFactory.newSimpleInstance(mContext.applicationContext)
+        mPlayer = ExoPlayer.Builder(mContext).build()
         _player.value = mPlayer
 
-        mPlayer.addListener(object : Player.EventListener
+        mPlayer.addListener(object : Player.Listener
         {
+
             override fun onLoadingChanged(isLoading : Boolean) {}
 
             override fun onPlayerStateChanged(playWhenReady : Boolean, playbackState : Int)
@@ -672,17 +677,13 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                 }
             }
 
-            override fun onPlayerError(error : ExoPlaybackException)
+            override fun onPlayerError(error : PlaybackException)
             {
                 Log.f("Play Error : " + error.message)
             }
 
             override fun onPlaybackParametersChanged(playbackParameters : PlaybackParameters) {}
 
-            override fun onSeekProcessed()
-            {
-                Log.f("Max Duration : " + mPlayer.getDuration())
-            }
         })
     }
 
@@ -1168,6 +1169,7 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         }
     }
 
+    @OptIn(UnstableApi::class)
     private fun startMovie()
     {
         Log.f("mAuthContentResult.getVideoUrl() : " + mAuthContentResult.getMovieHlsUrl())
@@ -1175,8 +1177,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         notifyPlayItemIndex()
         settingCurrentMovieStudyOption()
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
-        mPlayer.prepare(source, true, false)
-       // _PlayerView.requestFocus() TODO
+        mPlayer.setMediaSource(source)
+        mPlayer.prepare()
+
         _enablePlayMovie.value = true
         _supportCaptionAndPage.value = isSupportCaption
         _scrollPosition.value = mCurrentPlayMovieIndex
@@ -1282,20 +1285,22 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     }
 
 
+    @OptIn(UnstableApi::class)
     private fun buildMediaSource(uri : Uri) : MediaSource
     {
         val userAgent = Util.getUserAgent(mContext, Common.PACKAGE_NAME)
+        val mediaItem = MediaItem.fromUri(uri)
         return if(uri.lastPathSegment!!.contains("mp4"))
         {
-            ProgressiveMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(uri)
+            ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
         else if(uri.lastPathSegment!!.contains("m3u8"))
         {
-            HlsMediaSource.Factory(DefaultHttpDataSourceFactory(userAgent)).createMediaSource(uri)
+            HlsMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
         else
         {
-            ProgressiveMediaSource.Factory(DefaultDataSourceFactory(mContext, userAgent)).createMediaSource(uri)
+            ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory().setUserAgent(userAgent)).createMediaSource(mediaItem)
         }
     }
 

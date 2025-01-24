@@ -1,6 +1,7 @@
 package com.littlefox.app.foxschool.presentation.screen.player.phone
 
 import android.content.res.Configuration
+import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -60,9 +61,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerView
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerView
 import com.littlefox.app.foxschool.presentation.viewmodel.PlayerViewModel
 import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
 import com.littlefox.app.foxschool.R
@@ -266,9 +268,10 @@ fun PlayerScreen(
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 private fun BuildPortraitScreen(
-    moviePlayer : SimpleExoPlayer?,
+    moviePlayer : ExoPlayer?,
     isCompleteToReadyMovie : Boolean,
     isMovieLoading : Boolean,
     isPlayListVisible : Boolean,
@@ -643,9 +646,10 @@ private fun BuildPortraitScreen(
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 private fun BuildLandscapeScreen(
-    moviePlayer : SimpleExoPlayer?,
+    moviePlayer : ExoPlayer?,
     isCompleteToReadyMovie : Boolean,
     isMovieLoading : Boolean,
     isPlayListVisible : Boolean,

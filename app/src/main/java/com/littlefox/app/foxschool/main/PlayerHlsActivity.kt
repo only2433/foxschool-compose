@@ -17,17 +17,19 @@ import android.widget.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.activity.viewModels
 import androidx.annotation.Nullable
+import androidx.annotation.OptIn
 import androidx.lifecycle.Observer
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.BindView
 import butterknife.BindViews
 import butterknife.ButterKnife
 import butterknife.OnClick
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.PlayerView
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.adapter.PlayerListAdapter
 import com.littlefox.app.foxschool.adapter.PlayerSpeedListAdapter
@@ -857,6 +859,7 @@ class PlayerHlsActivity() : BaseActivity(), OrientationChangeListener
         changeModePlayEndLayout()
     }
 
+    @OptIn(UnstableApi::class)
     private fun changeModePlayerView()
     {
         var baseLayoutParams : RelativeLayout.LayoutParams? = null

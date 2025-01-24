@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "com.littlefox.app.foxschool"
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
@@ -78,6 +78,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
 
+
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -118,10 +119,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer_version"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer_version"
-    implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer_version"
-    implementation 'me.kaelaela:verticalviewpager:1.0.0@aar'
+
+    implementation "androidx.media3:media3-exoplayer:1.4.1"
+    implementation "androidx.media3:media3-exoplayer-dash:1.4.1"
+    implementation "androidx.media3:media3-ui:1.4.1"
+    implementation 'androidx.media3:media3-exoplayer-hls:1.4.1'
+
     implementation 'com.android.volley:volley:1.2.1'
     implementation "com.android.billingclient:billing:$billing_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

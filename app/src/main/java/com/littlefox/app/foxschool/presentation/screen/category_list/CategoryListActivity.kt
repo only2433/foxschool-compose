@@ -5,13 +5,20 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.category.CategoryListSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.category.viewmodel.CategoryListViewModel
 import com.littlefox.app.foxschool.presentation.screen.category_list.phone.CategoryListScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.CategoryListViewModel
+
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoryListActivity : BaseActivity()
@@ -26,32 +33,52 @@ class CategoryListActivity : BaseActivity()
         setContent {
             CategoryListScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
             )
         }
     }
 
     override fun setupObserverViewModel()
     {
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@CategoryListActivity, message, Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect {value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@CategoryListActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@CategoryListActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@CategoryListActivity).showErrorMessage(value.message)
+                        }
+                        is CategoryListSideEffect.SetStatusBarColor ->
+                        {
+                            setStatusBar(value.color)
+                        }
+                    }
+                }
+            }
         }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@CategoryListActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@CategoryListActivity).showErrorMessage(message)
-        }
-
-        viewModel.statusBarColor.observe(this){ color ->
-            setStatusBar(color)
-        }
-
     }
 
     override fun onResume()
