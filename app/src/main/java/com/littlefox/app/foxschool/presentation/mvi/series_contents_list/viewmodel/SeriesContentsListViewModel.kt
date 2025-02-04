@@ -686,8 +686,7 @@ class SeriesContentsListViewModel @Inject constructor(private val apiViewModel :
     {
         mCurrentSelectItem?.let { item ->
             Log.f("Movie  : " + item.toString())
-            val sendItemList = ArrayList<ContentsBaseResult>()
-            sendItemList.add(item)
+            val sendItemList = arrayListOf(item)
             val playerParamsObject = PlayerIntentParamsObject(sendItemList)
 
             IntentManagementFactory.getInstance().readyActivityMode(ActivityMode.PLAYER)

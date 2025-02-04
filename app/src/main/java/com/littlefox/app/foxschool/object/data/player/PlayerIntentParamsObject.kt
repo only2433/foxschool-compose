@@ -4,12 +4,17 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 
-class PlayerIntentParamsObject : Parcelable
-{
+class PlayerIntentParamsObject(
+    private var mHomeworkNumber : Int = 0,
     private var mPlayInformationList : ArrayList<ContentsBaseResult> = ArrayList()
-    private var mHomeworkNumber : Int = 0
+) : Parcelable
+{
+    private constructor(`in` : Parcel) : this(
+        `in`.readInt(),
+        `in`.createTypedArrayList(ContentsBaseResult.CREATOR) ?: ArrayList()
+    )
 
-    constructor(playInformationList : ArrayList<ContentsBaseResult>)
+    constructor(playInformationList : ArrayList<ContentsBaseResult>) : this()
     {
         mPlayInformationList = playInformationList
         mHomeworkNumber = 0
@@ -20,11 +25,6 @@ class PlayerIntentParamsObject : Parcelable
         mHomeworkNumber = homeworkNumber
     }
 
-    private constructor(`in` : Parcel)
-    {
-        `in`.readTypedList(mPlayInformationList as List<ContentsBaseResult>, ContentsBaseResult.CREATOR)
-        mHomeworkNumber = `in`.readInt()
-    }
 
     fun getPlayerInformationList() : ArrayList<ContentsBaseResult> = mPlayInformationList
 
@@ -32,8 +32,8 @@ class PlayerIntentParamsObject : Parcelable
 
     override fun writeToParcel(dest : Parcel, flags : Int)
     {
-        dest.writeTypedList(mPlayInformationList)
         dest.writeInt(mHomeworkNumber)
+        dest.writeTypedList(mPlayInformationList)
     }
 
     override fun describeContents() : Int
