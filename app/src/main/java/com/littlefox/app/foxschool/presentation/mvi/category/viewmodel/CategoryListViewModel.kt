@@ -90,7 +90,7 @@ class CategoryListViewModel @Inject constructor(private val apiViewModel : Categ
                             }
                             postEvent(
                                 CategoryListEvent.SetTotalContentsCount(totalCategoryContentItemCount),
-                                CategoryListEvent.UpdateContentsList(mCategoryDataList)
+                                CategoryListEvent.NotifyContentsList(mCategoryDataList)
                             )
                         }
                     }
@@ -165,7 +165,7 @@ class CategoryListViewModel @Inject constructor(private val apiViewModel : Categ
     {
         return when(event)
         {
-            is CategoryListEvent.UpdateContentsList ->
+            is CategoryListEvent.NotifyContentsList ->
             {
                 current.copy(
                     categoryList = event.contentsList

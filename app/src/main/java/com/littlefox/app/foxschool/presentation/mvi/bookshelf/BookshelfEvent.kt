@@ -6,7 +6,7 @@ import com.littlefox.app.foxschool.presentation.mvi.base.Event
 
 sealed class BookshelfEvent: Event
 {
-    data class UpdateContentsList(val contentsList : ArrayList<ContentsBaseResult>): BookshelfEvent()
+    data class NotifyContentsList(val contentsList : ArrayList<ContentsBaseResult>): BookshelfEvent()
     data class SelectItemCount(val count: Int): BookshelfEvent()
     data class SetTitle(val title: String): BookshelfEvent()
     data class EnableContentsLoading(val isLoading: Boolean): BookshelfEvent()

@@ -7,7 +7,7 @@ import com.littlefox.app.foxschool.presentation.mvi.base.Event
 
 sealed class CategoryListEvent: Event
 {
-    data class UpdateContentsList(val contentsList: ArrayList<SeriesInformationResult>): CategoryListEvent()
+    data class NotifyContentsList(val contentsList: ArrayList<SeriesInformationResult>): CategoryListEvent()
     data class SetTotalContentsCount(val count: Int): CategoryListEvent()
     data class SetTitle(val title: String): CategoryListEvent()
     data class SettingBackground(val data: TopThumbnailViewData): CategoryListEvent()

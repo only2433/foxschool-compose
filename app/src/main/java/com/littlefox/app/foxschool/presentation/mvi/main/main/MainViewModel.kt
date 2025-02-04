@@ -1,7 +1,6 @@
 package com.littlefox.app.foxschool.presentation.mvi.main.main
 
 import android.content.Context
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.api.MainApiViewModel
@@ -58,13 +57,13 @@ class MainViewModel @Inject constructor(private val apiViewModel: MainApiViewMod
         Log.i("size : " + mMainInformationResult.getMainStoryInformation().getContentByLevelToList().size)
 
         postEvent(
-            MainEvent.UpdateStoryTab(
+            MainEvent.NotifyStoryTab(
                 mMainInformationResult.getMainStoryInformation()
             ),
-            MainEvent.UpdateSongTab(
+            MainEvent.NotifySongTab(
                 mMainInformationResult.getMainSongInformationList()
             ),
-            MainEvent.UpdateMyBooksTab(
+            MainEvent.NotifyMyBooksTab(
                 mMainInformationResult
             )
         )
@@ -187,19 +186,19 @@ class MainViewModel @Inject constructor(private val apiViewModel: MainApiViewMod
                     userInformation = event.data
                 )
             }
-            is MainEvent.UpdateStoryTab ->
+            is MainEvent.NotifyStoryTab ->
             {
                 current.copy(
                     storyData = event.data
                 )
             }
-            is MainEvent.UpdateSongTab ->
+            is MainEvent.NotifySongTab ->
             {
                 current.copy(
                     songData = event.data
                 )
             }
-            is MainEvent.UpdateMyBooksTab ->
+            is MainEvent.NotifyMyBooksTab ->
             {
                 current.copy(
                     myBooksData = event.data
@@ -503,21 +502,21 @@ class MainViewModel @Inject constructor(private val apiViewModel: MainApiViewMod
                 {
                     Common.PAGE_STORY ->{
                         postEvent(
-                            MainEvent.UpdateStoryTab(
+                            MainEvent.NotifyStoryTab(
                                 mMainInformationResult.getMainStoryInformation()
                             )
                         )
                     }
                     Common.PAGE_SONG ->{
                         postEvent(
-                            MainEvent.UpdateSongTab(
+                            MainEvent.NotifySongTab(
                                 mMainInformationResult.getMainSongInformationList()
                             )
                         )
                     }
                     Common.PAGE_MY_BOOKS ->{
                         postEvent(
-                            MainEvent.UpdateMyBooksTab(
+                            MainEvent.NotifyMyBooksTab(
                                 mMainInformationResult
                             )
                         )

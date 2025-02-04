@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
 import android.provider.Settings
-import android.view.WindowInsets.Side
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -42,8 +41,6 @@ import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfAction
 import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfEvent
 import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfSideEffect
 import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfState
-import com.littlefox.app.foxschool.presentation.mvi.vocabulary.VocabularySideEffect
-import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -151,7 +148,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
                         mBookItemInformationList = list
                         postEvent(
                             BookshelfEvent.EnableContentsLoading(false),
-                            BookshelfEvent.UpdateContentsList(mBookItemInformationList)
+                            BookshelfEvent.NotifyContentsList(mBookItemInformationList)
                         )
                     }
                 }
@@ -332,7 +329,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
     {
         return when(event)
         {
-            is BookshelfEvent.UpdateContentsList ->
+            is BookshelfEvent.NotifyContentsList ->
             {
                 current.copy(
                     contentsList = event.contentsList
@@ -386,7 +383,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         MainObserver.updatePage(Common.PAGE_MY_BOOKS)
 
         postEvent(
-            BookshelfEvent.UpdateContentsList(mBookItemInformationList)
+            BookshelfEvent.NotifyContentsList(mBookItemInformationList)
         )
     }
 
@@ -626,7 +623,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         }
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
         postEvent(
-            BookshelfEvent.UpdateContentsList(mBookItemInformationList)
+            BookshelfEvent.NotifyContentsList(mBookItemInformationList)
         )
 
         sendSelectedItem()
@@ -657,7 +654,7 @@ class BookshelfViewModel @Inject constructor(private val apiViewModel : Bookshel
         // mCurrentContentsItemList를 ArrayList로 변환하여 방출
 
         postEvent(
-            BookshelfEvent.UpdateContentsList(mBookItemInformationList),
+            BookshelfEvent.NotifyContentsList(mBookItemInformationList),
             if(isSelected)
             {
                 BookshelfEvent.SelectItemCount(mBookItemInformationList.size)

@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
 import com.littlefox.app.foxschool.base.BaseActivity
@@ -20,12 +23,15 @@ import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.SeriesContentsListAction
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.SeriesContentsListEvent
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.SeriesContentsListSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.viewmodel.SeriesContentsListViewModel
 import com.littlefox.app.foxschool.presentation.screen.series_contents_list.phone.SeriesContentsScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.SeriesContentsListViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.ArrayList
 
 @AndroidEntryPoint
@@ -46,52 +52,60 @@ class SeriesContentsListActivity : BaseActivity()
         setContent{
             SeriesContentsScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
             )
         }
     }
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect { value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@SeriesContentsListActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@SeriesContentsListActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@SeriesContentsListActivity).showErrorMessage(value.message)
+                        }
+                        is SeriesContentsListSideEffect.SetStatusBarColor ->
+                        {
+                            setStatusBar(value.color)
+                        }
+                        is SeriesContentsListSideEffect.ShowBottomOptionDialog ->
+                        {
+                            showBottomContentItemDialog(value.data)
+                        }
+                        is SeriesContentsListSideEffect.ShowBookshelfContentsAddDialog ->
+                        {
+                            showBottomBookAddDialog(value.list)
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
         }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@SeriesContentsListActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@SeriesContentsListActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@SeriesContentsListActivity).showErrorMessage(message)
-        }
-
-        viewModel.statusBarColor.observe(this){ color ->
-            setStatusBar(color)
-        }
-
-        viewModel.dialogBottomOption.observe(this){ item ->
-            showBottomContentItemDialog(item)
-        }
-
-        viewModel.dialogBottomBookshelfContentsAdd.observe(this){ list ->
-            showBottomBookAddDialog(list)
-        }
-
     }
 
     override fun onResume()
@@ -156,8 +170,8 @@ class SeriesContentsListActivity : BaseActivity()
     {
         override fun onClickItem(type : ActionContentsType)
         {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onClickBottomContentsType(
+            viewModel.onHandleAction(
+                SeriesContentsListAction.ClickBottomContentsType(
                     type
                 )
             )
@@ -168,10 +182,8 @@ class SeriesContentsListActivity : BaseActivity()
     {
         override fun onClickBook(index : Int)
         {
-            viewModel.onHandleViewEvent(
-                SeriesContentsListEvent.onAddContentsInBookshelf(
-                    index
-                )
+            viewModel.onHandleAction(
+                SeriesContentsListAction.AddContentsInBookshelf(index)
             )
         }
     }
@@ -180,20 +192,16 @@ class SeriesContentsListActivity : BaseActivity()
     {
         override fun onConfirmButtonClick(eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogClick(
-                    eventType
-                )
+            viewModel.onDialogClick(
+                eventType
             )
         }
 
         override fun onChoiceButtonClick(buttonType : DialogButtonType, eventType : Int)
         {
-            viewModel.onHandleViewEvent(
-                BaseEvent.DialogChoiceClick(
-                    buttonType,
-                    eventType
-                )
+            viewModel.onDialogChoiceClick(
+                buttonType,
+                eventType
             )
         }
     }

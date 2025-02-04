@@ -167,7 +167,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
                                 delay(Common.DURATION_SHORT)
                             }
                             postEvent(
-                                VocabularyEvent.UpdateContentsList(
+                                VocabularyEvent.NotifyContentsList(
                                     mVocabularyItemList
                                 )
                             )
@@ -403,7 +403,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
     {
         return when(event)
         {
-            is VocabularyEvent.UpdateContentsList ->
+            is VocabularyEvent.NotifyContentsList ->
             {
                 current.copy(
                     contentsList = event.list
@@ -628,7 +628,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
         }
 
         postEvent(
-            VocabularyEvent.UpdateContentsList(mVocabularyItemList),
+            VocabularyEvent.NotifyContentsList(mVocabularyItemList),
             VocabularyEvent.SelectItemCount(
                 when(isSelected)
                 {
@@ -661,7 +661,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
         }
         val selectedItemCount = getSelectItemCount()
         postEvent(
-            VocabularyEvent.UpdateContentsList(mVocabularyItemList),
+            VocabularyEvent.NotifyContentsList(mVocabularyItemList),
             VocabularyEvent.SelectItemCount(selectedItemCount)
         )
     }
@@ -802,7 +802,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
             mCurrentPlayIndex = 0
             mSelectedPlayItemList = getSelectedItemList()
             postEvent(
-                VocabularyEvent.UpdateContentsList(
+                VocabularyEvent.NotifyContentsList(
                     ArrayList()
                 ),
                 VocabularyEvent.EnableContentsLoading(true)
@@ -821,7 +821,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
                     delay(Common.DURATION_NORMAL)
                 }
                 postEvent(
-                    VocabularyEvent.UpdateContentsList(mSelectedPlayItemList),
+                    VocabularyEvent.NotifyContentsList(mSelectedPlayItemList),
                     VocabularyEvent.NotifyCurrentPlayIndex(mCurrentPlayIndex)
                 )
                 startAudio(mSelectedPlayItemList)
@@ -832,7 +832,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
             Log.f("Vocabulary Sound Stop")
             enableSequencePlayAudio(false)
             postEvent(
-                VocabularyEvent.UpdateContentsList(
+                VocabularyEvent.NotifyContentsList(
                     ArrayList()
                 ),
                 VocabularyEvent.NotifyCurrentPlayIndex(0),
@@ -845,7 +845,7 @@ class VocabularyViewModel @Inject constructor(private val apiViewModel: Vocabula
                 }
                 postEvent(
                     VocabularyEvent.EnableContentsLoading(false),
-                    VocabularyEvent.UpdateContentsList(mVocabularyItemList)
+                    VocabularyEvent.NotifyContentsList(mVocabularyItemList)
                 )
             }
         }

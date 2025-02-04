@@ -42,14 +42,16 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.`object`.data.series.TopThumbnailViewData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.SeriesContentsListViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.series_contents_list.SeriesContentsListEvent
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.SeriesContentsListAction
+import com.littlefox.app.foxschool.presentation.mvi.series_contents_list.viewmodel.SeriesContentsListViewModel
 import com.littlefox.app.foxschool.presentation.widget.BuildBottomSelectBarLayout
 import com.littlefox.app.foxschool.presentation.widget.BuildContentsListItem
 import com.littlefox.app.foxschool.presentation.widget.TopbarSeriesContentsLayout
@@ -63,48 +65,30 @@ import kotlinx.coroutines.delay
 @Composable
 fun SeriesContentsScreenV(
     viewModel : SeriesContentsListViewModel,
-    onEvent: (SeriesContentsListEvent) -> Unit,
+    onAction: (SeriesContentsListAction) -> Unit,
 )
 {
-    val _contentsList by viewModel.contentsList.observeAsState(
-        initial = EventWrapper(ArrayList<ContentsBaseResult>())
-    )
-    val _selectedItemCount by viewModel.itemSelectedCount.observeAsState(
-        initial = EventWrapper(0)
-    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    val _showToolbarInformationView by viewModel.showToolbarInformationView.observeAsState(initial = false)
-    val _isShowContentsLoading by viewModel.isContentsLoading.observeAsState(initial = true)
-    val _seriesTitle by viewModel.seriesTitle.observeAsState(initial = "")
-    val _prepareData by viewModel.backgroundViewData.observeAsState(initial = TopThumbnailViewData())
-
-    var _dataList by remember {
-        mutableStateOf(ArrayList<ContentsBaseResult>())
-    }
-    var _itemCount by remember {
-        mutableStateOf(0)
-    }
     var _isFabToolbarVisible by remember { //
         mutableStateOf(false)
     }
-    var _shouldAnimate by remember { mutableStateOf(false) }
-    // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
-
-    _contentsList.getContentIfNotHandled()?.let {
-        LaunchedEffect(_contentsList) {
-            if(it.size > 0)
-            {
-                _shouldAnimate = true
-            }
-        }
-
-        _dataList = ArrayList()
-        _dataList = it
+    var _shouldAnimate by remember {
+        mutableStateOf(false)
     }
-    _selectedItemCount.getContentIfNotHandled()?.let {
-        Log.i("count : $it")
-        _itemCount = it
-        _isFabToolbarVisible = if(it > 0) true else false
+
+    // contentsList의 사이즈가 변경될 때마다 애니메이션을 트리거
+    LaunchedEffect(state.contentsList) {
+        if(state.contentsList.size > 0)
+        {
+            _shouldAnimate = true
+        }
+    }
+
+    // selectItemCount 사이즈가 변경될 때마다 애니메이션을 트리거
+    LaunchedEffect(state.selectItemCount) {
+        Log.i("state.selectItemCount : $state.selectItemCount")
+        _isFabToolbarVisible = if(state.selectItemCount > 0) true else false
     }
 
 
@@ -120,9 +104,9 @@ fun SeriesContentsScreenV(
                         getDp(pixel = 144)
                     )
                     .pin(),
-                    title = _seriesTitle,
-                    background = _prepareData.titleColor,
-                    isShowSeriesInformation = _showToolbarInformationView,
+                    title = state.title,
+                    background = state.backgroundViewData.titleColor,
+                    isShowSeriesInformation = state.isShowInformationTooltip,
                     onTabBackButton = { /*TODO*/},
                     onTabSeriesInformationButton = {
 
@@ -144,7 +128,7 @@ fun SeriesContentsScreenV(
 
                         }
                         .parallax(),
-                    thumbnailUrl = _prepareData.thumbnail,
+                    thumbnailUrl = state.backgroundViewData.thumbnail,
                 )
             })
         {
@@ -164,7 +148,7 @@ fun SeriesContentsScreenV(
                         )
                 )
                 {
-                    items(_dataList.size) {index ->
+                    items(state.contentsList.size) {index ->
                         Column {
                             if(index == 0)
                             {
@@ -176,7 +160,7 @@ fun SeriesContentsScreenV(
                                 )
                             }
                             AnimatedVisibility(
-                                visible = _dataList.isNotEmpty() && _shouldAnimate,
+                                visible = state.contentsList.isNotEmpty() && _shouldAnimate,
                                 enter = fadeIn() + slideInVertically(
                                     animationSpec = tween(
                                         durationMillis = 500,
@@ -197,22 +181,26 @@ fun SeriesContentsScreenV(
                             )
                             {
                                 BuildContentsListItem(
-                                    data = _dataList[index],
-                                    itemIndexColor = _prepareData.titleColor,
+                                    data = state.contentsList[index],
+                                    itemIndexColor = state.backgroundViewData.titleColor,
                                     onBackgroundClick = {
                                         Log.i("onBackgroundClick : $index")
-                                        onEvent(
-                                            SeriesContentsListEvent.onSelectedItem(index)
+                                        onAction(
+                                            SeriesContentsListAction.SelectedItem(index)
                                         )
                                     },
                                     onThumbnailClick = {
-                                        onEvent(
-                                            SeriesContentsListEvent.onClickThumbnail(_dataList[index])
+                                        onAction(
+                                            SeriesContentsListAction.ClickThumbnail(
+                                                state.contentsList[index]
+                                            )
                                         )
                                     },
                                     onOptionClick = {
-                                        onEvent(
-                                            SeriesContentsListEvent.onClickOption(_dataList[index])
+                                        onAction(
+                                            SeriesContentsListAction.ClickOption(
+                                                state.contentsList[index]
+                                            )
                                         )
                                     })
                             }
@@ -228,72 +216,6 @@ fun SeriesContentsScreenV(
 
                     }
                 }
-/*                AnimatedVisibility(
-                    visible = _dataList.isNotEmpty() && _shouldAnimate,
-                    enter = slideInVertically(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        ),
-                        initialOffsetY = { it }
-                    ),
-                    exit = slideOutVertically(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        ),
-                        targetOffsetY = { 0 }
-                    )
-                )
-                {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(
-                                start = getDp(pixel = 28),
-                                end = getDp(pixel = 28),
-                            )
-
-                    ) {
-                        itemsIndexed(_dataList, key = {_, item -> item.id}) {index, item ->
-                            Column {
-                                if(index == 0)
-                                {
-                                    Spacer(
-                                        modifier = Modifier.height(
-                                            getDp(pixel = 20)
-                                        )
-                                    )
-                                }
-                                BuildContentsListItem(data = item,
-                                    itemIndexColor = _prepareData.titleColor,
-                                    onBackgroundClick = {
-                                        Log.i("onBackgroundClick : $index")
-                                        onEvent(
-                                            SeriesContentsListEvent.onSelectedItem(index)
-                                        )
-                                    },
-                                    onThumbnailClick = {
-                                        onEvent(
-                                            SeriesContentsListEvent.onClickThumbnail(item)
-                                        )
-                                    },
-                                    onOptionClick = {
-                                        onEvent(
-                                            SeriesContentsListEvent.onClickOption(item)
-                                        )
-                                    })
-                                Spacer(
-                                    modifier = Modifier.height(
-                                        getDp(pixel = 20)
-                                    )
-                                )
-                            }
-                        }
-                    }
-
-                }*/
-
 
                 Box(
                     modifier = Modifier
@@ -309,7 +231,7 @@ fun SeriesContentsScreenV(
 
                 ) {
                     AnimatedVisibility(
-                        visible = _isShowContentsLoading, enter = fadeIn(), exit = fadeOut()
+                        visible = state.isContentsLoading, enter = fadeIn(), exit = fadeOut()
                     ) {
                         CircularProgressIndicator(
                             color = colorResource(id = R.color.color_1aa3f8)
@@ -372,12 +294,16 @@ fun SeriesContentsScreenV(
         BuildBottomSelectBarLayout(
             modifier = Modifier
                 .align(Alignment.BottomCenter),
-            selectedItemCount = _itemCount,
+            selectedItemCount = state.selectItemCount,
             isVisible = _isFabToolbarVisible,
             onClickMenu = { menu ->
-                onEvent(
-                    SeriesContentsListEvent.onClickBottomBarMenu(menu)
+                onAction(
+                    SeriesContentsListAction.ClickBottomBarMenu(menu)
                 )
+                if(menu == ContentsListBottomBarMenu.CANCEL)
+                {
+                    _isFabToolbarVisible = false
+                }
             }
         )
     }

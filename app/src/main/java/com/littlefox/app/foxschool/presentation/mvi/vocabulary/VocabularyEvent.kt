@@ -8,7 +8,7 @@ import com.littlefox.app.foxschool.presentation.mvi.base.Event
 
 sealed class VocabularyEvent: Event
 {
-    data class UpdateContentsList(val list: ArrayList<VocabularyDataResult>): VocabularyEvent()
+    data class NotifyContentsList(val list: ArrayList<VocabularyDataResult>): VocabularyEvent()
     data class SelectItemCount(val count: Int): VocabularyEvent()
     data class SetTitle(val title: String): VocabularyEvent()
     data class SetVocabularyType(val type: VocabularyType): VocabularyEvent()

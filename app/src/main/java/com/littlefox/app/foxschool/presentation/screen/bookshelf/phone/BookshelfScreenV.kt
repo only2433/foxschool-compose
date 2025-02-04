@@ -38,6 +38,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.logmonitor.Log
 import com.littlefox.app.foxschool.R
+import com.littlefox.app.foxschool.enumerate.ContentsListBottomBarMenu
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
 import com.littlefox.app.foxschool.presentation.mvi.bookshelf.BookshelfAction
@@ -249,6 +250,10 @@ fun BookshelfScreenV(
                 onAction(
                     BookshelfAction.ClickBottomBarMenu(menu)
                 )
+                if(menu == ContentsListBottomBarMenu.CANCEL)
+                {
+                    _isFabToolbarVisible = false
+                }
             }
         )
     }
