@@ -1,14 +1,17 @@
 package com.littlefox.app.foxschool.api.base
 
+import com.google.gson.Gson
 import com.littlefox.app.foxschool.`object`.result.base.BaseResult
 import com.littlefox.app.foxschool.api.data.ResultData
 import com.littlefox.app.foxschool.base.MainApplication
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.logmonitor.Log
+import okhttp3.ResponseBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -40,17 +43,18 @@ suspend fun <T : Any> safeApiCall(call: suspend () -> Response<T>) : ResultData<
                         result = ResultData.Fail(temp.status, temp.message)
                     }
 
-                    if(temp.access_token.equals("") == false)
+                    if(temp.access_token != "")
                     {
                         Log.f("temp.access_token : ${temp.access_token}")
-                        MainApplication.instance.setUserToken(temp.access_token!!)
+                        MainApplication.instance.setUserToken(temp.access_token)
                     }
                 }
             }
         }
         else
         {
-            result = ResultData.Fail(response.code(),response.message())
+            Log.i("------- Error")
+            result = getErrorMessageFromGenericResponse(response.errorBody())
         }
 
     }
@@ -89,4 +93,48 @@ fun getNetworkErrorJson() : String
         e.printStackTrace()
     }
     return data.toString()
+}
+
+private fun getErrorMessageFromGenericResponse(body: ResponseBody?): ResultData.Fail?
+{
+    Log.i("")
+    var data: ResultData.Fail? = null
+    try
+    {
+        val adapter = Gson().getAdapter(BaseResponse::class.java)
+        val errorParser = adapter.fromJson(body?.string())
+
+        Log.i("error status : ${errorParser.status}, message: ${errorParser.message}")
+        if(errorParser.access_token != "")
+        {
+            Log.f("temp.access_token : ${errorParser.access_token}")
+            MainApplication.instance.setUserToken(errorParser.access_token)
+        }
+        return ResultData.Fail(errorParser.status, errorParser.message)
+    }
+    catch (e: java.lang.Exception)
+    {
+        e.printStackTrace()
+    }
+
+    return ResultData.Fail(105, "Internal Error")
+}
+
+private fun getErrorMessageFromGenericResponse(httpException: HttpException): String?
+{
+    var errorMessage: String? = null
+    try
+    {
+        val body = httpException.response()?.errorBody()
+        val adapter = Gson().getAdapter(BaseResult::class.java)
+        val errorParser = adapter.fromJson(body?.string())
+        errorMessage = errorParser.getMessage()
+
+        Log.i("error Data : ${errorParser.toString()}")
+    }
+    catch (e: IOException)
+    {
+        e.printStackTrace()
+    }
+    return errorMessage
 }

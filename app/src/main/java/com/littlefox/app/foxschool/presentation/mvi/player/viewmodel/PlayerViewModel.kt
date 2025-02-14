@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.player.viewmodel
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -17,35 +16,33 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.exoplayer.ExoPlaybackException
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.SimpleExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.api.enumerate.RequestCode
 import com.littlefox.app.foxschool.api.viewmodel.api.PlayerApiViewModel
-import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel
-import com.littlefox.app.foxschool.api.viewmodel.factory.PlayerFactoryViewModel.Companion
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
-import com.littlefox.app.foxschool.common.Event
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
 import com.littlefox.app.foxschool.database.CoachmarkDao
 import com.littlefox.app.foxschool.database.CoachmarkDatabase
 import com.littlefox.app.foxschool.database.CoachmarkEntity
+import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.ActivityMode
 import com.littlefox.app.foxschool.enumerate.AnimationMode
 import com.littlefox.app.foxschool.enumerate.DataType
 import com.littlefox.app.foxschool.enumerate.MovieNavigationStatus
+import com.littlefox.app.foxschool.enumerate.PlayerPageLineType
 import com.littlefox.app.foxschool.enumerate.PlayerStatus
 import com.littlefox.app.foxschool.enumerate.VocabularyType
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
 import com.littlefox.app.foxschool.`object`.data.flashcard.FlashcardDataObject
 import com.littlefox.app.foxschool.`object`.data.player.PageByPageData
+import com.littlefox.app.foxschool.`object`.data.player.PageLineData
 import com.littlefox.app.foxschool.`object`.data.player.PlayerEndViewData
 import com.littlefox.app.foxschool.`object`.data.player.PlayerIntentParamsObject
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizIntentParamsObject
@@ -57,16 +54,19 @@ import com.littlefox.app.foxschool.`object`.result.main.MainInformationResult
 import com.littlefox.app.foxschool.`object`.result.main.MyBookshelfResult
 import com.littlefox.app.foxschool.`object`.result.main.MyVocabularyResult
 import com.littlefox.app.foxschool.`object`.result.player.PlayItemResult
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.player.PlayerEvent
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerAction
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerEvent
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerState
+import com.littlefox.app.foxschool.presentation.mvi.search.SearchSideEffect
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -74,7 +74,9 @@ import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel) : BaseViewModel()
+class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel): BaseMVIViewModel<PlayerState, PlayerEvent, SideEffect>(
+    PlayerState()
+)
 {
     companion object
     {
@@ -88,101 +90,8 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         private val PLAY_SPEED_LIST = floatArrayOf(0.7f, 0.85f, 1.0f, 1.15f, 1.3f)
         private const val DEFAULT_SPEED_INDEX : Int         = 2
         private const val FINE_TUNING_PAGE_TIME : Float     = 1f
+        private const val PAGE_MAX_VISIBLE_COUNT : Int          = 5
     }
-
-    private val _player = SingleLiveEvent<ExoPlayer?>()
-    val player: LiveData<ExoPlayer?> get() = _player
-
-    private val _contentsList = SingleLiveEvent<ArrayList<ContentsBaseResult>>()
-    val contentsList: LiveData<ArrayList<ContentsBaseResult>> get() = _contentsList
-
-    private val _isMovieLoading = SingleLiveEvent<Boolean>()
-    val isMovieLoading: LiveData<Boolean> get() = _isMovieLoading
-
-    private val _showStoryCoachmarkView = SingleLiveEvent<Void>()
-    val showStoryCoachmarkView: LiveData<Void> get() = _showStoryCoachmarkView
-
-    private val _showSongCoachmarkView = SingleLiveEvent<Void>()
-    val showSongCoachmarkView: LiveData<Void> get() = _showSongCoachmarkView
-
-    private val _setMovieTitle = SingleLiveEvent<String>()
-    val setMovieTitle: LiveData<String> get() = _setMovieTitle
-
-    private val _setCaptionText = SingleLiveEvent<String>()
-    val setCaptionText: LiveData<String> get() = _setCaptionText
-
-    private val _setRemainMovieTime = SingleLiveEvent<String>()
-    val setRemainMovieTime: LiveData<String> get() = _setRemainMovieTime
-
-    private val _setCurrentMovieTime = SingleLiveEvent<String>()
-    val setCurrentMovieTime: LiveData<String> get() = _setCurrentMovieTime
-
-    private val _setSeekProgress = SingleLiveEvent<Int>()
-    val setSeekProgress: LiveData<Int> get() = _setSeekProgress
-
-    private val _setMaxProgress = SingleLiveEvent<Int>()
-    val setMaxProgress: LiveData<Int> get() = _setMaxProgress
-
-    private val _isCompleteToReadyMovie = SingleLiveEvent<Boolean>()
-    val isReadyToMovie: LiveData<Boolean> get() = _isCompleteToReadyMovie
-
-    private val _enablePlayMovie = SingleLiveEvent<Boolean>()
-    val enablePlayMovie: LiveData<Boolean> get() = _enablePlayMovie
-
-    private val _showPlayerEndView = SingleLiveEvent<Boolean>()
-    val showPlayerEndView: LiveData<Boolean> get() = _showPlayerEndView
-
-    private val _settingPlayerEndView = SingleLiveEvent<PlayerEndViewData>()
-    val settingPlayerEndView: LiveData<PlayerEndViewData> get() = _settingPlayerEndView
-
-    private val _movieNavigationStatus = SingleLiveEvent<MovieNavigationStatus>()
-    val movieNavigationStatus: LiveData<MovieNavigationStatus> get() = _movieNavigationStatus
-
-    private val _supportCaptionAndPage = SingleLiveEvent<Boolean>()
-    val supportCaptionAndPage: LiveData<Boolean> get() = _supportCaptionAndPage
-
-    private val _scrollPosition = SingleLiveEvent<Int>()
-    val scrollPosition: LiveData<Int> get() = _scrollPosition
-
-    private val _setCurrentPageLine = SingleLiveEvent<Pair<Int, Int>>()
-    val setCurrentPageLine: LiveData<Pair<Int, Int>> get() = _setCurrentPageLine
-
-    private val _setCurrentPage = SingleLiveEvent<Int>()
-    val setCurrentPage: LiveData<Int> get() = _setCurrentPage
-
-    private val _currentPlayIndex = SingleLiveEvent<Int>()
-    val currentPlayIndex: LiveData<Int> get() = _currentPlayIndex
-
-    private val _activatePageView = SingleLiveEvent<Boolean>()
-    val activatePageView: LiveData<Boolean> get() = _activatePageView
-
-    private val _enableSpeedButton = SingleLiveEvent<Boolean>()
-    val enableSpeedButton: LiveData<Boolean> get() = _enableSpeedButton
-
-    private val _enablePortraitOptionButton = SingleLiveEvent<Boolean>()
-    val enablePortraitOptionButton: LiveData<Boolean> get() = _enablePortraitOptionButton
-
-    private val _availableMovieOptionButton = SingleLiveEvent<Boolean>()
-    val availableMovieOptionButton: LiveData<Boolean> get() = _availableMovieOptionButton
-
-    private val _currentPlaySpeedIndex = SingleLiveEvent<Int>()
-    val currentPlaySpeedIndex: LiveData<Int> get() = _currentPlaySpeedIndex
-
-    private val _dialogWarningWatchingMovie = SingleLiveEvent <Void>()
-    val dialogWarningWatchingMovie: LiveData<Void> get() = _dialogWarningWatchingMovie
-
-    private val _dialogWarningAPIException = SingleLiveEvent <String>()
-    val dialogWarningAPIException: LiveData<String> get() = _dialogWarningAPIException
-
-    private val _dialogWarningRecordPermission = SingleLiveEvent <Void>()
-    val dialogWarningRecordPermission: LiveData<Void> get() = _dialogWarningRecordPermission
-
-    private val _dialogBottomOption = SingleLiveEvent <ContentsBaseResult>()
-    val dialogBottomOption: LiveData<ContentsBaseResult> get() = _dialogBottomOption
-
-    private val _dialogBottomBookshelfContentAdd = SingleLiveEvent<ArrayList<MyBookshelfResult>>()
-    val dialogBottomBookshelfContentAdd: LiveData<ArrayList<MyBookshelfResult>> get() = _dialogBottomBookshelfContentAdd
-
 
     @SuppressLint("StaticFieldLeak")
     private lateinit var mContext : Context
@@ -212,16 +121,14 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     private var mCurrentRepeatPageIndex : Int = -1
     private var mCurrentPageIndex : Int = 0
     private var mCurrentPlaySpeedIndex : Int = DEFAULT_SPEED_INDEX
-
+    private var mCurrentSelectItem: ContentsBaseResult? = null
     private var isVideoPrepared : Boolean = false
     private var mCoachingMarkUserDao : CoachmarkDao? = null
     private lateinit var mPlayer : ExoPlayer
     private lateinit var mLoginInformationResult : LoginInformationResult
-
     private var mUiUpdateTimerJob: Job? = null
     private var mWarningWatchTimerJob: Job? = null
     private var mCoachingMarkJob: Job? = null
-
 
     override fun init(context : Context)
     {
@@ -235,50 +142,32 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         }
     }
 
-    override fun onHandleViewEvent(event : BaseEvent)
+    override fun resume()
     {
-        when(event)
+        Log.f("status : $mCurrentPlayerStatus")
+        resumePlayer()
+    }
+
+    override fun pause()
+    {
+        Log.f("status : $mCurrentPlayerStatus")
+        if(mCurrentPlayerStatus != PlayerStatus.COMPELTE)
         {
-            is BaseEvent.onBackPressed ->
-            {
-                (mContext as AppCompatActivity).finish()
-            }
-
-            is PlayerEvent.onStartTrackingTouch ->
-            {
-                onStartTrackingTouch()
-            }
-
-            is PlayerEvent.onStopTrackingTouch ->
-            {
-                onStopTrackingTouch(event.progress)
-            }
-
-            is PlayerEvent.onClickControllerPlay ->
-            {
-                onHandlePlayButton()
-            }
-            is PlayerEvent.onClickControllerPrev ->
-            {
-                onPrevButton()
-            }
-            is PlayerEvent.onClickControllerNext ->
-            {
-                onNextButton()
-            }
-            is PlayerEvent.onClickReplay ->
-            {
-                onReplayButton()
-            }
-            is PlayerEvent.onSelectSpeed ->
-            {
-                onSelectSpeed(event.index)
-            }
-            is PlayerEvent.onSelectItem ->
-            {
-                onSelectItem(event.index)
-            }
+            sendStudyLogSaveAsync()
         }
+        pausePlayer()
+    }
+
+    override fun destroy()
+    {
+        Log.f("")
+        enableTimer(false)
+        releasePlayer()
+    }
+
+    override fun onBackPressed()
+    {
+        (mContext as AppCompatActivity).finish()
     }
 
     override fun onHandleApiObserver()
@@ -289,14 +178,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                     data?.let {
                         if(data.first == RequestCode.CODE_BOOKSHELF_CONTENTS_ADD)
                         {
-                            if(data.second)
-                            {
-                                _isLoading.postValue(true)
-                            }
-                            else
-                            {
-                                _isLoading.postValue(false)
-                            }
+                            postSideEffect(
+                                SideEffect.EnableLoading(isLoading = data.second)
+                            )
                         }
                     }
                 }
@@ -324,7 +208,11 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                             withContext(Dispatchers.IO){
                                 delay(Common.DURATION_NORMAL)
                             }
-                            _successMessage.value = mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                            postSideEffect(
+                                SideEffect.ShowSuccessMessage(
+                                    mContext.resources.getString(R.string.message_success_save_contents_in_bookshelf)
+                                )
+                            )
                         }
                         resumePlayer()
                     }
@@ -343,7 +231,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                         if(result.isDuplicateLogin)
                         {
                             //중복 로그인 시 재시작
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO)
                                 {
@@ -356,7 +246,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                         else if(result.isAuthenticationBroken)
                         {
                             Log.f("== isAuthenticationBroken ==")
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO)
                                 {
@@ -371,8 +263,14 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                             if(code == RequestCode.CODE_AUTH_CONTENT_PLAY)
                             {
                                 Log.f("Auth Content data error retry popup")
-                                _isMovieLoading.value = false
-                                _dialogWarningAPIException.value = result.message
+                                postEvent(
+                                    PlayerEvent.EnableMovieLoading(false)
+                                )
+                                postSideEffect(
+                                    PlayerSideEffect.ShowWarningAPIExceptionDialog(
+                                        result.message
+                                    )
+                                )
                                 if(Feature.IS_ENABLE_FIREBASE_CRASHLYTICS)
                                 {
                                     val errorData = ErrorRequestData(
@@ -391,7 +289,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                                     withContext(Dispatchers.IO){
                                         delay(Common.DURATION_NORMAL)
                                     }
-                                    _errorMessage.value = result.message
+                                    postSideEffect(
+                                        SideEffect.ShowErrorMessage(result.message)
+                                    )
                                 }
                             }
                         }
@@ -402,27 +302,220 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         }
     }
 
-    override fun resume()
+    override fun onHandleAction(action : Action)
     {
-        Log.f("status : $mCurrentPlayerStatus")
-        resumePlayer()
-    }
-
-    override fun pause()
-    {
-        Log.f("status : $mCurrentPlayerStatus")
-        if(mCurrentPlayerStatus !== PlayerStatus.COMPELTE)
+        when(action)
         {
-            sendStudyLogSaveAsync()
+            is PlayerAction.ClickActionContentsType ->
+            {
+                checkBottomSelectItemType(action.type)
+            }
+            is PlayerAction.ClickControllerPlay ->
+            {
+                onHandlePlayButton()
+            }
+            is PlayerAction.ClickControllerPrev ->
+            {
+                onPrevButton()
+            }
+            is PlayerAction.ClickControllerNext ->
+            {
+                onNextButton()
+            }
+            is PlayerAction.ClickReplay ->
+            {
+                onReplayButton()
+            }
+            is PlayerAction.ClickLoadNextMovie ->
+            {
+                onNextMovieButton()
+            }
+            is PlayerAction.SelectSpeed ->
+            {
+                onSelectSpeed(action.index)
+            }
+            is PlayerAction.SelectItem ->
+            {
+                onSelectItem(action.index)
+            }
+            is PlayerAction.StartTrackingTouch ->
+            {
+                onStartTrackingTouch()
+            }
+            is PlayerAction.StopTrackingTouch ->
+            {
+                onStopTrackingTouch(action.progress)
+            }
+            is PlayerAction.ClickOption ->
+            {
+                onClickItemOption(action.item)
+            }
+            is PlayerAction.ClickPageByPageIndex ->
+            {
+
+            }
+            is PlayerAction.ClickPageByPagePrev ->
+            {
+
+            }
+            is PlayerAction.ClickPageByPageNext ->
+            {
+
+            }
+            is PlayerAction.ChangeOrientationPortrait ->
+            {
+
+            }
+            is PlayerAction.ChangeOrientationLandscape ->
+            {
+
+            }
         }
-        pausePlayer()
     }
 
-    override fun destroy()
+    override suspend fun reduceState(current : PlayerState, event : PlayerEvent) : PlayerState
     {
-        Log.f("")
-        enableTimer(false)
-        releasePlayer()
+       return when(event)
+        {
+           is PlayerEvent.EnableMovieLoading ->
+           {
+               current.copy(
+                   isMovieLoading = event.isLoading
+               )
+           }
+           is PlayerEvent.SetPlayer ->
+            {
+                current.copy(
+                    player = event.player
+                )
+            }
+           is PlayerEvent.SetTitle ->
+           {
+               current.copy(
+                   title = event.title
+               )
+           }
+           is PlayerEvent.NotifyContentsList ->
+           {
+               current.copy(
+                   contentsList = event.list
+               )
+           }
+           is PlayerEvent.SetPlayerEndViewData ->
+           {
+               current.copy(
+                   playerEndViewData = event.data
+               )
+           }
+           is PlayerEvent.UpdateCaptionText ->
+           {
+               current.copy(
+                   captionText = event.text
+               )
+           }
+           is PlayerEvent.UpdateCurrentMovieTime ->
+           {
+               current.copy(
+                   currentMovieTime = event.time
+               )
+           }
+           is PlayerEvent.SetMaxMovieTime ->
+           {
+               current.copy(
+                   totalMovieTime = event.time
+               )
+           }
+           is PlayerEvent.UpdateCurrentProgress ->
+           {
+               current.copy(
+                   currentProgress = event.progress
+               )
+           }
+           is PlayerEvent.SetMaxProgress ->
+           {
+               current.copy(
+                   maxProgress = event.maxProgress
+               )
+           }
+           is PlayerEvent.ReadyToPlayMovie ->
+           {
+               current.copy(
+                   isReadyToPlayMovie = event.isReady
+               )
+           }
+           is PlayerEvent.PlayMovie ->
+           {
+               current.copy(
+                   playMovie = event.isPlaying
+               )
+           }
+           is PlayerEvent.ShowPlayerEndView ->
+           {
+               current.copy(
+                   showPlayerEndView = event.isShow
+               )
+           }
+           is PlayerEvent.UpdateNavigationStatus ->
+           {
+               current.copy(
+                   navigationStatus = event.status
+               )
+           }
+           is PlayerEvent.UpdateCurrentPlayIndex ->
+           {
+               current.copy(
+                   currentPlayIndex = event.index
+               )
+           }
+           is PlayerEvent.UpdateCurrentPageLineData ->
+           {
+               current.copy(
+                   currentPageLineData = event.data
+               )
+           }
+           is PlayerEvent.UpdateCurrentSpeedIndex -> {
+               current.copy(
+                   currentSpeedIndex = event.index
+               )
+           }
+
+           is PlayerEvent.UpdateCurrentPageIndex -> {
+               current.copy(
+                   currentPageIndex = event.index
+               )
+           }
+           is PlayerEvent.SupportSpeedViewButton ->
+           {
+               current.copy(
+                   supportSpeedViewButton = event.isEnable
+               )
+           }
+           is PlayerEvent.SupportMovieOption ->
+           {
+               current.copy(
+                   supportMovieOption = event.isEnable
+               )
+           }
+
+           is PlayerEvent.SupportCaptionAndPage ->
+           {
+               current.copy(
+                   supportCaptionAndPage = event.isSupport
+               )
+           }
+           is PlayerEvent.ActivatePageView ->
+           {
+               current.copy(
+                   activatePageView = event.isActivate
+               )
+           }
+           is PlayerEvent.ActivateMovieOption ->
+           {
+               current.copy(
+                   activateMovieOption = event.isActivate
+               )
+           }
+       }
     }
 
     private val isPlaying : Boolean
@@ -606,12 +699,57 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             return -1
         }
 
+    private fun checkBottomSelectItemType(type: ActionContentsType)
+    {
+        when(type)
+        {
+            ActionContentsType.QUIZ -> startQuizActivity()
+            ActionContentsType.EBOOK -> startEbookActivity()
+            ActionContentsType.FLASHCARD -> startFlashcardActivity()
+            ActionContentsType.VOCABULARY -> startVocabularyActivity()
+            ActionContentsType.CROSSWORD -> startGameCrosswordActivity()
+            ActionContentsType.STARWORDS -> startGameStarwordsActivity()
+            ActionContentsType.TRANSLATE -> startOriginTranslateActivity()
+            ActionContentsType.RECORD_PLAYER -> {
+                Log.f("")
+                if (CommonUtils.getInstance(mContext).checkRecordPermission() == false)
+                {
+                    postSideEffect(
+                        SearchSideEffect.ShowRecordPermissionDialog
+                    )
+                }
+                else
+                {
+                    startRecordPlayerActivity()
+                }
+            }
+            ActionContentsType.ADD_BOOKSHELF -> {
+                Log.f("")
+                mCurrentSelectItem?.let {
+                    mSendBookshelfAddList.clear()
+                    mSendBookshelfAddList.add(it)
+                    postSideEffect(
+                        PlayerSideEffect.ShowBookshelfContentsAddDialog(
+                            mMainInformationResult.getBookShelvesList()
+                        )
+                    )
+                }
+
+            }
+            else -> {}
+        }
+    }
+
 
     private fun settingData()
     {
         mPlayerIntentParamsObject = (mContext as AppCompatActivity).intent.getParcelableExtra(Common.INTENT_PLAYER_DATA_PARAMS)!!
         mPlayInformationList = mPlayerIntentParamsObject.getPlayerInformationList()
-        _contentsList.value = mPlayInformationList
+        postEvent(
+            PlayerEvent.NotifyContentsList(
+                mPlayInformationList
+            )
+        )
         Log.f("list size : ${mPlayInformationList.size} , isOptionDisable : ${mPlayInformationList[0].isOptionDisable} " + ", homeworkNumber : ${mPlayerIntentParamsObject.getHomeworkNumber()}")
         mCurrentPlayMovieIndex = 0
 
@@ -631,7 +769,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     private fun setupPlayVideo()
     {
         mPlayer = ExoPlayer.Builder(mContext).build()
-        _player.value = mPlayer
+        postEvent(
+            PlayerEvent.SetPlayer(mPlayer)
+        )
 
         mPlayer.addListener(object : Player.Listener
         {
@@ -647,13 +787,17 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                     Player.STATE_IDLE -> { }
                     Player.STATE_BUFFERING -> if(playWhenReady)
                     {
-                        _isMovieLoading.value = true
+                        postEvent(
+                            PlayerEvent.EnableMovieLoading(true)
+                        )
                     }
                     Player.STATE_READY ->
                     {
                         if(playWhenReady)
                         {
-                            _isMovieLoading.value = false
+                            postEvent(
+                                PlayerEvent.EnableMovieLoading(false)
+                            )
                         }
                         if(isVideoPrepared)
                         {
@@ -667,7 +811,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                         Log.f("Play Complete")
                         if(playWhenReady)
                         {
-                            _isMovieLoading.value = false
+                            postEvent(
+                                PlayerEvent.EnableMovieLoading(false)
+                            )
                         }
                         setVideoCompleted()
                     }
@@ -692,7 +838,11 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         {
             mCurrentPlaySpeedIndex = DEFAULT_SPEED_INDEX
         }
-        _currentPlaySpeedIndex.value = mCurrentPlaySpeedIndex
+        postEvent(
+            PlayerEvent.UpdateCurrentSpeedIndex(
+                mCurrentPlaySpeedIndex
+            )
+        )
     }
 
     private fun setVideoPrepared()
@@ -704,31 +854,44 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         else
         {
             setVideoSpeed(mCurrentPlaySpeedIndex)
-            _enableSpeedButton.value = true
+            postEvent(
+                PlayerEvent.SupportSpeedViewButton(true)
+            )
         }
-        if(mCurrentPlayerStatus === PlayerStatus.COMPELTE)
+        if(mCurrentPlayerStatus == PlayerStatus.COMPELTE)
         {
             return
         }
-        if(mCurrentPlayerStatus === PlayerStatus.PLAY)
+        if(mCurrentPlayerStatus == PlayerStatus.PLAY)
         {
             Log.f("init Play")
             Log.f("Max Duration : " + mPlayer.getDuration())
             Log.f("Max Progress : " + (mPlayer.getDuration() / Common.SECOND))
 
-            _setCurrentMovieTime.value = "00:00"
-            _setRemainMovieTime.value = CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getDuration())
-            _setMaxProgress.value = (mPlayer.getDuration().toInt() / Common.SECOND)
+            postEvent(
+                PlayerEvent.UpdateCurrentMovieTime("00:00"),
+                PlayerEvent.SetMaxMovieTime(
+                    CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.duration)
+                ),
+                PlayerEvent.SetMaxProgress(
+                    mPlayer.duration.toInt() / Common.SECOND
+                ),
+                PlayerEvent.UpdateCurrentPageIndex(-1)
+            )
             if(isSupportCaption)
             {
-                _setCurrentPageLine.value = Pair(mPageByPageDataList[0].getCurrentIndex(), mPageByPageDataList.size)
+                settingCurrentLineData(
+                    mPageByPageDataList[0].getCurrentIndex(),
+                    mPageByPageDataList.size
+                )
             }
-            _setCurrentPage.value = -1
         }
-        _isMovieLoading.value = false
-        _isCompleteToReadyMovie.value = true
-        _enablePortraitOptionButton.value = true
-        mPlayer.setPlayWhenReady(true)
+        postEvent(
+            PlayerEvent.EnableMovieLoading(false),
+            PlayerEvent.ReadyToPlayMovie(true),
+            PlayerEvent.ActivateMovieOption(true)
+        )
+        mPlayer.playWhenReady = true
         enableTimer(true)
     }
 
@@ -736,8 +899,16 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     {
         mCurrentPlayerStatus = PlayerStatus.COMPELTE
         enableTimer(false)
-        _setSeekProgress.value = mPlayer.getDuration().toInt() / Common.SECOND
-        _setCurrentMovieTime.value = CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getDuration())
+
+        postEvent(
+            PlayerEvent.UpdateCurrentProgress(
+                mPlayer.duration.toInt() / Common.SECOND
+            ),
+            PlayerEvent.UpdateCurrentMovieTime(
+                CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.duration)
+            )
+        )
+
         sendStudyLogSaveAsync()
 
         var nextMovieIndex = mCurrentPlayMovieIndex
@@ -769,7 +940,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         if(nextMovieIndex >= mPlayInformationList.size)
         {
             Log.f("ALL FULL_PLAY Complete")
-            _showPlayerEndView.value = true
+            postEvent(
+                PlayerEvent.ShowPlayerEndView(true)
+            )
         }
         else
         {
@@ -786,37 +959,38 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
 
         var isShowCoachingMark : Boolean = false
         val type : String = mPlayInformationList[mCurrentPlayMovieIndex].type
-        _showPlayerEndView.value = false
-
+        postEvent(
+            PlayerEvent.ShowPlayerEndView(false)
+        )
         prepareMovie()
 
-/*        mCoachingMarkJob = CoroutineScope(Dispatchers.Main).launch{
-            CoroutineScope(Dispatchers.Default).async {
-                isShowCoachingMark = isNeverSeeAgainCheck(type)
-            }.await()
+        /*        mCoachingMarkJob = CoroutineScope(Dispatchers.Main).launch{
+                    CoroutineScope(Dispatchers.Default).async {
+                        isShowCoachingMark = isNeverSeeAgainCheck(type)
+                    }.await()
 
-            if(isShowCoachingMark)
-            {
-                Log.f("show coachmark")
-                pausePlayer()
+                    if(isShowCoachingMark)
+                    {
+                        Log.f("show coachmark")
+                        pausePlayer()
 
-                when(type)
-                {
-                    Common.CONTENT_TYPE_STORY ->
+                        when(type)
+                        {
+                            Common.CONTENT_TYPE_STORY ->
+                            {
+                                _showStoryCoachmarkView.call()
+                            }
+                            else ->
+                            {
+                                _showSongCoachmarkView.call()
+                            }
+                        }
+                    } else
                     {
-                        _showStoryCoachmarkView.call()
+                        Log.f("show coachmark")
+                        prepareMovie()
                     }
-                    else ->
-                    {
-                        _showSongCoachmarkView.call()
-                    }
-                }
-            } else
-            {
-                Log.f("show coachmark")
-                prepareMovie()
-            }
-        }*/
+                }*/
     }
 
     private fun prepareMovie()
@@ -829,13 +1003,15 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         mCurrentPageIndex = 0
         mCurrentRepeatPageIndex = -1
         mCurrentStudyLogMilliSeconds = 0f
-        _setCaptionText.value = ""
-        _setMovieTitle.value = title
-        _isCompleteToReadyMovie.value = false
-        _isMovieLoading.value = true
-        _enableSpeedButton.value = false
-        _enablePortraitOptionButton.value = false
-        _currentPlayIndex.value = mCurrentPlayMovieIndex
+        postEvent(
+            PlayerEvent.ReadyToPlayMovie(false),
+            PlayerEvent.UpdateCaptionText(""),
+            PlayerEvent.SetTitle(title),
+            PlayerEvent.EnableMovieLoading(true),
+            PlayerEvent.SupportSpeedViewButton(false),
+            PlayerEvent.ActivateMovieOption(false),
+            PlayerEvent.UpdateCurrentPlayIndex(mCurrentPlayMovieIndex)
+        )
 
         viewModelScope.launch(Dispatchers.Main) {
             withContext(Dispatchers.IO){
@@ -975,7 +1151,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             mCurrentPlayDuration = mPlayer.getCurrentPosition()
             mPlayer.setPlayWhenReady(false)
             enableTimer(false)
-            _enablePlayMovie.value = false
+            postEvent(
+                PlayerEvent.PlayMovie(false)
+            )
             mCurrentPlayerStatus = PlayerStatus.PAUSE
         }
     }
@@ -988,15 +1166,30 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             mPlayer.seekTo(mCurrentPlayDuration)
             mPlayer.setPlayWhenReady(true)
             enableTimer(true)
-            _enablePlayMovie.value = true
+            postEvent(
+                PlayerEvent.PlayMovie(true)
+            )
             mCurrentPlayerStatus = PlayerStatus.PLAY
         }
     }
 
     private fun releasePlayer()
     {
-        _player.value = null
+        postEvent(
+            PlayerEvent.SetPlayer(null)
+        )
         mPlayer.release()
+    }
+
+    private fun onClickItemOption(item: ContentsBaseResult)
+    {
+        Log.f("index : ${item.id}")
+        mCurrentSelectItem = item
+        postSideEffect(
+            PlayerSideEffect.ShowBottomOptionDialog(
+                item
+            )
+        )
     }
 
     private fun requestAuthContentPlay()
@@ -1048,8 +1241,15 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         {
             return
         }
-        _setSeekProgress.value = mPlayer.getCurrentPosition().toInt() / Common.SECOND
-        _setCurrentMovieTime.value = CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.getCurrentPosition())
+
+        postEvent(
+            PlayerEvent.UpdateCurrentProgress(
+                mPlayer.currentPosition.toInt() / Common.SECOND
+            ),
+            PlayerEvent.UpdateCurrentMovieTime(
+                CommonUtils.getInstance(mContext).getMillisecondTime(mPlayer.currentPosition)
+            )
+        )
 
         if(isSupportCaption)
         {
@@ -1058,7 +1258,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                 if(isEndTimeForCurrentPage)
                 {
                     mPlayer.setPlayWhenReady(false)
-                    _enablePlayMovie.value = false
+                    postEvent(
+                        PlayerEvent.PlayMovie(false)
+                    )
                     return
                 }
             }
@@ -1068,20 +1270,31 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                 {
                     if(mCurrentPageIndex % Common.MAX_PAGE_BY_PAGE_COUNT_IN_LINE == 0)
                     {
-                        _setCurrentPageLine.value = Pair(mPageByPageDataList[mCurrentPageIndex].getCurrentIndex(), mPageByPageDataList.size)
+                        settingCurrentLineData(
+                            mPageByPageDataList[mCurrentPageIndex].getCurrentIndex(),
+                            mPageByPageDataList.size
+                        )
                     }
                     if(mCurrentPageIndex == 0)
                     {
-                        _activatePageView.value = true
+                        postEvent(
+                            PlayerEvent.ActivatePageView(true)
+                        )
                     }
-                    _setCurrentPage.value = mCurrentPageIndex + 1
+                    postEvent(
+                        PlayerEvent.UpdateCurrentPageIndex(mCurrentPageIndex + 1)
+                    )
                     mCurrentPageIndex++
                 }
             }
         }
         if(isTimeForCaption == true)
         {
-            _setCaptionText.value = mAuthContentResult.getCaptionList()[mCurrentCaptionIndex].getText()
+            postEvent(
+                PlayerEvent.UpdateCaptionText(
+                    mAuthContentResult.getCaptionList()[mCurrentCaptionIndex].getText()
+                )
+            )
             mCurrentCaptionIndex++
         }
     }
@@ -1174,10 +1387,11 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         val source : MediaSource = buildMediaSource(Uri.parse(mAuthContentResult.getMovieHlsUrl()))
         mPlayer.setMediaSource(source)
         mPlayer.prepare()
-
-        _enablePlayMovie.value = true
-        _supportCaptionAndPage.value = isSupportCaption
-        _scrollPosition.value = mCurrentPlayMovieIndex
+        postEvent(
+            PlayerEvent.PlayMovie(true),
+            PlayerEvent.SupportCaptionAndPage(isSupport = isSupportCaption),
+            PlayerEvent.UpdateCurrentPlayIndex(mCurrentPlayMovieIndex)
+        )
     }
 
     private fun notifyPlayItemIndex()
@@ -1185,21 +1399,37 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         Log.f("list size : " + mPlayInformationList.size + ", index : " + mCurrentPlayMovieIndex)
         if(mPlayInformationList.size == 1)
         {
-            _movieNavigationStatus.value = MovieNavigationStatus.BOTH_INVISIBLE
+            postEvent(
+                PlayerEvent.UpdateNavigationStatus(
+                    MovieNavigationStatus.BOTH_INVISIBLE
+                )
+            )
             return
         }
 
         if(mCurrentPlayMovieIndex == 0)
         {
-            _movieNavigationStatus.value = MovieNavigationStatus.PREV_BUTTON_INVISIBLE
+            postEvent(
+                PlayerEvent.UpdateNavigationStatus(
+                    MovieNavigationStatus.PREV_BUTTON_INVISIBLE
+                )
+            )
         }
         else if(mCurrentPlayMovieIndex == mPlayInformationList.size - 1)
         {
-            _movieNavigationStatus.value = MovieNavigationStatus.NEXT_BUTTON_INVISIBLE
+            postEvent(
+                PlayerEvent.UpdateNavigationStatus(
+                    MovieNavigationStatus.NEXT_BUTTON_INVISIBLE
+                )
+            )
         }
         else
         {
-            _movieNavigationStatus.value = MovieNavigationStatus.NORMAL
+            postEvent(
+                PlayerEvent.UpdateNavigationStatus(
+                    MovieNavigationStatus.NORMAL
+                )
+            )
         }
     }
 
@@ -1260,15 +1490,17 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             }
         }
 
-        if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable)
-        {
-            _availableMovieOptionButton.value = false
-        }
-        else
-        {
-            _availableMovieOptionButton.value = true
-        }
-        _settingPlayerEndView.value = playerEndViewData
+        postEvent(
+            if(mPlayInformationList[mCurrentPlayMovieIndex].isOptionDisable)
+            {
+                PlayerEvent.SupportMovieOption(false)
+            }
+            else
+            {
+                PlayerEvent.SupportMovieOption(true)
+            },
+            PlayerEvent.SetPlayerEndViewData(playerEndViewData)
+        )
     }
 
     /**
@@ -1313,7 +1545,7 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             .startActivity()
     }
 
-    private fun startQuizAcitiviy()
+    private fun startQuizActivity()
     {
         Log.f("")
         var quizIntentParamsObject : QuizIntentParamsObject = QuizIntentParamsObject(mPlayInformationList[mSelectItemOptionIndex].id)
@@ -1409,7 +1641,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     {
         enableTimer(false)
         mCurrentRepeatPageIndex = -1
-        _setCaptionText.value = ""
+        postEvent(
+            PlayerEvent.UpdateCaptionText("")
+        )
     }
 
     private fun onStopTrackingTouch(progress: Int)
@@ -1422,14 +1656,21 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         {
             mCurrentPageIndex = pageIndex
             val pageFirstNumber = getFirstIndexOfCurrentPageLine(mCurrentPageIndex) + 1
-            _setCurrentPageLine.value = Pair(pageFirstNumber, mPageByPageDataList.size)
-            _activatePageView.value = true
-            _setCurrentPage.value = mCurrentPageIndex + 1
+            settingCurrentLineData(
+                pageFirstNumber,
+                mPageByPageDataList.size
+            )
+            postEvent(
+                PlayerEvent.ActivatePageView(true),
+                PlayerEvent.UpdateCurrentPageIndex(mCurrentPageIndex + 1)
+            )
         }
         else
         {
             mCurrentPageIndex = 0
-            _activatePageView.value = false
+            postEvent(
+                PlayerEvent.ActivatePageView(false)
+            )
         }
         enableTimer(true)
     }
@@ -1440,7 +1681,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         {
             Log.f("pause video")
             mPlayer.setPlayWhenReady(false)
-            _enablePlayMovie.value = false
+            postEvent(
+                PlayerEvent.PlayMovie(false)
+            )
         }
         else
         {
@@ -1450,7 +1693,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
                 mCurrentRepeatPageIndex = -1
             }
             mPlayer.setPlayWhenReady(true)
-            _enablePlayMovie.value = true
+            postEvent(
+                PlayerEvent.PlayMovie(true)
+            )
         }
     }
 
@@ -1479,7 +1724,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     {
         Log.f("")
         enableTimer(false)
-        _showPlayerEndView.value = false
+        postEvent(
+            PlayerEvent.ShowPlayerEndView(false)
+        )
         prepareMovie()
     }
 
@@ -1495,7 +1742,9 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
             mPlayInformationList[0] = mAuthContentResult.getNextContentData()!!
         }
         enableTimer(false)
-        _showPlayerEndView.value = false
+        postEvent(
+            PlayerEvent.ShowPlayerEndView(false)
+        )
         prepareMovie()
     }
 
@@ -1503,11 +1752,12 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
     {
         Log.f("speed : " + PLAY_SPEED_LIST[index])
         mCurrentPlaySpeedIndex = index
-        _currentPlaySpeedIndex.value = mCurrentPlaySpeedIndex
         setVideoSpeed(mCurrentPlaySpeedIndex)
+        postEvent(
+            PlayerEvent.UpdateCurrentSpeedIndex(mCurrentPlaySpeedIndex)
+        )
         CommonUtils.getInstance(mContext).setSharedPreference(Common.PARAMS_PLAYER_SPEED_INDEX, index)
     }
-
     private fun onSelectItem(position: Int)
     {
         Log.f("List select Index : $position")
@@ -1518,4 +1768,54 @@ class PlayerViewModel @Inject constructor(val apiViewModel : PlayerApiViewModel)
         }
     }
 
+    private fun settingCurrentLineData(startIndex: Int, maxPageCount: Int)
+    {
+        Log.f("startIndex : $startIndex,  maxPageCount : $maxPageCount")
+        var index = 0
+        val maxItemCountInLine = getCurrentPageCountInLine(startIndex, maxPageCount)
+        val pageLineType : PlayerPageLineType
+        val pageTagList : MutableList<Int> = mutableListOf(-1, -1, -1, -1, -1)
+        for(i in startIndex until startIndex + maxItemCountInLine)
+        {
+            pageTagList[index] = i
+            index++
+        }
+
+        if(startIndex == 1)
+        {
+            pageLineType = PlayerPageLineType.FIRST_LINE
+        }
+        else
+        {
+            pageLineType = if(((maxItemCountInLine < PAGE_MAX_VISIBLE_COUNT) || (startIndex + maxItemCountInLine - 1 == maxPageCount)))
+            {
+                PlayerPageLineType.LAST_LINE
+            } else
+            {
+                PlayerPageLineType.NORMAL
+            }
+        }
+
+        postEvent(
+            PlayerEvent.UpdateCurrentPageLineData(
+                PageLineData(
+                    pageLineType,
+                    pageTagList
+                )
+            )
+        )
+    }
+
+    private fun getCurrentPageCountInLine(startIndex : Int, maxPageCount : Int) : Int
+    {
+        val pageIndex = startIndex - 1
+        if(pageIndex + PAGE_MAX_VISIBLE_COUNT < maxPageCount)
+        {
+            return PAGE_MAX_VISIBLE_COUNT
+        }
+        else
+        {
+            return maxPageCount - pageIndex
+        }
+    }
 }

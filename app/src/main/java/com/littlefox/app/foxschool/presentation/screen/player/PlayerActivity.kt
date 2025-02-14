@@ -2,13 +2,22 @@ package com.littlefox.app.foxschool.presentation.screen.player
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
+import com.littlefox.app.foxschool.common.CommonUtils
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.management.ManagementMyBooksSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.player.viewmodel.PlayerViewModel
 import com.littlefox.app.foxschool.presentation.screen.player.phone.PlayerScreen
-import com.littlefox.app.foxschool.presentation.viewmodel.PlayerViewModel
+import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlayerActivity : BaseActivity()
@@ -23,7 +32,7 @@ class PlayerActivity : BaseActivity()
         setContent {
             PlayerScreen(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent)
+                onAction = viewModel::onHandleAction)
         }
         setupObserverViewModel()
     }
@@ -54,6 +63,40 @@ class PlayerActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        super.setupObserverViewModel()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED){
+                viewModel.sideEffect.collect{ value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@PlayerActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@PlayerActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@PlayerActivity).showErrorMessage(value.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 }

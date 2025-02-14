@@ -102,11 +102,11 @@ class ManagementMyBooksActivity : BaseActivity()
                             Log.i("message : ${value.message}")
                             CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(value.message)
                         }
-                        is ManagementMyBooksSideEffect.ShowDeleteBookshelfDialog ->
+                        is ManagementMyBooksSideEffect.ShowBookshelfDeleteDialog ->
                         {
                             showDeleteBookshelfDialog()
                         }
-                        is ManagementMyBooksSideEffect.ShowDeleteVocabularyDialog ->
+                        is ManagementMyBooksSideEffect.ShowVocabularyDeleteDialog ->
                         {
                             showDeleteBookshelfDialog()
                         }
@@ -115,39 +115,6 @@ class ManagementMyBooksActivity : BaseActivity()
             }
         }
 
-/*        viewModel.isLoading.observe(this){ isLoading ->
-            if(isLoading)
-            {
-                showLoading()
-            }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@ManagementMyBooksActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@ManagementMyBooksActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@ManagementMyBooksActivity).showErrorMessage(message)
-        }
-
-        viewModel.dialogDeleteBookshelf.observe(this){
-            showDeleteBookshelfDialog()
-        }
-
-        viewModel.dialogDeleteVocabulary.observe(this){
-            showDeleteVocabularyDialog()
-        }*/
     }
 
     private fun showTemplateAlertDialog(message : String, eventType : Int, buttonType : DialogButtonType)

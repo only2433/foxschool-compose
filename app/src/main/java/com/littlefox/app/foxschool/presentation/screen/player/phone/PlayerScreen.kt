@@ -4,7 +4,6 @@ import android.content.res.Configuration
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -34,13 +33,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Slider
-import androidx.compose.material.SliderColors
 import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,12 +58,11 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
-import com.littlefox.app.foxschool.presentation.viewmodel.PlayerViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
+
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.common.CommonUtils
@@ -74,10 +70,14 @@ import com.littlefox.app.foxschool.enumerate.ActionContentsType
 import com.littlefox.app.foxschool.enumerate.DataType
 import com.littlefox.app.foxschool.enumerate.MovieNavigationStatus
 import com.littlefox.app.foxschool.enumerate.PlayerActionType
+import com.littlefox.app.foxschool.enumerate.PlayerPageLineType
+import com.littlefox.app.foxschool.`object`.data.player.PageLineData
 import com.littlefox.app.foxschool.`object`.data.player.PlayerEndViewData
 import com.littlefox.app.foxschool.`object`.result.content.ContentsBaseResult
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.player.PlayerEvent
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerAction
+import com.littlefox.app.foxschool.presentation.mvi.player.PlayerState
+import com.littlefox.app.foxschool.presentation.mvi.player.viewmodel.PlayerViewModel
 import com.littlefox.app.foxschool.presentation.widget.BuildPlayerListItem
 import com.littlefox.app.foxschool.presentation.widget.BuildSpeedListItem
 import com.littlefox.logmonitor.Log
@@ -86,28 +86,12 @@ import de.charlex.compose.material.HtmlText
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (PlayerAction) -> Unit
 ) 
 {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val _captionText by viewModel.setCaptionText.observeAsState(initial = "")
-    val _player by viewModel.player.observeAsState(initial = null)
-    val _movieTitle by viewModel.setMovieTitle.observeAsState(initial = "")
-    val _contentsList by viewModel.contentsList.observeAsState(initial = ArrayList<ContentsBaseResult>())
-    val _currentPlayIndex by viewModel.currentPlayIndex.observeAsState(initial = 0)
-    val _isSupportCaptionAndPage by viewModel.supportCaptionAndPage.observeAsState(initial = false)
-    val _isPlayingMovie by viewModel.enablePlayMovie.observeAsState(initial = false)
-    val _currentPlayProgress by viewModel.setSeekProgress.observeAsState(initial = 0)
-    val _maxPlayProgress by viewModel.setMaxProgress.observeAsState(initial = 100)
-    val _currentPlayTime by viewModel.setCurrentMovieTime.observeAsState(initial = "")
-    val _maxPlayTime by viewModel.setRemainMovieTime.observeAsState(initial = "")
-    val _navigationStatus by viewModel.movieNavigationStatus.observeAsState(initial = MovieNavigationStatus.NORMAL)
-    val _isMovieLoading by viewModel.isMovieLoading.observeAsState(initial = false)
-    val _isCompleteToReadyMovie by viewModel.isReadyToMovie.observeAsState(initial = false)
-    val _endLayoutData by viewModel.settingPlayerEndView.observeAsState(initial = PlayerEndViewData())
-    val _isShowEndLayout by viewModel.showPlayerEndView.observeAsState(initial = false)
-    val _currentPlaySpeedIndex by viewModel.currentPlaySpeedIndex.observeAsState(initial = 0)
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     var _enableCaption by  remember {
         mutableStateOf(
@@ -140,17 +124,27 @@ fun PlayerScreen(
         mutableStateOf(false)
     }
 
-    LaunchedEffect(_isCompleteToReadyMovie) {
-        if(_isCompleteToReadyMovie == false)
+    var _isPageByPageVisible by remember {
+        mutableStateOf(true)
+    }
+
+    LaunchedEffect(state.isReadyToPlayMovie) {
+        if(state.isReadyToPlayMovie == false)
         {
             _isMenuVisible = false
+            _isPageByPageVisible = false
+        }
+        else
+        {
+            _isPageByPageVisible = true
         }
     }
 
-    LaunchedEffect(_isShowEndLayout) {
-        if(_isShowEndLayout)
+    LaunchedEffect(state.showPlayerEndView) {
+        if(state.showPlayerEndView)
         {
             _isMenuVisible = false
+            _isPageByPageVisible = false
             _isPlaySpeedViewVisible = false
             _isPlayListVisible = false
         }
@@ -161,29 +155,12 @@ fun PlayerScreen(
         Configuration.ORIENTATION_PORTRAIT ->
         {
             BuildPortraitScreen(
-                moviePlayer = _player,
-                isCompleteToReadyMovie = _isCompleteToReadyMovie,
-                isMovieLoading = _isMovieLoading,
+                state = state,
                 isPlayListVisible = _isPlayListVisible,
                 isPlaySpeedViewVisible = _isPlaySpeedViewVisible,
-                isShowEndLayout = _isShowEndLayout,
-                isSupportCaptionAndPage = _isSupportCaptionAndPage,
-                isPlayingMovie = _isPlayingMovie,
                 isMenuVisible = _isMenuVisible,
                 enableCaption = _enableCaption,
-                enablePageByPage = _enablePageByPage,
-                movieTitle = _movieTitle,
-                captionText = _captionText,
-                navigationStatus = _navigationStatus,
-                currentPlayProgress = _currentPlayProgress.toFloat(),
-                maxPlayProgress = _maxPlayProgress.toFloat(),
-                currentPlayTime = _currentPlayTime,
-                maxPlayTime = _maxPlayTime,
-                endViewData = _endLayoutData,
-                contentsList = _contentsList,
-                currentPlayIndex = _currentPlayIndex,
-                currentPlaySpeedIndex = _currentPlaySpeedIndex,
-                onEvent = onEvent,
+                onAction = onAction,
                 onValueChange = { type, value ->
                     when(type)
                     {
@@ -208,35 +185,23 @@ fun PlayerScreen(
                             _enablePageByPage = value
                         }
                     }
+                },
+                onExit = {
+                    viewModel.onBackPressed()
                 }
             )
         }
         Configuration.ORIENTATION_LANDSCAPE ->
         {
             BuildLandscapeScreen(
-                moviePlayer = _player,
-                isCompleteToReadyMovie = _isCompleteToReadyMovie,
-                isMovieLoading = _isMovieLoading,
+                state = state,
                 isPlayListVisible = _isPlayListVisible,
                 isPlaySpeedViewVisible = _isPlaySpeedViewVisible,
-                isShowEndLayout = _isShowEndLayout,
-                isSupportCaptionAndPage = _isSupportCaptionAndPage,
-                isPlayingMovie = _isPlayingMovie,
                 isMenuVisible = _isMenuVisible,
+                isPageByPageVisible = _isPageByPageVisible,
                 enableCaption = _enableCaption,
                 enablePageByPage = _enablePageByPage,
-                movieTitle = _movieTitle,
-                captionText = _captionText,
-                navigationStatus = _navigationStatus,
-                currentPlayProgress = _currentPlayProgress.toFloat(),
-                maxPlayProgress = _maxPlayProgress.toFloat(),
-                currentPlayTime = _currentPlayTime,
-                maxPlayTime = _maxPlayTime,
-                endViewData = _endLayoutData,
-                contentsList = _contentsList,
-                currentPlayIndex = _currentPlayIndex,
-                currentPlaySpeedIndex = _currentPlaySpeedIndex,
-                onEvent = onEvent,
+                onAction = onAction,
                 onValueChange = { type, value ->
                     when(type)
                     {
@@ -261,6 +226,9 @@ fun PlayerScreen(
                             _enablePageByPage = value
                         }
                     }
+                },
+                onExit = {
+                    viewModel.onBackPressed()
                 }
             )
         }
@@ -271,30 +239,14 @@ fun PlayerScreen(
 @OptIn(UnstableApi::class)
 @Composable
 private fun BuildPortraitScreen(
-    moviePlayer : ExoPlayer?,
-    isCompleteToReadyMovie : Boolean,
-    isMovieLoading : Boolean,
+    state: PlayerState,
     isPlayListVisible : Boolean,
     isPlaySpeedViewVisible : Boolean,
-    isShowEndLayout : Boolean,
-    isSupportCaptionAndPage : Boolean,
-    isPlayingMovie: Boolean,
     isMenuVisible : Boolean,
     enableCaption : Boolean,
-    enablePageByPage: Boolean,
-    movieTitle: String,
-    captionText : String,
-    navigationStatus : MovieNavigationStatus,
-    currentPlayProgress: Float,
-    maxPlayProgress: Float,
-    currentPlayTime: String,
-    maxPlayTime: String,
-    endViewData : PlayerEndViewData,
-    contentsList: ArrayList<ContentsBaseResult>,
-    currentPlayIndex: Int,
-    currentPlaySpeedIndex: Int,
-    onEvent: (BaseEvent) -> Unit,
+    onAction: (PlayerAction) -> Unit,
     onValueChange: (PlayerActionType, Boolean) -> Unit,
+    onExit: () -> Unit
 )
 {
     val context = LocalContext.current
@@ -304,7 +256,7 @@ private fun BuildPortraitScreen(
             .fillMaxSize()
     )
     {
-        if(isCompleteToReadyMovie == false)
+        if(state.isReadyToPlayMovie == false)
         {
             Box(
                 modifier = Modifier
@@ -327,7 +279,7 @@ private fun BuildPortraitScreen(
                     )
             )
             {
-                moviePlayer?.let {
+                state.player?.let {
                     AndroidView(
                         factory = { context ->
                             PlayerView(context).apply {
@@ -344,7 +296,7 @@ private fun BuildPortraitScreen(
                             .clickable(interactionSource = remember {
                                 MutableInteractionSource()
                             }, indication = null, onClick = {
-                                if(isMovieLoading == false && isPlayListVisible == false && isPlaySpeedViewVisible == false && isShowEndLayout == false)
+                                if(state.isMovieLoading == false && isPlayListVisible == false && isPlaySpeedViewVisible == false && state.showPlayerEndView == false)
                                 {
                                     onValueChange(PlayerActionType.MENU, !isMenuVisible)
                                 }
@@ -352,62 +304,65 @@ private fun BuildPortraitScreen(
                     )
                 }
 
-                AnimatedVisibility(
-                    modifier = Modifier
-                        .align(
-                            alignment = Alignment.BottomCenter
-                        ),
-                    visible = enableCaption,
-                    enter = slideInVertically(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        ),
-                        initialOffsetY = {
-                            112
-                        }
-                    ),
-                    exit = slideOutVertically(
-                        animationSpec = tween(
-                            durationMillis = 500,
-                            easing = FastOutSlowInEasing
-                        ),
-                        targetOffsetY = {
-                            112
-                        }
-                    )
-                )
+                if(state.supportCaptionAndPage)
                 {
-                    Box(
+                    AnimatedVisibility(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(
-                                getDp(pixel = 112)
+                            .align(
+                                alignment = Alignment.BottomCenter
                             ),
-                        contentAlignment = Alignment.Center
-                    ) {
+                        visible = enableCaption,
+                        enter = slideInVertically(
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                easing = FastOutSlowInEasing
+                            ),
+                            initialOffsetY = {
+                                112
+                            }
+                        ),
+                        exit = slideOutVertically(
+                            animationSpec = tween(
+                                durationMillis = 500,
+                                easing = FastOutSlowInEasing
+                            ),
+                            targetOffsetY = {
+                                112
+                            }
+                        )
+                    )
+                    {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(
-                                    getDp(pixel = 140)
-                                )
-                                .background(
-                                    color = colorResource(id = R.color.color_alpha_07_black)
-                                )
-                        )
+                                    getDp(pixel = 112)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(
+                                        getDp(pixel = 140)
+                                    )
+                                    .background(
+                                        color = colorResource(id = R.color.color_alpha_07_black)
+                                    )
+                            )
 
-                        HtmlText(
-                            text = captionText, style = TextStyle(
-                                color = colorResource(id = R.color.color_ffffff),
-                                fontSize = 12.sp,
-                                fontFamily = FontFamily(
-                                    Font(
-                                        resId = R.font.pretendard_medium
+                            HtmlText(
+                                text = state.captionText, style = TextStyle(
+                                    color = colorResource(id = R.color.color_ffffff),
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily(
+                                        Font(
+                                            resId = R.font.pretendard_medium
+                                        )
                                     )
                                 )
                             )
-                        )
+                        }
                     }
                 }
 
@@ -464,16 +419,12 @@ private fun BuildPortraitScreen(
                     )
                 ) {
                     BuildTopViewPortrait(
-                        isSupportCaptionAndPage = isSupportCaptionAndPage,
+                        isSupportCaptionAndPage = state.supportCaptionAndPage,
                         isCheckCaption = enableCaption,
                         onCheckCaption = {
                             onValueChange(PlayerActionType.CAPTION, !enableCaption)
                         },
-                        onClickCloseButton = {
-                            onEvent(
-                                BaseEvent.onBackPressed
-                            )
-                        }
+                        onClickCloseButton = onExit
                     )
                 }
 
@@ -502,28 +453,28 @@ private fun BuildPortraitScreen(
                             .height(
                                 getDp(pixel = 109)
                             ),
-                        movieNavigationStatus = navigationStatus,
-                        isPlaying = isPlayingMovie,
+                        movieNavigationStatus = state.navigationStatus,
+                        isPlaying = state.playMovie,
                         onClickPrev = {
-                            onEvent(
-                                PlayerEvent.onClickControllerPrev
+                            onAction(
+                                PlayerAction.ClickControllerPrev
                             )
                         },
                         onClickNext = {
-                            onEvent(
-                                PlayerEvent.onClickControllerNext
+                            onAction(
+                                PlayerAction.ClickControllerNext
                             )
                         },
                         onClickPlay = {
-                            onEvent(
-                                PlayerEvent.onClickControllerPlay
+                            onAction(
+                                PlayerAction.ClickControllerPlay
                             )
                         }
                     )
                 }
 
                 AnimatedVisibility(
-                    visible = isShowEndLayout,
+                    visible = state.showPlayerEndView,
                     enter = fadeIn() + slideInVertically(
                         animationSpec = tween(
                             durationMillis = 1200,
@@ -547,25 +498,21 @@ private fun BuildPortraitScreen(
                             .height(
                                 getDp(pixel = 602)
                             ),
-                        data = endViewData,
+                        data = state.playerEndViewData,
                         onClickActionType = {type ->
-                            onEvent(
-                                PlayerEvent.onClickActionContentsType(type)
+                            onAction(
+                                PlayerAction.ClickActionContentsType(type)
                             )
                         },
-                        onClickClose = {
-                            onEvent(
-                                BaseEvent.onBackPressed
-                            )
-                        },
+                        onClickClose = onExit,
                         onClickReplay = {
-                            onEvent(
-                                PlayerEvent.onClickReplay
+                            onAction(
+                                PlayerAction.ClickReplay
                             )
                         },
                         onClickNextMovie = {
-                            onEvent(
-                                PlayerEvent.onClickLoadNextMovie
+                            onAction(
+                                PlayerAction.ClickLoadNextMovie
                             )
                         })
                 }
@@ -579,19 +526,19 @@ private fun BuildPortraitScreen(
                 .offset(
                     y = getDp(pixel = 602)
                 ),
-            dataList = contentsList,
-            currentPlayIndex = currentPlayIndex,
+            dataList = state.contentsList,
+            currentPlayIndex = state.currentPlayIndex,
             onSelectPlayItem = { index ->
-                if(isMovieLoading == false)
+                if(state.isMovieLoading == false)
                 {
-                    onEvent(
-                        PlayerEvent.onSelectItem(index)
+                    onAction(
+                        PlayerAction.SelectItem(index)
                     )
                 }
             },
         )
 
-        if(isCompleteToReadyMovie && isShowEndLayout == false)
+        if(state.isReadyToPlayMovie && state.showPlayerEndView == false)
         {
             BuildSeekViewPortrait(
                 modifier = Modifier
@@ -599,16 +546,16 @@ private fun BuildPortraitScreen(
                     .offset(
                         y = getDp(pixel = 571)
                     ),
-                progress = currentPlayProgress,
-                maxProgress = maxPlayProgress,
+                progress = state.currentProgress.toFloat(),
+                maxProgress = state.maxProgress.toFloat(),
                 onStartTrackingTouch = {
-                    onEvent(
-                        PlayerEvent.onStartTrackingTouch
+                    onAction(
+                        PlayerAction.StartTrackingTouch
                     )
                 },
                 onStopTrackingTouch = { progress ->
-                    onEvent(
-                        PlayerEvent.onStopTrackingTouch(
+                    onAction(
+                        PlayerAction.StopTrackingTouch(
                             progress.toInt()
                         )
                     )
@@ -635,7 +582,7 @@ private fun BuildPortraitScreen(
                     .align(Alignment.Center)
             ) {
                 AnimatedVisibility(
-                    visible = isMovieLoading, enter = fadeIn(), exit = fadeOut()
+                    visible = state.isMovieLoading, enter = fadeIn(), exit = fadeOut()
                 ) {
                     CircularProgressIndicator(
                         color = colorResource(id = R.color.color_1aa3f8)
@@ -649,30 +596,16 @@ private fun BuildPortraitScreen(
 @OptIn(UnstableApi::class)
 @Composable
 private fun BuildLandscapeScreen(
-    moviePlayer : ExoPlayer?,
-    isCompleteToReadyMovie : Boolean,
-    isMovieLoading : Boolean,
+    state: PlayerState,
     isPlayListVisible : Boolean,
     isPlaySpeedViewVisible : Boolean,
-    isShowEndLayout : Boolean,
-    isSupportCaptionAndPage : Boolean,
-    isPlayingMovie: Boolean,
     isMenuVisible : Boolean,
+    isPageByPageVisible: Boolean,
     enableCaption : Boolean,
-    enablePageByPage: Boolean,
-    movieTitle: String,
-    captionText : String,
-    navigationStatus : MovieNavigationStatus,
-    currentPlayProgress: Float,
-    maxPlayProgress: Float,
-    currentPlayTime: String,
-    maxPlayTime: String,
-    endViewData : PlayerEndViewData,
-    contentsList: ArrayList<ContentsBaseResult>,
-    currentPlayIndex: Int,
-    currentPlaySpeedIndex: Int,
-    onEvent: (BaseEvent) -> Unit,
+    enablePageByPage : Boolean,
+    onAction: (PlayerAction) -> Unit,
     onValueChange: (PlayerActionType, Boolean) -> Unit,
+    onExit: () -> Unit
 )
 {
     val context = LocalContext.current
@@ -682,11 +615,12 @@ private fun BuildLandscapeScreen(
             .fillMaxSize()
     )
     {
-        if(isCompleteToReadyMovie == false)
+        if(state.isReadyToPlayMovie == false)
         {
+            Log.i("state.isReadyToPlayMovie false")
             Box(
                 modifier = Modifier
-                    .fillMaxHeight()
+                    .fillMaxSize()
                     .background(
                         color = colorResource(id = R.color.color_000000)
                     )
@@ -694,7 +628,8 @@ private fun BuildLandscapeScreen(
         }
         else
         {
-            moviePlayer?.let {
+            Log.i("state.isReadyToPlayMovie true")
+            state.player?.let {
                 AndroidView(
                     factory = { context ->
                         PlayerView(context).apply {
@@ -708,7 +643,10 @@ private fun BuildLandscapeScreen(
                         .clickable(interactionSource = remember {
                             MutableInteractionSource()
                         }, indication = null, onClick = {
-                            if(isMovieLoading == false && isPlayListVisible == false && isPlaySpeedViewVisible == false && isShowEndLayout == false)
+                            if(state.isMovieLoading == false
+                                && isPlayListVisible == false
+                                && isPlaySpeedViewVisible == false
+                                && state.showPlayerEndView == false)
                             {
                                 onValueChange(PlayerActionType.MENU, !isMenuVisible)
                             }
@@ -716,62 +654,65 @@ private fun BuildLandscapeScreen(
                 )
             }
 
-            AnimatedVisibility(
-                modifier = Modifier
-                    .align(
-                        alignment = Alignment.BottomCenter
-                    ),
-                visible = enableCaption,
-                enter = slideInVertically(
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = FastOutSlowInEasing
-                    ),
-                    initialOffsetY = {
-                        140
-                    }
-                ),
-                exit = slideOutVertically(
-                    animationSpec = tween(
-                        durationMillis = 500,
-                        easing = FastOutSlowInEasing
-                    ),
-                    targetOffsetY = {
-                        140
-                    }
-                )
-            )
+            if(state.supportCaptionAndPage)
             {
-                Box(
+                AnimatedVisibility(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(
-                            getDp(pixel = 140)
+                        .align(
+                            alignment = Alignment.BottomCenter
                         ),
-                    contentAlignment = Alignment.Center
-                ) {
+                    visible = enableCaption,
+                    enter = slideInVertically(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        ),
+                        initialOffsetY = {
+                            140
+                        }
+                    ),
+                    exit = slideOutVertically(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        ),
+                        targetOffsetY = {
+                            140
+                        }
+                    )
+                )
+                {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(
                                 getDp(pixel = 140)
-                            )
-                            .background(
-                                color = colorResource(id = R.color.color_alpha_07_black)
-                            )
-                    )
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(
+                                    getDp(pixel = 140)
+                                )
+                                .background(
+                                    color = colorResource(id = R.color.color_alpha_07_black)
+                                )
+                        )
 
-                    HtmlText(
-                        text = captionText, style = TextStyle(
-                            color = colorResource(id = R.color.color_ffffff),
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(
-                                Font(
-                                    resId = R.font.pretendard_medium
+                        HtmlText(
+                            text = state.captionText, style = TextStyle(
+                                color = colorResource(id = R.color.color_ffffff),
+                                fontSize = 15.sp,
+                                fontFamily = FontFamily(
+                                    Font(
+                                        resId = R.font.pretendard_medium
+                                    )
                                 )
                             )
                         )
-                    )
+                    }
                 }
             }
 
@@ -825,8 +766,8 @@ private fun BuildLandscapeScreen(
                 )
             ) {
                 BuildTopView(
-                    title = movieTitle,
-                    isSupportCaptionAndPage = isSupportCaptionAndPage,
+                    title = state.title,
+                    isSupportCaptionAndPage = state.supportCaptionAndPage,
                     isCheckCaption = enableCaption,
                     isCheckPageByPage = enablePageByPage,
                     onCheckCaption = {
@@ -839,11 +780,8 @@ private fun BuildLandscapeScreen(
                         onValueChange(PlayerActionType.MENU, false)
                         onValueChange(PlayerActionType.PLAY_LIST, true)
                     },
-                    onClickCloseButton = {
-                        onEvent(
-                            BaseEvent.onBackPressed
-                        )
-                    })
+                    onClickCloseButton = onExit
+                )
 
             }
 
@@ -872,24 +810,53 @@ private fun BuildLandscapeScreen(
                         .height(
                             getDp(pixel = 167)
                         ),
-                    movieNavigationStatus = navigationStatus,
-                    isPlaying = isPlayingMovie,
+                    movieNavigationStatus = state.navigationStatus,
+                    isPlaying = state.playMovie,
                     onClickPrev = {
-                        onEvent(
-                            PlayerEvent.onClickControllerPrev
+                        onAction(
+                            PlayerAction.ClickControllerPrev
                         )
                     },
                     onClickNext = {
-                        onEvent(
-                            PlayerEvent.onClickControllerNext
+                        onAction(
+                            PlayerAction.ClickControllerNext
                         )
                     },
                     onClickPlay = {
-                        onEvent(
-                            PlayerEvent.onClickControllerPlay
+                        onAction(
+                            PlayerAction.ClickControllerPlay
                         )
                     }
                 )
+            }
+
+            if(state.supportCaptionAndPage)
+            {
+                AnimatedVisibility(
+                    modifier = Modifier
+                        .align(
+                            Alignment.BottomCenter
+                        ),
+                    visible = !isMenuVisible && enablePageByPage && isPageByPageVisible,
+                    enter = fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        )
+                    ),
+                    exit = fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 500,
+                            easing = FastOutSlowInEasing
+                        )
+                    )
+                )
+                {
+                    BuildPageByPageView(
+                        currentPageIndex = state.currentPageIndex,
+                        data = state.currentPageLineData,
+                        onAction = onAction)
+                }
             }
 
             AnimatedVisibility(
@@ -923,23 +890,27 @@ private fun BuildLandscapeScreen(
                         .height(
                             getDp(pixel = 234)
                         ),
-                    progress = currentPlayProgress,
-                    maxProgress = maxPlayProgress,
-                    currentDuration = currentPlayTime,
-                    totalDuration = maxPlayTime,
+                    progress = state.currentProgress.toFloat(),
+                    maxProgress = state.maxProgress.toFloat(),
+                    currentDuration = state.currentMovieTime,
+                    totalDuration = state.totalMovieTime,
                     isRepeat = false,
+                    isSupportMovieSpeed = state.supportSpeedViewButton,
                     onClickSpeedButton = {
-                        onValueChange(PlayerActionType.MENU, false)
-                        onValueChange(PlayerActionType.SPEED_MENU, true)
+                        if(state.supportSpeedViewButton)
+                        {
+                            onValueChange(PlayerActionType.MENU, false)
+                            onValueChange(PlayerActionType.SPEED_MENU, true)
+                        }
                     },
                     onStartTrackingTouch = {
-                        onEvent(
-                            PlayerEvent.onStartTrackingTouch
+                        onAction(
+                            PlayerAction.StartTrackingTouch
                         )
                     },
                     onStopTrackingTouch = { progress ->
-                        onEvent(
-                            PlayerEvent.onStopTrackingTouch(
+                        onAction(
+                            PlayerAction.StopTrackingTouch(
                                 progress.toInt()
                             )
                         )
@@ -948,7 +919,7 @@ private fun BuildLandscapeScreen(
             }
 
             AnimatedVisibility(
-                visible = isShowEndLayout,
+                visible = state.showPlayerEndView,
                 enter = fadeIn() + slideInVertically(
                     animationSpec = tween(
                         durationMillis = 1200,
@@ -969,25 +940,21 @@ private fun BuildLandscapeScreen(
                 BuildPlayerEndView(
                     modifier = Modifier
                         .fillMaxSize(),
-                    data = endViewData,
+                    data = state.playerEndViewData,
                     onClickActionType = {type ->
-                        onEvent(
-                            PlayerEvent.onClickActionContentsType(type)
+                        onAction(
+                            PlayerAction.ClickActionContentsType(type)
                         )
                     },
-                    onClickClose = {
-                        onEvent(
-                            BaseEvent.onBackPressed
-                        )
-                    },
+                    onClickClose = onExit,
                     onClickReplay = {
-                        onEvent(
-                            PlayerEvent.onClickReplay
+                        onAction(
+                            PlayerAction.ClickReplay
                         )
                     },
                     onClickNextMovie = {
-                        onEvent(
-                            PlayerEvent.onClickLoadNextMovie
+                        onAction(
+                            PlayerAction.ClickLoadNextMovie
                         )
                     })
             }
@@ -1019,13 +986,13 @@ private fun BuildLandscapeScreen(
             )
             {
                 BuildPlayListView(
-                    dataList = contentsList,
-                    currentPlayIndex = currentPlayIndex,
+                    dataList = state.contentsList,
+                    currentPlayIndex = state.currentPlayIndex,
                     onSelectPlayItem = { index ->
-                        if(isMovieLoading == false)
+                        if(state.isMovieLoading == false)
                         {
-                            onEvent(
-                                PlayerEvent.onSelectItem(index)
+                            onAction(
+                                PlayerAction.SelectItem(index)
                             )
                         }
                     },
@@ -1063,10 +1030,10 @@ private fun BuildLandscapeScreen(
             )
             {
                 BuildPlaySpeedColumnView(
-                    currentIndex = currentPlaySpeedIndex,
+                    currentIndex = state.currentSpeedIndex,
                     onSelectSpeed = { index ->
-                        onEvent(
-                            PlayerEvent.onSelectSpeed(index)
+                        onAction(
+                            PlayerAction.SelectSpeed(index)
                         )
                         onValueChange(PlayerActionType.SPEED_MENU, false)
                         onValueChange(PlayerActionType.MENU, true)
@@ -1090,7 +1057,7 @@ private fun BuildLandscapeScreen(
                 .align(Alignment.Center)
         ) {
             AnimatedVisibility(
-                visible = isMovieLoading, enter = fadeIn(), exit = fadeOut()
+                visible = state.isMovieLoading, enter = fadeIn(), exit = fadeOut()
             ) {
                 CircularProgressIndicator(
                     color = colorResource(id = R.color.color_1aa3f8)
@@ -1599,6 +1566,7 @@ private fun BuildBottomInformationView(
     progress: Float,
     maxProgress: Float,
     isRepeat: Boolean,
+    isSupportMovieSpeed: Boolean,
     currentDuration: String = "",
     totalDuration: String = "",
     playSpeedText: String = "1x",
@@ -1746,6 +1714,16 @@ private fun BuildBottomInformationView(
                 .height(
                     getDp(pixel = 60)
                 )
+                .alpha(
+                    if(isSupportMovieSpeed)
+                    {
+                        1.0f
+                    }
+                    else
+                    {
+                        0.0f
+                    }
+                )
                 .clickable(
                     interactionSource = remember {
                         MutableInteractionSource()
@@ -1755,6 +1733,7 @@ private fun BuildBottomInformationView(
             contentScale = ContentScale.Fit,
             contentDescription = "Speed Icon"
         )
+
         Spacer(
             modifier = Modifier.width(
                 getDp(pixel = 10)
@@ -1767,6 +1746,16 @@ private fun BuildBottomInformationView(
                 )
                 .height(
                     getDp(pixel = 71)
+                )
+                .alpha(
+                    if(isSupportMovieSpeed)
+                    {
+                        1.0f
+                    }
+                    else
+                    {
+                        0.0f
+                    }
                 )
                 .clickable(
                     interactionSource = remember {
@@ -1980,6 +1969,198 @@ private fun BuildPlayListView(
             }
         }
 
+    }
+}
+
+@Composable
+private fun BuildPageByPageView(
+    modifier : Modifier = Modifier,
+    currentPageIndex: Int,
+    data: PageLineData,
+    onAction : (PlayerAction) -> Unit
+)
+{
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(
+                getDp(pixel = 279)
+            ),
+    )
+    {
+        if(data.type != PlayerPageLineType.FIRST_LINE)
+        {
+            Image(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 71)
+                    )
+                    .height(
+                        getDp(pixel = 71)
+                    )
+                    .offset(
+                        x = getDp(pixel = 490), y = getDp(pixel = 20)
+                    )
+                    .alpha(0.65f)
+                    .clickable(interactionSource = remember {
+                        MutableInteractionSource()
+                    }, indication = null, onClick = {
+                        onAction(
+                            PlayerAction.ClickPageByPagePrev(data.pageTagList[0])
+                        )
+                    }),
+                painter = painterResource(id = R.drawable.player__pre_page),
+                contentDescription = "Prev Button"
+            )
+        }
+
+        BuildPageViewItem(
+            modifier = Modifier
+                .offset(
+                    x = getDp(pixel = 619)
+                ),
+            isSelectItem = currentPageIndex == data.pageTagList[0],
+            pageNumber = data.pageTagList[0]
+        ) {
+            onAction(
+                PlayerAction.ClickPageByPageIndex(data.pageTagList[0])
+            )
+        }
+
+        BuildPageViewItem(
+            modifier = Modifier
+                .offset(
+                    x = getDp(pixel = 765)
+                ),
+            isSelectItem = currentPageIndex == data.pageTagList[1],
+            pageNumber = data.pageTagList[1]
+        ) {
+            onAction(
+                PlayerAction.ClickPageByPageIndex(data.pageTagList[1])
+            )
+        }
+
+        BuildPageViewItem(
+            modifier = Modifier
+                .offset(
+                    x = getDp(pixel = 911)
+                ),
+            isSelectItem = currentPageIndex == data.pageTagList[2],
+            pageNumber = data.pageTagList[2]
+        ) {
+            onAction(
+                PlayerAction.ClickPageByPageIndex(data.pageTagList[2])
+            )
+        }
+
+        BuildPageViewItem(
+            modifier = Modifier
+                .offset(
+                    x = getDp(pixel = 1057)
+                ),
+            isSelectItem = currentPageIndex == data.pageTagList[3],
+            pageNumber = data.pageTagList[3]
+        ) {
+            if(data.pageTagList[0] != -1)
+            {
+                onAction(
+                    PlayerAction.ClickPageByPageIndex(data.pageTagList[3])
+                )
+            }
+        }
+
+        BuildPageViewItem(
+            modifier = Modifier
+                .offset(
+                    x = getDp(pixel = 1203)
+                ),
+            isSelectItem = currentPageIndex == data.pageTagList[4],
+            pageNumber = data.pageTagList[4]
+        ) {
+            onAction(
+                PlayerAction.ClickPageByPageIndex(data.pageTagList[4])
+            )
+        }
+
+        if(data.type != PlayerPageLineType.LAST_LINE)
+        {
+            Image(
+                modifier = Modifier
+                    .width(
+                        getDp(pixel = 71)
+                    )
+                    .height(
+                        getDp(pixel = 71)
+                    )
+                    .offset(
+                        x = getDp(pixel = 1359), y = getDp(pixel = 20)
+                    )
+                    .alpha(0.65f)
+                    .clickable(interactionSource = remember {
+                        MutableInteractionSource()
+                    }, indication = null, onClick = {
+                        onAction(
+                            PlayerAction.ClickPageByPageNext(data.pageTagList[4])
+                        )
+                    }),
+                painter = painterResource(id = R.drawable.player__next_page),
+                contentDescription = "Next Button"
+            )
+        }
+    }
+}
+
+@Composable
+private fun BuildPageViewItem(
+    modifier : Modifier,
+    isSelectItem: Boolean,
+    pageNumber: Int,
+    onClick: () -> Unit
+)
+{
+    Box(
+        modifier = modifier
+            .width(
+                getDp(pixel = 98)
+            )
+            .height(
+                getDp(pixel = 98)
+            )
+            .alpha(
+                alpha = if(pageNumber == -1) 0.0f else 0.65f
+            )
+            .clip(
+                shape = RoundedCornerShape(getDp(pixel = 90))
+            )
+            .background(
+                color = if(isSelectItem)
+                {
+                    colorResource(id = R.color.color_fff55a)
+                } else
+                {
+                    colorResource(id = R.color.color_ffffff)
+                }
+            )
+            .clickable(interactionSource = remember {
+                MutableInteractionSource()
+            }, indication = null, onClick = {
+                onClick
+            }),
+        contentAlignment = Alignment.Center
+    )
+    {
+        Text(
+            text = pageNumber.toString(),
+            style = TextStyle(
+                color = colorResource(id = R.color.color_0c1217),
+                fontSize = 16.sp,
+                fontFamily = FontFamily(
+                    Font(
+                        resId = R.font.roboto_bold
+                    )
+                )
+            )
+        )
     }
 }
 
@@ -2647,7 +2828,7 @@ private fun BuildPlayerEndView(
                             .clickable(
                                 interactionSource = remember {
                                     MutableInteractionSource()
-                                }, indication = null, onClick = onClickClose
+                                }, indication = null, onClick = onClickNextMovie
                             ),
                         contentAlignment = Alignment.CenterStart
                     )

@@ -494,13 +494,13 @@ class ManagementMyBooksViewModel @Inject constructor(private val apiViewModel : 
             MyBooksType.BOOKSHELF_MODIFY ->
             {
                 postSideEffect(
-                    ManagementMyBooksSideEffect.ShowDeleteBookshelfDialog
+                    ManagementMyBooksSideEffect.ShowBookshelfDeleteDialog
                 )
             }
             MyBooksType.VOCABULARY_MODIFY ->
             {
                 postSideEffect(
-                    ManagementMyBooksSideEffect.ShowDeleteVocabularyDialog
+                    ManagementMyBooksSideEffect.ShowVocabularyDeleteDialog
                 )
             }
         }
