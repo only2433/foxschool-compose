@@ -37,23 +37,16 @@ import androidx.compose.ui.unit.sp
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.QuizViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizEvent
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizAction
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizState
+
 import com.littlefox.logmonitor.Log
 
 @Composable
 fun QuizIntroScreenV(
-    viewModel: QuizViewModel,
-    onEvent: (QuizEvent) -> Unit
+    state: QuizState,
+    onAction: (QuizAction) -> Unit
 ) {
-    val _titleData by viewModel.titleText.observeAsState(
-        initial = Pair("", "")
-    )
-    val _loadingComplete by viewModel.loadingComplete.observeAsState(initial = false)
-
-    LaunchedEffect(_loadingComplete) {
-        Log.i("_loadingComplete : $_loadingComplete")
-    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -78,7 +71,7 @@ fun QuizIntroScreenV(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = _titleData.first,
+                        text = state.title,
                         style = TextStyle(
                             color = colorResource(id = R.color.color_3b3b3b),
                             fontSize = 30.sp,
@@ -88,13 +81,13 @@ fun QuizIntroScreenV(
                             textAlign = TextAlign.Center
                         )
                     )
-                    if (_titleData.second != "") {
+                    if (state.subTitle != "") {
                         Spacer(
                             modifier = Modifier
                                 .height(getDp(pixel = 10))
                         )
                         Text(
-                            text = _titleData.second,
+                            text = state.subTitle,
                             style = TextStyle(
                                 color = colorResource(id = R.color.color_3b3b3b),
                                 fontSize = 20.sp,
@@ -140,7 +133,7 @@ fun QuizIntroScreenV(
         ) {
 
             AnimatedVisibility(
-                visible = _loadingComplete == false,
+                visible = state.isLoadingComplete == false,
                 enter = fadeIn(),
                 exit = fadeOut(
                     animationSpec = tween(
@@ -163,7 +156,7 @@ fun QuizIntroScreenV(
 
 
             AnimatedVisibility(
-                visible = _loadingComplete == true,
+                visible = state.isLoadingComplete,
                 enter = fadeIn(
                     animationSpec = tween(
                         durationMillis = Common.DURATION_SHORTEST.toInt(),
@@ -185,8 +178,8 @@ fun QuizIntroScreenV(
                                 MutableInteractionSource()},
                             indication = null,
                             onClick = {
-                                onEvent(
-                                    QuizEvent.onClickNextQuiz
+                                onAction(
+                                    QuizAction.ClickNextQuiz
                                 )
                             }
                         ),

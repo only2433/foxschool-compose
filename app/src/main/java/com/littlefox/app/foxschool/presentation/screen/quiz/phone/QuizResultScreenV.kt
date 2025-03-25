@@ -42,6 +42,7 @@ import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizEvent
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.enumerate.Grade
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizAction
 import com.littlefox.app.foxschool.presentation.widget.PressedTextButton
 import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.logmonitor.Log
@@ -49,7 +50,7 @@ import com.littlefox.logmonitor.Log
 @Composable
 fun QuizResultScreenV(
     resultData : String,
-    onEvent: (QuizEvent) -> Unit
+    onAction: (QuizAction) -> Unit
 )
 {
     var _quizPlayCount by remember {
@@ -154,8 +155,8 @@ fun QuizResultScreenV(
                     pressedImageID = R.drawable.btn_quiz_o,
                     text = stringResource(id = R.string.text_savescore)
                 ) {
-                    onEvent(
-                        QuizEvent.onClickSaveStudyInformation
+                    onAction(
+                        QuizAction.ClickSaveStudyInformation
                     )
                 }
 
@@ -178,8 +179,8 @@ fun QuizResultScreenV(
                     pressedImageID = R.drawable.btn_quiz_o,
                     text = stringResource(id = R.string.text_tryagain)
                 ) {
-                    onEvent(
-                        QuizEvent.onClickReplay
+                    onAction(
+                        QuizAction.ClickReplay
                     )
                 }
             }

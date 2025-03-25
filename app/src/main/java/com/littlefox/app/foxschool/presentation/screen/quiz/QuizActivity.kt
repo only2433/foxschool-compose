@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.base.BaseActivity
 import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.dialog.TemplateAlertDialog
 import com.littlefox.app.foxschool.enumerate.DialogButtonType
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.quiz.viewmodel.QuizViewModel
 import com.littlefox.app.foxschool.presentation.screen.quiz.phone.QuizScreenV
-import com.littlefox.app.foxschool.presentation.viewmodel.QuizViewModel
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class QuizActivity : BaseActivity()
@@ -28,7 +34,7 @@ class QuizActivity : BaseActivity()
         setContent {
             QuizScreenV(
                 viewModel = viewModel,
-                onEvent = viewModel::onHandleViewEvent
+                onAction = viewModel::onHandleAction
             )
         }
         setupObserverViewModel()
@@ -60,35 +66,44 @@ class QuizActivity : BaseActivity()
 
     override fun setupObserverViewModel()
     {
-        viewModel.isLoading.observe(this){ loading ->
-            Log.i("loading : $loading")
-            if(loading)
-            {
-                showLoading()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.sideEffect.collect {value ->
+                    when(value)
+                    {
+                        is SideEffect.EnableLoading ->
+                        {
+                            if(value.isLoading)
+                            {
+                                showLoading()
+                            }
+                            else
+                            {
+                                hideLoading()
+                            }
+                        }
+                        is SideEffect.ShowToast ->
+                        {
+                            Log.i("message : ${value.message}")
+                            Toast.makeText(this@QuizActivity, value.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is SideEffect.ShowSuccessMessage ->
+                        {
+                            Log.i("message : $value.message")
+                            CommonUtils.getInstance(this@QuizActivity).showSuccessMessage(value.message)
+                        }
+                        is SideEffect.ShowErrorMessage ->
+                        {
+                            Log.i("message : ${value.message}")
+                            CommonUtils.getInstance(this@QuizActivity).showErrorMessage(value.message)
+                        }
+                        is QuizSideEffect.ShowWarningMessageDialog ->
+                        {
+                            showMessageAlertDialog(value.text)
+                        }
+                    }
+                }
             }
-            else
-            {
-                hideLoading()
-            }
-        }
-
-        viewModel.toast.observe(this){ message ->
-            Log.i("message : $message")
-            Toast.makeText(this@QuizActivity, message, Toast.LENGTH_SHORT).show()
-        }
-
-        viewModel.successMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@QuizActivity).showSuccessMessage(message)
-        }
-
-        viewModel.errorMessage.observe(this){ message ->
-            Log.i("message : $message")
-            CommonUtils.getInstance(this@QuizActivity).showErrorMessage(message)
-        }
-
-        viewModel.dialogWarningText.observe(this){ message ->
-            showMessageAlertDialog(message)
         }
     }
 

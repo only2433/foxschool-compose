@@ -1,4 +1,4 @@
-package com.littlefox.app.foxschool.presentation.viewmodel
+package com.littlefox.app.foxschool.presentation.mvi.quiz.viewmodel
 
 import android.app.Activity
 import android.content.Context
@@ -10,7 +10,6 @@ import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
@@ -22,6 +21,7 @@ import com.littlefox.app.foxschool.common.CommonUtils
 import com.littlefox.app.foxschool.common.Feature
 import com.littlefox.app.foxschool.crashtics.CrashlyticsHelper
 import com.littlefox.app.foxschool.enumerate.Grade
+import com.littlefox.app.foxschool.enumerate.QuizAnswerViewType
 import com.littlefox.app.foxschool.management.IntentManagementFactory
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorQuizImageNotHaveData
 import com.littlefox.app.foxschool.`object`.data.crashtics.ErrorRequestData
@@ -31,15 +31,20 @@ import com.littlefox.app.foxschool.`object`.data.quiz.QuizPhonicsTextData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizPictureData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizStudyRecordData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizTextData
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizTypeData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizUserInteractionData
 import com.littlefox.app.foxschool.`object`.result.quiz.QuizInformationResult
 import com.littlefox.app.foxschool.`object`.result.quiz.QuizItemResult
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizEvent
-import com.littlefox.app.foxschool.`object`.data.quiz.QuizTypeData
+import com.littlefox.app.foxschool.presentation.mvi.base.Action
+import com.littlefox.app.foxschool.presentation.mvi.base.BaseMVIViewModel
+import com.littlefox.app.foxschool.presentation.mvi.base.SideEffect
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizAction
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizEvent
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizSideEffect
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizState
+import com.littlefox.app.foxschool.presentation.viewmodel.QuizViewModel
+import com.littlefox.app.foxschool.presentation.viewmodel.QuizViewModel.Companion
 import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
-import com.littlefox.app.foxschool.viewmodel.base.SingleLiveEvent
 import com.littlefox.logmonitor.Log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -53,9 +58,10 @@ import java.lang.Exception
 import java.util.Random
 import javax.inject.Inject
 
-
 @HiltViewModel
-class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewModel) : BaseViewModel()
+class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewModel): BaseMVIViewModel<QuizState, QuizEvent, SideEffect>(
+    QuizState()
+)
 {
     companion object
     {
@@ -88,48 +94,6 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         private const val PLAY_INIT : Int                               = 0
         private const val PLAY_REPLAY : Int                             = 1
     }
-
-    private val _viewPageCount = SingleLiveEvent<Int>()
-    val viewPageCount: LiveData<Int> get() = _viewPageCount
-
-    private val _titleText = SingleLiveEvent<Pair<String, String>>()
-    val titleText: LiveData<Pair<String, String>> get() = _titleText
-
-    private val _loadingComplete = SingleLiveEvent<Boolean>()
-    val loadingComplete: LiveData<Boolean> get() = _loadingComplete
-
-    private val _resultData = SingleLiveEvent<EventWrapper<String>>()
-    val resultData: LiveData<EventWrapper<String>> get() = _resultData
-
-    private val _quizPlayDataList = SingleLiveEvent<QuizTypeData>()
-    val quizPlayList: LiveData<QuizTypeData> get() = _quizPlayDataList
-
-    private val _enableTaskBoxLayout = SingleLiveEvent<Boolean>()
-    val enableTaskBoxLayout: LiveData<Boolean> get() = _enableTaskBoxLayout
-
-    private val _forceChangePageView = SingleLiveEvent<Int>()
-    val forceChangePageView: LiveData<Int> get() = _forceChangePageView
-
-    private val _setPageView = SingleLiveEvent<Int>()
-    val setPageView: LiveData<Int> get() = _setPageView
-
-    private val _showPlayTime = SingleLiveEvent<String>()
-    val showPlayTime: LiveData<String> get() = _showPlayTime
-
-    private val _answerCorrectText = SingleLiveEvent<String>()
-    val answerCorrectText: LiveData<String> get() = _answerCorrectText
-
-    private val _checkAnswerView = SingleLiveEvent<EventWrapper<Boolean>>()
-    val checkAnswerView: LiveData<EventWrapper<Boolean>> get() = _checkAnswerView
-
-    private val _hideAnswerView = SingleLiveEvent<EventWrapper<Unit>>()
-    val hideAnswerView: LiveData<EventWrapper<Unit>> get() = _hideAnswerView
-
-    private val _showSaveButton = SingleLiveEvent<Void>()
-    val showSaveButton: LiveData<Void> get() = _showSaveButton
-
-    private val _dialogWarningText = SingleLiveEvent<String>()
-    val dialogWarningText: LiveData<String> get() = _dialogWarningText
 
     private lateinit var mContext : Context
 
@@ -175,44 +139,34 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         requestQuizInformationAsync()
     }
 
-    override fun onHandleViewEvent(event : BaseEvent)
+    override fun resume()
     {
-        when(event)
+        Log.f("")
+        if(mCurrentQuizPageIndex != -1 &&
+            mCurrentQuizPageIndex != mQuizPlayingCount)
         {
-            is BaseEvent.onBackPressed ->
-            {
-                (mContext as AppCompatActivity).finish()
-            }
-
-            is QuizEvent.onPageSelected ->
-            {
-                onQuizPageSelected()
-            }
-            is QuizEvent.onClickNextQuiz ->
-            {
-                stopMediaPlay()
-                setQuizPlayStatus()
-            }
-            is QuizEvent.onClickQuizPlaySound ->
-            {
-                playQuestionSound(mCurrentQuizPageIndex)
-            }
-            is QuizEvent.onSelectedUserAnswer ->
-            {
-                onChoiceItem(event.data)
-            }
-            is QuizEvent.onClickSaveStudyInformation ->
-            {
-                onSaveStudyInformation()
-            }
-            is QuizEvent.onClickReplay ->
-            {
-                mCurrentQuizPageIndex = -1
-                mCorrectAnswerCount = 0
-                _resultData.value = EventWrapper("0:0") // 초기화
-                onGoReplay()
-            }
+            enableTimer(true)
         }
+    }
+
+    override fun pause()
+    {
+        Log.f("")
+        if(mCurrentQuizPageIndex != -1 &&
+            mCurrentQuizPageIndex != mQuizPlayingCount)
+        {
+            enableTimer(false)
+        }
+
+        stopEffectPlay()
+        stopMediaPlay()
+    }
+
+    override fun destroy()
+    {
+        Log.f("")
+        releaseMediaPlay()
+        releaseEffectPlay()
     }
 
     override fun onHandleApiObserver()
@@ -223,14 +177,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                     data?.let {
                         if(data.first == RequestCode.CODE_QUIZ_RECORD_SAVE)
                         {
-                            if(data.second)
-                            {
-                                _isLoading.postValue(true)
-                            }
-                            else
-                            {
-                                _isLoading.postValue(false)
-                            }
+                            postSideEffect(
+                                SideEffect.EnableLoading(isLoading = data.second)
+                            )
                         }
                     }
                 }
@@ -242,9 +191,11 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                     data?.let {
                         mQuizInformationResult = data
 
-                        _titleText.value = Pair(
-                            mQuizInformationResult!!.getTitle(),
-                            mQuizInformationResult!!.getSubTitle()
+                        postEvent(
+                            QuizEvent.SetTitle(
+                                mQuizInformationResult!!.getTitle(),
+                                mQuizInformationResult!!.getSubTitle()
+                            )
                         )
 
                         mCurrentQuizType = mQuizInformationResult!!.getType()
@@ -300,7 +251,11 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
             (mContext as AppCompatActivity).repeatOnLifecycle(Lifecycle.State.CREATED) {
                 apiViewModel.quizSaveRecordData.collect{ data ->
                     data?.let {
-                        _dialogWarningText.value = mContext.resources.getString(R.string.message_quiz_save_record_success)
+                        postSideEffect(
+                            QuizSideEffect.ShowWarningMessageDialog(
+                                mContext.resources.getString(R.string.message_quiz_save_record_success)
+                            )
+                        )
                     }
                 }
             }
@@ -315,7 +270,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                         if(result.isDuplicateLogin)
                         {
                             //중복 로그인 시 재시작
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO)
                                 {
@@ -327,7 +284,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                         }
                         else if(result.isAuthenticationBroken)
                         {
-                            _toast.value = result.message
+                            postSideEffect(
+                                SideEffect.ShowToast(result.message)
+                            )
                             viewModelScope.launch {
                                 withContext(Dispatchers.IO)
                                 {
@@ -343,7 +302,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                                 code == RequestCode.CODE_DOWNLOAD_QUIZ_RESOURCE )
                             {
                                 Log.f("FAIL code : $code")
-                                _toast.value = result.message
+                                postSideEffect(
+                                    SideEffect.ShowToast(result.message)
+                                )
                                 viewModelScope.launch(Dispatchers.Main) {
                                     withContext(Dispatchers.IO){
                                         delay(Common.DURATION_LONG)
@@ -365,8 +326,14 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                             else if(code == RequestCode.CODE_QUIZ_RECORD_SAVE)
                             {
                                 Log.f("FAIL ASYNC_CODE_QUIZ_SAVE_RECORD")
-                                _showSaveButton.call()
-                                _dialogWarningText.value = result.message
+                                postEvent(
+                                    QuizEvent.EnableSaveButton(true),
+                                )
+                                postSideEffect(
+                                    QuizSideEffect.ShowWarningMessageDialog(
+                                        result.message
+                                    )
+                                )
                             }
                         }
                     }
@@ -375,34 +342,114 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         }
     }
 
-    override fun resume()
+    override fun onHandleAction(action : Action)
     {
-        Log.f("")
-        if(mCurrentQuizPageIndex != -1 &&
-            mCurrentQuizPageIndex != mQuizPlayingCount)
-        {
-            enableTimer(true)
-        }
+       when(action)
+       {
+           is QuizAction.PageSelected ->
+           {
+               onQuizPageSelected();
+           }
+           is QuizAction.ClickNextQuiz ->
+           {
+               onGoNext();
+           }
+           is QuizAction.ClickSaveStudyInformation ->
+           {
+               onSaveStudyInformation();
+           }
+           is QuizAction.ClickReplay ->
+           {
+               onGoReplay();
+           }
+           is QuizAction.ClickQuizPlaySound ->
+           {
+               onPlaySound();
+           }
+           is QuizAction.SelectUserAnswer ->
+           {
+               onChoiceItem(action.data);
+           }
+       }
     }
 
-    override fun pause()
+    override suspend fun reduceState(current : QuizState, event : QuizEvent) : QuizState
     {
-        Log.f("")
-        if(mCurrentQuizPageIndex != -1 &&
-            mCurrentQuizPageIndex != mQuizPlayingCount)
+        return when(event)
         {
-            enableTimer(false)
+            is QuizEvent.LoadingComplete ->
+            {
+                current.copy(
+                    isLoadingComplete = event.isComplete
+                )
+            }
+            is QuizEvent.SetTitle ->
+            {
+                current.copy(
+                    title = event.title
+                )
+            }
+            is QuizEvent.SetQuizPlayData ->
+            {
+                current.copy(
+                    quizPlayData = event.data
+                )
+            }
+            is QuizEvent.EnableTaskBox ->
+            {
+                current.copy(
+                    showTaskBox = event.isShow
+                )
+            }
+            is QuizEvent.SetViewPageCount ->
+            {
+                current.copy(
+                    viewPageCount = event.size
+                )
+            }
+            is QuizEvent.NotifyAnswerViewType ->
+            {
+                current.copy(
+                    answerViewType = event.type
+                )
+            }
+            is QuizEvent.UpdateCorrectAnswerText ->
+            {
+                current.copy(
+                    answerCorrectText = event.answerText
+                )
+            }
+            is QuizEvent.SetCurrentPage ->
+            {
+                current.copy(
+                    currentPage = event.page
+                )
+            }
+            is QuizEvent.SetResultData ->
+            {
+                current.copy(
+                    resultData = event.data
+                )
+            }
+            is QuizEvent.UpdatePlayTime ->
+            {
+                current.copy(
+                    playTime = event.time
+                )
+            }
+            is QuizEvent.ForceChangePage ->
+            {
+                current.copy(
+                    forceChangePage = event.page
+                )
+            }
+            is QuizEvent.EnableSaveButton ->
+            {
+                current.copy(
+                    enableSaveButton = event.isEnable
+                )
+            }
         }
-
-        stopEffectPlay()
-        stopMediaPlay()
-    }
-
-    override fun destroy()
-    {
-        Log.f("")
-        releaseMediaPlay()
-        releaseEffectPlay()
     }
 
     private fun requestQuizInformationAsync()
@@ -434,6 +481,7 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
             fileSavePathList
         )
     }
+
 
     private fun requestQuizSaveRecord()
     {
@@ -737,9 +785,13 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         mCorrectImageList.clear()
 
 
-        _quizPlayDataList.value = QuizTypeData.Picture(mPictureQuizList)
         mCurrentPageMaxCount = mPictureQuizList.size + 2
-        _viewPageCount.value = mCurrentPageMaxCount
+        postEvent(
+            QuizEvent.SetQuizPlayData(
+                QuizTypeData.Picture(mPictureQuizList)
+            ),
+            QuizEvent.SetViewPageCount(mCurrentPageMaxCount)
+        )
 
         when(type)
         {
@@ -767,17 +819,20 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                 )
             )
         }
-
-        _quizPlayDataList.value = if(mCurrentQuizType == Common.QUIZ_CODE_SOUND_TEXT) {
-            QuizTypeData.SoundText(mTextInformationList)
-        }
-        else
-        {
-            QuizTypeData.Text(mTextInformationList)
-        }
         mCurrentPageMaxCount = mTextInformationList.size + 2
-        _viewPageCount.value = mCurrentPageMaxCount
 
+        postEvent(
+            QuizEvent.SetQuizPlayData(
+                if(mCurrentQuizType == Common.QUIZ_CODE_SOUND_TEXT) {
+                    QuizTypeData.SoundText(mTextInformationList)
+                }
+                else
+                {
+                    QuizTypeData.Text(mTextInformationList)
+                }
+            ),
+            QuizEvent.SetViewPageCount(mCurrentPageMaxCount)
+        )
         when(type)
         {
             PLAY_INIT -> readyToPlay()
@@ -801,10 +856,13 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
             mPhonicsTextInformationList.add(QuizPhonicsTextData(i, mQuizItemResultList!!))
         }
 
-        _quizPlayDataList.value = QuizTypeData.Phonics(mPhonicsTextInformationList)
         mCurrentPageMaxCount = mPhonicsTextInformationList.size + 2
-        _viewPageCount.value = mCurrentPageMaxCount
-
+        postEvent(
+            QuizEvent.SetQuizPlayData(
+                QuizTypeData.Phonics(mPhonicsTextInformationList)
+            ),
+            QuizEvent.SetViewPageCount(mCurrentPageMaxCount)
+        )
         when(type)
         {
             PLAY_INIT -> readyToPlay()
@@ -812,12 +870,15 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         }
     }
 
+
     /**
      * 퀴즈 시작 준비
      */
     private fun readyToPlay()
     {
-        _loadingComplete.value = true
+        postEvent(
+            QuizEvent.LoadingComplete(true)
+        )
         initTaskBoxInformation()
     }
 
@@ -880,8 +941,14 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         {
             mCorrectAnswerCount = 0
             mQuizLimitTime = mQuizInformationResult!!.getTimeLimit()
-            _showPlayTime.value = CommonUtils.getInstance(mContext).getSecondTime(mQuizLimitTime)
-            _answerCorrectText.value = "$mCorrectAnswerCount/$mQuizPlayingCount"
+            postEvent(
+                QuizEvent.UpdatePlayTime(
+                    CommonUtils.getInstance(mContext).getSecondTime(mQuizLimitTime)
+                ),
+                QuizEvent.UpdateCorrectAnswerText(
+                    "$mCorrectAnswerCount/$mQuizPlayingCount"
+                )
+            )
         } catch(e : NullPointerException) { }
     }
 
@@ -902,8 +969,10 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         {
             Log.i("-------- 정답 보내기 --------")
             enableTimer(false)
-            _enableTaskBoxLayout.value = false
-            _resultData.value = EventWrapper("$mQuizPlayingCount:$mCorrectAnswerCount")
+            postEvent(
+                QuizEvent.EnableTaskBox(false),
+                QuizEvent.SetResultData("$mQuizPlayingCount:$mCorrectAnswerCount")
+            )
             viewModelScope.launch(Dispatchers.Main) {
                 withContext(Dispatchers.IO){
                     delay(Common.DURATION_NORMAL)
@@ -911,8 +980,14 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                 playResultByQuizCorrect()
             }
         }
-        _hideAnswerView.value = EventWrapper(Unit)
-        _setPageView.value = mCurrentQuizPageIndex + 1
+        postEvent(
+            QuizEvent.NotifyAnswerViewType(
+                QuizAnswerViewType.HIDE
+            ),
+            QuizEvent.SetCurrentPage(
+                mCurrentQuizPageIndex + 1
+            )
+        )
     }
 
     private fun enableTimer(isStart: Boolean)
@@ -946,18 +1021,30 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         mQuizLimitTime--
         if(mQuizLimitTime >= 0)
         {
-            _showPlayTime.value = CommonUtils.getInstance(mContext).getSecondTime(mQuizLimitTime)
+            postEvent(
+                QuizEvent.UpdatePlayTime(
+                    CommonUtils.getInstance(mContext).getSecondTime(mQuizLimitTime)
+                )
+            )
         }
         else
         {
+            Log.f("Quiz End Not All Solved. Limit Time")
             mCurrentQuizPageIndex = mQuizPlayingCount
-            _enableTaskBoxLayout.value = false
             stopMediaPlay()
             enableTimer(false)
-            Log.f("Quiz End Not All Solved. Limit Time")
-            _hideAnswerView.value = EventWrapper(Unit)
-            _resultData.value = EventWrapper("$mQuizPlayingCount:$mCorrectAnswerCount")
-            _setPageView.value = mCurrentPageMaxCount - 1
+            postEvent(
+                QuizEvent.EnableTaskBox(false),
+                QuizEvent.NotifyAnswerViewType(
+                    QuizAnswerViewType.HIDE
+                ),
+                QuizEvent.SetResultData(
+                    "$mQuizPlayingCount:$mCorrectAnswerCount"
+                ),
+                QuizEvent.SetCurrentPage(
+                    mCurrentPageMaxCount - 1
+                )
+            )
             viewModelScope.launch(Dispatchers.Main) {
                 withContext(Dispatchers.IO){
                     delay(Common.DURATION_NORMAL)
@@ -976,11 +1063,19 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         if(isCorrect)
         {
             playEffectSound(MEDIA_CORRECT_PATH)
-            _checkAnswerView.value = EventWrapper(true)
+            postEvent(
+                QuizEvent.NotifyAnswerViewType(
+                    QuizAnswerViewType.SHOW_CORRECT
+                )
+            )
         } else
         {
             playEffectSound(MEDIA_INCORRECT_PATH)
-            _checkAnswerView.value = EventWrapper(false)
+            postEvent(
+                QuizEvent.NotifyAnswerViewType(
+                    QuizAnswerViewType.SHOW_INCORRECT
+                )
+            )
         }
     }
 
@@ -989,7 +1084,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         Log.f("quizPageIndex : $mCurrentQuizPageIndex, mQuizPlayingCount : $mQuizPlayingCount")
         if(mCurrentQuizPageIndex == -1)
         {
-            _enableTaskBoxLayout.value = false
+            postEvent(
+                QuizEvent.EnableTaskBox(false)
+            )
             releaseMediaPlay()
             releaseEffectPlay()
             return
@@ -998,8 +1095,9 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         {
             if(mCurrentQuizPageIndex != mQuizPlayingCount)
             {
-                _enableTaskBoxLayout.value = true // 상단 영역 표시 (타이머, 정답수)
-
+                postEvent(
+                    QuizEvent.EnableTaskBox(true) // 상단 영역 표시 (타이머, 정답수)
+                )
                 when(mCurrentQuizType)
                 {
                     Common.QUIZ_CODE_PICTURE,
@@ -1016,10 +1114,17 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                 }
             }
         }
-
-
     }
 
+
+    /**
+     * QuizPlayFragment에서 Sound 버튼 클릭 시
+     */
+    fun onPlaySound()
+    {
+        Log.f("index : $mCurrentQuizPageIndex")
+        playQuestionSound(mCurrentQuizPageIndex)
+    }
 
     /**
      * QuizPlayFragment에서 사용자가 보기 중에 선택 했을 때
@@ -1029,7 +1134,11 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         Log.i("")
         mQuizUserSelectObjectList.add(data)
         mCorrectAnswerCount = if(data.isCorrect()) mCorrectAnswerCount + 1 else mCorrectAnswerCount
-        _answerCorrectText.value = "$mCorrectAnswerCount/$mQuizPlayingCount"
+        postEvent(
+            QuizEvent.UpdateCorrectAnswerText(
+                "$mCorrectAnswerCount/$mQuizPlayingCount"
+            )
+        )
         showAnswerAnimation(data.isCorrect())
     }
 
@@ -1042,7 +1151,11 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
         if(mQuizLimitTime <= 0)
         {
             // 풀이시간 초과는 저장불가
-            _dialogWarningText.value = mContext.resources.getString(R.string.message_quiz_limit_not_save)
+            postSideEffect(
+                QuizSideEffect.ShowWarningMessageDialog(
+                    mContext.resources.getString(R.string.message_quiz_limit_not_save)
+                )
+            )
         }
         else
         {
@@ -1050,6 +1163,17 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
             requestQuizSaveRecord()
         }
     }
+
+    /**
+     * QuizPlayFragment에서 다음 버튼 클릭 시
+     */
+    private fun onGoNext()
+    {
+        Log.f("")
+        stopMediaPlay()
+        setQuizPlayStatus()
+    }
+
 
     /**
      * QuizResultFragment에서 Replay 버튼 클릭 시
@@ -1068,7 +1192,6 @@ class QuizViewModel @Inject constructor(private val apiViewModel : QuizApiViewMo
                 makePhonicsTextQuestion(PLAY_REPLAY)
         }
     }
-
 
 
 }

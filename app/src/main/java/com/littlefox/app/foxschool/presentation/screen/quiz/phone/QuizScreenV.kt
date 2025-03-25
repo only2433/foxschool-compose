@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,19 +38,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import com.littlefox.app.foxschool.presentation.viewmodel.QuizViewModel
-import com.littlefox.app.foxschool.presentation.viewmodel.base.BaseEvent
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.common.Common
+import com.littlefox.app.foxschool.enumerate.QuizAnswerViewType
 
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizPhonicsTextData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizPictureData
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizTextData
 import com.littlefox.app.foxschool.presentation.common.getDp
-import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizEvent
-import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizTypeData
+import com.littlefox.app.foxschool.`object`.data.quiz.QuizTypeData
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizAction
+import com.littlefox.app.foxschool.presentation.mvi.quiz.viewmodel.QuizViewModel
 import com.littlefox.app.foxschool.presentation.widget.TopBarCloseLayout
 import com.littlefox.app.foxschool.viewmodel.base.EventWrapper
 import com.littlefox.logmonitor.Log
@@ -59,48 +58,20 @@ import com.littlefox.logmonitor.Log
 @Composable
 fun QuizScreenV(
     viewModel : QuizViewModel,
-    onEvent: (BaseEvent) -> Unit
+    onAction: (QuizAction) -> Unit
 )
 {
-    val _maxPageCount by viewModel.viewPageCount.observeAsState(initial = 1)
-    val _quizTypeData by viewModel.quizPlayList.observeAsState(
-        initial = QuizTypeData.Picture(
-            ArrayList()
-    ))
-    val _checkAnswerView by viewModel.checkAnswerView.observeAsState(initial = EventWrapper(false))
-    val _hideAnswerView by viewModel.hideAnswerView.observeAsState(EventWrapper(Unit))
-    val _setCurrentPage by viewModel.setPageView.observeAsState(initial = 0)
-    val _enableTaskBox by viewModel.enableTaskBoxLayout.observeAsState(initial = false)
-    val _quizPlayTime by viewModel.showPlayTime.observeAsState(initial = "")
-    val _quizUserCount by viewModel.answerCorrectText.observeAsState(initial = "")
-
-    val _quizResultData by viewModel.resultData.observeAsState(
-        initial = EventWrapper("")
-    )
-
-    var _quizResultScreenData by remember {
-        mutableStateOf("")
-    }
-
-    _quizResultData.getContentIfNotHandled()?.let {
-
-        Log.i("------- result data : $it")
-        LaunchedEffect(_quizResultData) {
-            _quizResultScreenData = it
-        }
-
-    }
-
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val _pagerState = rememberPagerState(
         initialPage = 0,
-        pageCount = {_maxPageCount}
+        pageCount = {state.viewPageCount}
     )
 
-    LaunchedEffect(_setCurrentPage) {
-        Log.i("_setCurrentPage : $_setCurrentPage")
+    LaunchedEffect(state.currentPage) {
+        Log.i("_setCurrentPage : $state.currentPage")
         _pagerState.animateScrollToPage(
-            page = _setCurrentPage,
+            page = state.currentPage,
             animationSpec = tween(
                 durationMillis = Common.DURATION_NORMAL.toInt(),
                 easing = FastOutSlowInEasing
@@ -110,8 +81,8 @@ fun QuizScreenV(
 
     LaunchedEffect(_pagerState.currentPage) {
         Log.i("currentPage : ${_pagerState.currentPage}")
-        onEvent(
-            QuizEvent.onPageSelected
+        onAction(
+            QuizAction.PageSelected
         )
     }
 
@@ -123,20 +94,27 @@ fun QuizScreenV(
         mutableStateOf(false)
     }
 
-    _checkAnswerView.getContentIfNotHandled()?.let {
-        LaunchedEffect(_checkAnswerView) {
-            Log.i("_checkAnswerView View : $_checkAnswerView")
-            _isCorrectQuestion = it
-            _isVisibleAnswerView = true
-        }
-    }
-    _hideAnswerView.getContentIfNotHandled()?.let {
-        LaunchedEffect(_hideAnswerView) {
-            Log.i("hide View")
-            _isVisibleAnswerView = false
-        }
-    }
+    LaunchedEffect(state.answerViewType) {
+        Log.i("_checkAnswerView View : $state.answerViewType")
 
+        when(state.answerViewType)
+        {
+            QuizAnswerViewType.SHOW_CORRECT ->
+            {
+                _isCorrectQuestion = true
+                _isVisibleAnswerView = true
+            }
+            QuizAnswerViewType.SHOW_INCORRECT ->
+            {
+                _isCorrectQuestion = false
+                _isVisibleAnswerView = true
+            }
+            QuizAnswerViewType.HIDE ->
+            {
+                _isVisibleAnswerView = false
+            }
+        }
+    }
 
     var _pictureQuizList by remember {
         mutableStateOf(arrayOf<QuizPictureData>())
@@ -150,34 +128,31 @@ fun QuizScreenV(
         mutableStateOf(arrayOf<QuizPhonicsTextData>())
     }
 
-    LaunchedEffect(_quizTypeData) {
-        when(_quizTypeData)
+    LaunchedEffect(state.quizPlayData) {
+        when(state.quizPlayData)
         {
             is QuizTypeData.Picture ->
             {
-                _pictureQuizList = (_quizTypeData as QuizTypeData.Picture).list.toTypedArray()
+                _pictureQuizList = (state.quizPlayData as QuizTypeData.Picture).list.toTypedArray()
                 Log.i("Quiz Picture size: ${_pictureQuizList.size}")
             }
             is QuizTypeData.Text ->
             {
-                _textQuizList = (_quizTypeData as QuizTypeData.Text).list.toTypedArray()
+                _textQuizList = (state.quizPlayData as QuizTypeData.Text).list.toTypedArray()
                 Log.i("Quiz Text size: ${_textQuizList.size}")
             }
             is QuizTypeData.SoundText ->
             {
-                _textQuizList = (_quizTypeData as QuizTypeData.SoundText).list.toTypedArray()
+                _textQuizList = (state.quizPlayData as QuizTypeData.SoundText).list.toTypedArray()
                 Log.i("Quiz Sound Text size: ${_textQuizList.size}")
             }
             is QuizTypeData.Phonics ->
             {
-                _phonicsQuizLista = (_quizTypeData as QuizTypeData.Phonics).list.toTypedArray()
+                _phonicsQuizLista = (state.quizPlayData as QuizTypeData.Phonics).list.toTypedArray()
                 Log.i("Quiz Phonics Text size: ${_phonicsQuizLista.size}")
             }
+            else -> {}
         }
-    }
-
-    LaunchedEffect(_maxPageCount) {
-        Log.i("max Page Count : $_maxPageCount")
     }
 
 
@@ -199,8 +174,9 @@ fun QuizScreenV(
             TopBarCloseLayout(
                 height = 110,
                 title = stringResource(id = R.string.title_quiz),
-                backgroundColor = colorResource(id = R.color.color_23cc8a)) {
-                onEvent(BaseEvent.onBackPressed)
+                backgroundColor = colorResource(id = R.color.color_23cc8a))
+            {
+                viewModel.onBackPressed()
             }
             HorizontalPager(
                 state = _pagerState,
@@ -215,24 +191,24 @@ fun QuizScreenV(
                     0 ->
                     {
                         QuizIntroScreenV(
-                            viewModel = viewModel,
-                            onEvent = onEvent)
+                            state = state,
+                            onAction = onAction)
 
                     }
-                    _maxPageCount - 1 ->
+                    state.viewPageCount - 1 ->
                     {
                         QuizResultScreenV(
-                            resultData = _quizResultScreenData,
-                            onEvent = onEvent)
+                            resultData = state.resultData,
+                            onAction = onAction)
                     }
                     else ->
                     {
-                        when(_quizTypeData)
+                        when(state.quizPlayData)
                         {
                             is QuizTypeData.Picture ->
                             {
                                 QuizPlayPictureScreenV(
-                                    onEvent = onEvent,
+                                    onAction = onAction,
                                     data = _pictureQuizList[page - 1]
                                 )
                             }
@@ -240,34 +216,35 @@ fun QuizScreenV(
                             {
                                 QuizPlayTextScreenV(
                                     quizType = Common.QUIZ_CODE_TEXT,
-                                    onEvent = onEvent,
+                                    onAction = onAction,
                                     data = _textQuizList[page -1])
                             }
                             is QuizTypeData.SoundText ->
                             {
                                 QuizPlayTextScreenV(
                                     quizType = Common.QUIZ_CODE_SOUND_TEXT,
-                                    onEvent = onEvent,
+                                    onAction = onAction,
                                     data = _textQuizList[page -1])
                             }
                             is QuizTypeData.Phonics ->
                             {
                                 QuizPlayTextScreenV(
                                     quizType = Common.QUIZ_CODE_PHONICS_SOUND_TEXT,
-                                    onEvent = onEvent,
+                                    onAction = onAction,
                                     data = _phonicsQuizLista[page -1])
                             }
+                            else -> {}
                         }
                     }
                 }
             }
         }
 
-        if(_enableTaskBox)
+        if(state.showTaskBox)
         {
             BuildTaskBoxLayout(
-                playTime = _quizPlayTime,
-                correctCount = _quizUserCount
+                playTime = state.playTime,
+                correctCountText = state.answerCorrectText
             )
         }
 
@@ -297,7 +274,7 @@ fun QuizScreenV(
 @Composable
 private fun BuildTaskBoxLayout(
     playTime: String,
-    correctCount: String
+    correctCountText: String
 )
 {
     Row(
@@ -430,7 +407,7 @@ private fun BuildTaskBoxLayout(
         )
         {
             Text(
-                text = correctCount,
+                text = correctCountText,
                 style = TextStyle(
                     color = colorResource(id = R.color.color_2a4899),
                     fontSize = 14.sp,

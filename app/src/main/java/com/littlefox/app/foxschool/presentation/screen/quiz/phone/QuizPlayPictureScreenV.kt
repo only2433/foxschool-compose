@@ -42,13 +42,14 @@ import com.littlefox.app.foxschool.presentation.viewmodel.quiz.QuizEvent
 import com.littlefox.app.foxschool.R
 import com.littlefox.app.foxschool.`object`.data.quiz.QuizUserInteractionData
 import com.littlefox.app.foxschool.presentation.common.getDp
+import com.littlefox.app.foxschool.presentation.mvi.quiz.QuizAction
 import com.littlefox.app.foxschool.presentation.widget.BuildQuizTitleView
 import com.littlefox.app.foxschool.presentation.widget.PressedTextButton
 
 
 @Composable
 fun QuizPlayPictureScreenV(
-    onEvent: (QuizEvent) -> Unit,
+    onAction: (QuizAction) -> Unit,
     data: QuizPictureData
 )
 {
@@ -95,8 +96,8 @@ fun QuizPlayPictureScreenV(
                 index = data.getQuizIndex(),
                 title = data.getTitle(),
                 onPlaySound = {
-                    onEvent(
-                        QuizEvent.onClickQuizPlaySound
+                    onAction(
+                        QuizAction.ClickQuizPlaySound
                     )
                 }
             )
@@ -131,9 +132,8 @@ fun QuizPlayPictureScreenV(
                         data = data,
                         position
                     )
-
-                    onEvent(
-                        QuizEvent.onSelectedUserAnswer(result)
+                    onAction(
+                        QuizAction.SelectUserAnswer(result)
                     )
                 }
             )
@@ -169,8 +169,8 @@ fun QuizPlayPictureScreenV(
                 {
                     if(isQuestionEnd)
                     {
-                        onEvent(
-                            QuizEvent.onClickNextQuiz
+                        onAction(
+                            QuizAction.ClickNextQuiz
                         )
                     }
                 }
