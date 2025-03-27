@@ -973,7 +973,7 @@ class QuizFactoryViewModel @Inject constructor(private val apiViewModel : QuizAp
     {
         if(mQuizLimitTime <= 0)
         {
-            // 풀이시간 초과는 저장불가
+            // 풀이시간 초과는 저장불가 테스트입니다.
             _dialogWarningText.value = mContext.resources.getString(R.string.message_quiz_limit_not_save)
         }
         else
