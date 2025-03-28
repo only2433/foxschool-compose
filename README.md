@@ -104,19 +104,19 @@ sequenceDiagram
     participant VM as ViewModel
     participant Service as Service/Repository
 
-    Activity ->> Screen: 초기 State 전달
-    Screen ->> VM: Action (사용자 액션)
-    VM ->> Service: Request Data
-    Service -->> VM: Response
-    VM ->> VM: State 업데이트
-    VM ->> Screen: State 전달
-    Screen ->> Screen: UI 재렌더링
-    
-    alt 에러 발생
-        VM ->> VM: Side Effect 생성
-        VM ->> Activity: Side Effect 전달
-        Activity ->> Activity: Side Effect 처리
-    end
+Activity ->> Screen: Initial State Transfer
+Screen ->> VM: Action (User Action)
+VM ->> Service: Request Data
+Service -->> VM: Response
+VM ->> VM: Update State
+VM ->> Screen: Transfer State
+Screen ->> Screen: UI Re-rendering
+
+alt Error Occurs
+    VM ->> VM: Create Side Effect
+    VM ->> Activity: Transfer Side Effect
+    Activity ->> Activity: Handle Side Effect
+end
 ~~~   
 
 # UI 
