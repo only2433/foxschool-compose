@@ -68,8 +68,9 @@
 - Reactive UI updates
 - Separation of concerns
 - Event-driven architecture
+<br>
 
-
+## 🔀 Flow
 ~~~ mermaid
 flowchart LR
     subgraph UI/Screen
@@ -95,7 +96,7 @@ flowchart LR
     E -->|Modify| D
 ~~~  
 
-# Sequence
+## 🔀 Sequence
 ~~~ mermaid
 sequenceDiagram
     participant Activity as Activity
