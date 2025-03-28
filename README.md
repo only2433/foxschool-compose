@@ -24,7 +24,7 @@
 
     또한, LiveData와 StateFlow를 사용하여 데이터의 변경을 감지하고, 화면에 실시간으로 반영할 수 있습니다.
     이를 통해 사용자에게 빠르고 정확한 정보를 제공할 수 있습니다.
-
+~~~ mermaid
 flowchart LR
   subgraph View
   A(Activity)
@@ -40,7 +40,7 @@ flowchart LR
    C(Api ViewModel) -. Observer .-> B(Factory ViewModel)
    C(Api ViewModel) -- Execute --> D(Service)
    D(Service) -- Get Data --> C(Api ViewModel)
-
+~~~  
 
 # Sequence
 ~~~ mermaid
