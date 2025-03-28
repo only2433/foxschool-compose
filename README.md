@@ -7,15 +7,17 @@
 
 이러한 기능으로 학생들은 보다 효율적으로 학습을 진행할 수 있으며,<br> 
 교사는 숙제 검사와 점수 부여를 편리하게 처리할 수 있다.<br>
+<br><br>
 
-
-# Project Architecture
 
 ## 🏗️ Architecture Overview
 
 ### Development Pattern
 - **Pattern**: Model-View-Intent (**MVI**)
 - **UI Framework**: Declarative UI with **Jetpack Compose**
+
+<br>
+
 
 ## 📦 Package Structure
 
@@ -52,10 +54,14 @@
 - Equivalent to traditional XML layouts
 - Responsible for rendering user interfaces
 
+<br>
+
 ## 🚀 Key Features
 - **Reactive Programming**: Utilizing MVI architectural pattern
 - **Declarative UI**: Powered by Jetpack Compose
 - **Unidirectional Data Flow**: State → UI → Action → ViewModel
+
+<br>
 
 ## 🔍 Technical Highlights
 - Immutable state management
